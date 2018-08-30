@@ -1,6 +1,6 @@
 ﻿#include "voicebank.h"
 
-VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path)
+VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path),CharacterTextCodec(DefaultCharacterTextCodec),ReadmeTextCodec(DefaultReadmeTextCodec)
 {
 
 }
@@ -45,17 +45,9 @@ void VoiceBank::setPath(const QString &value)
     path = value;
 }
 
-QTextCodec *VoiceBank::getTextCodec() const
-{
-    return textCodec;
-}
 
-void VoiceBank::setTextCodec(QTextCodec *value)
-{
-    textCodec = value;
-}
 
-QString VoiceBank::readTextFileInTextCodec(const QString& path)
+QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *textCodec)
 {
     QFile* file = new QFile(path);
     if (!file->exists())
@@ -78,7 +70,7 @@ void VoiceBank::readCharacterFile()
 {
     try
     {
-    auto characterString = readTextFileInTextCodec(path + u8"character.txt");
+    auto characterString = readTextFileInTextCodec(path + u8"character.txt",CharacterTextCodec);
     auto characterList = characterString.split("\n",QString::SplitBehavior::SkipEmptyParts);
     for (auto i : characterList){
         i = i.trimmed();
@@ -118,7 +110,7 @@ void VoiceBank::readCharacterFile()
 void VoiceBank::readReadme()
 {
     try{
-        readme = readTextFileInTextCodec(path + u8"readme.txt");
+        readme = readTextFileInTextCodec(path + u8"readme.txt",ReadmeTextCodec);
     }
     catch(std::runtime_error& e){
         if (std::strcmp(e.what(),u8"File not exists") == 0){
@@ -150,4 +142,24 @@ QHash<VoiceBank::ProbablyErrors, bool> VoiceBank::getErrors() const
 QString VoiceBank::getPixmapPath() const
 {
     return pixmapPath;
+}
+
+QTextCodec *VoiceBank::getCharacterTextCodec() const
+{
+    return CharacterTextCodec;
+}
+
+void VoiceBank::setCharacterTextCodec(QTextCodec *value)
+{
+    CharacterTextCodec = value;
+}
+
+QTextCodec *VoiceBank::getReadmeTextCodec() const
+{
+    return ReadmeTextCodec;
+}
+
+void VoiceBank::setReadmeTextCodec(QTextCodec *value)
+{
+    ReadmeTextCodec = value;
 }

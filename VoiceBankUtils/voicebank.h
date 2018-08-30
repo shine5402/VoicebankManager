@@ -26,9 +26,6 @@ public:
     QString getPath() const;
     void setPath(const QString &value);
 
-    QTextCodec *getTextCodec() const;
-    void setTextCodec(QTextCodec *value);
-
     void readFromPath();
     QString getCalculateInformation();
     enum ProbablyErrors {
@@ -38,6 +35,12 @@ public:
 
     QString getPixmapPath() const;
 
+    QTextCodec *getCharacterTextCodec() const;
+    void setCharacterTextCodec(QTextCodec *value);
+
+    QTextCodec *getReadmeTextCodec() const;
+    void setReadmeTextCodec(QTextCodec *value);
+
 private:
     QPixmap pixmap;
     QString pixmapPath;
@@ -45,13 +48,14 @@ private:
     QString readme;
     QString path;
     QString calculateInformation;
-    QTextCodec *textCodec = QTextCodec::codecForName("Shift-JIS");
-
+    QTextCodec *CharacterTextCodec = QTextCodec::codecForName("Shift-JIS");
+    QTextCodec *ReadmeTextCodec = QTextCodec::codecForName("Shift-JIS");
     QHash<ProbablyErrors,bool>errors{};
     void readCharacterFile();
     void readReadme();
-    QString readTextFileInTextCodec(const QString &path);
-
+    QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
+    static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName("Shift-JIS");
+    static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName("Shift-JIS");
 signals:
     void readDone(VoiceBank *);
 };

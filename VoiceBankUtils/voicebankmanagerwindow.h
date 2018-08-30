@@ -12,6 +12,8 @@
 #include <QAction>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QClipboard>
+#include "monitorfolderssettingdialog.h"
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -32,6 +34,7 @@ public slots:
     void debug_voiceBank_readDone_Slot(VoiceBank *voiceBank);
 #endif
     void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+
 private:
     Ui::VoiceBankManagerWindow *ui;
     QStringList monitorFolders = {u8"./voice"};
@@ -50,6 +53,8 @@ private:
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
     void createVoiceBanksTableMenu();
 
+    void loadVoiceBanksList();
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -57,6 +62,13 @@ private slots:
     void on_voiceBanksTableWidget_currentItemChanged(QTableWidgetItem *current, QTableWidgetItem *);
     void on_voiceBanksTableWidget_customContextMenuRequested(const QPoint &);
     void openVoiceBankPathInExplorer();
+    void openVoiceBankCharacterFileByOS();
+    void openVoiceBankReadmeFileByOS();
+    void copyVoiceBankPathtoClipboard();
+    void copyVoiceBankCharacterFilePathtoClipboard();
+    void copyVoiceBankReadmeFilePathtoClipboard();
+    void on_actionMonitor_Folders_triggered();
+    void on_actionRefresh_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

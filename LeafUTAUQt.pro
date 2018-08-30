@@ -29,7 +29,10 @@ SOURCES += \
     VoiceBankUtils/voicebankreadmeinformationdialog.cpp \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
-    GUIUtils/nofocusdelegate.cpp
+    GUIUtils/nofocusdelegate.cpp \
+    VoiceBankUtils/monitorfolderssettingdialog.cpp \
+    VoiceBankUtils/monitorfoldersadddialog.cpp \
+    VoiceBankUtils/textcodecsettingdialog.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -37,12 +40,18 @@ HEADERS += \
     VoiceBankUtils/voicebankreadmeinformationdialog.h \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
-    GUIUtils/nofocusdelegate.h
+    GUIUtils/nofocusdelegate.h \
+    VoiceBankUtils/monitorfolderssettingdialog.h \
+    VoiceBankUtils/monitorfoldersadddialog.h \
+    VoiceBankUtils/textcodecsettingdialog.h
 
 FORMS += \
         editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
-    VoiceBankUtils/voicebankreadmeinformationdialog.ui
+    VoiceBankUtils/voicebankreadmeinformationdialog.ui \
+    VoiceBankUtils/monitorfolderssettingdialog.ui \
+    VoiceBankUtils/monitorfoldersadddialog.ui \
+    VoiceBankUtils/textcodecsettingdialog.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }

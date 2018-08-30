@@ -29,6 +29,7 @@ public:
     VoiceBank* getVoiceBank(int id){
         return voiceBanks.value(id);
     }
+    void clear();
 private:
     QList<VoiceBank *> voiceBanks{};
 private slots:
