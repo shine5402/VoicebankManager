@@ -28,14 +28,16 @@ SOURCES += \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
     VoiceBankUtils/voicebankreadmeinformationdialog.cpp \
     VoiceBankUtils/voicebank.cpp \
-    VoiceBankUtils/voicebankhandler.cpp
+    VoiceBankUtils/voicebankhandler.cpp \
+    GUIUtils/nofocusdelegate.cpp
 
 HEADERS += \
         editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
     VoiceBankUtils/voicebankreadmeinformationdialog.h \
     VoiceBankUtils/voicebank.h \
-    VoiceBankUtils/voicebankhandler.h
+    VoiceBankUtils/voicebankhandler.h \
+    GUIUtils/nofocusdelegate.h
 
 FORMS += \
         editorwindow.ui \

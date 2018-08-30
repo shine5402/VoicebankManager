@@ -6,6 +6,12 @@
 #include <QAction>
 #include "voicebankhandler.h"
 #include <QDebug>
+#include "../GUIUtils/nofocusdelegate.h"
+#include <QTableWidgetItem>
+#include <QMenu>
+#include <QAction>
+#include <QDesktopServices>
+#include <QUrl>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -20,19 +26,37 @@ public:
 
     QStringList getMonitorFolders() const;
     void setMonitorFolders(const QStringList &value);
-
+    void readVoiceBanks();
 public slots:
 #ifndef NDEBUG
     void debug_voiceBank_readDone_Slot(VoiceBank *voiceBank);
 #endif
+    void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 private:
     Ui::VoiceBankManagerWindow *ui;
     QStringList monitorFolders = {u8"./voice"};
-    VoiceBankHandler* voiceBankhandler = new VoiceBankHandler(this);
+    VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
+    QStringList getFoldersInMonitorFolders() const;
+    void addVoiceBankRowInTableWidget(VoiceBank *voiceBank);
+    void setVoiceBankInfomation(VoiceBank *voiceBank);
+    int voiceBankPathsCount{};
+    int voiceBankReadDoneCount{};
+    struct TableColumn
+    {
+        static constexpr int Name = 0;
+        static constexpr int Path = 1;
+    };
+    QHash<QTableWidgetItem*,VoiceBank*> voiceBankByTableItemFinder;
+    QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
+    void createVoiceBanksTableMenu();
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
 #endif
+    void on_voiceBanksTableWidget_currentItemChanged(QTableWidgetItem *current, QTableWidgetItem *);
+    void on_voiceBanksTableWidget_customContextMenuRequested(const QPoint &);
+    void openVoiceBankPathInExplorer();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

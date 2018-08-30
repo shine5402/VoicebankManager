@@ -14,7 +14,7 @@ class VoiceBank : public QObject
     Q_OBJECT
 public:
     explicit VoiceBank(QString path,QObject *parent = nullptr);
-    QPixmap getImage() const;
+    QPixmap getPixmap() const;
     void setImage(const QPixmap &value);
 
     QString getName() const;
@@ -31,21 +31,26 @@ public:
 
     void readFromPath();
     QString getCalculateInformation();
+    enum ProbablyErrors {
+        CharacterFileNotExists,NameNotSet,ImageFileNotSet,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists
+    };
+    QHash<ProbablyErrors, bool> getErrors() const;
+
+    QString getPixmapPath() const;
 
 private:
-    QPixmap image;
+    QPixmap pixmap;
+    QString pixmapPath;
     QString name;
     QString readme;
-    QString path;//must have "/" in the end.
+    QString path;
     QString calculateInformation;
     QTextCodec *textCodec = QTextCodec::codecForName("Shift-JIS");
-    enum ProbablyErrors {
-        CharacterFileNotExists,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists
-    };
+
     QHash<ProbablyErrors,bool>errors{};
     void readCharacterFile();
     void readReadme();
-    QString readTextFileInTextCodec(QString& path);
+    QString readTextFileInTextCodec(const QString &path);
 
 signals:
     void readDone(VoiceBank *);
