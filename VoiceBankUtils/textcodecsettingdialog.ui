@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>431</width>
     <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0" columnstretch="0,1">
+  <layout class="QGridLayout" name="gridLayout" rowstretch="0,1,0,0,0" columnstretch="0,1">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
@@ -33,32 +33,97 @@
      <item row="0" column="0">
       <widget class="QLabel" name="characterTxtLabel">
        <property name="text">
-        <string>character.txt的文本编码</string>
+        <string>character.txt的字符编码</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="characterTxtLineEdit"/>
+      <widget class="QComboBox" name="characterTxtComboBox">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Shift-JIS</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>GB18030</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Big5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UTF-8</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="readmeTxtLabel">
        <property name="text">
-        <string>readme.txt的文本编码</string>
+        <string>readme.txt的字符编码</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="readmeTxtLineEdit"/>
+      <widget class="QComboBox" name="readmeTxtComboBox">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <item>
+        <property name="text">
+         <string>Shift-JIS</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>GB18030</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Big5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UTF-8</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="4" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;注意：如果您要手动指定编码的话，请注意输入QTextCodec的codecForName()函数支持的编码对应字符串。&lt;/p&gt;&lt;p&gt;您可以使用下面的按钮来查看QTextCodec支持的编码及其别名。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QPushButton" name="availableCodecButton">
+     <property name="text">
+      <string>支持的编码</string>
      </property>
     </widget>
    </item>
