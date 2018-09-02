@@ -196,7 +196,6 @@
     <addaction name="actionRefresh"/>
     <addaction name="separator"/>
     <addaction name="actionSet_chosen_voicebank_s_oto_ini"/>
-    <addaction name="actionEdit_chosen_voicebank_s_LeafUTAUQt_Extend_Settings"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -248,11 +247,6 @@
   <action name="actionDefault_TextCodec">
    <property name="text">
     <string>默认文本编码...</string>
-   </property>
-  </action>
-  <action name="actionEdit_chosen_voicebank_s_LeafUTAUQt_Extend_Settings">
-   <property name="text">
-    <string>编辑选中音源库的Leaf UTAU Qt扩展设置...</string>
    </property>
   </action>
  </widget>

@@ -14,6 +14,8 @@
 #include <QUrl>
 #include <QClipboard>
 #include "monitorfolderssettingdialog.h"
+#include "textcodecsettingdialog.h"
+#include <QSettings>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -54,7 +56,7 @@ private:
     void createVoiceBanksTableMenu();
 
     void loadVoiceBanksList();
-
+    
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -69,6 +71,9 @@ private slots:
     void copyVoiceBankReadmeFilePathtoClipboard();
     void on_actionMonitor_Folders_triggered();
     void on_actionRefresh_triggered();
+    void on_actionDefault_TextCodec_triggered();
+    void setCodecForVoiceBankActionSlot();
+    void reloadVoiceBankActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

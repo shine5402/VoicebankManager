@@ -33,7 +33,8 @@ SOURCES += \
     VoiceBankUtils/monitorfolderssettingdialog.cpp \
     VoiceBankUtils/monitorfoldersadddialog.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
-    VoiceBankUtils/availabletextcodecdialog.cpp
+    VoiceBankUtils/availabletextcodecdialog.cpp \
+    ../LeafPublicQtClasses/leaflogger.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -45,7 +46,8 @@ HEADERS += \
     VoiceBankUtils/monitorfolderssettingdialog.h \
     VoiceBankUtils/monitorfoldersadddialog.h \
     VoiceBankUtils/textcodecsettingdialog.h \
-    VoiceBankUtils/availabletextcodecdialog.h
+    VoiceBankUtils/availabletextcodecdialog.h \
+    ../LeafPublicQtClasses/leaflogger.h
 
 FORMS += \
         editorwindow.ui \

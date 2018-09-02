@@ -2,7 +2,7 @@
 
 VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 {
-
+    VoiceBank::readStaticSettings();
 }
 
 QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const

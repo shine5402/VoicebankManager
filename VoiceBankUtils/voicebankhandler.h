@@ -10,15 +10,11 @@ class VoiceBankHandler : public QObject
 public:
     explicit VoiceBankHandler(QObject *parent = nullptr);
     QList<VoiceBank *> getVoiceBanks() const;
-    void addVoiceBank(VoiceBank * newVoiceBank){
-        voiceBanks.append(newVoiceBank);
 
-    }
     VoiceBank* addVoiceBank(QString& path){
         auto newVoiceBank = new VoiceBank(path,this);
         auto newReadThread = QThread::create([=]{newVoiceBank->readFromPath();});
         connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
-        connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SLOT(aVoiceBankReadDoneSlot(VoiceBank*)));
         newReadThread->start();
         addVoiceBank(newVoiceBank);
         return newVoiceBank;
@@ -32,6 +28,9 @@ public:
     void clear();
 private:
     QList<VoiceBank *> voiceBanks{};
+    void addVoiceBank(VoiceBank * newVoiceBank){
+        voiceBanks.append(newVoiceBank);
+    }
 private slots:
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);

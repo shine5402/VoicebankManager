@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>监视文件夹</string>
+   <string>监视文件夹设定</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">
