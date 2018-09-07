@@ -101,7 +101,7 @@ void VoiceBank::readSettings(){
             if (json.contains(u8"TextCodec/FollowDefault")){
                 auto value = json.value(u8"TextCodec/FollowDefault");
                 if (value.isBool()){
-
+                    setIsFollowDefault(value.toBool());
                 }else
                     LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
             }
