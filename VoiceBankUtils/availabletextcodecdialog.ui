@@ -7,14 +7,34 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>409</height>
+    <height>418</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>支持的编码</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0" colspan="2">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;支持的编码：&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="lineEdit">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过在此处键入文本来搜索下面显示的字符编码。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="placeholderText">
+      <string>键入以搜索</string>
+     </property>
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QListWidget" name="listWidget">
      <property name="contextMenuPolicy">
       <enum>Qt::ActionsContextMenu</enum>
@@ -27,43 +47,29 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item>
     <widget class="QLabel" name="label_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;在Qt的内部实现中，以上的有些编码是同一种编码的别名。&lt;/p&gt;&lt;p&gt;您可以通过右键菜单来复制相应字符串到剪贴板。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;在Qt的内部实现中，以上的有些编码是同一种编码的别名。&lt;/p&gt;&lt;p&gt;您可以通过右键菜单来复制相应字符串到剪贴板，或者直接双击或选择后确定以应用至父窗口。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;支持的编码：&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过在此处键入文本来搜索下面显示的字符编码。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="placeholderText">
-      <string>键入以搜索</string>
-     </property>
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

@@ -4,6 +4,8 @@
 #include <QDialog>
 #include "voicebank.h"
 #include "availabletextcodecdialog.h"
+#include <QTextCodec>
+#include <QComboBox>
 namespace Ui {
     class TextCodecSettingDialog;
 }
@@ -20,9 +22,12 @@ public:
     QTextCodec* getReadmeTextCodec();
     bool getIsFollowDefaultCodec();
 private slots:
-    void on_availableCodecButton_clicked();
 
     void on_followDefaultTextCodecCheckBox_stateChanged(int state);
+
+    void on_availableCodecButton_Character_clicked();
+
+    void on_availableCodecButton_Readme_clicked();
 
 private:
     Ui::TextCodecSettingDialog *ui;
@@ -31,6 +36,7 @@ private:
     void initUI();
     void setFormInDefault();
     void setFormInNoDefault();
+    void onAvailbaleCodecButtonClicked(QComboBox *comboBox);
 };
 
 #endif // TEXTCODECSETTINGDIALOG_H

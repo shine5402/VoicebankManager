@@ -17,10 +17,13 @@ class AvailableTextCodecDialog : public QDialog
 public:
     explicit AvailableTextCodecDialog(QWidget *parent = 0);
     ~AvailableTextCodecDialog();
+    QString getSelectedCodecName() const;
 
 private slots:
     void on_lineEdit_textChanged(const QString &arg1);
     void on_actionCopyTextCodec_triggered();
+
+    void on_listWidget_doubleClicked(const QModelIndex &);
 
 private:
     Ui::AvailableTextCodecDialog *ui;

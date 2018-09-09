@@ -27,6 +27,8 @@ void TextCodecSettingDialog::setFormInDefault()
     ui->characterTxtLabel->setEnabled(false);
     ui->readmeTxtComboBox->setEnabled(false);
     ui->readmeTxtLabel->setEnabled(false);
+    ui->availableCodecButton_Character->setEnabled(false);
+    ui->availableCodecButton_Readme->setEnabled(false);
 }
 
 void TextCodecSettingDialog::setFormInNoDefault()
@@ -35,6 +37,8 @@ void TextCodecSettingDialog::setFormInNoDefault()
     ui->readmeTxtComboBox->setEnabled(true);
     ui->characterTxtLabel->setEnabled(true);
     ui->readmeTxtLabel->setEnabled(true);
+    ui->availableCodecButton_Character->setEnabled(true);
+    ui->availableCodecButton_Readme->setEnabled(true);
     ui->characterTxtComboBox->setCurrentText(voiceBank->getCharacterTextCodec()->name());
     ui->readmeTxtComboBox->setCurrentText(voiceBank->getReadmeTextCodec()->name());
 }
@@ -77,12 +81,7 @@ bool TextCodecSettingDialog::getIsFollowDefaultCodec()
     return ui->followDefaultTextCodecCheckBox->isChecked();
 }
 
-void TextCodecSettingDialog::on_availableCodecButton_clicked()
-{
-    auto dialog = new AvailableTextCodecDialog();
-    dialog->exec();
-    dialog->deleteLater();
-}
+
 
 void TextCodecSettingDialog::on_followDefaultTextCodecCheckBox_stateChanged(int state)
 {
@@ -92,4 +91,26 @@ void TextCodecSettingDialog::on_followDefaultTextCodecCheckBox_stateChanged(int 
     else if (state == Qt::CheckState::Unchecked){
         setFormInNoDefault();
     }
+}
+
+void TextCodecSettingDialog::onAvailbaleCodecButtonClicked(QComboBox* comboBox)
+{
+    auto dialog = new AvailableTextCodecDialog();
+    auto dialogCode = dialog->exec();
+    if (dialogCode == QDialog::Accepted)
+    {
+        auto newCodecString = dialog->getSelectedCodecName();
+        if (QTextCodec::codecForName(newCodecString.toUtf8()) != nullptr)
+            comboBox->setCurrentText(newCodecString);}
+    dialog->deleteLater();
+}
+
+void TextCodecSettingDialog::on_availableCodecButton_Character_clicked()
+{
+    onAvailbaleCodecButtonClicked(ui->characterTxtComboBox);
+}
+
+void TextCodecSettingDialog::on_availableCodecButton_Readme_clicked()
+{
+    onAvailbaleCodecButtonClicked(ui->readmeTxtComboBox);
 }
