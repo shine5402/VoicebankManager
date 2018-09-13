@@ -89,7 +89,6 @@ void VoiceBank::readStaticSettings()
 }
 
 void VoiceBank::readSettings(){
-    //FIXME:读取失效，怀疑是后面新的设置函数调用进行了覆盖。
     LeafLogger::LogMessage(QString(u8"开始读取%1的声库单独设置。").arg(path));
     try{
     auto text = readTextFileInTextCodec(path + u8"leafUTAUQtSettings.json",QTextCodec::codecForName("UTF-8"));
@@ -219,14 +218,20 @@ void VoiceBank::readCharacterFile()
                 if (imageFileInfo.exists()) {
                     try {
                         pixmap.load(pixmapPath);
-                    } catch (...) {
-                        auto dialog = new QMessageBox(QMessageBox::Warning,tr(u8"发生了一个异常"),tr(u8"程序运行过程中在VoiceBank::readCharacterFile中读取pixmap时发生了一个异常。\n由于当前是通用捕捉器捕捉的异常，我们无法提供更多信息。\n您可以继续使用程序，但程序可能不稳定。"),QMessageBox::Ok);
-                        dialog->exec();
-                        dialog->deleteLater();
+                        if (pixmap.width() != 100 || pixmap.height() != 100){
+                            errors.insert(ProbablyErrors::ImageFileNotFit,true);
+                        }
+                    } catch (std::exception &e){
+                        LeafLogger::LogMessage(QString(u8"程序运行过程中在VoiceBank::readCharacterFile中读取pixmap时发生了一个异常。异常说明为%1").arg(e.what()));
+                        errors.insert(ProbablyErrors::PixmapReadException,true);
+                        pixmap = QPixmap();
                     }
-                    if (pixmap.width() != 100 || pixmap.height() != 100){
-                        errors.insert(ProbablyErrors::ImageFileNotFit,true);
+                    catch (...) {
+                        LeafLogger::LogMessage(u8"程序运行过程中在VoiceBank::readCharacterFile中读取pixmap时发生了一个由通用捕捉器捕捉的异常。");
+                        errors.insert(ProbablyErrors::PixmapReadException,true);
+                        pixmap = QPixmap();
                     }
+
                 }
                 else
                 {

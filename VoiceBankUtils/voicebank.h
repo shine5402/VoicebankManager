@@ -35,7 +35,7 @@ public:
     void readFromPath();
     QString getCalculateInformation();
     enum ProbablyErrors {
-        CharacterFileNotExists,NameNotSet,ImageFileNotSet,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists
+        CharacterFileNotExists,NameNotSet,ImageFileNotSet,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists,PixmapReadException
     };
     QHash<ProbablyErrors, bool> getErrors() const;
 

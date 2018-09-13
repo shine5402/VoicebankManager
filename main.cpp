@@ -1,8 +1,11 @@
 ﻿#include "editorwindow.h"
 #include "VoiceBankUtils/voicebankmanagerwindow.h"
 #include <QApplication>
+#include <QTranslator>
 #include <../LeafPublicQtClasses/leaflogger.h>
-#define DEBUG_TEST
+#include <QLibraryInfo>
+#define VOICEBANK_MANAGER_ONLY
+#define NO_EDITOR
 
 int main(int argc, char *argv[])
 {
@@ -11,13 +14,16 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("shine5402.top");
     QCoreApplication::setApplicationName("Leaf UTAU Qt");
     LeafLogger::LogInit();
-
-#ifndef DEBUG_TEST
+    QTranslator translatorsys;
+    translatorsys.load(":/translations/qt_zh_CN.qm");
+    a.installTranslator(&translatorsys);
+    QTranslator qtTranslator;
+#ifndef NO_EDITOR
     EditorWindow w;
     w.show();
 #endif
-
-#ifdef DEBUG_TEST
+//TODO: Log看起来不能正常保存
+#ifdef VOICEBANK_MANAGER_ONLY
     VoiceBankManagerWindow v;
     v.show();
 #endif

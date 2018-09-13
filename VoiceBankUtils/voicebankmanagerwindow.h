@@ -57,6 +57,10 @@ private:
 
     void loadVoiceBanksList();
     
+    void loadMonitorFoldersSettings();
+    void saveMonitorFoldersSettings();
+    void setUIAfterVoiceBanksReadDone();
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -74,6 +78,8 @@ private slots:
     void on_actionDefault_TextCodec_triggered();
     void setCodecForVoiceBankActionSlot();
     void reloadVoiceBankActionSlot();
+    void on_searchLineEdit_textChanged(const QString &arg1);
+    void on_actionExit_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

@@ -13,6 +13,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     monitorFolders.append(u8R"(E:\UTAU\voice)");
 #endif
     ui->voiceBanksTableWidget->setItemDelegate(new NoFocusDelegate());
+    loadMonitorFoldersSettings();
     loadVoiceBanksList();
     createVoiceBanksTableMenu();
     connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
@@ -29,14 +30,27 @@ void VoiceBankManagerWindow::loadVoiceBanksList()
     ui->voiceBanksTableWidget->setEnabled(false);
     ui->voicebankCountLabel->setText(tr(u8"加载中……"));
     readVoiceBanks();
-
+    
 }
 
 VoiceBankManagerWindow::~VoiceBankManagerWindow()
 {
     delete ui;
+    saveMonitorFoldersSettings();
 }
-
+void VoiceBankManagerWindow::loadMonitorFoldersSettings(){
+    QSettings settings;
+    if (settings.contains(u8"MonitorFolders"))
+    {
+        auto value = settings.value(u8"MonitorFolders");
+        monitorFolders = value.toStringList();
+    }
+}
+void VoiceBankManagerWindow::saveMonitorFoldersSettings()
+{
+    QSettings settings;
+    settings.setValue(u8"MonitorFolders",monitorFolders);
+}
 QStringList VoiceBankManagerWindow::getMonitorFolders() const
 {
     return monitorFolders;
@@ -99,12 +113,20 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
                     ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。</p>)").arg(voiceBank->getPixmapPath()));
                 break;
             case VoiceBank::ProbablyErrors::ImageFileNotFit:
-                if (errors_it.value())
-                    ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（100*100）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getPixmap().width()).arg(voiceBank->getPixmap().height()));
+                if (errors_it.value()) {
+                    if (voiceBank->getPixmap().isNull())
+                        ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件没有正常读取。是不是图片格式与后缀名不符？亦或是文件损坏？</p>)"));
+                    else
+                        ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（100*100）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getPixmap().width()).arg(voiceBank->getPixmap().height()));
+                }
                 break;
             case VoiceBank::ProbablyErrors::ReadmeFileNotExists:
                 if (errors_it.value())
                     ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：找不到readme.txt。音源的README将无法显示。</p>)"));
+                break;
+            case VoiceBank::ProbablyErrors::PixmapReadException:
+                if (errors_it.value())
+                    ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：在读取音源图片时发生了一个异常。或许重载此音源能解决这个问题。</p>)"));
                 break;
             }
             ++errors_it;
@@ -116,17 +138,29 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 void VoiceBankManagerWindow::readVoiceBanks(){
     auto pathList = getFoldersInMonitorFolders();
     voiceBankPathsCount = pathList.count();
-    for (auto path : pathList){
-        voiceBankHandler->addVoiceBank(path);
+    if (voiceBankPathsCount == 0)
+        setUIAfterVoiceBanksReadDone();
+    else{
+        for (auto path : pathList){
+            voiceBankHandler->addVoiceBank(path);
+        }
     }
-
+    
 }
+void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
+{
+    ui->voiceBanksTableWidget->setEnabled(true);
+    if (voiceBankHandler->count() != 0)
+        ui->voicebankCountLabel->setText(tr(u8"共 %1 个").arg(voiceBankHandler->count()));
+    else
+        ui->voicebankCountLabel->setText(tr(u8"没有音源。"));
+    ui->voiceBankBriefInfomationWidget->setVisible(false);
+}
+
 void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     addVoiceBankRowInTableWidget(voiceBank);
     if (++voiceBankReadDoneCount == voiceBankPathsCount){
-        ui->voiceBanksTableWidget->setEnabled(true);
-        ui->voicebankCountLabel->setText(tr(u8"共 %1 个").arg(voiceBankHandler->count()));
-        ui->voiceBankBriefInfomationWidget->setVisible(false);
+        setUIAfterVoiceBanksReadDone();
     }
 }
 #ifndef NDEBUG
@@ -136,7 +170,7 @@ void VoiceBankManagerWindow::debugFunction()
 }
 
 void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *voiceBank){
-
+    
 }
 #endif
 
@@ -185,41 +219,41 @@ void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
 {
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    auto url = QUrl(u8"file:" + voiceBank->getPath());
-    QDesktopServices::openUrl(url);}
-
+        auto url = QUrl(u8"file:" + voiceBank->getPath());
+        QDesktopServices::openUrl(url);}
+    
 }
 void VoiceBankManagerWindow::openVoiceBankCharacterFileByOS(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    auto url = QUrl(u8"file:" + voiceBank->getPath() + u8"character.txt");
-    QDesktopServices::openUrl(url);}
+        auto url = QUrl(u8"file:" + voiceBank->getPath() + u8"character.txt");
+        QDesktopServices::openUrl(url);}
 }
 void VoiceBankManagerWindow::openVoiceBankReadmeFileByOS(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    auto url = QUrl(u8"file:" + voiceBank->getPath() + u8"readme.txt");
-    QDesktopServices::openUrl(url);
+        auto url = QUrl(u8"file:" + voiceBank->getPath() + u8"readme.txt");
+        QDesktopServices::openUrl(url);
     }
 }
 void VoiceBankManagerWindow::copyVoiceBankPathtoClipboard()
 {
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    QClipboard* clipboard = QApplication::clipboard();
-    clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath()));}
+        QClipboard* clipboard = QApplication::clipboard();
+        clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath()));}
 }
 void VoiceBankManagerWindow::copyVoiceBankCharacterFilePathtoClipboard(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    QClipboard* clipboard = QApplication::clipboard();
-    clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath() + u8"character.txt"));}
+        QClipboard* clipboard = QApplication::clipboard();
+        clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath() + u8"character.txt"));}
 }
 void VoiceBankManagerWindow::copyVoiceBankReadmeFilePathtoClipboard(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    QClipboard* clipboard = QApplication::clipboard();
-    clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath() + u8"readme.txt"));}
+        QClipboard* clipboard = QApplication::clipboard();
+        clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath() + u8"readme.txt"));}
 }
 void VoiceBankManagerWindow::setCodecForVoiceBankActionSlot(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
@@ -252,7 +286,7 @@ void VoiceBankManagerWindow::on_actionMonitor_Folders_triggered()
     auto dialog = new MonitorFoldersSettingDialog(this);
     dialog->setMonitorFolders(monitorFolders);
     auto dialogCode = dialog->exec();
-    if (dialogCode == 1 && monitorFolders == dialog->getMonitorFolders()){
+    if (dialogCode == 1 && monitorFolders != dialog->getMonitorFolders()){
         monitorFolders = dialog->getMonitorFolders();
         auto clickedButton = QMessageBox::information(this,u8"监视文件夹列表被更改",u8"您更改了监视文件夹列表，是否立即重载音源库列表？",QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
@@ -278,4 +312,38 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
             loadVoiceBanksList();
     }
     dialog->deleteLater();
+}
+
+void VoiceBankManagerWindow::on_searchLineEdit_textChanged(const QString &arg1)
+{
+    int rC = ui->voiceBanksTableWidget->rowCount();//获得行号
+    if (arg1.isEmpty())//判断输入是否为空
+    {
+        for (int i = 0; i < rC; i++)
+        {
+            ui->voiceBanksTableWidget->setRowHidden(i, false);//显示所有行
+        }
+    }
+    else
+    {
+        //获取符合条件的cell索引
+        QList <QTableWidgetItem *> item = ui->voiceBanksTableWidget->findItems(arg1, Qt::MatchContains);
+        for (int i = 0; i < rC; i++)
+        {
+            ui->voiceBanksTableWidget->setRowHidden(i, true);//隐藏所有行
+        }
+        if (!item.isEmpty())//不为空
+        {
+            for (int i = 0; i < item.count(); i++)
+            {
+                ui->voiceBanksTableWidget->setRowHidden(item.at(i)->row(),false);
+            }
+        }
+    }
+    qApp->processEvents();
+}
+
+void VoiceBankManagerWindow::on_actionExit_triggered()
+{
+    qApp->exit();
 }
