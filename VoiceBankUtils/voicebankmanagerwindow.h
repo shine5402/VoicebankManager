@@ -31,6 +31,7 @@ public:
     QStringList getMonitorFolders() const;
     void setMonitorFolders(const QStringList &value);
     void readVoiceBanks();
+    const static QString version;
 public slots:
 #ifndef NDEBUG
     void debug_voiceBank_readDone_Slot(VoiceBank *voiceBank);
@@ -80,6 +81,8 @@ private slots:
     void reloadVoiceBankActionSlot();
     void on_searchLineEdit_textChanged(const QString &arg1);
     void on_actionExit_triggered();
+    void on_actionAbout_triggered();
+    void on_actionAbout_Qt_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H
