@@ -187,32 +187,40 @@ void VoiceBankManagerWindow::on_voiceBanksTableWidget_customContextMenuRequested
 }
 void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 {
-    auto openPathAction = new QAction(tr(u8"打开音源文件夹"),voiceBanksTableWidgetMenu);
+    auto openPathAction = new QAction(tr(u8"打开音源文件夹"),this);
     connect(openPathAction,SIGNAL(triggered(bool)),this,SLOT(openVoiceBankPathInExplorer()));
+    openPathAction->setStatusTip(tr(u8"在资源管理器中打开该音源的文件夹。"));
     voiceBanksTableWidgetMenu->addAction(openPathAction);
-    auto openCharacterAction = new QAction(tr(u8"打开character.txt"),voiceBanksTableWidgetMenu);
+    auto openCharacterAction = new QAction(tr(u8"打开character.txt"),this);
     connect(openCharacterAction,SIGNAL(triggered(bool)),this,SLOT(openVoiceBankCharacterFileByOS()));
+    openCharacterAction->setStatusTip(tr(u8"在系统关联的文本编辑器中打开该音源的character.txt。"));
     voiceBanksTableWidgetMenu->addAction(openCharacterAction);
-    auto openReadmeAction = new QAction(tr(u8"打开readme.txt"),voiceBanksTableWidgetMenu);
+    auto openReadmeAction = new QAction(tr(u8"打开readme.txt"),this);
     connect(openReadmeAction,SIGNAL(triggered(bool)),this,SLOT(openVoiceBankReadmeFileByOS()));
+    openReadmeAction->setStatusTip(tr(u8"在系统关联的文本编辑器中打开该音源的readme.txt。"));
     voiceBanksTableWidgetMenu->addAction(openReadmeAction);
     voiceBanksTableWidgetMenu->addSeparator();
-    auto copyPathAction = new QAction(tr(u8"复制音源路径"),voiceBanksTableWidgetMenu);
+    auto copyPathAction = new QAction(tr(u8"复制音源路径"),this);
     connect(copyPathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankPathtoClipboard()));
+    copyPathAction->setStatusTip(tr(u8"复制该音源的文件夹路径到剪贴板。"));
     voiceBanksTableWidgetMenu->addAction(copyPathAction);
-    auto copyCharacterPathAction = new QAction(tr(u8"复制character.txt的文件路径"),voiceBanksTableWidgetMenu);
+    auto copyCharacterPathAction = new QAction(tr(u8"复制character.txt的文件路径"),this);
     connect(copyCharacterPathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankCharacterFilePathtoClipboard()));
+    copyPathAction->setStatusTip(tr(u8"复制该音源的character.txt的路径到剪贴板。"));
     voiceBanksTableWidgetMenu->addAction(copyCharacterPathAction);
-    auto copyReadmePathAction = new QAction(tr(u8"复制readme.txt的文件路径"),voiceBanksTableWidgetMenu);
+    auto copyReadmePathAction = new QAction(tr(u8"复制readme.txt的文件路径"),this);
     connect(copyReadmePathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankReadmeFilePathtoClipboard()));
+    copyReadmePathAction->setStatusTip(tr(u8"复制该音源的readme.txt路径到剪贴板。"));
     voiceBanksTableWidgetMenu->addAction(copyReadmePathAction);
     voiceBanksTableWidgetMenu->addSeparator();
-    auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),voiceBanksTableWidgetMenu);
+    auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),this);
     connect(setCodecAction,SIGNAL(triggered(bool)),this,SLOT(setCodecForVoiceBankActionSlot()));
+    setCodecAction->setStatusTip(tr(u8"为该音源设置读取用文本编码。注意，这仅在本软件中有效。"));
     voiceBanksTableWidgetMenu->addAction(setCodecAction);
     voiceBanksTableWidgetMenu->addSeparator();
-    auto reloadAction = new QAction(tr(u8"重载此音源"),voiceBanksTableWidgetMenu);
+    auto reloadAction = new QAction(tr(u8"重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
+    reloadAction->setStatusTip(tr(u8"重新从硬盘加载此音源。"));
     voiceBanksTableWidgetMenu->addAction(reloadAction);
 }
 void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
@@ -346,4 +354,15 @@ void VoiceBankManagerWindow::on_searchLineEdit_textChanged(const QString &arg1)
 void VoiceBankManagerWindow::on_actionExit_triggered()
 {
     qApp->exit();
+}
+
+void VoiceBankManagerWindow::on_actionAbout_triggered()
+{
+    QMessageBox::about(this,tr(u8"关于本程序"),tr(u8R"(<h3>音源管理器</h3><p>版本：%1 作者：shine_5402</p><p>本程序以 Apache 2.0 License 分发。</p><p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p><p>本程序是 <a href="https://github.com/shine5402/LeafOpenUTAUQt">Leaf OpenUTAU Qt Project</a> 的一部分</p><p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>)").arg(version));
+}
+const QString VoiceBankManagerWindow::version = "0.1.1";
+
+void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
+{
+    QMessageBox::aboutQt(this,tr(u8"关于 Qt"));
 }

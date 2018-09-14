@@ -33,8 +33,8 @@ SOURCES += \
     VoiceBankUtils/monitorfolderssettingdialog.cpp \
     VoiceBankUtils/monitorfoldersadddialog.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
-    VoiceBankUtils/availabletextcodecdialog.cpp \
-    ../LeafPublicQtClasses/leaflogger.cpp
+    ../LeafPublicQtClasses/leaflogger.cpp \
+    TextCodecUtils/availabletextcodecdialog.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -46,8 +46,8 @@ HEADERS += \
     VoiceBankUtils/monitorfolderssettingdialog.h \
     VoiceBankUtils/monitorfoldersadddialog.h \
     VoiceBankUtils/textcodecsettingdialog.h \
-    VoiceBankUtils/availabletextcodecdialog.h \
-    ../LeafPublicQtClasses/leaflogger.h
+    ../LeafPublicQtClasses/leaflogger.h \
+    TextCodecUtils/availabletextcodecdialog.h
 
 FORMS += \
         editorwindow.ui \
@@ -56,7 +56,7 @@ FORMS += \
     VoiceBankUtils/monitorfolderssettingdialog.ui \
     VoiceBankUtils/monitorfoldersadddialog.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
-    VoiceBankUtils/availabletextcodecdialog.ui
+    TextCodecUtils/availabletextcodecdialog.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }
