@@ -18,6 +18,9 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     createVoiceBanksTableMenu();
     connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
     ui->voiceBankBriefInfomationWidget->setVisible(false);
+    auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
+    readmeTextBroswerPattle.setBrush(QPalette::Normal,QPalette::Base,readmeTextBroswerPattle.window());
+    ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
 }
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
