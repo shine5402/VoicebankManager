@@ -75,7 +75,7 @@ void VoiceBankManagerWindow::addVoiceBankRowInTableWidget(VoiceBank *voiceBank)
 {
     ui->voiceBanksTableWidget->insertRow(ui->voiceBanksTableWidget->rowCount());
     QTableWidgetItem *newNameItem = new QTableWidgetItem(voiceBank->getName());
-    newNameItem->setIcon(voiceBank->getPixmap());
+    newNameItem->setIcon(QPixmap::fromImage(voiceBank->getImage()));
     ui->voiceBanksTableWidget->setItem(ui->voiceBanksTableWidget->rowCount()-1,TableColumn::Name,newNameItem);
     voiceBankByTableItemFinder.insert(newNameItem,voiceBank);
     QTableWidgetItem *newPathItem = new QTableWidgetItem(voiceBank->getPath());
@@ -88,7 +88,7 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
         ui->voiceBankBriefInfomationWidget->setVisible(true);
     ui->voicebankNameLabel->setText(voiceBank->getName());
-    ui->voicebankImage->setPixmap(voiceBank->getPixmap());
+    ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage()));
     //ui->voicebankReadmeTextBrowser->setText();
     ui->voicebankReadmeTextBrowser->clear();
     if (!voiceBank->getErrors().isEmpty()){
@@ -114,10 +114,10 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
                 break;
             case VoiceBank::ProbablyErrors::ImageFileNotFit:
                 if (errors_it.value()) {
-                    if (voiceBank->getPixmap().isNull())
+                    if (voiceBank->getImage().isNull())
                         ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件没有正常读取。是不是图片格式与后缀名不符？亦或是文件损坏？</p>)"));
                     else
-                        ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（100*100）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getPixmap().width()).arg(voiceBank->getPixmap().height()));
+                        ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（100*100）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getImage().width()).arg(voiceBank->getImage().height()));
                 }
                 break;
             case VoiceBank::ProbablyErrors::ReadmeFileNotExists:
@@ -283,7 +283,7 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
         voiceBank->readFromPathWithoutEmit();
         auto row = ui->voiceBanksTableWidget->currentRow();
         ui->voiceBanksTableWidget->item(row,TableColumn::Name)->setText(voiceBank->getName());
-        ui->voiceBanksTableWidget->item(row,TableColumn::Name)->setIcon(voiceBank->getPixmap());
+        ui->voiceBanksTableWidget->item(row,TableColumn::Name)->setIcon(QPixmap::fromImage(voiceBank->getImage()));
         ui->voiceBanksTableWidget->item(row,TableColumn::Path)->setText(voiceBank->getPath());
         setVoiceBankInfomation(voiceBank);
     }

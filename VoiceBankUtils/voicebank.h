@@ -20,8 +20,8 @@ class VoiceBank : public QObject
 public:
     explicit VoiceBank(QString path,QObject *parent = nullptr);
     ~VoiceBank();
-    QPixmap getPixmap() const;
-    void setImage(const QPixmap &value);
+    QImage getImage() const;
+    void setImage(const QImage &value);
 
     QString getName() const;
     void setName(const QString &value);
@@ -64,7 +64,7 @@ public:
     void setIsFollowDefault(bool value);
     void saveSettings();
 private:
-    QPixmap pixmap;
+    QImage image;
     QString pixmapPath;
     QString name;
     QString readme;
