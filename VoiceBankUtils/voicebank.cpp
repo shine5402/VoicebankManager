@@ -9,14 +9,14 @@ VoiceBank::~VoiceBank()
 {
     saveSettings();
 }
-QPixmap VoiceBank::getPixmap() const
+QImage VoiceBank::getImage() const
 {
-    return pixmap;
+    return image;
 }
 
-void VoiceBank::setImage(const QPixmap &value)
+void VoiceBank::setImage(const QImage &value)
 {
-    pixmap = value;
+    image = value;
 }
 
 QString VoiceBank::getName() const
@@ -217,19 +217,19 @@ void VoiceBank::readCharacterFile()
                 QFileInfo imageFileInfo(pixmapPath);
                 if (imageFileInfo.exists()) {
                     try {
-                        pixmap.load(pixmapPath);
-                        if (pixmap.width() != 100 || pixmap.height() != 100){
+                        image.load(pixmapPath);
+                        if (image.width() != 100 || image.height() != 100){
                             errors.insert(ProbablyErrors::ImageFileNotFit,true);
                         }
                     } catch (std::exception &e){
-                        LeafLogger::LogMessage(QString(u8"程序运行过程中在VoiceBank::readCharacterFile中读取pixmap时发生了一个异常。异常说明为%1").arg(e.what()));
+                        LeafLogger::LogMessage(QString(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
                         errors.insert(ProbablyErrors::PixmapReadException,true);
-                        pixmap = QPixmap();
+                        image = QImage();
                     }
                     catch (...) {
-                        LeafLogger::LogMessage(u8"程序运行过程中在VoiceBank::readCharacterFile中读取pixmap时发生了一个由通用捕捉器捕捉的异常。");
+                        LeafLogger::LogMessage(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
                         errors.insert(ProbablyErrors::PixmapReadException,true);
-                        pixmap = QPixmap();
+                        image = QImage();
                     }
 
                 }
