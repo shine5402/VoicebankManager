@@ -54,3 +54,15 @@ void AvailableTextCodecDialog::on_listWidget_doubleClicked(const QModelIndex &)
 {
     accept();
 }
+void AvailableTextCodecDialog::onAvailbaleCodecButtonClicked(QComboBox* comboBox)
+{
+    auto dialog = new AvailableTextCodecDialog();
+    auto dialogCode = dialog->exec();
+    if (dialogCode == QDialog::Accepted)
+    {
+        auto newCodecString = dialog->getSelectedCodecName();
+        if (QTextCodec::codecForName(newCodecString.toUtf8()) != nullptr)
+            comboBox->setCurrentText(newCodecString);}
+    dialog->deleteLater();
+}
+

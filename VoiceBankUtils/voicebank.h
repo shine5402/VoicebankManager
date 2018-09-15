@@ -14,6 +14,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <../LeafPublicQtClasses/leaflogger.h>
+#include <public_defines.h>
 class VoiceBank : public QObject
 {
     Q_OBJECT
@@ -35,7 +36,7 @@ public:
     void readFromPath();
     QString getCalculateInformation();
     enum ProbablyErrors {
-        CharacterFileNotExists,NameNotSet,ImageFileNotSet,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists,PixmapReadException
+        CharacterFileNotExists,NameNotSet,ImageFileNotSet,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists,PixmapReadException,ReadmeFileCanNotOpen,CharacterFileCanNotOpen
     };
     QHash<ProbablyErrors, bool> getErrors() const;
 
@@ -48,7 +49,11 @@ public:
     void setReadmeTextCodec(QTextCodec *value);
     class FileNotExists : public std::runtime_error{
     public:
-        FileNotExists():std::runtime_error(u8"File not exists"){}
+        FileNotExists():std::runtime_error(u8"File not exists."){}
+    };
+    class FileCanNotOpen : public std::runtime_error{
+    public:
+        FileCanNotOpen():std::runtime_error(u8"File can not open."){}
     };
     static void setDefaultCharacterTextCodec(QTextCodec *value);
 
@@ -77,8 +82,8 @@ private:
     void readCharacterFile();
     void readReadme();
     QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
-    static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName("Shift-JIS");
-    static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName("Shift-JIS");
+    static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
+    static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline bool isReadStaticSettings = false;
     void readSettings();
 

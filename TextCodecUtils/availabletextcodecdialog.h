@@ -5,7 +5,7 @@
 #include <QTextCodec>
 #include <QStringList>
 #include <QClipboard>
-
+#include <QComboBox>
 namespace Ui {
     class AvailableTextCodecDialog;
 }
@@ -19,6 +19,7 @@ public:
     ~AvailableTextCodecDialog();
     QString getSelectedCodecName() const;
 
+    static void onAvailbaleCodecButtonClicked(QComboBox *comboBox);
 private slots:
     void on_lineEdit_textChanged(const QString &arg1);
     void on_actionCopyTextCodec_triggered();

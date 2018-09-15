@@ -36,7 +36,6 @@ private:
     void initUI();
     void setFormInDefault();
     void setFormInNoDefault();
-    void onAvailbaleCodecButtonClicked(QComboBox *comboBox);
 };
 
 #endif // TEXTCODECSETTINGDIALOG_H

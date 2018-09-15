@@ -59,7 +59,7 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
         throw FileNotExists();}
     else
     {
-        file->open(QIODevice::ReadOnly | QIODevice::Text);
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
         auto RawData = file->readAll();
         file->close();
         delete file;
@@ -67,7 +67,13 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
         auto String = decoder->toUnicode(RawData);
         delete decoder;
         return String;
+        }
+        else
+        {
+            LeafLogger::LogMessage(QString(u8"读取%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString()));
+        }
     }
+    return QString();
 }
 
 void VoiceBank::readStaticSettings()
@@ -248,6 +254,10 @@ void VoiceBank::readCharacterFile()
     catch(FileNotExists&){
         errors.insert(ProbablyErrors::CharacterFileNotExists,true);
     }
+    catch(FileCanNotOpen&)
+    {
+        errors.insert(ProbablyErrors::CharacterFileCanNotOpen,true);
+    }
 
 }
 void VoiceBank::readReadme()
@@ -260,6 +270,10 @@ void VoiceBank::readReadme()
     }
     catch(FileNotExists&){
         errors.insert(ProbablyErrors::ReadmeFileNotExists,true);
+    }
+    catch(FileCanNotOpen&)
+    {
+        errors.insert(ProbablyErrors::ReadmeFileCanNotOpen,true);
     }
 }
 void VoiceBank::readFromPathWithoutEmit()

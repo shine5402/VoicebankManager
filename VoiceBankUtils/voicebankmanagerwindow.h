@@ -16,6 +16,9 @@
 #include "monitorfolderssettingdialog.h"
 #include "textcodecsettingdialog.h"
 #include <QSettings>
+#include <public_defines.h>
+#include "TextCodecUtils/textcodecconvertdialog.h"
+#include <QPair>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -31,7 +34,6 @@ public:
     QStringList getMonitorFolders() const;
     void setMonitorFolders(const QStringList &value);
     void readVoiceBanks();
-    const static QString version;
 public slots:
 #ifndef NDEBUG
     void debug_voiceBank_readDone_Slot(VoiceBank *voiceBank);
@@ -62,6 +64,7 @@ private:
     void saveMonitorFoldersSettings();
     void setUIAfterVoiceBanksReadDone();
 
+    QPair<bool, QTextCodec *> processFileTextCodecConvert(const QString &path, QTextCodec *sourceCodec, QTextCodec *targetCodec);
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -83,6 +86,8 @@ private slots:
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
     void on_actionAbout_Qt_triggered();
+    void convertCharacterCodecActionSlot();
+    void convertReadmeCodecActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

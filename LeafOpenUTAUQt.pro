@@ -49,7 +49,8 @@ HEADERS += \
     VoiceBankUtils/textcodecsettingdialog.h \
     ../LeafPublicQtClasses/leaflogger.h \
     TextCodecUtils/availabletextcodecdialog.h \
-    TextCodecUtils/textcodecconvertdialog.h
+    TextCodecUtils/textcodecconvertdialog.h \
+    public_defines.h
 
 FORMS += \
         editorwindow.ui \

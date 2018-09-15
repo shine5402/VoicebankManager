@@ -93,24 +93,13 @@ void TextCodecSettingDialog::on_followDefaultTextCodecCheckBox_stateChanged(int 
     }
 }
 
-void TextCodecSettingDialog::onAvailbaleCodecButtonClicked(QComboBox* comboBox)
-{
-    auto dialog = new AvailableTextCodecDialog();
-    auto dialogCode = dialog->exec();
-    if (dialogCode == QDialog::Accepted)
-    {
-        auto newCodecString = dialog->getSelectedCodecName();
-        if (QTextCodec::codecForName(newCodecString.toUtf8()) != nullptr)
-            comboBox->setCurrentText(newCodecString);}
-    dialog->deleteLater();
-}
 
 void TextCodecSettingDialog::on_availableCodecButton_Character_clicked()
 {
-    onAvailbaleCodecButtonClicked(ui->characterTxtComboBox);
+    AvailableTextCodecDialog::onAvailbaleCodecButtonClicked(ui->characterTxtComboBox);
 }
 
 void TextCodecSettingDialog::on_availableCodecButton_Readme_clicked()
 {
-    onAvailbaleCodecButtonClicked(ui->readmeTxtComboBox);
+    AvailableTextCodecDialog::onAvailbaleCodecButtonClicked(ui->readmeTxtComboBox);
 }

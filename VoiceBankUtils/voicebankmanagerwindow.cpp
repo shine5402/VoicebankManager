@@ -128,6 +128,14 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
                 if (errors_it.value())
                     ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：在读取音源图片时发生了一个异常。或许重载此音源能解决这个问题。</p>)"));
                 break;
+            case VoiceBank::ProbablyErrors::CharacterFileCanNotOpen:
+                if (errors_it.value())
+                    ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：无法打开character.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。</p>)"));
+                break;
+            case VoiceBank::ProbablyErrors::ReadmeFileCanNotOpen:
+                if (errors_it.value())
+                    ui->voicebankReadmeTextBrowser->append(tr(u8R"(<p style="color:red">错误：无法打开readme.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。</p>)"));
+                break;
             }
             ++errors_it;
         }
@@ -191,37 +199,58 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     connect(openPathAction,SIGNAL(triggered(bool)),this,SLOT(openVoiceBankPathInExplorer()));
     openPathAction->setStatusTip(tr(u8"在资源管理器中打开该音源的文件夹。"));
     voiceBanksTableWidgetMenu->addAction(openPathAction);
+
     auto openCharacterAction = new QAction(tr(u8"打开character.txt"),this);
     connect(openCharacterAction,SIGNAL(triggered(bool)),this,SLOT(openVoiceBankCharacterFileByOS()));
     openCharacterAction->setStatusTip(tr(u8"在系统关联的文本编辑器中打开该音源的character.txt。"));
     voiceBanksTableWidgetMenu->addAction(openCharacterAction);
+
     auto openReadmeAction = new QAction(tr(u8"打开readme.txt"),this);
     connect(openReadmeAction,SIGNAL(triggered(bool)),this,SLOT(openVoiceBankReadmeFileByOS()));
     openReadmeAction->setStatusTip(tr(u8"在系统关联的文本编辑器中打开该音源的readme.txt。"));
     voiceBanksTableWidgetMenu->addAction(openReadmeAction);
+
     voiceBanksTableWidgetMenu->addSeparator();
+
     auto copyPathAction = new QAction(tr(u8"复制音源路径"),this);
     connect(copyPathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankPathtoClipboard()));
     copyPathAction->setStatusTip(tr(u8"复制该音源的文件夹路径到剪贴板。"));
     voiceBanksTableWidgetMenu->addAction(copyPathAction);
+
     auto copyCharacterPathAction = new QAction(tr(u8"复制character.txt的文件路径"),this);
     connect(copyCharacterPathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankCharacterFilePathtoClipboard()));
     copyPathAction->setStatusTip(tr(u8"复制该音源的character.txt的路径到剪贴板。"));
     voiceBanksTableWidgetMenu->addAction(copyCharacterPathAction);
+
     auto copyReadmePathAction = new QAction(tr(u8"复制readme.txt的文件路径"),this);
     connect(copyReadmePathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankReadmeFilePathtoClipboard()));
     copyReadmePathAction->setStatusTip(tr(u8"复制该音源的readme.txt路径到剪贴板。"));
     voiceBanksTableWidgetMenu->addAction(copyReadmePathAction);
+
     voiceBanksTableWidgetMenu->addSeparator();
+
     auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),this);
     connect(setCodecAction,SIGNAL(triggered(bool)),this,SLOT(setCodecForVoiceBankActionSlot()));
     setCodecAction->setStatusTip(tr(u8"为该音源设置读取用文本编码。注意，这仅在本软件中有效。"));
     voiceBanksTableWidgetMenu->addAction(setCodecAction);
+
+    auto convertCharacterCodecAction = new QAction(tr(u8"对character.txt进行编码转换"),this);
+    connect(convertCharacterCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertCharacterCodecActionSlot()));//TODO
+    convertCharacterCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源character.txt的编码。"));
+    voiceBanksTableWidgetMenu->addAction(convertCharacterCodecAction);
+
+    auto convertReadmeCodecAction = new QAction(tr(u8"对readme.txt进行编码转换"),this);
+    connect(convertReadmeCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertReadmeCodecActionSlot()));//TODO
+    convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源readme.txt的编码。"));
+    voiceBanksTableWidgetMenu->addAction(convertReadmeCodecAction);
+
     voiceBanksTableWidgetMenu->addSeparator();
+
     auto reloadAction = new QAction(tr(u8"重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
     reloadAction->setStatusTip(tr(u8"重新从硬盘加载此音源。"));
     voiceBanksTableWidgetMenu->addAction(reloadAction);
+
 }
 void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
 {
@@ -277,6 +306,93 @@ void VoiceBankManagerWindow::setCodecForVoiceBankActionSlot(){
         }
     }
 }
+void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
+    auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
+    if (voiceBank){
+        auto path = voiceBank->getPath() + u8"character.txt";
+        auto isDone = processFileTextCodecConvert(path,voiceBank->getCharacterTextCodec(),VoiceBank::getDefaultCharacterTextCodec());
+        if (isDone.first)
+        {
+            voiceBank->setIsFollowDefault(false);
+            voiceBank->setCharacterTextCodec(isDone.second);
+            voiceBank->saveSettings();
+            reloadVoiceBankActionSlot();
+        }
+    }
+}
+void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
+    auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
+    if (voiceBank){
+        auto path = voiceBank->getPath() + u8"readme.txt";
+        auto isDone = processFileTextCodecConvert(path,voiceBank->getReadmeTextCodec(),VoiceBank::getDefaultReadmeTextCodec());
+        if (isDone.first)
+        {
+            voiceBank->setIsFollowDefault(false);
+            voiceBank->setReadmeTextCodec(isDone.second);
+            voiceBank->saveSettings();
+            reloadVoiceBankActionSlot();
+        }
+    }
+}
+QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(const QString& path,QTextCodec* sourceCodec,QTextCodec* targetCodec){
+    bool isDone = false;
+    auto dialog = new TextCodecConvertDialog(this);
+    QFile* file = new QFile(path);
+    if (!file->exists()){
+        delete file;
+        QMessageBox::warning(this,tr(u8"文件不存在"),tr(u8"文件%1不存在").arg(path));
+        return QPair<bool,QTextCodec*>(false,nullptr);}
+    QByteArray rawData;
+    if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
+        rawData = file->readAll();
+        file->close();}
+    dialog->setSource(rawData);
+    dialog->setSourceTextCodec(sourceCodec);
+    dialog->setTargetTextCodec(targetCodec);
+    dialog->setShownFileName(path);
+    auto dialogCode = dialog->exec();
+    if (dialogCode == QDialog::Accepted){
+        auto infoDialogCode = QMessageBox::information(this,tr(u8"即将执行编码转换"),tr(u8R"(<h3>程序即将对%1执行编码转换（%2 -> %3）</h3>
+                                                                              <p>在您单击确定后，程序将会把转换后的结果保存至%1。</p>
+                                                                              <p>但是，程序有必要提醒您编码转换的<b>风险</b>：由于源编码和目标编码间的可能的映射不对等关系，这种转换可能<b>不可逆</b>，并且可能使您<b>丢失数据</b>！</p>
+                                                                              <p>出于安全考虑，程序将保存一份源文件的备份副本（%1.bak），以便出现问题时您可以手动恢复。</p>
+                                                                              <p>确定要执行转换吗？</p>)").arg(path).arg(QString::fromUtf8(dialog->getSourceCodec()->name())).arg(QString::fromUtf8(dialog->getTargetCodec()->name())),QMessageBox::Ok | QMessageBox::Cancel);
+        if (infoDialogCode == QMessageBox::Ok){
+            QFile bakFile(path + u8".bak");
+            if (bakFile.exists())
+                bakFile.remove();
+            if (file->copy(path + u8".bak")){
+                if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
+                    auto fileWriteCode = file->write(dialog->getEncodedTargetByteArray());
+                    if (fileWriteCode == -1){
+                        QMessageBox::critical(this,tr(u8"转换失败"),tr(u8R"(<h3>程序无法对%1进行写入</h3>
+                                                                   <p>在写入时出现错误。Qt提供的错误描述为%2。</p>
+                                                                   <p>文件应该没有被修改。</p>)").arg(path).arg(file->errorString()));
+                    }
+                    else
+                    {
+                        QMessageBox::information(this,tr(u8"转换成功"),tr(u8R"(<h3>文件编码转换完成</h3>
+                                                                      <p>程序将自动修改该文件的读取用文本编码，之后将实施重载。</p>)"));
+                        isDone = true;
+                    }
+                    file->close();
+                }
+            }
+            else
+            {
+                QMessageBox::critical(this,tr(u8"无法备份%1").arg(path + u8".bak"),tr(u8R"(<h3>程序无法对%1进行备份</h3>
+                                                                                <p>在备份时出现错误。Qt提供的错误说明为：%2</p>
+                                                                                <p>你仍可以令程序继续转换，但是之前提到的<b>风险</b>仍然存在，且出现问题时您无法恢复。</p>
+                                                                                <p>确定要继续转换吗？</p>)").arg(path).arg(file->errorString()));
+            }
+        }
+    }
+    if (file->isOpen())
+        file->close();
+    delete file;
+    dialog->deleteLater();
+    return QPair<bool,QTextCodec*>(isDone,dialog->getTargetCodec());
+}
 void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
@@ -312,7 +428,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
 {
     auto dialog = new TextCodecSettingDialog(this);
     auto dialogCode = dialog->exec();
-    if (dialogCode == 1){
+    if (dialogCode == QDialog::Accepted){
         VoiceBank::setDefaultCharacterTextCodec(dialog->getCharacterTextCodec());
         VoiceBank::setDefaultReadmeTextCodec(dialog->getReadmeTextCodec());
         auto clickedButton = QMessageBox::information(this,u8"默认文本读取编码被更改",u8"您更改了默认的读取用文本编码，是否立即重载音源库列表？",QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
@@ -358,9 +474,8 @@ void VoiceBankManagerWindow::on_actionExit_triggered()
 
 void VoiceBankManagerWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this,tr(u8"关于本程序"),tr(u8R"(<h3>音源管理器</h3><p>版本：%1 作者：shine_5402</p><p>本程序以 Apache 2.0 License 分发。</p><p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p><p>本程序是 <a href="https://github.com/shine5402/LeafOpenUTAUQt">Leaf OpenUTAU Qt Project</a> 的一部分</p><p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>)").arg(version));
+    QMessageBox::about(this,tr(u8"关于本程序"),tr(u8R"(<h3>音源管理器</h3><p>版本：%1 作者：shine_5402</p><p>本程序以 Apache 2.0 License 分发。</p><p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p><p>本程序是 <a href="https://github.com/shine5402/LeafOpenUTAUQt">Leaf OpenUTAU Qt Project</a> 的一部分</p><p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>)").arg(voicebankManagerVersion));
 }
-const QString VoiceBankManagerWindow::version = "0.1.1";
 
 void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
 {
