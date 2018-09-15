@@ -149,10 +149,12 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 void VoiceBankManagerWindow::readVoiceBanks(){
     auto pathList = getFoldersInMonitorFolders();
     voiceBankPathsCount = pathList.count();
+    LeafLogger::LogMessage(QString(u8"准备读取音源库。共有%1个文件夹待读取。").arg(pathList.count()));
     if (voiceBankPathsCount == 0)
         setUIAfterVoiceBanksReadDone();
     else{
         for (auto path : pathList){
+            LeafLogger::LogMessage(QString(u8"添加%1到音源Handler。").arg(path));
             voiceBankHandler->addVoiceBank(path);
         }
     }
@@ -174,6 +176,8 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     if (++voiceBankReadDoneCount == voiceBankPathsCount){
         setUIAfterVoiceBanksReadDone();
     }
+    qApp->processEvents();
+    LeafLogger::LogMessage(QString(u8"读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()

@@ -55,6 +55,7 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
 {
     QFile* file = new QFile(path);
     if (!file->exists()){
+        LeafLogger::LogMessage(QString(u8"%1不存在。").arg(file->fileName()));
         delete file;
         throw FileNotExists();}
     else
@@ -192,6 +193,7 @@ void VoiceBank::setDefaultReadmeTextCodec(QTextCodec *value)
     DefaultReadmeTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/ReadmeFile",DefaultReadmeTextCodec->name());
+    LeafLogger::LogMessage(QString(u8"DefaultReadmeTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
 }
 
 void VoiceBank::setDefaultCharacterTextCodec(QTextCodec *value)
@@ -199,6 +201,7 @@ void VoiceBank::setDefaultCharacterTextCodec(QTextCodec *value)
     DefaultCharacterTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/CharacterFile",DefaultCharacterTextCodec->name());
+    LeafLogger::LogMessage(QString(u8"DefaultCharacterTextCodec被设置为%1").arg(QString::fromUtf8(DefaultCharacterTextCodec->name())));
 }
 
 void VoiceBank::readCharacterFile()
@@ -210,13 +213,15 @@ void VoiceBank::readCharacterFile()
             characterString = readTextFileInTextCodec(path + u8"character.txt",CharacterTextCodec);
         else
             characterString = readTextFileInTextCodec(path + u8"character.txt",DefaultCharacterTextCodec);
+        LeafLogger::LogMessage(QString(u8"%1的character.txt被成功读取至characterString。").arg(path));
         auto characterList = characterString.split("\n",QString::SplitBehavior::SkipEmptyParts);
         for (auto i : characterList){
             i = i.trimmed();
             auto list = i.split("=",QString::SplitBehavior::SkipEmptyParts);
-
-            if (list.at(0).compare(u8"name",Qt::CaseInsensitive) == 0)
+            if (list.at(0).compare(u8"name",Qt::CaseInsensitive) == 0){
                 name = list.at(1);
+                LeafLogger::LogMessage(QString(u8"%1的name为%2").arg(path).arg(name));
+            }
             if (list.at(0).compare(u8"image",Qt::CaseInsensitive) == 0)
             {
                 pixmapPath = path + list.at(1);
@@ -224,6 +229,7 @@ void VoiceBank::readCharacterFile()
                 if (imageFileInfo.exists()) {
                     try {
                         image.load(pixmapPath);
+                        LeafLogger::LogMessage(QString(u8"%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
                         if (image.width() != 100 || image.height() != 100){
                             errors.insert(ProbablyErrors::ImageFileNotFit,true);
                         }
@@ -242,21 +248,27 @@ void VoiceBank::readCharacterFile()
                 else
                 {
                     errors.insert(ProbablyErrors::ImageFileNotExists,true);
+                    LeafLogger::LogMessage(QString(u8"%1的音源图片文件不存在。").arg(path));
                 }
 
             }
         }
-        if (name.isEmpty())
+        if (name.isEmpty()){
             errors.insert(ProbablyErrors::NameNotSet,true);
-        if (pixmapPath.isEmpty())
+            LeafLogger::LogMessage(QString(u8"%1的音源的name字段不存在。").arg(path));
+        }
+        if (pixmapPath.isEmpty()){
             errors.insert(ProbablyErrors::ImageFileNotSet,true);
+        LeafLogger::LogMessage(QString(u8"%1的音源的image字段不存在。").arg(path));}
     }
     catch(FileNotExists&){
         errors.insert(ProbablyErrors::CharacterFileNotExists,true);
+        LeafLogger::LogMessage(QString(u8"%1的音源的character.txt不存在。").arg(path));
     }
     catch(FileCanNotOpen&)
     {
         errors.insert(ProbablyErrors::CharacterFileCanNotOpen,true);
+        LeafLogger::LogMessage(QString(u8"%1的音源的character.txt无法打开。").arg(path));
     }
 
 }
@@ -267,13 +279,16 @@ void VoiceBank::readReadme()
             readme = readTextFileInTextCodec(path + u8"readme.txt",ReadmeTextCodec);
         else
             readme = readTextFileInTextCodec(path + u8"readme.txt",DefaultReadmeTextCodec);
+        LeafLogger::LogMessage(QString(u8"%1的readme.txt被成功读取至readmeString。").arg(path));
     }
     catch(FileNotExists&){
         errors.insert(ProbablyErrors::ReadmeFileNotExists,true);
+        LeafLogger::LogMessage(QString(u8"%1的音源的readme.txt不存在。").arg(path));
     }
     catch(FileCanNotOpen&)
     {
         errors.insert(ProbablyErrors::ReadmeFileCanNotOpen,true);
+        LeafLogger::LogMessage(QString(u8"%1的音源的readme.txt无法打开。").arg(path));
     }
 }
 void VoiceBank::readFromPathWithoutEmit()

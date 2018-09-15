@@ -14,8 +14,10 @@ public:
     VoiceBank* addVoiceBank(QString& path){
         auto newVoiceBank = new VoiceBank(path,this);
         auto newReadThread = QThread::create([=]{newVoiceBank->readFromPath();});
+        LeafLogger::LogMessage(QString(u8"为%1建立了一个新线程。").arg(path));
         connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
         newReadThread->start();
+        LeafLogger::LogMessage(QString(u8"%1的读取线程启动。").arg(path));
         addVoiceBank(newVoiceBank);
         return newVoiceBank;
     }
