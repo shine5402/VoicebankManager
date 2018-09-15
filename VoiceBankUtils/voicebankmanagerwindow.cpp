@@ -161,8 +161,9 @@ void VoiceBankManagerWindow::readVoiceBanks(){
 void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 {
     ui->voiceBanksTableWidget->setEnabled(true);
-    if (voiceBankHandler->count() != 0)
+    if (voiceBankHandler->count() != 0){
         ui->voicebankCountLabel->setText(tr(u8"共 %1 个").arg(voiceBankHandler->count()));
+    ui->voiceBanksTableWidget->sortItems(TableColumn::Name);}
     else
         ui->voicebankCountLabel->setText(tr(u8"没有音源。"));
     ui->voiceBankBriefInfomationWidget->setVisible(false);
