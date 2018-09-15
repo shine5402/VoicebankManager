@@ -3,6 +3,7 @@
 VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 {
     VoiceBank::readStaticSettings();
+    threadPool->setMaxThreadCount(50);//TODO:提供设置
 }
 
 QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
@@ -16,4 +17,13 @@ void VoiceBankHandler::clear()
         item->deleteLater();
     }
     voiceBanks.clear();
+}
+
+VoiceBankHandler::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank *voicebank):QRunnable(),voicebank(voicebank)
+{
+}
+
+void VoiceBankHandler::VoiceBankReadFuctionRunner::run()
+{
+    voicebank->readFromPath();
 }

@@ -157,6 +157,7 @@ void VoiceBankManagerWindow::readVoiceBanks(){
             LeafLogger::LogMessage(QString(u8"添加%1到音源Handler。").arg(path));
             voiceBankHandler->addVoiceBank(path);
         }
+        //TODO
     }
     
 }

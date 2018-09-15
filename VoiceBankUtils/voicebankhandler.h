@@ -4,6 +4,7 @@
 #include <QObject>
 #include "voicebank.h"
 #include <QThread>
+#include <QThreadPool>
 class VoiceBankHandler : public QObject
 {
     Q_OBJECT
@@ -13,11 +14,13 @@ public:
 
     VoiceBank* addVoiceBank(QString& path){
         auto newVoiceBank = new VoiceBank(path,this);
-        auto newReadThread = QThread::create([=]{newVoiceBank->readFromPath();});
-        LeafLogger::LogMessage(QString(u8"为%1建立了一个新线程。").arg(path));
+        //auto newReadThread = QThread::create([=]{newVoiceBank->readFromPath();});
+        //LeafLogger::LogMessage(QString(u8"为%1建立了一个新线程。").arg(path));
         connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
-        newReadThread->start();
-        LeafLogger::LogMessage(QString(u8"%1的读取线程启动。").arg(path));
+        auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(newVoiceBank);
+        //newReadThread->start();
+        threadPool->start(newVoiceBankReadFunctionRunner);
+        LeafLogger::LogMessage(QString(u8"%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
         addVoiceBank(newVoiceBank);
         return newVoiceBank;
     }
@@ -28,11 +31,20 @@ public:
         return voiceBanks.value(id);
     }
     void clear();
+    class VoiceBankReadFuctionRunner : public QRunnable{
+    public:
+        VoiceBankReadFuctionRunner(VoiceBank* voicebank);
+        void run() override;
+    private:
+        VoiceBank* voicebank;
+    };
+
 private:
     QList<VoiceBank *> voiceBanks{};
     void addVoiceBank(VoiceBank * newVoiceBank){
         voiceBanks.append(newVoiceBank);
     }
+    QThreadPool* threadPool = new QThreadPool(this);
 private slots:
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
