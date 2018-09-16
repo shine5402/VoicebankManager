@@ -14,13 +14,13 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 #endif
     ui->voiceBanksTableWidget->setItemDelegate(new NoFocusDelegate());
     loadMonitorFoldersSettings();
-    loadVoiceBanksList();
     createVoiceBanksTableMenu();
     connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
     ui->voiceBankBriefInfomationWidget->setVisible(false);
     auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
     readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
     ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
+    //loadVoiceBanksList();
 }
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
@@ -31,7 +31,8 @@ void VoiceBankManagerWindow::loadVoiceBanksList()
     voiceBankByTableItemFinder.clear();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableWidget->setEnabled(false);
-    ui->voicebankCountLabel->setText(tr(u8"加载中……"));
+    ui->voicebankCountLabel->setText(tr(u8"加载中"));
+    ui->voiceBanksTableWidget->setSortingEnabled(false);
     readVoiceBanks();
     
 }
@@ -83,6 +84,7 @@ void VoiceBankManagerWindow::addVoiceBankRowInTableWidget(VoiceBank *voiceBank)
     voiceBankByTableItemFinder.insert(newNameItem,voiceBank);
     QTableWidgetItem *newPathItem = new QTableWidgetItem(voiceBank->getPath());
     ui->voiceBanksTableWidget->setItem(ui->voiceBanksTableWidget->rowCount()-1,TableColumn::Path,newPathItem);
+    LeafLogger::LogMessage(QString(u8"设置后的路径Item项的内容为%1").arg(ui->voiceBanksTableWidget->item(ui->voiceBanksTableWidget->rowCount()-1,TableColumn::Path)->text()));
     voiceBankByTableItemFinder.insert(newPathItem,voiceBank);
 }
 
@@ -166,10 +168,12 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
     ui->voiceBanksTableWidget->setEnabled(true);
     if (voiceBankHandler->count() != 0){
         ui->voicebankCountLabel->setText(tr(u8"共 %1 个").arg(voiceBankHandler->count()));
+        ui->voiceBanksTableWidget->setSortingEnabled(true);
     ui->voiceBanksTableWidget->sortItems(TableColumn::Name);}
     else
         ui->voicebankCountLabel->setText(tr(u8"没有音源。"));
     ui->voiceBankBriefInfomationWidget->setVisible(false);
+    ui->voiceBanksTableWidget->repaint();
 }
 
 void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
@@ -177,13 +181,17 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     if (++voiceBankReadDoneCount == voiceBankPathsCount){
         setUIAfterVoiceBanksReadDone();
     }
-    qApp->processEvents();
+//    else
+//    {
+//       ui->voicebankCountLabel->setText(tr(u8"已完成%1个/共%2个").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
+//        ui->voicebankCountLabel->repaint();
+//    }
     LeafLogger::LogMessage(QString(u8"读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    qDebug() << "debug";
+
 }
 
 void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *voiceBank){
@@ -489,4 +497,12 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
 void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
 {
     QMessageBox::aboutQt(this,tr(u8"关于 Qt"));
+}
+
+void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
+{
+    bool ok = false;
+    auto count = QInputDialog::getInt(this,tr(u8"设定线程池的最大大小"),tr(u8"该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),voiceBankHandler->getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
+    if (ok)
+        voiceBankHandler->setThreadPoolMaxThreadCount(count);
 }

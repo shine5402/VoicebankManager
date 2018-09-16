@@ -19,6 +19,7 @@
 #include <public_defines.h>
 #include "TextCodecUtils/textcodecconvertdialog.h"
 #include <QPair>
+#include <QInputDialog>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -34,6 +35,7 @@ public:
     QStringList getMonitorFolders() const;
     void setMonitorFolders(const QStringList &value);
     void readVoiceBanks();
+    void loadVoiceBanksList();
 public slots:
 #ifndef NDEBUG
     void debug_voiceBank_readDone_Slot(VoiceBank *voiceBank);
@@ -57,9 +59,6 @@ private:
     QHash<QTableWidgetItem*,VoiceBank*> voiceBankByTableItemFinder;
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
     void createVoiceBanksTableMenu();
-
-    void loadVoiceBanksList();
-    
     void loadMonitorFoldersSettings();
     void saveMonitorFoldersSettings();
     void setUIAfterVoiceBanksReadDone();
@@ -88,6 +87,7 @@ private slots:
     void on_actionAbout_Qt_triggered();
     void convertCharacterCodecActionSlot();
     void convertReadmeCodecActionSlot();
+    void on_actionSet_Thread_Pool_Max_Count_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

@@ -22,10 +22,10 @@ int main(int argc, char *argv[])
     EditorWindow w;
     w.show();
 #endif
-//TODO: Log看起来不能正常保存
 #ifdef VOICEBANK_MANAGER_ONLY
     VoiceBankManagerWindow v;
     v.show();
+    v.loadVoiceBanksList();
 #endif
     return a.exec();
 }

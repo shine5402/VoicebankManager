@@ -218,6 +218,7 @@
     </property>
     <addaction name="actionMonitor_Folders"/>
     <addaction name="actionDefault_TextCodec"/>
+    <addaction name="actionSet_Thread_Pool_Max_Count"/>
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
@@ -314,6 +315,17 @@
    </property>
    <property name="statusTip">
     <string>关于本程序使用的 Qt 框架</string>
+   </property>
+  </action>
+  <action name="actionSet_Thread_Pool_Max_Count">
+   <property name="text">
+    <string>设置读取用线程池的最大大小...</string>
+   </property>
+   <property name="toolTip">
+    <string>（高级）改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。</string>
+   </property>
+   <property name="statusTip">
+    <string>（高级）改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。</string>
    </property>
   </action>
  </widget>

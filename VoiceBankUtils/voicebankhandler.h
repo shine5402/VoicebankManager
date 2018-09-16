@@ -10,6 +10,7 @@ class VoiceBankHandler : public QObject
     Q_OBJECT
 public:
     explicit VoiceBankHandler(QObject *parent = nullptr);
+    ~VoiceBankHandler();
     QList<VoiceBank *> getVoiceBanks() const;
 
     VoiceBank* addVoiceBank(QString& path){
@@ -38,13 +39,18 @@ public:
     private:
         VoiceBank* voicebank;
     };
-
+    void setThreadPoolMaxThreadCount(int maxCount);
+    int getThreadPoolMaxThreadCount() const{
+        return threadPool->maxThreadCount();
+    }
 private:
     QList<VoiceBank *> voiceBanks{};
     void addVoiceBank(VoiceBank * newVoiceBank){
         voiceBanks.append(newVoiceBank);
     }
     QThreadPool* threadPool = new QThreadPool(this);
+    void readThreadPoolMaxThreadCountSettings();
+    void saveThreadPoolMaxThreadCountSettings();
 private slots:
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
