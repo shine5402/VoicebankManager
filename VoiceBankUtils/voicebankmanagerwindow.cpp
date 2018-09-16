@@ -265,6 +265,11 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源readme.txt的编码。"));
     voiceBanksTableWidgetMenu->addAction(convertReadmeCodecAction);
 
+    auto convertWavFileNameCodecAction = new QAction(tr(u8"对readme.txt进行编码转换"),this);
+    connect(convertWavFileNameCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertWavFileNameCodecActionSlot()));//TODO
+    convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源readme.txt的编码。"));
+    voiceBanksTableWidgetMenu->addAction(convertWavFileNameCodecAction);
+
     voiceBanksTableWidgetMenu->addSeparator();
 
     auto reloadAction = new QAction(tr(u8"重载此音源"),this);
@@ -352,6 +357,21 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
             voiceBank->setReadmeTextCodec(isDone.second);
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
+        }
+    }
+}
+void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
+    auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
+    if (voiceBank){
+        auto showString = voiceBank->getWavFileNameRaw().join("\n");
+        auto dialog = new TextCodecConvertDialog(this);
+        dialog->setShownFileName(tr(u8"%1的WAV文件名").arg(voiceBank->getName()));
+        dialog->setSource(showString);
+        dialog->setSourceTextCodec(voiceBank->getWavFileNameTextCodec());
+        dialog->setTargetTextCodec(QTextCodec::codecForLocale());
+        auto dialogCode = dialog->exec();
+        if (dialogCode == QDialog::Accepted){
+
         }
     }
 }

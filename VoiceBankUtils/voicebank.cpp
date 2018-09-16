@@ -92,6 +92,7 @@ void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
 
 void VoiceBank::readWavFileName()
 {
+    if (!isWavFileNameReaded){
     wavFileName.clear();
     wavFileNameReDecoded.clear();
     QDir dir(path);
@@ -111,8 +112,11 @@ void VoiceBank::readWavFileName()
         QTextDecoder decoder(wavFileNameTextCodec);
         for (auto name : wavFileName)
         {
-            wavFileNameReDecoded.insert(encoder.fromUnicode(name),decoder.toUnicode(name.toLocal8Bit()));
+            auto raw = encoder.fromUnicode(name);
+            wavFileNameRaw.append(raw);
+            wavFileNameReDecoded.insert(raw,decoder.toUnicode(name.toLocal8Bit()));
         }
+    }
     }
 }
 
@@ -228,6 +232,21 @@ void VoiceBank::readSettings(){
     catch(FileNotExists&){
         LeafLogger::LogMessage(QString(u8"声库%1的设置json不存在。").arg(path));
     }
+}
+
+QByteArrayList VoiceBank::getWavFileNameRaw() const
+{
+    return wavFileNameRaw;
+}
+
+QHash<QString, QString> VoiceBank::getWavFileNameReDecoded() const
+{
+    return wavFileNameReDecoded;
+}
+
+QStringList VoiceBank::getWavFileName() const
+{
+    return wavFileName;
 }
 
 bool VoiceBank::getIsWavFileNameReaded() const
@@ -377,6 +396,9 @@ void VoiceBank::readFromPathWithoutEmit()
         path.append(u8"/");
     }
     errors.clear();
+    isWavFileNameReaded = false;
+    wavFileName.clear();
+    wavFileNameReDecoded.clear();
     readSettings();
     readCharacterFile();
     readReadme();

@@ -88,6 +88,7 @@ private slots:
     void convertCharacterCodecActionSlot();
     void convertReadmeCodecActionSlot();
     void on_actionSet_Thread_Pool_Max_Count_triggered();
+    void convertWavFileNameCodecActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

@@ -77,6 +77,12 @@ public:
     QTextCodec *getWavFileNameTextCodec() const;
     void setWavFileNameTextCodec(QTextCodec *value);
 
+    QStringList getWavFileName() const;
+
+    QHash<QString, QString> getWavFileNameReDecoded() const;
+
+    QByteArrayList getWavFileNameRaw() const;
+
 private:
     QImage image;
     QString pixmapPath;
@@ -100,6 +106,7 @@ private:
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
     QHash<QString, QString> wavFileNameReDecoded{};
+    QByteArrayList wavFileNameRaw{};
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);
