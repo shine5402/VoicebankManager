@@ -56,7 +56,6 @@ public:
         FileCanNotOpen():std::runtime_error(u8"File can not open."){}
     };
     static void setDefaultCharacterTextCodec(QTextCodec *value);
-
     static void setDefaultReadmeTextCodec(QTextCodec *value);
 
     static QTextCodec *getDefaultCharacterTextCodec();
@@ -68,6 +67,16 @@ public:
     bool getIsFollowDefault() const;
     void setIsFollowDefault(bool value);
     void saveSettings();
+    bool getIsWavFileNameReaded() const;
+
+    static QTextCodec *getDefaultWavFileNameTextCodec();
+    static void setDefaultWavFileNameTextCodec(QTextCodec *value);
+
+    void readWavFileName();
+
+    QTextCodec *getWavFileNameTextCodec() const;
+    void setWavFileNameTextCodec(QTextCodec *value);
+
 private:
     QImage image;
     QString pixmapPath;
@@ -77,6 +86,7 @@ private:
     QString calculateInformation;
     QTextCodec *CharacterTextCodec;
     QTextCodec *ReadmeTextCodec;
+    QTextCodec *wavFileNameTextCodec;
     bool isTextCodecFollowDefault = true;
     QHash<ProbablyErrors,bool>errors{};
     void readCharacterFile();
@@ -84,9 +94,12 @@ private:
     QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
     static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
+    static inline QTextCodec *DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline bool isReadStaticSettings = false;
     void readSettings();
-
+    bool isWavFileNameReaded = false;
+    QStringList wavFileName{};
+    QHash<QString, QString> wavFileNameReDecoded{};
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);

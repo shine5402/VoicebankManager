@@ -1,6 +1,6 @@
 ﻿#include "voicebank.h"
 
-VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path),CharacterTextCodec(DefaultCharacterTextCodec),ReadmeTextCodec(DefaultReadmeTextCodec)
+VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path),CharacterTextCodec(DefaultCharacterTextCodec),ReadmeTextCodec(DefaultReadmeTextCodec),wavFileNameTextCodec(DefaultWavFileNameTextCodec)
 {
 
 }
@@ -77,6 +77,59 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
     return QString();
 }
 
+QTextCodec *VoiceBank::getDefaultWavFileNameTextCodec()
+{
+    return DefaultWavFileNameTextCodec;
+}
+
+void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
+{
+    DefaultWavFileNameTextCodec = value;
+    QSettings settings{};
+    settings.setValue("DefaultTextCodec/WavFileName",DefaultReadmeTextCodec->name());
+    LeafLogger::LogMessage(QString(u8"DefaultWavFileNameNameTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
+}
+
+void VoiceBank::readWavFileName()
+{
+    wavFileName.clear();
+    wavFileNameReDecoded.clear();
+    QDir dir(path);
+    wavFileName.append(dir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+    auto subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    if (!subdirs.isEmpty())
+    {
+        for (auto subDirPath : subdirs)
+        {
+            QDir subdir(path + subDirPath);
+            wavFileName.append(subdir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+        }
+    }
+    if (!wavFileName.isEmpty())
+    {
+        QTextEncoder encoder(QTextCodec::codecForLocale());
+        QTextDecoder decoder(wavFileNameTextCodec);
+        for (auto name : wavFileName)
+        {
+            wavFileNameReDecoded.insert(encoder.fromUnicode(name),decoder.toUnicode(name.toLocal8Bit()));
+        }
+    }
+}
+
+QTextCodec *VoiceBank::getWavFileNameTextCodec() const
+{
+    return wavFileNameTextCodec;
+}
+
+void VoiceBank::setWavFileNameTextCodec(QTextCodec *value)
+{
+    if (value){
+        wavFileNameTextCodec = value;
+    }
+    else
+        wavFileNameTextCodec = DefaultCharacterTextCodec;
+}
+
 void VoiceBank::readStaticSettings()
 {
     if (!isReadStaticSettings){
@@ -89,6 +142,10 @@ void VoiceBank::readStaticSettings()
 
         if (settings.contains("DefaultTextCodec/ReadmeFile")){
             auto readmeCodecName = settings.value("DefaultTextCodec/ReadmeFile");
+            DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
+        }
+        if (settings.contains("DefaultTextCodec/WavFileName")){
+            auto readmeCodecName = settings.value("DefaultTextCodec/WavFileName");
             DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
         }
         isReadStaticSettings = true;
@@ -142,6 +199,21 @@ void VoiceBank::readSettings(){
             }
             else
                 LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/ReadmeFile不存在。").arg(path));
+            if (json.contains(u8"TextCodec/WavFileName"))
+            {
+
+                auto value = json.value(u8"TextCodec/WavFileName");
+                if (value.isString()){
+                    auto value_string = value.toString();
+                    setWavFileNameTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                }
+                else
+                {
+                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/WavFileName不是String。").arg(path));
+                }
+            }
+            else
+                LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/WavFileName不存在。").arg(path));
         }
         else
         {
@@ -158,6 +230,12 @@ void VoiceBank::readSettings(){
     }
 }
 
+bool VoiceBank::getIsWavFileNameReaded() const
+{
+    return isWavFileNameReaded;
+}
+
+
 void VoiceBank::saveSettings(){
     LeafLogger::LogMessage(QString(u8"开始保存%1的声库单独设置。").arg(path));
     QJsonObject json;
@@ -168,6 +246,7 @@ void VoiceBank::saveSettings(){
         json.insert(u8"TextCodec/FollowDefault",false);
         json.insert(u8"TextCodec/CharacterFile",QString::fromUtf8(CharacterTextCodec->name()));
         json.insert(u8"TextCodec/ReadmeFile",QString::fromUtf8(ReadmeTextCodec->name()));
+        json.insert(u8"TextCodec/WavFileName",QString::fromUtf8(wavFileNameTextCodec->name()));
     }
     QJsonDocument json_doc(json);
     auto json_file = new QFile(path + u8"leafUTAUQtSettings.json");
