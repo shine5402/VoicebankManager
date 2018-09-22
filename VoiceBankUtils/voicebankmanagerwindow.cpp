@@ -267,7 +267,7 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     auto convertWavFileNameCodecAction = new QAction(tr(u8"对WAV文件名进行编码转换"),this);
     connect(convertWavFileNameCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertWavFileNameCodecActionSlot()));//TODO
-    convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源的WAV文件名的编码。"));
+    convertWavFileNameCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源的WAV文件名的编码。"));
     voiceBanksTableWidgetMenu->addAction(convertWavFileNameCodecAction);
 
     voiceBanksTableWidgetMenu->addSeparator();
