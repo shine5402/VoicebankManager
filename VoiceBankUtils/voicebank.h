@@ -82,6 +82,8 @@ public:
     QHash<QString, QString> getWavFileNameReDecoded() const;
 
     QByteArrayList getWavFileNameRaw() const;
+    void clearWavFileReadStage();
+    void decodeWavFileName();
 
 private:
     QImage image;
@@ -105,7 +107,7 @@ private:
     void readSettings();
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
-    QHash<QString, QString> wavFileNameReDecoded{};
+    QHash<QString, QString> wavFilePathNameAndDecoded{};
     QByteArrayList wavFileNameRaw{};
 signals:
     void readDone(VoiceBank *);

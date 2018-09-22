@@ -90,11 +90,26 @@ void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
     LeafLogger::LogMessage(QString(u8"DefaultWavFileNameNameTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
 }
 
+void VoiceBank::decodeWavFileName()
+{
+    if (!wavFileName.isEmpty())
+    {
+        QTextEncoder encoder(QTextCodec::codecForLocale());
+        QTextDecoder decoder(wavFileNameTextCodec);
+        for (auto name : wavFileName)
+        {
+            auto raw = encoder.fromUnicode(name);
+            wavFileNameRaw.append(raw);
+            wavFilePathNameAndDecoded.insert(name,decoder.toUnicode(raw));
+        }
+    }
+}
+
 void VoiceBank::readWavFileName()
 {
     if (!isWavFileNameReaded){
     wavFileName.clear();
-    wavFileNameReDecoded.clear();
+    wavFilePathNameAndDecoded.clear();
     QDir dir(path);
     wavFileName.append(dir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
     auto subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -106,17 +121,7 @@ void VoiceBank::readWavFileName()
             wavFileName.append(subdir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
         }
     }
-    if (!wavFileName.isEmpty())
-    {
-        QTextEncoder encoder(QTextCodec::codecForLocale());
-        QTextDecoder decoder(wavFileNameTextCodec);
-        for (auto name : wavFileName)
-        {
-            auto raw = encoder.fromUnicode(name);
-            wavFileNameRaw.append(raw);
-            wavFileNameReDecoded.insert(raw,decoder.toUnicode(name.toLocal8Bit()));
-        }
-    }
+    decodeWavFileName();
     }
 }
 
@@ -239,9 +244,17 @@ QByteArrayList VoiceBank::getWavFileNameRaw() const
     return wavFileNameRaw;
 }
 
+void VoiceBank::clearWavFileReadStage()
+{
+    wavFileName.clear();
+    wavFileNameRaw.clear();
+    wavFilePathNameAndDecoded.clear();
+    isWavFileNameReaded = false;
+}
+
 QHash<QString, QString> VoiceBank::getWavFileNameReDecoded() const
 {
-    return wavFileNameReDecoded;
+    return wavFilePathNameAndDecoded;
 }
 
 QStringList VoiceBank::getWavFileName() const
@@ -398,7 +411,7 @@ void VoiceBank::readFromPathWithoutEmit()
     errors.clear();
     isWavFileNameReaded = false;
     wavFileName.clear();
-    wavFileNameReDecoded.clear();
+    wavFilePathNameAndDecoded.clear();
     readSettings();
     readCharacterFile();
     readReadme();

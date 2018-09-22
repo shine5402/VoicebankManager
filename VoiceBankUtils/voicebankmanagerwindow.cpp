@@ -169,7 +169,7 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
     if (voiceBankHandler->count() != 0){
         ui->voicebankCountLabel->setText(tr(u8"共 %1 个").arg(voiceBankHandler->count()));
         ui->voiceBanksTableWidget->setSortingEnabled(true);
-    ui->voiceBanksTableWidget->sortItems(TableColumn::Name);}
+        ui->voiceBanksTableWidget->sortItems(TableColumn::Name);}
     else
         ui->voicebankCountLabel->setText(tr(u8"没有音源。"));
     ui->voiceBankBriefInfomationWidget->setVisible(false);
@@ -181,11 +181,11 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     if (++voiceBankReadDoneCount == voiceBankPathsCount){
         setUIAfterVoiceBanksReadDone();
     }
-//    else
-//    {
-//       ui->voicebankCountLabel->setText(tr(u8"已完成%1个/共%2个").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
-//        ui->voicebankCountLabel->repaint();
-//    }
+    //    else
+    //    {
+    //       ui->voicebankCountLabel->setText(tr(u8"已完成%1个/共%2个").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
+    //        ui->voicebankCountLabel->repaint();
+    //    }
     LeafLogger::LogMessage(QString(u8"读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
@@ -193,8 +193,8 @@ void VoiceBankManagerWindow::debugFunction()
 {
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     if (voiceBank){
-    voiceBank->readWavFileName();
-qDebug() << "Read Done.";
+        voiceBank->readWavFileName();
+        qDebug() << "Read Done.";
     }
 }
 
@@ -368,12 +368,42 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
         auto dialog = new TextCodecConvertDialog(tr(u8"%1的WAV文件名").arg(voiceBank->getName()),showString,voiceBank->getWavFileNameTextCodec(),QTextCodec::codecForLocale(),true,this);
         auto dialogCode = dialog->exec();
         if (dialogCode == QDialog::Accepted){
-
+            auto sourceCodec = dialog->getSourceCodec();
+            voiceBank->setWavFileNameTextCodec(sourceCodec);
+            voiceBank->decodeWavFileName();
+            auto targetCodec = dialog->getTargetCodec();
+            QTextEncoder encoder(targetCodec);
+            QTextDecoder decoder(QTextCodec::codecForLocale());
+            auto wavFileNameReDecoded = voiceBank->getWavFileNameReDecoded();
+            auto it = wavFileNameReDecoded.begin();
+            QStringList unsucess;
+            while (it != wavFileNameReDecoded.end())
+            {
+                auto file = new QFile(voiceBank->getPath() + it.key());
+                if (file->exists()) {
+                    if (!file->rename(voiceBank->getPath() + decoder.toUnicode(encoder.fromUnicode(it.value())))) {
+                        unsucess.append(tr(u8"%1（%2）").arg(file->fileName()).arg(file->errorString()));
+                        LeafLogger::LogMessage(QString(u8"文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
+                    }
+                }
+                file->deleteLater();
+                ++it;
+            }
+            if (!unsucess.isEmpty()){
+                QMessageBox::warning(this,tr(u8"转换中出了些问题"),tr(u8"<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join(u8"\n")));
+            }
+            else
+            {
+                voiceBank->clearWavFileReadStage();
+                voiceBank->setWavFileNameTextCodec(targetCodec);
+                QMessageBox::information(this,tr(u8"转换成功完成"),tr(u8"音源%1的WAV文件名均已从%2转换至%3。").arg(voiceBank->getName()).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
+            }
         }
+        dialog->deleteLater();
     }
 }
 QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(const QString& path,QTextCodec* sourceCodec,QTextCodec* targetCodec){
-    bool isDone = false; 
+    bool isDone = false;
     QFile* file = new QFile(path);
     if (!file->exists()){
         delete file;
@@ -387,10 +417,10 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
     auto dialogCode = dialog->exec();
     if (dialogCode == QDialog::Accepted){
         auto infoDialogCode = QMessageBox::information(this,tr(u8"即将执行编码转换"),tr(u8R"(<h3>程序即将对%1执行编码转换（%2 -> %3）</h3>
-                                                                              <p>在您单击确定后，程序将会把转换后的结果保存至%1。</p>
-                                                                              <p>但是，程序有必要提醒您编码转换的<b>风险</b>：由于源编码和目标编码间的可能的映射不对等关系，这种转换可能<b>不可逆</b>，并且可能使您<b>丢失数据</b>！</p>
-                                                                              <p>出于安全考虑，程序将保存一份源文件的备份副本（%1.bak），以便出现问题时您可以手动恢复。</p>
-                                                                              <p>确定要执行转换吗？</p>)").arg(path).arg(QString::fromUtf8(dialog->getSourceCodec()->name())).arg(QString::fromUtf8(dialog->getTargetCodec()->name())),QMessageBox::Ok | QMessageBox::Cancel);
+                                                                                <p>在您单击确定后，程序将会把转换后的结果保存至%1。</p>
+                                                                                <p>但是，程序有必要提醒您编码转换的<b>风险</b>：由于源编码和目标编码间的可能的映射不对等关系，这种转换可能<b>不可逆</b>，并且可能使您<b>丢失数据</b>！</p>
+                                                                                <p>出于安全考虑，程序将保存一份源文件的备份副本（%1.bak），以便出现问题时您可以手动恢复。</p>
+                                                                                <p>确定要执行转换吗？</p>)").arg(path).arg(QString::fromUtf8(dialog->getSourceCodec()->name())).arg(QString::fromUtf8(dialog->getTargetCodec()->name())),QMessageBox::Ok | QMessageBox::Cancel);
         if (infoDialogCode == QMessageBox::Ok){
             QFile bakFile(path + u8".bak");
             if (bakFile.exists())
@@ -415,9 +445,9 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
             else
             {
                 QMessageBox::critical(this,tr(u8"无法备份%1").arg(path + u8".bak"),tr(u8R"(<h3>程序无法对%1进行备份</h3>
-                                                                                <p>在备份时出现错误。Qt提供的错误说明为：%2</p>
-                                                                                <p>你仍可以令程序继续转换，但是之前提到的<b>风险</b>仍然存在，且出现问题时您无法恢复。</p>
-                                                                                <p>确定要继续转换吗？</p>)").arg(path).arg(file->errorString()));
+                                                                                  <p>在备份时出现错误。Qt提供的错误说明为：%2</p>
+                                                                                  <p>你仍可以令程序继续转换，但是之前提到的<b>风险</b>仍然存在，且出现问题时您无法恢复。</p>
+                                                                                  <p>确定要继续转换吗？</p>)").arg(path).arg(file->errorString()));
             }
         }
     }
