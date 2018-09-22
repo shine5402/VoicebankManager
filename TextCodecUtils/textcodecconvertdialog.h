@@ -15,15 +15,18 @@ class TextCodecConvertDialog : public QDialog
 
 public:
     explicit TextCodecConvertDialog(QWidget *parent = nullptr);
+    TextCodecConvertDialog(QString showFileName, QByteArray source,QTextCodec* sourceCodec,QTextCodec* targetCodec,bool isShowSystemDecodePreView = false,QWidget *parent = nullptr);
     ~TextCodecConvertDialog();
-    void setSource(QByteArray text);
-    void setTargetTextCodec(QTextCodec* codec);
-    void setSourceTextCodec(QTextCodec* codec);
+    void setSource(QByteArray text,bool shouldReGen = false);
+    void setTargetTextCodec(QTextCodec* codec, bool shouldEmit = false);
+    void setSourceTextCodec(QTextCodec* codec,bool shouldEmit = false);
     QString getDecodedString(QTextCodec *codec, QByteArray rawData);
     void setShownFileName(QString name);
     QByteArray getEncodedTargetByteArray() const;
     QTextCodec *getSourceCodec() const;
     QTextCodec *getTargetCodec() const;
+
+    void reDecodeAndReEncodeSource();
 
 signals:
     void targetTextCodecModified();
@@ -39,6 +42,8 @@ private slots:
 
     void on_availableCodecButton_target_clicked();
 
+    void on_showSystemTextCodecCheckBox_stateChanged(int);
+
 private:
     Ui::TextCodecConvertDialog *ui;
     QByteArray source;
@@ -48,7 +53,6 @@ private:
     QTextCodec* targetCodec = QTextCodec::codecForName(defaultTextCodecName);
 
     QByteArray getEncodedByteArray(QTextCodec *codec, QString rawData);
-
 };
 
 #endif // TEXTCODECCONVERTDIALOG_H

@@ -6,9 +6,16 @@ TextCodecConvertDialog::TextCodecConvertDialog(QWidget *parent) :
     ui(new Ui::TextCodecConvertDialog)
 {
     ui->setupUi(this);
-    connect(this,SIGNAL(sourceChanged()),this,SLOT(sourceChangedSlot()));
-    connect(this,SIGNAL(sourceTextCodecModified()),this,SLOT(reDecodeSource()));
-    connect(this,SIGNAL(targetTextCodecModified()),this,SLOT(reEncodeSource()));
+}
+
+TextCodecConvertDialog::TextCodecConvertDialog(QString shownFileName, QByteArray source, QTextCodec *sourceCodec, QTextCodec *targetCodec, bool isShowSystemDecodePreView, QWidget *parent) :TextCodecConvertDialog(parent)
+{
+    setShownFileName(shownFileName);
+    setSourceTextCodec(sourceCodec);
+    setSource(source);
+    setTargetTextCodec(targetCodec);
+    reDecodeAndReEncodeSource();
+    ui->showSystemTextCodecCheckBox->setChecked(isShowSystemDecodePreView);
 }
 
 TextCodecConvertDialog::~TextCodecConvertDialog()
@@ -16,30 +23,38 @@ TextCodecConvertDialog::~TextCodecConvertDialog()
     delete ui;
 }
 
-void TextCodecConvertDialog::setSource(QByteArray text)
+void TextCodecConvertDialog::reDecodeAndReEncodeSource()
 {
-    source = text;
     reDecodeSource();
     reEncodeSource();
 }
-void TextCodecConvertDialog::setTargetTextCodec(QTextCodec *codec)
+
+void TextCodecConvertDialog::setSource(QByteArray text, bool shouldReGen)
+{
+    source = text;
+    if (shouldReGen)
+        reDecodeAndReEncodeSource();
+}
+void TextCodecConvertDialog::setTargetTextCodec(QTextCodec *codec,bool shouldEmit)
 {
     if (codec)
     {
         ui->targetTextCodecComboBox->setCurrentText(codec->name());
-        sourceCodec = codec;
+        targetCodec = codec;
     }
-    emit targetTextCodecModified();
+    if (shouldEmit)
+        emit targetTextCodecModified();
 }
 
-void TextCodecConvertDialog::setSourceTextCodec(QTextCodec *codec)
+void TextCodecConvertDialog::setSourceTextCodec(QTextCodec *codec,bool shouldEmit)
 {
     if (codec)
     {
         ui->sourceTextCodecComboBox->setCurrentText(codec->name());
         targetCodec = codec;
     }
-    emit sourceTextCodecModified();
+    if (shouldEmit)
+        emit sourceTextCodecModified();
 }
 
 void TextCodecConvertDialog::on_sourceTextCodecComboBox_currentTextChanged(const QString &arg1)
@@ -47,7 +62,7 @@ void TextCodecConvertDialog::on_sourceTextCodecComboBox_currentTextChanged(const
     auto codec = QTextCodec::codecForName(arg1.toUtf8());
     if (codec){
         sourceCodec = codec;
-        reDecodeSource();
+        reDecodeAndReEncodeSource();
     }
 }
 
@@ -74,7 +89,14 @@ void TextCodecConvertDialog::reEncodeSource()
 {
     encodedTargetByteArray = getEncodedByteArray(targetCodec,decodedSourceString);
     auto reDecodeString = getDecodedString(targetCodec, encodedTargetByteArray);
-    ui->targetTextBrowser->setText(reDecodeString);
+    if (!ui->showSystemTextCodecCheckBox->isChecked())
+        ui->targetTextBrowser->setText(reDecodeString);
+    else
+    {
+        auto systemDecodeString = getDecodedString(QTextCodec::codecForLocale(), encodedTargetByteArray);
+        auto preview = tr(u8"<h4>以%1进行解码的预览：</h4><pre>%2</pre><h4>使用系统编码重解码后的预览</h4><pre>%3</pre>").arg(QString::fromUtf8(targetCodec->name())).arg(reDecodeString).arg(systemDecodeString);
+        ui->targetTextBrowser->setText(preview);
+    }
     qApp->processEvents();
 }
 
@@ -115,4 +137,9 @@ void TextCodecConvertDialog::on_availableCodecButton_source_clicked()
 void TextCodecConvertDialog::on_availableCodecButton_target_clicked()
 {
     AvailableTextCodecDialog::onAvailbaleCodecButtonClicked(ui->targetTextCodecComboBox);
+}
+
+void TextCodecConvertDialog::on_showSystemTextCodecCheckBox_stateChanged(int)
+{
+    reEncodeSource();
 }

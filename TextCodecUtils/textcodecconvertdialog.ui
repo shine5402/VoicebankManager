@@ -14,6 +14,13 @@
    <string>转换文本编码</string>
   </property>
   <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,0,1,0">
+   <item row="1" column="2">
+    <widget class="QPushButton" name="availableCodecButton_source">
+     <property name="text">
+      <string>支持的编码</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QComboBox" name="sourceTextCodecComboBox">
      <property name="editable">
@@ -41,12 +48,42 @@
      </item>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="availableCodecButton_source">
+   <item row="0" column="3" colspan="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>转换后文本预览：</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QPushButton" name="availableCodecButton_target">
      <property name="text">
       <string>支持的编码</string>
      </property>
     </widget>
+   </item>
+   <item row="4" column="0" colspan="6">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QTextBrowser" name="sourceTextBrowser"/>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>转换前文本：</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3" colspan="3">
+    <widget class="QTextBrowser" name="targetTextBrowser"/>
    </item>
    <item row="1" column="3" colspan="2">
     <widget class="QComboBox" name="targetTextCodecComboBox">
@@ -75,40 +112,13 @@
      </item>
     </widget>
    </item>
-   <item row="1" column="5">
-    <widget class="QPushButton" name="availableCodecButton_target">
-     <property name="text">
-      <string>支持的编码</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="3">
-    <widget class="QTextBrowser" name="sourceTextBrowser"/>
-   </item>
-   <item row="2" column="3" colspan="3">
-    <widget class="QTextBrowser" name="targetTextBrowser"/>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>转换前文本：</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3" colspan="3">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>转换后文本预览：</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="0" colspan="6">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="QCheckBox" name="showSystemTextCodecCheckBox">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;打开此项后，程序将在预览窗口中同时输出系统编码下对您选择编码字符串的重解码后的显示效果。对文件名转换来说，此项十分有帮助。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <property name="text">
+      <string>在预览中输出在系统编码下重解码的预览</string>
      </property>
     </widget>
    </item>

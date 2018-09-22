@@ -256,18 +256,18 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     voiceBanksTableWidgetMenu->addAction(setCodecAction);
 
     auto convertCharacterCodecAction = new QAction(tr(u8"对character.txt进行编码转换"),this);
-    connect(convertCharacterCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertCharacterCodecActionSlot()));//TODO
+    connect(convertCharacterCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertCharacterCodecActionSlot()));
     convertCharacterCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源character.txt的编码。"));
     voiceBanksTableWidgetMenu->addAction(convertCharacterCodecAction);
 
     auto convertReadmeCodecAction = new QAction(tr(u8"对readme.txt进行编码转换"),this);
-    connect(convertReadmeCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertReadmeCodecActionSlot()));//TODO
+    connect(convertReadmeCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertReadmeCodecActionSlot()));
     convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源readme.txt的编码。"));
     voiceBanksTableWidgetMenu->addAction(convertReadmeCodecAction);
 
-    auto convertWavFileNameCodecAction = new QAction(tr(u8"对readme.txt进行编码转换"),this);
+    auto convertWavFileNameCodecAction = new QAction(tr(u8"对WAV文件名进行编码转换"),this);
     connect(convertWavFileNameCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertWavFileNameCodecActionSlot()));//TODO
-    convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源readme.txt的编码。"));
+    convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源的WAV文件名的编码。"));
     voiceBanksTableWidgetMenu->addAction(convertWavFileNameCodecAction);
 
     voiceBanksTableWidgetMenu->addSeparator();
@@ -362,13 +362,10 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
 }
 void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     auto voiceBank = voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
+    voiceBank->readWavFileName();
     if (voiceBank){
         auto showString = voiceBank->getWavFileNameRaw().join("\n");
-        auto dialog = new TextCodecConvertDialog(this);
-        dialog->setShownFileName(tr(u8"%1的WAV文件名").arg(voiceBank->getName()));
-        dialog->setSource(showString);
-        dialog->setSourceTextCodec(voiceBank->getWavFileNameTextCodec());
-        dialog->setTargetTextCodec(QTextCodec::codecForLocale());
+        auto dialog = new TextCodecConvertDialog(tr(u8"%1的WAV文件名").arg(voiceBank->getName()),showString,voiceBank->getWavFileNameTextCodec(),QTextCodec::codecForLocale(),true,this);
         auto dialogCode = dialog->exec();
         if (dialogCode == QDialog::Accepted){
 
@@ -376,8 +373,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     }
 }
 QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(const QString& path,QTextCodec* sourceCodec,QTextCodec* targetCodec){
-    bool isDone = false;
-    auto dialog = new TextCodecConvertDialog(this);
+    bool isDone = false; 
     QFile* file = new QFile(path);
     if (!file->exists()){
         delete file;
@@ -387,10 +383,7 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
     if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
         rawData = file->readAll();
         file->close();}
-    dialog->setSource(rawData);
-    dialog->setSourceTextCodec(sourceCodec);
-    dialog->setTargetTextCodec(targetCodec);
-    dialog->setShownFileName(path);
+    auto dialog = new TextCodecConvertDialog(path,rawData,sourceCodec,targetCodec,false,this);
     auto dialogCode = dialog->exec();
     if (dialogCode == QDialog::Accepted){
         auto infoDialogCode = QMessageBox::information(this,tr(u8"即将执行编码转换"),tr(u8R"(<h3>程序即将对%1执行编码转换（%2 -> %3）</h3>
