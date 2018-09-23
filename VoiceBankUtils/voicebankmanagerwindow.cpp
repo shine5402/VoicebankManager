@@ -369,28 +369,34 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
         auto dialogCode = dialog->exec();
         if (dialogCode == QDialog::Accepted){
             auto sourceCodec = dialog->getSourceCodec();
-            voiceBank->setWavFileNameTextCodec(sourceCodec);
-            voiceBank->decodeWavFileName();
             auto targetCodec = dialog->getTargetCodec();
             QTextEncoder encoder(targetCodec);
-            QTextDecoder decoder(QTextCodec::codecForLocale());
-            auto wavFileNameReDecoded = voiceBank->getWavFileNameReDecoded();
-            auto it = wavFileNameReDecoded.begin();
+            QTextDecoder decoder(sourceCodec);
+            QTextDecoder decoderLocale(QTextCodec::codecForLocale());
+            //auto wavFileNameReDecoded = voiceBank->getWavFileNameReDecoded();
+            auto wavFilePath = voiceBank->getWavFilePath();
+            auto it = wavFilePath.begin();
             QStringList unsucess;
-            while (it != wavFileNameReDecoded.end())
+            while (it != wavFilePath.end())
             {
-                auto file = new QFile(voiceBank->getPath() + it.key());
+                auto file = new QFile(*it);
                 if (file->exists()) {
-                    if (!file->rename(voiceBank->getPath() + decoder.toUnicode(encoder.fromUnicode(it.value())))) {
-                        unsucess.append(tr(u8"%1（%2）").arg(file->fileName()).arg(file->errorString()));
-                        LeafLogger::LogMessage(QString(u8"文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
+                    QFileInfo fileInfo(*it);
+                    auto newName = decoderLocale.toUnicode(encoder.fromUnicode(decoder.toUnicode(fileInfo.fileName().toLocal8Bit())));
+                    auto newPath = fileInfo.absolutePath() + u8"/" + newName;
+                    if (newName != fileInfo.fileName())
+                    {
+                        if (!file->rename(newPath)) {
+                            unsucess.append(tr(u8"%1（%2）").arg(file->fileName()).arg(file->errorString()));
+                            LeafLogger::LogMessage(QString(u8"文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
+                        }
                     }
                 }
                 file->deleteLater();
                 ++it;
             }
             if (!unsucess.isEmpty()){
-                QMessageBox::warning(this,tr(u8"转换中出了些问题"),tr(u8"<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join(u8"\n")));
+                QMessageBox::warning(this,tr(u8"转换中出了些问题"),tr(u8"<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>这些文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join(u8"\n")));
             }
             else
             {

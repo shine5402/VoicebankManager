@@ -61,13 +61,13 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
     else
     {
         if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
-        auto RawData = file->readAll();
-        file->close();
-        delete file;
-        QTextDecoder *decoder = textCodec->makeDecoder();
-        auto String = decoder->toUnicode(RawData);
-        delete decoder;
-        return String;
+            auto RawData = file->readAll();
+            file->close();
+            delete file;
+            QTextDecoder *decoder = textCodec->makeDecoder();
+            auto String = decoder->toUnicode(RawData);
+            delete decoder;
+            return String;
         }
         else
         {
@@ -100,7 +100,6 @@ void VoiceBank::decodeWavFileName()
         {
             auto raw = encoder.fromUnicode(name);
             wavFileNameRaw.append(raw);
-            wavFilePathNameAndDecoded.insert(name,decoder.toUnicode(raw));
         }
     }
 }
@@ -108,20 +107,25 @@ void VoiceBank::decodeWavFileName()
 void VoiceBank::readWavFileName()
 {
     if (!isWavFileNameReaded){
-    wavFileName.clear();
-    wavFilePathNameAndDecoded.clear();
-    QDir dir(path);
-    wavFileName.append(dir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
-    auto subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    if (!subdirs.isEmpty())
-    {
-        for (auto subDirPath : subdirs)
+        wavFileName.clear();
+        //wavFilePathNameAndDecoded.clear();
+        wavFilePath.clear();
+        QDir dir(path);
+        wavFileName.append(dir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+        auto subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        if (!subdirs.isEmpty())
         {
-            QDir subdir(path + subDirPath);
-            wavFileName.append(subdir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+            for (auto subDirPath : subdirs)
+            {
+                QDir subdir(path + subDirPath);
+                wavFileName.append(subdir.entryList({u8"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+                for (auto fileName : wavFileName)
+                {
+                    wavFilePath.append(path + subDirPath + u8"/" + fileName);
+                }
+            }
         }
-    }
-    decodeWavFileName();
+        decodeWavFileName();
     }
 }
 
@@ -164,79 +168,84 @@ void VoiceBank::readStaticSettings()
 void VoiceBank::readSettings(){
     LeafLogger::LogMessage(QString(u8"开始读取%1的声库单独设置。").arg(path));
     try{
-    auto text = readTextFileInTextCodec(path + u8"leafUTAUQtSettings.json",QTextCodec::codecForName("UTF-8"));
-    QJsonParseError json_error;
-    auto json_doc = QJsonDocument::fromJson(text.toUtf8(),&json_error);
-    if (!json_doc.isNull()){
-        auto json = json_doc.object();
-        if (!json.isEmpty()){
-            if (json.contains(u8"TextCodec/FollowDefault")){
-                auto value = json.value(u8"TextCodec/FollowDefault");
-                if (value.isBool()){
-                    setIsFollowDefault(value.toBool());
-                }else
-                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
-            }
-            else
-                LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/FollowDefault不存在。").arg(path));
-            if (json.contains(u8"TextCodec/CharacterFile"))
-            {
+        auto text = readTextFileInTextCodec(path + u8"leafUTAUQtSettings.json",QTextCodec::codecForName("UTF-8"));
+        QJsonParseError json_error;
+        auto json_doc = QJsonDocument::fromJson(text.toUtf8(),&json_error);
+        if (!json_doc.isNull()){
+            auto json = json_doc.object();
+            if (!json.isEmpty()){
+                if (json.contains(u8"TextCodec/FollowDefault")){
+                    auto value = json.value(u8"TextCodec/FollowDefault");
+                    if (value.isBool()){
+                        setIsFollowDefault(value.toBool());
+                    }else
+                        LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
+                }
+                else
+                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/FollowDefault不存在。").arg(path));
+                if (json.contains(u8"TextCodec/CharacterFile"))
+                {
 
-                auto value = json.value(u8"TextCodec/CharacterFile");
-                if (value.isString()){
-                    auto value_string = value.toString();
-                    setCharacterTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                    auto value = json.value(u8"TextCodec/CharacterFile");
+                    if (value.isString()){
+                        auto value_string = value.toString();
+                        setCharacterTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                    }
+                    else
+                    {
+                        LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/CharacterFile不是String。").arg(path));
+                    }
                 }
                 else
+                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/CharacterFile不存在。").arg(path));
+                if (json.contains(u8"TextCodec/ReadmeFile"))
                 {
-                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/CharacterFile不是String。").arg(path));
-                }
-            }
-            else
-                LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/CharacterFile不存在。").arg(path));
-            if (json.contains(u8"TextCodec/ReadmeFile"))
-            {
-                auto value = json.value(u8"TextCodec/ReadmeFile");
-                if (value.isString()){
-                    auto value_string = value.toString();
-                    setReadmeTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                    auto value = json.value(u8"TextCodec/ReadmeFile");
+                    if (value.isString()){
+                        auto value_string = value.toString();
+                        setReadmeTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                    }
+                    else
+                    {
+                        LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/ReadmeFile不是String。").arg(path));
+                    }
                 }
                 else
+                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/ReadmeFile不存在。").arg(path));
+                if (json.contains(u8"TextCodec/WavFileName"))
                 {
-                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/ReadmeFile不是String。").arg(path));
-                }
-            }
-            else
-                LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/ReadmeFile不存在。").arg(path));
-            if (json.contains(u8"TextCodec/WavFileName"))
-            {
 
-                auto value = json.value(u8"TextCodec/WavFileName");
-                if (value.isString()){
-                    auto value_string = value.toString();
-                    setWavFileNameTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                    auto value = json.value(u8"TextCodec/WavFileName");
+                    if (value.isString()){
+                        auto value_string = value.toString();
+                        setWavFileNameTextCodec(QTextCodec::codecForName(value_string.toUtf8()));
+                    }
+                    else
+                    {
+                        LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/WavFileName不是String。").arg(path));
+                    }
                 }
                 else
-                {
-                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/WavFileName不是String。").arg(path));
-                }
+                    LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/WavFileName不存在。").arg(path));
             }
             else
-                LeafLogger::LogMessage(QString(u8"声库%1的TextCodec/WavFileName不存在。").arg(path));
+            {
+                LeafLogger::LogMessage(QString(u8"声库%1的设置json读取后的Object为空。").arg(path));
+            }
         }
         else
         {
-            LeafLogger::LogMessage(QString(u8"声库%1的设置json读取后的Object为空。").arg(path));
+            LeafLogger::LogMessage(QString(u8"声库%1的设置json读取出现问题。QJsonParseError的输出为%2。").arg(path).arg(json_error.errorString()));
         }
-    }
-    else
-    {
-        LeafLogger::LogMessage(QString(u8"声库%1的设置json读取出现问题。QJsonParseError的输出为%2。").arg(path).arg(json_error.errorString()));
-    }
     }
     catch(FileNotExists&){
         LeafLogger::LogMessage(QString(u8"声库%1的设置json不存在。").arg(path));
     }
+}
+
+QStringList VoiceBank::getWavFilePath() const
+{
+    return wavFilePath;
 }
 
 QByteArrayList VoiceBank::getWavFileNameRaw() const
@@ -248,14 +257,10 @@ void VoiceBank::clearWavFileReadStage()
 {
     wavFileName.clear();
     wavFileNameRaw.clear();
-    wavFilePathNameAndDecoded.clear();
+    wavFilePath.clear();
     isWavFileNameReaded = false;
 }
 
-QHash<QString, QString> VoiceBank::getWavFileNameReDecoded() const
-{
-    return wavFilePathNameAndDecoded;
-}
 
 QStringList VoiceBank::getWavFileName() const
 {
@@ -370,7 +375,7 @@ void VoiceBank::readCharacterFile()
         }
         if (pixmapPath.isEmpty()){
             errors.insert(ProbablyErrors::ImageFileNotSet,true);
-        LeafLogger::LogMessage(QString(u8"%1的音源的image字段不存在。").arg(path));}
+            LeafLogger::LogMessage(QString(u8"%1的音源的image字段不存在。").arg(path));}
     }
     catch(FileNotExists&){
         errors.insert(ProbablyErrors::CharacterFileNotExists,true);
@@ -409,9 +414,7 @@ void VoiceBank::readFromPathWithoutEmit()
         path.append(u8"/");
     }
     errors.clear();
-    isWavFileNameReaded = false;
-    wavFileName.clear();
-    wavFilePathNameAndDecoded.clear();
+    clearWavFileReadStage();
     readSettings();
     readCharacterFile();
     readReadme();
