@@ -159,7 +159,6 @@ void VoiceBankManagerWindow::readVoiceBanks(){
             LeafLogger::LogMessage(QString(u8"添加%1到音源Handler。").arg(path));
             voiceBankHandler->addVoiceBank(path);
         }
-        //TODO
     }
     
 }
@@ -266,7 +265,7 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     voiceBanksTableWidgetMenu->addAction(convertReadmeCodecAction);
 
     auto convertWavFileNameCodecAction = new QAction(tr(u8"对WAV文件名进行编码转换"),this);
-    connect(convertWavFileNameCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertWavFileNameCodecActionSlot()));//TODO
+    connect(convertWavFileNameCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertWavFileNameCodecActionSlot()));
     convertWavFileNameCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源的WAV文件名的编码。"));
     voiceBanksTableWidgetMenu->addAction(convertWavFileNameCodecAction);
 
