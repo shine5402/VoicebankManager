@@ -35,11 +35,63 @@ public:
 
     void readFromPath();
     QString getCalculateInformation();
-    enum ProbablyErrors {
-        CharacterFileNotExists,NameNotSet,ImageFileNotSet,ImageFileNotExists,ImageFileNotFit,ReadmeFileNotExists,PixmapReadException,ReadmeFileCanNotOpen,CharacterFileCanNotOpen
+    //错误标识类
+    class ErrorState{
+    public:
+        explicit ErrorState(VoiceBank* voiceBank){
+            if (voiceBank)
+                this->voiceBank = voiceBank;
+        }
+        virtual QString getErrorHTMLString() = 0;
+        virtual ~ErrorState(){}
+    protected:
+        VoiceBank* voiceBank = nullptr;
     };
-    QHash<ProbablyErrors, bool> getErrors() const;
-
+    class CharacterFileNotExistsErrorState : public ErrorState{
+    public:
+        explicit CharacterFileNotExistsErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class NameNotSetErrorState : public ErrorState{
+    public:
+        explicit NameNotSetErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class ImageFileNotSetErrorState : public ErrorState{
+    public:
+        explicit ImageFileNotSetErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class ImageFileNotExistsErrorState : public ErrorState{
+    public:
+        explicit ImageFileNotExistsErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class ImageFileNotFitErrorState : public ErrorState{
+    public:
+        explicit ImageFileNotFitErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class ReadmeFileNotExistsErrorState : public ErrorState{
+    public:
+        explicit ReadmeFileNotExistsErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class ImageReadExceptionErrorState : public ErrorState{
+    public:
+        explicit ImageReadExceptionErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class ReadmeFileCanNotOpenErrorState : public ErrorState{
+    public:
+        explicit ReadmeFileCanNotOpenErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
+    class CharacterFileCanNotOpenErrorState : public ErrorState{
+    public:
+        explicit CharacterFileCanNotOpenErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
     QString getPixmapPath() const;
 
     QTextCodec *getCharacterTextCodec() const;
@@ -79,13 +131,14 @@ public:
 
     QStringList getWavFileName() const;
 
-   // QHash<QString, QString> getWavFileNameReDecoded() const;
+    // QHash<QString, QString> getWavFileNameReDecoded() const;
 
     QByteArrayList getWavFileNameRaw() const;
     void clearWavFileReadStage();
     void decodeWavFileName();
 
     QStringList getWavFilePath() const;
+    QList<ErrorState *> getErrorStates() const;
 
 private:
     QImage image;
@@ -98,7 +151,7 @@ private:
     QTextCodec *ReadmeTextCodec;
     QTextCodec *wavFileNameTextCodec;
     bool isTextCodecFollowDefault = true;
-    QHash<ProbablyErrors,bool>errors{};
+    QList<ErrorState *> errorStates;
     void readCharacterFile();
     void readReadme();
     QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
@@ -109,7 +162,6 @@ private:
     void readSettings();
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
-    //QHash<QString, QString> wavFilePathNameAndDecoded{};
     QByteArrayList wavFileNameRaw{};
     QStringList wavFilePath{};
 signals:

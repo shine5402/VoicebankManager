@@ -8,6 +8,11 @@ VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path)
 VoiceBank::~VoiceBank()
 {
     saveSettings();
+    for (auto state : errorStates)
+    {
+        if (state)
+            delete state;
+    }
 }
 QImage VoiceBank::getImage() const
 {
@@ -248,6 +253,12 @@ QStringList VoiceBank::getWavFilePath() const
     return wavFilePath;
 }
 
+QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
+{
+    return errorStates;
+}
+
+
 QByteArrayList VoiceBank::getWavFileNameRaw() const
 {
     return wavFileNameRaw;
@@ -347,43 +358,43 @@ void VoiceBank::readCharacterFile()
                         image.load(pixmapPath);
                         LeafLogger::LogMessage(QString(u8"%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
                         if (image.width() != 100 || image.height() != 100){
-                            errors.insert(ProbablyErrors::ImageFileNotFit,true);
+                            errorStates.append(new ImageFileNotFitErrorState(this));
                         }
                     } catch (std::exception &e){
                         LeafLogger::LogMessage(QString(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
-                        errors.insert(ProbablyErrors::PixmapReadException,true);
+                        errorStates.append(new ImageReadExceptionErrorState(this));
                         image = QImage();
                     }
                     catch (...) {
                         LeafLogger::LogMessage(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
-                        errors.insert(ProbablyErrors::PixmapReadException,true);
+                        errorStates.append(new ImageReadExceptionErrorState(this));
                         image = QImage();
                     }
 
                 }
                 else
                 {
-                    errors.insert(ProbablyErrors::ImageFileNotExists,true);
+                    errorStates.append(new ImageFileNotExistsErrorState(this));
                     LeafLogger::LogMessage(QString(u8"%1的音源图片文件不存在。").arg(path));
                 }
 
             }
         }
         if (name.isEmpty()){
-            errors.insert(ProbablyErrors::NameNotSet,true);
+            errorStates.append(new NameNotSetErrorState(this));
             LeafLogger::LogMessage(QString(u8"%1的音源的name字段不存在。").arg(path));
         }
         if (pixmapPath.isEmpty()){
-            errors.insert(ProbablyErrors::ImageFileNotSet,true);
+            errorStates.append(new ImageFileNotSetErrorState(this));
             LeafLogger::LogMessage(QString(u8"%1的音源的image字段不存在。").arg(path));}
     }
     catch(FileNotExists&){
-        errors.insert(ProbablyErrors::CharacterFileNotExists,true);
+        errorStates.append(new CharacterFileNotExistsErrorState(this));
         LeafLogger::LogMessage(QString(u8"%1的音源的character.txt不存在。").arg(path));
     }
     catch(FileCanNotOpen&)
     {
-        errors.insert(ProbablyErrors::CharacterFileCanNotOpen,true);
+        errorStates.append(new CharacterFileCanNotOpenErrorState(this));
         LeafLogger::LogMessage(QString(u8"%1的音源的character.txt无法打开。").arg(path));
     }
 
@@ -398,12 +409,12 @@ void VoiceBank::readReadme()
         LeafLogger::LogMessage(QString(u8"%1的readme.txt被成功读取至readmeString。").arg(path));
     }
     catch(FileNotExists&){
-        errors.insert(ProbablyErrors::ReadmeFileNotExists,true);
+        errorStates.append(new ReadmeFileNotExistsErrorState(this));
         LeafLogger::LogMessage(QString(u8"%1的音源的readme.txt不存在。").arg(path));
     }
     catch(FileCanNotOpen&)
     {
-        errors.insert(ProbablyErrors::ReadmeFileCanNotOpen,true);
+        errorStates.append(new ReadmeFileCanNotOpenErrorState(this));
         LeafLogger::LogMessage(QString(u8"%1的音源的readme.txt无法打开。").arg(path));
     }
 }
@@ -413,7 +424,12 @@ void VoiceBank::readFromPathWithoutEmit()
     if (!path.endsWith(u8"/")){
         path.append(u8"/");
     }
-    errors.clear();
+    if (!errorStates.isEmpty())
+    {
+        for (auto state : errorStates)
+            delete state;
+    }
+    errorStates.clear();
     clearWavFileReadStage();
     readSettings();
     readCharacterFile();
@@ -441,10 +457,6 @@ QString VoiceBank::getCalculateInformation()
     return calculateInformation;
 }
 
-QHash<VoiceBank::ProbablyErrors, bool> VoiceBank::getErrors() const
-{
-    return errors;
-}
 
 QString VoiceBank::getPixmapPath() const
 {
@@ -477,4 +489,133 @@ void VoiceBank::setReadmeTextCodec(QTextCodec *value)
     }
     else
         ReadmeTextCodec = DefaultReadmeTextCodec;
+}
+
+VoiceBank::CharacterFileNotExistsErrorState::CharacterFileNotExistsErrorState(VoiceBank *voiceBank) :ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::CharacterFileNotExistsErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：没有为此音源库找到character.txt。在音源使用过程中将无法查看音源名称、图像等信息。</p>)");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::NameNotSetErrorState::NameNotSetErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::NameNotSetErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：character.txt中的name字段没有被设定。在音源使用过程中音源区域将显示文件夹名称。</p>)");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ImageFileNotSetErrorState::ImageFileNotSetErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::ImageFileNotSetErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：character.txt中的image字段没有被设定。在音源使用过程中音源区域将不显示图片。</p>)");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::ImageFileNotExistsErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。</p>)").arg(voiceBank->getPixmapPath());
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ImageFileNotFitErrorState::ImageFileNotFitErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::ImageFileNotFitErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        if (voiceBank->getImage().isNull())
+            return tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件没有正常读取。是不是图片格式与后缀名不符？亦或是文件损坏？</p>)");
+        else
+            return tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（100*100）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getImage().width()).arg(voiceBank->getImage().height());
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ReadmeFileNotExistsErrorState::ReadmeFileNotExistsErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::ReadmeFileNotExistsErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：找不到readme.txt。音源的README将无法显示。</p>)");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ImageReadExceptionErrorState::ImageReadExceptionErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::ImageReadExceptionErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：在读取音源图片时发生了一个异常。或许重载此音源能解决这个问题。</p>)");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ReadmeFileCanNotOpenErrorState::ReadmeFileCanNotOpenErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::ReadmeFileCanNotOpenErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：无法打开readme.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。</p>)");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::CharacterFileCanNotOpenErrorState::CharacterFileCanNotOpenErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+{
+
+}
+
+QString VoiceBank::CharacterFileCanNotOpenErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr(u8R"(<p style="color:red">错误：无法打开character.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。</p>)");
+    }
+    else
+        return QString();
 }
