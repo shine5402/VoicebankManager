@@ -19,7 +19,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
     readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
     ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
-    //loadVoiceBanksList();
+    ui->voiceBanksTableView->setModel(new VoiceBankTableModel(voiceBankHandler));
 }
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
@@ -111,10 +111,11 @@ void VoiceBankManagerWindow::readVoiceBanks(){
     if (voiceBankPathsCount == 0)
         setUIAfterVoiceBanksReadDone();
     else{
-        for (auto path : pathList){
-            LeafLogger::LogMessage(QString(u8"添加%1到音源Handler。").arg(path));
-            voiceBankHandler->addVoiceBank(path);
-        }
+//        for (auto path : pathList){
+//            LeafLogger::LogMessage(QString(u8"添加%1到音源Handler。").arg(path));
+//            voiceBankHandler->addVoiceBank(path);
+//        }
+        voiceBankHandler->addVoiceBanks(pathList);
     }
     
 }
@@ -136,11 +137,6 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     if (++voiceBankReadDoneCount == voiceBankPathsCount){
         setUIAfterVoiceBanksReadDone();
     }
-    //    else
-    //    {
-    //       ui->voicebankCountLabel->setText(tr(u8"已完成%1个/共%2个").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
-    //        ui->voicebankCountLabel->repaint();
-    //    }
     LeafLogger::LogMessage(QString(u8"读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
@@ -154,7 +150,7 @@ void VoiceBankManagerWindow::debugFunction()
 }
 
 
-void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *voiceBank){
+void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *){
     
 }
 #endif
@@ -368,7 +364,7 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
     bool isDone = false;
     QFile* file = new QFile(path);
     if (!file->exists()){
-        delete file;
+        file->deleteLater();
         QMessageBox::warning(this,tr(u8"文件不存在"),tr(u8"文件%1不存在").arg(path));
         return QPair<bool,QTextCodec*>(false,nullptr);}
     QByteArray rawData;
@@ -415,7 +411,7 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
     }
     if (file->isOpen())
         file->close();
-    delete file;
+    file->deleteLater();
     dialog->deleteLater();
     return QPair<bool,QTextCodec*>(isDone,dialog->getTargetCodec());
 }

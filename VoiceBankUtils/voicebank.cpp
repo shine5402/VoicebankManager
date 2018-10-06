@@ -61,14 +61,14 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
     QFile* file = new QFile(path);
     if (!file->exists()){
         LeafLogger::LogMessage(QString(u8"%1不存在。").arg(file->fileName()));
-        delete file;
+        file->deleteLater();
         throw FileNotExists();}
     else
     {
         if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
             auto RawData = file->readAll();
             file->close();
-            delete file;
+            file->deleteLater();
             QTextDecoder *decoder = textCodec->makeDecoder();
             auto String = decoder->toUnicode(RawData);
             delete decoder;
@@ -302,7 +302,7 @@ void VoiceBank::saveSettings(){
     QTextStream json_writer(json_file);
     json_writer << json_doc.toJson();
     json_file->close();
-    delete json_file;
+    json_file->deleteLater();
 }
 
 QTextCodec *VoiceBank::getDefaultReadmeTextCodec()

@@ -20,6 +20,7 @@
 #include "TextCodecUtils/textcodecconvertdialog.h"
 #include <QPair>
 #include <QInputDialog>
+#include "voicebanktablemodel.h"
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -38,7 +39,7 @@ public:
     void loadVoiceBanksList();
 public slots:
 #ifndef NDEBUG
-    void debug_voiceBank_readDone_Slot(VoiceBank *voiceBank);
+    void debug_voiceBank_readDone_Slot(VoiceBank *);
 #endif
     void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 

@@ -13,23 +13,25 @@ public:
     ~VoiceBankHandler();
     QList<VoiceBank *> getVoiceBanks() const;
 
-    VoiceBank* addVoiceBank(QString& path){
-        auto newVoiceBank = new VoiceBank(path,this);
-        //auto newReadThread = QThread::create([=]{newVoiceBank->readFromPath();});
-        //LeafLogger::LogMessage(QString(u8"为%1建立了一个新线程。").arg(path));
-        connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
-        auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(newVoiceBank);
-        //newReadThread->start();
-        threadPool->start(newVoiceBankReadFunctionRunner);
-        LeafLogger::LogMessage(QString(u8"%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
-        addVoiceBank(newVoiceBank);
-        return newVoiceBank;
+    VoiceBank* addVoiceBank(QString& path);
+    QList<VoiceBank*> addVoiceBanks(QStringList& paths){
+        QList<VoiceBank*> voiceBanks;
+        for (auto path : paths)
+        {
+            auto voiceBank = addVoiceBank(path);
+            voiceBanks.append(voiceBank);
+        }
+        return voiceBanks;
     }
     int count(){
         return voiceBanks.count();
     }
     VoiceBank* getVoiceBank(int id){
         return voiceBanks.value(id);
+    }
+    int getVoiceBankID(VoiceBank* voiceBank)
+    {
+        return voiceBanks.indexOf(voiceBank);
     }
     void clear();
     class VoiceBankReadFuctionRunner : public QRunnable{
@@ -43,6 +45,8 @@ public:
     int getThreadPoolMaxThreadCount() const{
         return threadPool->maxThreadCount();
     }
+    enum class SortableInformationID{Name,Path};
+    void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 private:
     QList<VoiceBank *> voiceBanks{};
     void addVoiceBank(VoiceBank * newVoiceBank){
@@ -52,6 +56,7 @@ private:
     void readThreadPoolMaxThreadCountSettings();
     void saveThreadPoolMaxThreadCountSettings();
 private slots:
+    void aVoiceBankReadDoneSlot(VoiceBank* voiceBank);
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
 public slots:

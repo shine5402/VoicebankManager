@@ -35,7 +35,8 @@ SOURCES += \
     VoiceBankUtils/textcodecsettingdialog.cpp \
     ../LeafPublicQtClasses/leaflogger.cpp \
     TextCodecUtils/availabletextcodecdialog.cpp \
-    TextCodecUtils/textcodecconvertdialog.cpp
+    TextCodecUtils/textcodecconvertdialog.cpp \
+    VoiceBankUtils/voicebanktablemodel.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -50,7 +51,8 @@ HEADERS += \
     ../LeafPublicQtClasses/leaflogger.h \
     TextCodecUtils/availabletextcodecdialog.h \
     TextCodecUtils/textcodecconvertdialog.h \
-    public_defines.h
+    public_defines.h \
+    VoiceBankUtils/voicebanktablemodel.h
 
 FORMS += \
         editorwindow.ui \
