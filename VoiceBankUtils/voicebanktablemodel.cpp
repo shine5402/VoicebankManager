@@ -1,9 +1,8 @@
 ﻿#include "voicebanktablemodel.h"
+//TODO: 修正默认排序
 int VoiceBankTableModel::iconSize = 20;
 VoiceBankTableModel::VoiceBankTableModel(VoiceBankHandler *parent) : QAbstractTableModel (parent),voicebankHandler(parent)
 {
-    //FIXME: 修复此处信号传递
-    //connect(parent,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
     connect(parent,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(dataChangedEmitter(VoiceBank*)));
 }
 void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
