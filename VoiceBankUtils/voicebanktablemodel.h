@@ -28,8 +28,9 @@ public:
     Qt::ItemFlags flags(const QModelIndex &) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-public slots:
     void dataChangedEmitter(VoiceBank *voiceBank);
+public slots:
+    void newDataEmitter(VoiceBank *voiceBank);
 private:
     static int iconSize;
     VoiceBankHandler* voicebankHandler = nullptr;

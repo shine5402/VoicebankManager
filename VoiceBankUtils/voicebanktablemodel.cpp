@@ -1,14 +1,16 @@
 ﻿#include "voicebanktablemodel.h"
-//TODO: 修正默认排序
 int VoiceBankTableModel::iconSize = 20;
 VoiceBankTableModel::VoiceBankTableModel(VoiceBankHandler *parent) : QAbstractTableModel (parent),voicebankHandler(parent)
 {
-    connect(parent,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(dataChangedEmitter(VoiceBank*)));
+    connect(parent,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(newDataEmitter(VoiceBank*)));
 }
-void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
+void VoiceBankTableModel::newDataEmitter(VoiceBank* voiceBank){
 
     beginInsertRows(QModelIndex(),voicebankHandler->getVoiceBankID(voiceBank),voicebankHandler->getVoiceBankID(voiceBank));
     endInsertRows();
+}
+void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
+    emit dataChanged(index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Name),index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Path));
 }
 QVariant VoiceBankTableModel::data(const QModelIndex &index, int role) const
 {

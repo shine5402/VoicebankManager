@@ -26,10 +26,10 @@ public:
     int count(){
         return voiceBanks.count();
     }
-    VoiceBank* getVoiceBank(int id){
+    VoiceBank* getVoiceBank(int id) const{
         return voiceBanks.value(id);
     }
-    int getVoiceBankID(VoiceBank* voiceBank)
+    int getVoiceBankID(VoiceBank* voiceBank) const
     {
         return voiceBanks.indexOf(voiceBank);
     }
@@ -47,6 +47,10 @@ public:
     }
     enum class SortableInformationID{Name,Path};
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
+    QList<int> findIDByName(const QString &text) const;
+    int getVoiceBankCount() const{
+        return voiceBanks.count();
+    }
 private:
     QList<VoiceBank *> voiceBanks{};
     void addVoiceBank(VoiceBank * newVoiceBank){
@@ -56,7 +60,6 @@ private:
     void readThreadPoolMaxThreadCountSettings();
     void saveThreadPoolMaxThreadCountSettings();
 private slots:
-    void aVoiceBankReadDoneSlot(VoiceBank* voiceBank);
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
 public slots:

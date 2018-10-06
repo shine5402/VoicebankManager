@@ -41,14 +41,14 @@ public slots:
 #ifndef NDEBUG
     void debug_voiceBank_readDone_Slot(VoiceBank *);
 #endif
-    void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+    void voiceBankReadDoneSlot(VoiceBank *);
 
 private:
     Ui::VoiceBankManagerWindow *ui;
     QStringList monitorFolders = {u8"./voice"};
     VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
+    VoiceBankTableModel* voiceBankTableModel = nullptr;
     QStringList getFoldersInMonitorFolders() const;
-    void addVoiceBankRowInTableWidget(VoiceBank *voiceBank);
     void setVoiceBankInfomation(VoiceBank *voiceBank);
     int voiceBankPathsCount{};
     int voiceBankReadDoneCount{};
@@ -65,6 +65,9 @@ private:
     void setUIAfterVoiceBanksReadDone();
 
     QPair<bool, QTextCodec *> processFileTextCodecConvert(const QString &path, QTextCodec *sourceCodec, QTextCodec *targetCodec);
+    VoiceBank *getSelectedVoiceBank();
+
+    VoiceBank *getSelectedVoiceBank(QTableWidgetItem *current);
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -90,6 +93,8 @@ private slots:
     void convertReadmeCodecActionSlot();
     void on_actionSet_Thread_Pool_Max_Count_triggered();
     void convertWavFileNameCodecActionSlot();
+    void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
+    void on_voiceBanksTableView_clicked(const QModelIndex &);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

@@ -44,17 +44,28 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
     if (sortWhat == SortableInformationID::Name)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank *value1,VoiceBank *value2)->bool{
             if (order == Qt::AscendingOrder)
-            return value1->getName() > value2->getName();
-        else
             return value1->getName() < value2->getName();
+        else
+            return value1->getName() > value2->getName();
     });
     else if (sortWhat == SortableInformationID::Path)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const VoiceBank *value1,const VoiceBank *value2)->bool{
             if (order == Qt::AscendingOrder)
-                return value1->getPath() > value2->getPath();
-            else
                 return value1->getPath() < value2->getPath();
+            else
+                return value1->getPath() > value2->getPath();
         });
+}
+
+QList<int> VoiceBankHandler::findIDByName(const QString &text) const
+{
+    QList<int> result{};
+    for (auto voiceBank : voiceBanks)
+    {
+        if (voiceBank->getName().contains(text) || voiceBank->getPath().contains(text))
+            result.append(getVoiceBankID(voiceBank));
+    }
+    return result;
 }
 
 void VoiceBankHandler::readThreadPoolMaxThreadCountSettings()
@@ -70,10 +81,6 @@ void VoiceBankHandler::saveThreadPoolMaxThreadCountSettings()
     settings.setValue(u8"VoiceBankHandler/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
 }
 
-void VoiceBankHandler::aVoiceBankReadDoneSlot(VoiceBank *voiceBank)
-{
-
-}
 
 VoiceBankHandler::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank *voicebank):QRunnable(),voicebank(voicebank)
 {
