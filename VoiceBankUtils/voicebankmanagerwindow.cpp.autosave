@@ -211,7 +211,6 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 }
 VoiceBank* VoiceBankManagerWindow::getSelectedVoiceBank()
 {
-    //return voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
     return voiceBankHandler->getVoiceBank(ui->voiceBanksTableView->currentIndex().row());
 }
 VoiceBank* VoiceBankManagerWindow::getSelectedVoiceBank(QTableWidgetItem *current)

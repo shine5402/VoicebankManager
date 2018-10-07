@@ -72,8 +72,6 @@ private slots:
 #ifndef NDEBUG
     void debugFunction();
 #endif
-    void on_voiceBanksTableWidget_currentItemChanged(QTableWidgetItem *current, QTableWidgetItem *);
-    void on_voiceBanksTableWidget_customContextMenuRequested(const QPoint &);
     void openVoiceBankPathInExplorer();
     void openVoiceBankCharacterFileByOS();
     void openVoiceBankReadmeFileByOS();
