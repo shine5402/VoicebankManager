@@ -6,7 +6,6 @@
 #include <QAction>
 #include "voicebankhandler.h"
 #include <QDebug>
-#include "../GUIUtils/nofocusdelegate.h"
 #include <QTableWidgetItem>
 #include <QMenu>
 #include <QAction>
