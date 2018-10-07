@@ -11,7 +11,6 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->menubar->addAction(debugFunctionAction);
     connect(debugFunctionAction,SIGNAL(triggered(bool)),this,SLOT(debugFunction()));
 #endif
-    //ui->voiceBanksTableWidget->setItemDelegate(new NoFocusDelegate());
     loadMonitorFoldersSettings();
     createVoiceBanksTableMenu();
     connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
@@ -22,6 +21,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
     ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
+    connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &)));
 }
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
@@ -116,10 +116,11 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
     ui->voiceBankBriefInfomationWidget->setVisible(false);
 }
 
-void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *){
-    if (++voiceBankReadDoneCount == voiceBankPathsCount){
-        setUIAfterVoiceBanksReadDone();
-    }
+void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
+    if (voiceBank->isFirstRead())
+        if (++voiceBankReadDoneCount == voiceBankPathsCount){
+            setUIAfterVoiceBanksReadDone();
+        }
     LeafLogger::LogMessage(QString(u8"读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
@@ -211,13 +212,14 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 }
 VoiceBank* VoiceBankManagerWindow::getSelectedVoiceBank()
 {
-    //return voiceBankByTableItemFinder.value(ui->voiceBanksTableWidget->currentItem());
-    return voiceBankHandler->getVoiceBank(ui->voiceBanksTableView->currentIndex().row());
+    return getSelectedVoiceBank(ui->voiceBanksTableView->currentIndex());
 }
-VoiceBank* VoiceBankManagerWindow::getSelectedVoiceBank(QTableWidgetItem *current)
+
+VoiceBank *VoiceBankManagerWindow::getSelectedVoiceBank(const QModelIndex &current)
 {
-    return voiceBankByTableItemFinder.value(current);
+    return voiceBankHandler->getVoiceBank(current.row());
 }
+
 void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
 {
     auto voiceBank = getSelectedVoiceBank();
@@ -406,11 +408,7 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
 void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
-        voiceBank->readFromPathWithoutEmit();
-//        auto row = ui->voiceBanksTableWidget->currentRow();
-//        ui->voiceBanksTableWidget->item(row,TableColumn::Name)->setText(voiceBank->getName());
-//        ui->voiceBanksTableWidget->item(row,TableColumn::Name)->setIcon(QPixmap::fromImage(voiceBank->getImage()));
-//        ui->voiceBanksTableWidget->item(row,TableColumn::Path)->setText(voiceBank->getPath());
+        voiceBank->readFromPath();
         voiceBankTableModel->dataChangedEmitter(voiceBank);
         setVoiceBankInfomation(voiceBank);
     }
@@ -503,9 +501,10 @@ void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(c
     voiceBanksTableWidgetMenu->exec(QCursor::pos());
 }
 
-void VoiceBankManagerWindow::on_voiceBanksTableView_clicked(const QModelIndex &)
+
+void VoiceBankManagerWindow::onVoiceBankViewCurrentChanged(const QModelIndex &current, const QModelIndex &)
 {
-    auto voiceBank = getSelectedVoiceBank();
+    auto voiceBank = getSelectedVoiceBank(current);
     if (voiceBank)
         setVoiceBankInfomation(voiceBank);
 }

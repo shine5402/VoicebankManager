@@ -114,7 +114,6 @@ public:
 
     static QTextCodec *getDefaultReadmeTextCodec();
     static void readStaticSettings();
-    void readFromPathWithoutEmit();
 
     bool getIsFollowDefault() const;
     void setIsFollowDefault(bool value);
@@ -139,6 +138,9 @@ public:
 
     QStringList getWavFilePath() const;
     QList<ErrorState *> getErrorStates() const;
+    bool isFirstRead() const{
+        return ReadCount == 1 || ReadCount == 0;
+    }
 
 private:
     QImage image;
@@ -164,6 +166,8 @@ private:
     QStringList wavFileName{};
     QByteArrayList wavFileNameRaw{};
     QStringList wavFilePath{};
+    //bool firstRead = true;
+    int ReadCount = 0;
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);

@@ -418,7 +418,18 @@ void VoiceBank::readReadme()
         LeafLogger::LogMessage(QString(u8"%1的音源的readme.txt无法打开。").arg(path));
     }
 }
-void VoiceBank::readFromPathWithoutEmit()
+
+bool VoiceBank::getIsFollowDefault() const
+{
+    return isTextCodecFollowDefault;
+}
+
+void VoiceBank::setIsFollowDefault(bool value)
+{
+    isTextCodecFollowDefault = value;
+}
+
+void VoiceBank::readFromPath()
 {
     path = QDir::fromNativeSeparators(path);
     if (!path.endsWith(u8"/")){
@@ -434,21 +445,8 @@ void VoiceBank::readFromPathWithoutEmit()
     readSettings();
     readCharacterFile();
     readReadme();
-}
-
-bool VoiceBank::getIsFollowDefault() const
-{
-    return isTextCodecFollowDefault;
-}
-
-void VoiceBank::setIsFollowDefault(bool value)
-{
-    isTextCodecFollowDefault = value;
-}
-
-void VoiceBank::readFromPath()
-{
-    readFromPathWithoutEmit();
+    //firstRead = false;
+    ++ReadCount;
     emit readDone(this);
 }
 
