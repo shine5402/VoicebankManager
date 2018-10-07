@@ -29,7 +29,6 @@ SOURCES += \
     VoiceBankUtils/voicebankreadmeinformationdialog.cpp \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
-    GUIUtils/nofocusdelegate.cpp \
     VoiceBankUtils/monitorfolderssettingdialog.cpp \
     VoiceBankUtils/monitorfoldersadddialog.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
@@ -44,7 +43,6 @@ HEADERS += \
     VoiceBankUtils/voicebankreadmeinformationdialog.h \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
-    GUIUtils/nofocusdelegate.h \
     VoiceBankUtils/monitorfolderssettingdialog.h \
     VoiceBankUtils/monitorfoldersadddialog.h \
     VoiceBankUtils/textcodecsettingdialog.h \
