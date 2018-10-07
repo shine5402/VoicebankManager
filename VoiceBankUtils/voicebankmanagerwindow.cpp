@@ -26,16 +26,12 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
-    //ui->voiceBanksTableWidget->clearContents();
-    //ui->voiceBanksTableWidget->setRowCount(0);
     voiceBankHandler->clear();
     voiceBankByTableItemFinder.clear();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableView->setEnabled(false);
     ui->voicebankCountLabel->setText(tr(u8"加载中"));
-    //ui->voiceBanksTableWidget->setSortingEnabled(false);
     readVoiceBanks();
-    
 }
 
 VoiceBankManagerWindow::~VoiceBankManagerWindow()
@@ -121,6 +117,11 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
         if (++voiceBankReadDoneCount == voiceBankPathsCount){
             setUIAfterVoiceBanksReadDone();
         }
+    auto name  = voiceBank->getName();
+    if (!name.isEmpty())
+        ui->statusbar->showMessage(tr(u8"音源“%1”读取完毕").arg(name));
+    else
+        ui->statusbar->showMessage(tr(u8"音源“%1”读取完毕").arg(voiceBank->getPath()));
     LeafLogger::LogMessage(QString(u8"读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
@@ -169,7 +170,7 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     auto copyCharacterPathAction = new QAction(tr(u8"复制character.txt的文件路径"),this);
     connect(copyCharacterPathAction,SIGNAL(triggered(bool)),this,SLOT(copyVoiceBankCharacterFilePathtoClipboard()));
-    copyPathAction->setStatusTip(tr(u8"复制该音源的character.txt的路径到剪贴板。"));
+    copyCharacterPathAction->setStatusTip(tr(u8"复制该音源的character.txt的路径到剪贴板。"));
     copySubMenu->addAction(copyCharacterPathAction);
 
     auto copyReadmePathAction = new QAction(tr(u8"复制readme.txt的文件路径"),this);
@@ -491,9 +492,11 @@ void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
 void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
 {
     bool ok = false;
-    auto count = QInputDialog::getInt(this,tr(u8"设定线程池的最大大小"),tr(u8"该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),voiceBankHandler->getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
-    if (ok)
+    auto count = QInputDialog::getInt(this,tr(u8"设定线程池的最大大小"),tr(u8"（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),voiceBankHandler->getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
+    if (ok){
         voiceBankHandler->setThreadPoolMaxThreadCount(count);
+    ui->statusbar->showMessage(tr(u8"线程池大小已经被设置为%1").arg(count));
+    }
 }
 
 void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(const QPoint &)
