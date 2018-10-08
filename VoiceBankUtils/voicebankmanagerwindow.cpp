@@ -181,12 +181,14 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     voiceBanksTableWidgetMenu->addMenu(copySubMenu);
 
 
-    auto codecSubMenu = new QMenu(tr(u8"编码转换"),this);
+    auto codecSubMenu = new QMenu(tr(u8"编码相关"),this);
 
     auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),this);
     connect(setCodecAction,SIGNAL(triggered(bool)),this,SLOT(setCodecForVoiceBankActionSlot()));
     setCodecAction->setStatusTip(tr(u8"为该音源设置读取用文本编码。注意，这仅在本软件中有效。"));
     codecSubMenu->addAction(setCodecAction);
+
+    codecSubMenu->addSeparator();
 
     auto convertCharacterCodecAction = new QAction(tr(u8"对character.txt进行编码转换"),this);
     connect(convertCharacterCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertCharacterCodecActionSlot()));
