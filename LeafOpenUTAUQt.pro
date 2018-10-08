@@ -35,7 +35,11 @@ SOURCES += \
     ../LeafPublicQtClasses/leaflogger.cpp \
     TextCodecUtils/availabletextcodecdialog.cpp \
     TextCodecUtils/textcodecconvertdialog.cpp \
-    VoiceBankUtils/voicebanktablemodel.cpp
+    VoiceBankUtils/voicebanktablemodel.cpp \
+    EngineUtils/moresamplersettingsdialog.cpp \
+    EngineUtils/moresamplersettingsmodel.cpp \
+    EngineUtils/moresamplerconfigreader.cpp \
+    EngineUtils/moresamplerconfig.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -50,7 +54,11 @@ HEADERS += \
     TextCodecUtils/availabletextcodecdialog.h \
     TextCodecUtils/textcodecconvertdialog.h \
     public_defines.h \
-    VoiceBankUtils/voicebanktablemodel.h
+    VoiceBankUtils/voicebanktablemodel.h \
+    EngineUtils/moresamplersettingsdialog.h \
+    EngineUtils/moresamplersettingsmodel.h \
+    EngineUtils/moresamplerconfigreader.h \
+    EngineUtils/moresamplerconfig.h
 
 FORMS += \
         editorwindow.ui \
@@ -60,7 +68,8 @@ FORMS += \
     VoiceBankUtils/monitorfoldersadddialog.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
     TextCodecUtils/availabletextcodecdialog.ui \
-    TextCodecUtils/textcodecconvertdialog.ui
+    TextCodecUtils/textcodecconvertdialog.ui \
+    EngineUtils/moresamplersettingsdialog.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }
