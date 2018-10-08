@@ -1,6 +1,7 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 
+//FIXME:修复重载空行
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
