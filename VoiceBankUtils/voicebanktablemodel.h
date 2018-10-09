@@ -31,6 +31,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void dataChangedEmitter(VoiceBank *voiceBank);
+    void clear();
 public slots:
     void newDataEmitter(VoiceBank *voiceBank);
 private:

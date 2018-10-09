@@ -14,6 +14,16 @@ void VoiceBankTableModel::newDataEmitter(VoiceBank* voiceBank){
 void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
     emit dataChanged(index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Name),index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Path));
 }
+
+void VoiceBankTableModel::clear()
+{
+    if (rowCount() > 0)
+    {
+        beginRemoveRows(QModelIndex(),0,rowCount()-1);
+        voicebankHandler->clear();
+        endRemoveRows();
+    }
+}
 QVariant VoiceBankTableModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())

@@ -56,7 +56,6 @@ private:
         static constexpr int Name = 0;
         static constexpr int Path = 1;
     };
-    QHash<QTableWidgetItem*,VoiceBank*> voiceBankByTableItemFinder;
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
     void createVoiceBanksTableMenu();
     void loadMonitorFoldersSettings();
