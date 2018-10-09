@@ -42,7 +42,7 @@ private:
     QString configString;
     ConfigDecoration decoration{};
     ConfigType type{};
-    static ConfigType getTypeByName(const QString &name);
+    static ConfigType getTypeByTypeName(const QString &name);
     static QString getTypeString(ConfigType type);
     QString valueString;
 };

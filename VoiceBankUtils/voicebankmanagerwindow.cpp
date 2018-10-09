@@ -127,11 +127,8 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    auto voiceBank = getSelectedVoiceBank();
-    if (voiceBank){
-        voiceBank->readWavFileName();
-        qDebug() << "Read Done.";
-    }
+    MoresamplerConfigReader* reader = new MoresamplerConfigReader(u8"D:/Program Files (x86)/UTAU/voice/Akatsuka Youichi_fall/moreconfig.txt",MoresamplerConfigReader::ConfigFileType::VoiceBank,this);
+    qDebug() << "read done";
 }
 
 

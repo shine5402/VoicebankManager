@@ -41,7 +41,6 @@ int MoresamplerSettingsModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     return configReader->getCount();
-    // FIXME: Implement me!
 }
 
 int MoresamplerSettingsModel::columnCount(const QModelIndex &parent) const
@@ -49,7 +48,6 @@ int MoresamplerSettingsModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     return 5;
-    // FIXME: Implement me!
 }
 
 QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) const

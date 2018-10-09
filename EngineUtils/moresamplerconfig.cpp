@@ -24,6 +24,8 @@ MoresamplerConfig::ConfigType MoresamplerConfig::getType() const
 void MoresamplerConfig::processString()
 {
     auto string = configString.trimmed();
+    if (string.isEmpty())
+        return;
     if (string.at(0) == u8"#")
     {
         decoration.comment = true;
@@ -34,12 +36,12 @@ void MoresamplerConfig::processString()
         string.remove(0,1);
         decoration.override = true;
     }
-    type = getTypeByName(string);
     auto splitted = string.split(" ",QString::SplitBehavior::SkipEmptyParts);
+    type = getTypeByTypeName(splitted.at(0));
     valueString = splitted.at(1);
 }
 
-MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByName(const QString& name)
+MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByTypeName(const QString& name)
 {
     auto trimmedName = name.trimmed();
     if (trimmedName == "output-sampling-rate" || trimmedName == "output-bit-depth" || trimmedName == "resampler-compatibility")
@@ -71,6 +73,7 @@ QString MoresamplerConfig::getTypeString(MoresamplerConfig::ConfigType type)
     case ConfigType::Unknown:
         return QCoreApplication::translate("MoresamplerConfig", u8"未知");
     }
+    return QCoreApplication::translate("MoresamplerConfig", u8"未知");
 }
 
 QString MoresamplerConfig::getValueString() const

@@ -16,6 +16,7 @@ public:
     int getCount() const{
         return configs.count();
     }
+    void saveConfigs();
 signals:
 
 public slots:
