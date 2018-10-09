@@ -28,7 +28,6 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
     voiceBankHandler->clear();
-    voiceBankByTableItemFinder.clear();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableView->setEnabled(false);
     ui->voicebankCountLabel->setText(tr(u8"加载中"));
