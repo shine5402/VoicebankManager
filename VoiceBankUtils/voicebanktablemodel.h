@@ -8,13 +8,15 @@ class VoiceBankTableModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit VoiceBankTableModel(VoiceBankHandler *parent);
-    virtual int columnCount(const QModelIndex & = QModelIndex()) const override{
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override{
+        if (parent.isValid())
+            return 0;
         return TableColumns::Count;
     }
-    virtual int rowCount(const QModelIndex & = QModelIndex()) const override{
-//        if (!parent.isValid())
-//            return 0;
-//        else
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override{
+        if (parent.isValid())
+            return 0;
+        else
             return voicebankHandler->count();
     }
     struct TableColumns
@@ -29,6 +31,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     void dataChangedEmitter(VoiceBank *voiceBank);
+    void clear();
 public slots:
     void newDataEmitter(VoiceBank *voiceBank);
 private:

@@ -1,7 +1,6 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 
-//FIXME:修复重载空行
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
@@ -27,7 +26,8 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
-    voiceBankHandler->clear();
+    //voiceBankHandler->clear();
+    voiceBankTableModel->clear();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableView->setEnabled(false);
     ui->voicebankCountLabel->setText(tr(u8"加载中"));
