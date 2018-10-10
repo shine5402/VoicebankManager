@@ -32,6 +32,8 @@ public:
         return configString.trimmed().isEmpty();
     }
 
+    QString getNameString() const;
+
 private:
     struct ConfigDecoration
     {
@@ -45,6 +47,7 @@ private:
     static ConfigType getTypeByTypeName(const QString &name);
     static QString getTypeString(ConfigType type);
     QString valueString;
+    QString nameString;
 };
 
 #endif // MORESAMPLERCONFIG_H

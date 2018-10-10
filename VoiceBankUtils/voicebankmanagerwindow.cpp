@@ -26,8 +26,8 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
-    //voiceBankHandler->clear();
-    voiceBankTableModel->clear();
+    voiceBankHandler->clear();
+    voiceBankTableModel->clearEmitter();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableView->setEnabled(false);
     ui->voicebankCountLabel->setText(tr(u8"加载中"));
@@ -127,7 +127,8 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    MoresamplerConfigReader* reader = new MoresamplerConfigReader(u8"D:/Program Files (x86)/UTAU/voice/Akatsuka Youichi_fall/moreconfig.txt",MoresamplerConfigReader::ConfigFileType::VoiceBank,this);
+    auto dialog = new MoresamplerSettingsDialog(u8"D:/Program Files (x86)/UTAU/voice/Akatsuka Youichi_fall/moreconfig.txt",this);
+    dialog->exec();
     qDebug() << "read done";
 }
 

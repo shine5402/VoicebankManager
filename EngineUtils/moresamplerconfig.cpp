@@ -37,7 +37,8 @@ void MoresamplerConfig::processString()
         decoration.override = true;
     }
     auto splitted = string.split(" ",QString::SplitBehavior::SkipEmptyParts);
-    type = getTypeByTypeName(splitted.at(0));
+    nameString = splitted.at(0);
+    type = getTypeByTypeName(nameString);
     valueString = splitted.at(1);
 }
 
@@ -74,6 +75,11 @@ QString MoresamplerConfig::getTypeString(MoresamplerConfig::ConfigType type)
         return QCoreApplication::translate("MoresamplerConfig", u8"未知");
     }
     return QCoreApplication::translate("MoresamplerConfig", u8"未知");
+}
+
+QString MoresamplerConfig::getNameString() const
+{
+    return nameString;
 }
 
 QString MoresamplerConfig::getValueString() const

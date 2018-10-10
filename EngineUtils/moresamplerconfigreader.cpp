@@ -15,7 +15,7 @@ void MoresamplerConfigReader::readConfigs()
         auto fileContentSingleLine = fileContentString.split("\n");
         for (auto string : fileContentSingleLine)
         {
-            configs.append(MoresamplerConfig(string));
+            configs.append(new MoresamplerConfig(string));
         }
     }
 }
@@ -23,4 +23,17 @@ void MoresamplerConfigReader::readConfigs()
 void MoresamplerConfigReader::saveConfigs()
 {
 
+}
+
+MoresamplerConfigReader::~MoresamplerConfigReader()
+{
+    for (auto i : configs)
+    {
+        delete i;
+    }
+}
+
+MoresamplerConfigReader::ConfigFileType MoresamplerConfigReader::getConfigFileType() const
+{
+    return configFileType;
 }

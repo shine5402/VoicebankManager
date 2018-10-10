@@ -9,21 +9,36 @@ QVariant MoresamplerSettingsModel::headerData(int section, Qt::Orientation orien
 {
     if (role == Qt::ItemDataRole::DisplayRole){
         if (orientation == Qt::Orientation::Horizontal){
-            switch (section) {
-            //改变此处时注意更改ColumnCount
-            case 0:
-                return tr(u8"设置项");
-            case 1:
-                return tr(u8"值");
-            case 2:
-                return tr(u8"分类");
-            case 3:
-                return tr(u8"是否覆盖声库配置");//FIXME: 根据是否为声库配置单独显示
-            case 4:
-                return tr(u8"注释");
-            default:
-                return QVariant();
-            }
+            if (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global)
+                switch (section) {
+                //改变此处时注意更改ColumnCount
+                case TableColumnsGlobal::Name:
+                    return tr(u8"设置项");
+                case TableColumnsGlobal::Value:
+                    return tr(u8"值");
+                case TableColumnsGlobal::Type:
+                    return tr(u8"分类");
+                case TableColumnsGlobal::Override:
+                    return tr(u8"是否覆盖声库配置");//FIXME: 根据是否为声库配置单独显示
+                case TableColumnsGlobal::Information:
+                    return tr(u8"说明");
+                default:
+                    return QVariant();
+                }
+            else
+                switch (section) {
+                //改变此处时注意更改ColumnCount
+                case TableColumnsVoicebank::Name:
+                    return tr(u8"设置项");
+                case TableColumnsVoicebank::Value:
+                    return tr(u8"值");
+                case TableColumnsVoicebank::Type:
+                    return tr(u8"分类");
+                case TableColumnsVoicebank::Information:
+                    return tr(u8"说明");
+                default:
+                    return QVariant();
+                }
         }
         else
         {
@@ -47,14 +62,57 @@ int MoresamplerSettingsModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return 5;
+    if (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global)
+        return TableColumnsGlobal::Count;
+    else
+        return TableColumnsVoicebank::Count;
 }
 
 QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-
+    if (role == Qt::ItemDataRole::DisplayRole) {
+        if (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global)
+            switch (index.column())
+            {
+            case TableColumnsGlobal::Name:
+                // return tr(u8"设置项");
+                return configReader->getConfig(index.row())->getNameString();
+            case TableColumnsGlobal::Value:
+                //return tr(u8"值");
+                return configReader->getConfig(index.row())->getValueString();
+            case TableColumnsGlobal::Type:
+                //return tr(u8"分类");
+                return configReader->getConfig(index.row())->getTypeString();
+            case TableColumnsGlobal::Override:
+                //return tr(u8"是否覆盖声库配置");//FIXME: 根据是否为声库配置单独显示
+                return configReader->getConfig(index.row())->isOverride();
+            case TableColumnsGlobal::Information:
+                //return tr(u8"说明");
+                return QVariant();//FIXME: 在此处放置说明
+            default:
+                return QVariant();
+            }
+        else
+            switch (index.column())
+            {
+            case TableColumnsVoicebank::Name:
+                // return tr(u8"设置项");
+                return configReader->getConfig(index.row())->getNameString();
+            case TableColumnsVoicebank::Value:
+                //return tr(u8"值");
+                return configReader->getConfig(index.row())->getValueString();
+            case TableColumnsVoicebank::Type:
+                //return tr(u8"分类");
+                return configReader->getConfig(index.row())->getTypeString();
+            case TableColumnsVoicebank::Information:
+                //return tr(u8"说明");
+                return QVariant();//FIXME: 在此处放置说明
+            default:
+                return QVariant();
+            }
+    }
     // FIXME: Implement me!
     return QVariant();
 }
@@ -73,6 +131,8 @@ Qt::ItemFlags MoresamplerSettingsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
-
-    return Qt::ItemIsEditable; // FIXME: Implement me!
+    if ((configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == TableColumnsGlobal::Value) || (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == TableColumnsVoicebank::Value))
+        return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
+    else
+        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }

@@ -17,13 +17,19 @@ public:
         return configs.count();
     }
     void saveConfigs();
+    MoresamplerConfig* getConfig(int id) const{
+        return configs.at(id);
+    }
+    ~MoresamplerConfigReader();
+    ConfigFileType getConfigFileType() const;
+
 signals:
 
 public slots:
 private:
     QString path;
     ConfigFileType configFileType;
-    QList<MoresamplerConfig> configs;
+    QList<MoresamplerConfig *> configs;
 };
 
 #endif // MORESAMPLERCONFIGREADER_H

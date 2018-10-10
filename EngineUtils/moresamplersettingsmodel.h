@@ -24,6 +24,21 @@ public:
                  int role = Qt::EditRole) override;
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
+    struct TableColumnsGlobal{
+        constexpr static int Count = 5;
+        constexpr static int Name = 0;
+        constexpr static int Value = 1;
+        constexpr static int Type = 2;
+        constexpr static int Override = 3;
+        constexpr static int Information = 4;
+    };
+    struct TableColumnsVoicebank{
+        constexpr static int Count = 4;
+        constexpr static int Name = 0;
+        constexpr static int Value = 1;
+        constexpr static int Type = 2;
+        constexpr static int Information = 3;
+    };
 
 private:
     MoresamplerConfigReader* configReader = nullptr;
