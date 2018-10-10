@@ -20,7 +20,7 @@ QVariant MoresamplerSettingsModel::headerData(int section, Qt::Orientation orien
                     return tr(u8"分类");
                 case TableColumnsGlobal::Override:
                     return tr(u8"是否覆盖声库配置");//FIXME: 根据是否为声库配置单独显示
-                case TableColumnsGlobal::Information:
+                case TableColumnsGlobal::Help:
                     return tr(u8"说明");
                 default:
                     return QVariant();
@@ -34,7 +34,7 @@ QVariant MoresamplerSettingsModel::headerData(int section, Qt::Orientation orien
                     return tr(u8"值");
                 case TableColumnsVoicebank::Type:
                     return tr(u8"分类");
-                case TableColumnsVoicebank::Information:
+                case TableColumnsVoicebank::Help:
                     return tr(u8"说明");
                 default:
                     return QVariant();
@@ -88,7 +88,7 @@ QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) cons
             case TableColumnsGlobal::Override:
                 //return tr(u8"是否覆盖声库配置");//FIXME: 根据是否为声库配置单独显示
                 return configReader->getConfig(index.row())->isOverride();
-            case TableColumnsGlobal::Information:
+            case TableColumnsGlobal::Help:
                 //return tr(u8"说明");
                 return QVariant();//FIXME: 在此处放置说明
             default:
@@ -106,7 +106,7 @@ QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) cons
             case TableColumnsVoicebank::Type:
                 //return tr(u8"分类");
                 return configReader->getConfig(index.row())->getTypeString();
-            case TableColumnsVoicebank::Information:
+            case TableColumnsVoicebank::Help:
                 //return tr(u8"说明");
                 return QVariant();//FIXME: 在此处放置说明
             default:

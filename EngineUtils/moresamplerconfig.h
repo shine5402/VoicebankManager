@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QCoreApplication>
+#include <QHash>
 class MoresamplerConfig
 {
 public:
@@ -45,9 +46,11 @@ private:
     ConfigDecoration decoration{};
     ConfigType type{};
     static ConfigType getTypeByTypeName(const QString &name);
-    static QString getTypeString(ConfigType type);
+    static QString getTypeString(const ConfigType type);
+    static QString getEntryHelp(const QString configName);
     QString valueString;
     QString nameString;
+    static const QHash<QString,QString> EntryHelps;
 };
 
 #endif // MORESAMPLERCONFIG_H

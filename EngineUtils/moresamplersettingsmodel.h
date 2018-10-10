@@ -14,8 +14,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    inline int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    inline int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
@@ -30,14 +30,14 @@ public:
         constexpr static int Value = 1;
         constexpr static int Type = 2;
         constexpr static int Override = 3;
-        constexpr static int Information = 4;
+        constexpr static int Help = 4;
     };
     struct TableColumnsVoicebank{
         constexpr static int Count = 4;
         constexpr static int Name = 0;
         constexpr static int Value = 1;
         constexpr static int Type = 2;
-        constexpr static int Information = 3;
+        constexpr static int Help = 3;
     };
 
 private:

@@ -58,7 +58,7 @@ MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByTypeName(const QString
     return ConfigType::Unknown;
 }
 
-QString MoresamplerConfig::getTypeString(MoresamplerConfig::ConfigType type)
+QString MoresamplerConfig::getTypeString(const ConfigType type)
 {
     switch (type) {
     case ConfigType::Analysis:
@@ -77,6 +77,11 @@ QString MoresamplerConfig::getTypeString(MoresamplerConfig::ConfigType type)
     return QCoreApplication::translate("MoresamplerConfig", u8"未知");
 }
 
+QString MoresamplerConfig::getEntryHelp(const QString configName)
+{
+
+}
+
 QString MoresamplerConfig::getNameString() const
 {
     return nameString;
@@ -91,3 +96,5 @@ void MoresamplerConfig::setValueString(const QString &value)
 {
     valueString = value;
 }
+//FIXME:插入帮助
+const QHash<QString,QString> MoresamplerConfig::EntryHelps{{"",""}};
