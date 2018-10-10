@@ -9,6 +9,7 @@ MoresamplerSettingsDialog::MoresamplerSettingsDialog(const QString &path, QWidge
     reader = new MoresamplerConfigReader(path,MoresamplerConfigReader::ConfigFileType::VoiceBank,this);
     model = new MoresamplerSettingsModel(reader);
     ui->configTableView->setModel(model);
+    ui->configTableView->resizeColumnsToContents();
 }
 
 MoresamplerSettingsDialog::~MoresamplerSettingsDialog()

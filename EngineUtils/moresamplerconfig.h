@@ -34,7 +34,7 @@ public:
     }
 
     QString getNameString() const;
-
+    QString getEntryHelp() const;
 private:
     struct ConfigDecoration
     {
@@ -50,7 +50,7 @@ private:
     static QString getEntryHelp(const QString configName);
     QString valueString;
     QString nameString;
-    static const QHash<QString,QString> EntryHelps;
+    static const QHash<QString,QString> entryHelps;
 };
 
 #endif // MORESAMPLERCONFIG_H

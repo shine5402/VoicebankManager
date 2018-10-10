@@ -108,7 +108,7 @@ QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) cons
                 return configReader->getConfig(index.row())->getTypeString();
             case TableColumnsVoicebank::Help:
                 //return tr(u8"说明");
-                return QVariant();//FIXME: 在此处放置说明
+                return configReader->getConfig(index.row())->getEntryHelp();
             default:
                 return QVariant();
             }
