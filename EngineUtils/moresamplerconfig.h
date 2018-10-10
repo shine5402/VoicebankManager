@@ -35,6 +35,23 @@ public:
 
     QString getNameString() const;
     QString getEntryHelp() const;
+    class EditMode{
+    public:
+        enum ValueType{Choices,Integer,Float,String};
+        EditMode(ValueType valueType,QStringList choices = QStringList());
+        class IsNotChoicesException : std::runtime_error{
+        public:
+            IsNotChoicesException();
+        };
+        ValueType getValueType() const;
+        QStringList getChoices() const;
+        virtual ~EditMode();
+        virtual bool isValidValue(QVariant value) const = 0;
+    private:
+        QStringList choices;
+        ValueType valueType;
+    };
+
 private:
     struct ConfigDecoration
     {

@@ -120,3 +120,13 @@ const QHash<QString,QString> MoresamplerConfig::entryHelps{
     {u8"analysis-noise-reduction",QT_TRANSLATE_NOOP("", u8"在从.wav文件分析LLSM时自动降噪。更适用于长录音。")},
     {u8"analysis-suppress-subharmonics",QT_TRANSLATE_NOOP("", u8"在分析时自动移除输入中存在的次谐波。对尖亮的声音可能有帮助，但会导致呼吸音的质量降低。")},
 };
+
+MoresamplerConfig::EditMode::IsNotChoicesException::IsNotChoicesException() : std::runtime_error(u8"The value of this config is not a \"Choices\".")
+{
+
+}
+
+MoresamplerConfig::EditMode::EditMode(MoresamplerConfig::EditMode::ValueType valueType, QStringList choices) : choices(choices),valueType(valueType)
+{
+
+}
