@@ -1,14 +1,14 @@
-﻿#ifndef MORESAMPLERSETTINGSMODEL_H
-#define MORESAMPLERSETTINGSMODEL_H
+﻿#ifndef MORESAMPLERCONFIGSMODEL_H
+#define MORESAMPLERCONFIGSMODEL_H
 
 #include <QAbstractTableModel>
 #include "moresamplerconfigreader.h"
-class MoresamplerSettingsModel : public QAbstractTableModel
+class MoresamplerConfigsModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit MoresamplerSettingsModel(MoresamplerConfigReader *parent = nullptr);
+    explicit MoresamplerConfigsModel(MoresamplerConfigReader *parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -44,4 +44,4 @@ private:
     MoresamplerConfigReader* configReader = nullptr;
 };
 
-#endif // MORESAMPLERSETTINGSMODEL_H
+#endif // MORESAMPLERCONFIGSMODEL_H
