@@ -1,11 +1,11 @@
-﻿#include "moresamplersettingsmodel.h"
+﻿#include "moresamplerconfigsmodel.h"
 
-MoresamplerSettingsModel::MoresamplerSettingsModel(MoresamplerConfigReader *parent)
+MoresamplerConfigsModel::MoresamplerConfigsModel(MoresamplerConfigReader *parent)
     : QAbstractTableModel(parent),configReader(parent)
 {
 }
 
-QVariant MoresamplerSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant MoresamplerConfigsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::ItemDataRole::DisplayRole){
         if (orientation == Qt::Orientation::Horizontal){
@@ -51,14 +51,14 @@ QVariant MoresamplerSettingsModel::headerData(int section, Qt::Orientation orien
 
 
 
-int MoresamplerSettingsModel::rowCount(const QModelIndex &parent) const
+int MoresamplerConfigsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return configReader->getCount();
 }
 
-int MoresamplerSettingsModel::columnCount(const QModelIndex &parent) const
+int MoresamplerConfigsModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -68,7 +68,7 @@ int MoresamplerSettingsModel::columnCount(const QModelIndex &parent) const
         return TableColumnsVoicebank::Count;
 }
 
-QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) const
+QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -117,7 +117,7 @@ QVariant MoresamplerSettingsModel::data(const QModelIndex &index, int role) cons
     return QVariant();
 }
 
-bool MoresamplerSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool MoresamplerConfigsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
         // FIXME: Implement me!
@@ -127,7 +127,7 @@ bool MoresamplerSettingsModel::setData(const QModelIndex &index, const QVariant 
     return false;
 }
 
-Qt::ItemFlags MoresamplerSettingsModel::flags(const QModelIndex &index) const
+Qt::ItemFlags MoresamplerConfigsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;

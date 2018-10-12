@@ -23,42 +23,41 @@ MoresamplerConfig::ConfigType MoresamplerConfig::getType() const
 
 void MoresamplerConfig::processString()
 {
-    auto string = configString.trimmed();
-    if (string.isEmpty())
+    configString = configString.trimmed();
+    if (configString.isEmpty())
         return;
-    if (string.at(0) == u8"#")
+    if (configString.at(0) == u8"#")
     {
         decoration.comment = true;
         return;
     }
-    if (string.at(0) == u8"*")
+    if (configString.at(0) == u8"*")
     {
-        string.remove(0,1);
+        configString.remove(0,1);
         decoration.override = true;
     }
-    auto splitted = string.split(" ",QString::SplitBehavior::SkipEmptyParts);
-    nameString = splitted.at(0);
+    auto splitted = configString.split(" ",QString::SplitBehavior::SkipEmptyParts);
+    nameString = splitted.at(0).trimmed();
     type = getTypeByTypeName(nameString);
-    valueString = splitted.at(1);
+    valueString = splitted.at(1).trimmed();
 }
 
-MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByTypeName(const QString& name)
+MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByTypeName(const QString& configName)
 {
-    auto trimmedName = name.trimmed();
-    if (trimmedName == "output-sampling-rate" || trimmedName == "output-bit-depth" || trimmedName == "resampler-compatibility")
+    if (configName == "output-sampling-rate" || configName == "output-bit-depth" || configName == "resampler-compatibility")
         return ConfigType::Output;
-    if (trimmedName == "synthesis-utau-style-normalization" || trimmedName == "synthesis-loudness-preservation" || trimmedName == "synthesis-duration-extension-method")
+    if (configName == "synthesis-utau-style-normalization" || configName == "synthesis-loudness-preservation" || configName == "synthesis-duration-extension-method")
         return ConfigType::Synthesis;
-    if (trimmedName == "multithread-synthesis" || trimmedName == "auto-update-llsm-mrq" || trimmedName == "dump-log-file")
+    if (configName == "multithread-synthesis" || configName == "auto-update-llsm-mrq" || configName == "dump-log-file")
         return ConfigType::Misc;
-    if (trimmedName == "analysis-f0-range-from-path" || trimmedName == "analysis-biased-f0-estimation" || trimmedName == "analysis-f0-min" || trimmedName == "analysis-f0-max" || trimmedName == "load-frq" || trimmedName == "analysis-anti-distortion" || trimmedName == "analysis-noise-reduction" || trimmedName == "analysis-suppress-subharmonics")
+    if (configName == "analysis-f0-range-from-path" || configName == "analysis-biased-f0-estimation" || configName == "analysis-f0-min" || configName == "analysis-f0-max" || configName == "load-frq" || configName == "analysis-anti-distortion" || configName == "analysis-noise-reduction" || configName == "analysis-suppress-subharmonics")
         return ConfigType::Analysis;
-    if (trimmedName.startsWith("meta-flag-"))
+    if (configName.startsWith("meta-flag-"))
         return ConfigType::MetaFlag;
     return ConfigType::Unknown;
 }
 
-QString MoresamplerConfig::getTypeString(const ConfigType type)
+QString MoresamplerConfig::getTypeString(const ConfigType &type)
 {
     switch (type) {
     case ConfigType::Analysis:
@@ -77,10 +76,22 @@ QString MoresamplerConfig::getTypeString(const ConfigType type)
     return QCoreApplication::translate("MoresamplerConfig", u8"未知");
 }
 
-QString MoresamplerConfig::getEntryHelp(const QString configName)
+QString MoresamplerConfig::getEntryHelp(const QString &configName)
 {
     return entryHelps.value(configName);
 }
+
+MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &configName)
+{
+    if (configName == u8"output-sampling-rate")
+        return new PositiveIntegerEditMode();
+    else if (configName == u8"output-bit-depth")
+        return new ChoicesEditMode({u8"8",u8"16",u8"24",u8"32"});
+    else if (configName == u8"resampler-compatibility")
+        return new ChoicesEditMode({u8"on",u8"off"});
+    //FIXME:
+}
+
 
 QString MoresamplerConfig::getNameString() const
 {
@@ -121,7 +132,7 @@ const QHash<QString,QString> MoresamplerConfig::entryHelps{
     {u8"analysis-suppress-subharmonics",QT_TRANSLATE_NOOP("", u8"在分析时自动移除输入中存在的次谐波。对尖亮的声音可能有帮助，但会导致呼吸音的质量降低。")},
 };
 
-MoresamplerConfig::EditMode::IsNotChoicesException::IsNotChoicesException() : std::runtime_error(u8"The value of this config is not a \"Choices\".")
+MoresamplerConfig::EditMode::NotChoicesException::NotChoicesException() : std::runtime_error(u8"The value of this config is not a \"Choices\".")
 {
 
 }
@@ -129,4 +140,104 @@ MoresamplerConfig::EditMode::IsNotChoicesException::IsNotChoicesException() : st
 MoresamplerConfig::EditMode::EditMode(MoresamplerConfig::EditMode::ValueType valueType, QStringList choices) : choices(choices),valueType(valueType)
 {
 
+}
+
+MoresamplerConfig::EditMode::ValueType MoresamplerConfig::EditMode::getValueType() const
+{
+    return valueType;
+}
+
+QStringList MoresamplerConfig::EditMode::getChoices() const
+{
+    if (valueType == ValueType::Choices)
+        return choices;
+    else
+        throw NotChoicesException();
+}
+
+MoresamplerConfig::DoubleEditMode::DoubleEditMode() : EditMode(Choices)
+{
+
+}
+
+bool MoresamplerConfig::DoubleEditMode::isValidValue(QVariant value) const
+{
+    return value.isValid() && value.type() == QVariant::Type::Double;
+}
+
+QVariant MoresamplerConfig::DoubleEditMode::toVariantValueFromString(QString valueString) const
+{
+        bool ok = false;
+        auto value = valueString.toDouble(&ok);
+        if (ok && isValidValue(value))
+            return value;
+        else
+            return 0.0;
+}
+
+bool MoresamplerConfig::PositiveDoubleEditMode::isValidValue(QVariant value) const
+{
+    return DoubleEditMode::isValidValue(value) && value.toDouble() >0;
+}
+
+MoresamplerConfig::IntegerEditMode::IntegerEditMode() : EditMode(ValueType::Integer)
+{
+
+}
+
+bool MoresamplerConfig::IntegerEditMode::isValidValue(QVariant value) const
+{
+    return value.isValid() && value.type() == QVariant::Type::Int;
+}
+
+QVariant MoresamplerConfig::IntegerEditMode::toVariantValueFromString(QString valueString) const
+{
+    bool ok = false;
+    auto value = valueString.toInt(&ok);
+    if (ok && isValidValue(value))
+        return value;
+    else
+        return 0;
+}
+
+MoresamplerConfig::PositiveIntegerEditMode::PositiveIntegerEditMode() : IntegerEditMode ()
+{
+
+}
+
+bool MoresamplerConfig::PositiveIntegerEditMode::isValidValue(QVariant value) const
+{
+    return IntegerEditMode::isValidValue(value) && value.toInt() > 0;
+}
+
+MoresamplerConfig::StringEditMode::StringEditMode() : EditMode (ValueType::String)
+{
+
+}
+
+bool MoresamplerConfig::StringEditMode::isValidValue(QVariant value) const
+{
+    return value.isValid() && value.type() == QVariant::Type::String;
+}
+
+QVariant MoresamplerConfig::StringEditMode::toVariantValueFromString(QString valueString) const
+{
+    if (isValidValue(valueString))
+        return valueString;
+}
+
+MoresamplerConfig::ChoicesEditMode::ChoicesEditMode(QStringList choices) : EditMode (ValueType::Choices,choices)
+{
+
+}
+
+bool MoresamplerConfig::ChoicesEditMode::isValidValue(QVariant value) const
+{
+    return value.isValid() && value.type() == QVariant::Type::String && choices.contains(value.toString());
+}
+
+QVariant MoresamplerConfig::ChoicesEditMode::toVariantValueFromString(QString valueString) const
+{
+    if (isValidValue(valueString))
+        return valueString;
 }
