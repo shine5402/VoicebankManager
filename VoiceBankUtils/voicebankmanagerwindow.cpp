@@ -78,7 +78,7 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
         ui->voiceBankBriefInfomationWidget->setVisible(true);
     ui->voicebankNameLabel->setText(voiceBank->getName());
-    ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage()));
+    ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage().scaled(100,100)));
     //ui->voicebankReadmeTextBrowser->setText();
     ui->voicebankReadmeTextBrowser->clear();
     auto errors = voiceBank->getErrorStates();
