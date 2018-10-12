@@ -357,7 +357,8 @@ void VoiceBank::readCharacterFile()
                     try {
                         image.load(pixmapPath);
                         LeafLogger::LogMessage(QString(u8"%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
-                        if (image.width() != 100 || image.height() != 100){
+
+                        if (!qFuzzyCompare(image.width() / image.height() , 1.0)){
                             errorStates.append(new ImageFileNotFitErrorState(this));
                         }
                     } catch (std::exception &e){
@@ -556,7 +557,7 @@ QString VoiceBank::ImageFileNotFitErrorState::getErrorHTMLString()
         if (voiceBank->getImage().isNull())
             return tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件没有正常读取。是不是图片格式与后缀名不符？亦或是文件损坏？</p>)");
         else
-            return tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（100*100）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getImage().width()).arg(voiceBank->getImage().height());
+            return tr(u8R"(<p style="color:red">错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（比例1:1）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。</p>)").arg(voiceBank->getImage().width()).arg(voiceBank->getImage().height());
     }
     else
         return QString();
