@@ -345,40 +345,43 @@ void VoiceBank::readCharacterFile()
         for (auto i : characterList){
             i = i.trimmed();
             auto list = i.split("=",QString::SplitBehavior::SkipEmptyParts);
-            if (list.at(0).compare(u8"name",Qt::CaseInsensitive) == 0){
-                name = list.at(1);
-                LeafLogger::LogMessage(QString(u8"%1的name为%2").arg(path).arg(name));
-            }
-            if (list.at(0).compare(u8"image",Qt::CaseInsensitive) == 0)
+            if (list.count() >= 2)
             {
-                pixmapPath = path + list.at(1);
-                QFileInfo imageFileInfo(pixmapPath);
-                if (imageFileInfo.exists()) {
-                    try {
-                        image.load(pixmapPath);
-                        LeafLogger::LogMessage(QString(u8"%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
-
-                        if (!qFuzzyCompare(image.width() / image.height() , 1.0)){
-                            errorStates.append(new ImageFileNotFitErrorState(this));
-                        }
-                    } catch (std::exception &e){
-                        LeafLogger::LogMessage(QString(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
-                        errorStates.append(new ImageReadExceptionErrorState(this));
-                        image = QImage();
-                    }
-                    catch (...) {
-                        LeafLogger::LogMessage(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
-                        errorStates.append(new ImageReadExceptionErrorState(this));
-                        image = QImage();
-                    }
-
+                if (list.at(0).compare(u8"name",Qt::CaseInsensitive) == 0){
+                    name = list.at(1);
+                    LeafLogger::LogMessage(QString(u8"%1的name为%2").arg(path).arg(name));
                 }
-                else
+                if (list.at(0).compare(u8"image",Qt::CaseInsensitive) == 0)
                 {
-                    errorStates.append(new ImageFileNotExistsErrorState(this));
-                    LeafLogger::LogMessage(QString(u8"%1的音源图片文件不存在。").arg(path));
-                }
+                    pixmapPath = path + list.at(1);
+                    QFileInfo imageFileInfo(pixmapPath);
+                    if (imageFileInfo.exists()) {
+                        try {
+                            image.load(pixmapPath);
+                            LeafLogger::LogMessage(QString(u8"%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
 
+                            if (image.height() == 0 ||(!qFuzzyCompare(image.width() / image.height() , 1.0))){
+                                errorStates.append(new ImageFileNotFitErrorState(this));
+                            }
+                        } catch (std::exception &e){
+                            LeafLogger::LogMessage(QString(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
+                            errorStates.append(new ImageReadExceptionErrorState(this));
+                            image = QImage();
+                        }
+                        catch (...) {
+                            LeafLogger::LogMessage(u8"程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
+                            errorStates.append(new ImageReadExceptionErrorState(this));
+                            image = QImage();
+                        }
+
+                    }
+                    else
+                    {
+                        errorStates.append(new ImageFileNotExistsErrorState(this));
+                        LeafLogger::LogMessage(QString(u8"%1的音源图片文件不存在。").arg(path));
+                    }
+
+                }
             }
         }
         if (name.isEmpty()){

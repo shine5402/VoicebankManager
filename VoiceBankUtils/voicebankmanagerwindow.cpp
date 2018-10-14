@@ -127,11 +127,7 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    auto voiceBank = getSelectedVoiceBank();
-    if (voiceBank){
-        voiceBank->readWavFileName();
-        qDebug() << "Read Done.";
-    }
+
 }
 
 
