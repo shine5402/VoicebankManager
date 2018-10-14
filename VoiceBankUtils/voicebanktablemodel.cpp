@@ -88,7 +88,7 @@ QVariant VoiceBankTableModel::headerData(int section, Qt::Orientation orientatio
         }
         else
         {
-            return QString("%1").arg(section);
+            return QString("%1").arg(section + 1);
         }
     }
     else

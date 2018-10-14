@@ -6,6 +6,7 @@
 #include "moresamplerconfigsmodel.h"
 #include "moresamplerconfigsdelegate.h"
 #include <QMessageBox>
+#include "moresamplerconfigaddnewdialog.h"
 namespace Ui {
 class MoresamplerConfigsDialog;
 }
@@ -20,6 +21,8 @@ public:
 
 private slots:
     void on_deleteButton_clicked();
+
+    void on_addButton_clicked();
 
 private:
     Ui::MoresamplerConfigsDialog *ui;

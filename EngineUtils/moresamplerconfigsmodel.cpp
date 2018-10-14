@@ -42,7 +42,7 @@ QVariant MoresamplerConfigsModel::headerData(int section, Qt::Orientation orient
         }
         else
         {
-            return QString("%1").arg(section);
+            return QString("%1").arg(section + 1);
         }
     }
     else

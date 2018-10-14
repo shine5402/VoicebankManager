@@ -156,6 +156,11 @@ void MoresamplerConfig::setValue(const QVariant &value)
     }
 }
 
+QStringList MoresamplerConfig::getAllEntrysName()
+{
+    return entryHelps.keys();
+}
+
 QVariant MoresamplerConfig::getValue() const
 {
     return value;

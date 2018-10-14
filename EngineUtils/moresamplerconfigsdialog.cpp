@@ -35,3 +35,9 @@ void MoresamplerConfigsDialog::on_deleteButton_clicked()
     else
         QMessageBox::warning(this,tr(u8"没有可删除的项"),tr(u8"当前配置文件的配置项目数为0，所以无法删除项目。"));
 }
+
+void MoresamplerConfigsDialog::on_addButton_clicked()
+{
+    auto dialog = new MoresamplerConfigAddNewDialog(this);
+    dialog->exec();
+}

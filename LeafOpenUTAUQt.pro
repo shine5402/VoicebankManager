@@ -40,7 +40,9 @@ SOURCES += \
     EngineUtils/moresamplerconfig.cpp \
     EngineUtils/moresamplerconfigsmodel.cpp \
     EngineUtils/moresamplerconfigsdialog.cpp \
-    EngineUtils/moresamplerconfigsdelegate.cpp
+    EngineUtils/moresamplerconfigsdelegate.cpp \
+    EngineUtils/moresamplerconfigaddnewdialog.cpp \
+    EngineUtils/moresamplerconfigsaddnewmodel.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -60,7 +62,9 @@ HEADERS += \
     EngineUtils/moresamplerconfig.h \
     EngineUtils/moresamplerconfigsmodel.h \
     EngineUtils/moresamplerconfigsdialog.h \
-    EngineUtils/moresamplerconfigsdelegate.h
+    EngineUtils/moresamplerconfigsdelegate.h \
+    EngineUtils/moresamplerconfigaddnewdialog.h \
+    EngineUtils/moresamplerconfigsaddnewmodel.h
 
 FORMS += \
         editorwindow.ui \
@@ -71,7 +75,8 @@ FORMS += \
     VoiceBankUtils/textcodecsettingdialog.ui \
     TextCodecUtils/availabletextcodecdialog.ui \
     TextCodecUtils/textcodecconvertdialog.ui \
-    EngineUtils/moresamplerconfigsdialog.ui
+    EngineUtils/moresamplerconfigsdialog.ui \
+    EngineUtils/moresamplerconfigaddnewdialog.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }

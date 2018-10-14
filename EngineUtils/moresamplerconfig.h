@@ -107,6 +107,8 @@ public:
     void setOverride(bool isOverride){
         decoration.override = isOverride;
     }
+    static QStringList getAllEntrysName();
+    static QString getEntryHelp(const QString& configName);
 private:
     struct ConfigDecoration
     {
@@ -119,7 +121,6 @@ private:
     ConfigType type{};
     static ConfigType getTypeByTypeName(const QString &configName);
     static QString getTypeString(const ConfigType& type);
-    static QString getEntryHelp(const QString& configName);
     static EditMode* getEditMode(const QString& configName);
     QString valueString;
     QVariant value;
