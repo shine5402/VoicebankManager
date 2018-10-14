@@ -127,7 +127,7 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    auto dialog = new MoresamplerConfigsDialog(u8"D:/Program Files (x86)/UTAU/voice/Akatsuka Youichi_fall/moreconfig.txt",this);
+    auto dialog = new MoresamplerConfigsDialog(u8R"(E:\VocalUtau\bin\Debug\moreconfig.txt)",MoresamplerConfigReader::ConfigFileType::Global,this);
     dialog->exec();
     qDebug() << "read done";
 }

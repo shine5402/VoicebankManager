@@ -39,7 +39,8 @@ public:
         constexpr static int Type = 2;
         constexpr static int Help = 3;
     };
-
+signals:
+    void ValueToSetIsNotValid();
 private:
     MoresamplerConfigReader* configReader = nullptr;
 };

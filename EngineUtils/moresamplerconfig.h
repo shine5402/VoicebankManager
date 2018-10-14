@@ -5,12 +5,14 @@
 #include <QCoreApplication>
 #include <QHash>
 #include <QVariant>
+#include <QStringList>
 class MoresamplerConfig
 {
 public:
     MoresamplerConfig(QString& configString);
+    ~MoresamplerConfig();
     enum ConfigType{
-        Analysis,Synthesis,Output,MetaFlag,Misc,Unknown
+        Unknown,Analysis,Synthesis,Output,MetaFlag,Misc,Comment,Blank
     };
 
     QString getConfigString() const;
@@ -49,6 +51,7 @@ public:
         virtual ~EditMode();
         virtual bool isValidValue(QVariant value) const = 0;
         virtual QVariant toVariantValueFromString(QString valueString) const = 0;
+        virtual QString toStringFromVariantValue(QVariant value) const = 0;
     protected:
         QStringList choices;
         ValueType valueType;
@@ -58,6 +61,7 @@ public:
         DoubleEditMode();
         virtual bool isValidValue(QVariant value) const override;
         virtual QVariant toVariantValueFromString(QString valueString) const override;
+        virtual QString toStringFromVariantValue(QVariant value) const override;
     };
     class PositiveDoubleEditMode : public DoubleEditMode{
     public:
@@ -69,6 +73,7 @@ public:
         IntegerEditMode();
         virtual bool isValidValue(QVariant value) const override;
         virtual QVariant toVariantValueFromString(QString valueString) const override;
+        virtual QString toStringFromVariantValue(QVariant value) const override;
     };
     class PositiveIntegerEditMode : public IntegerEditMode{
     public:
@@ -80,14 +85,28 @@ public:
         StringEditMode();
         virtual bool isValidValue(QVariant value) const override;
         virtual QVariant toVariantValueFromString(QString valueString) const override;
+         virtual QString toStringFromVariantValue(QVariant value) const override;
     };
     class ChoicesEditMode : public EditMode{
     public:
         ChoicesEditMode(QStringList choices);
         virtual bool isValidValue(QVariant value) const override;
         virtual QVariant toVariantValueFromString(QString valueString) const override;
+         virtual QString toStringFromVariantValue(QVariant value) const override;
     };
-
+    EditMode* getEditMode();
+    QVariant getValue() const;
+    void setValue(const QVariant &value);
+    class ValueNotValidException : std::runtime_error{
+    public:
+        ValueNotValidException();
+    };
+    bool canEdit() const{
+        return editMode;
+    }
+    void setOverride(bool isOverride){
+        decoration.override = isOverride;
+    }
 private:
     struct ConfigDecoration
     {
@@ -106,6 +125,7 @@ private:
     QVariant value;
     QString nameString;
     static const QHash<QString,QString> entryHelps;
+    EditMode* editMode = nullptr;
 };
 
 #endif // MORESAMPLERCONFIG_H

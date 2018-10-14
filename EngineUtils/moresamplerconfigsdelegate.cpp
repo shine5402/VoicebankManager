@@ -1,6 +1,6 @@
 ﻿#include "moresamplerconfigsdelegate.h"
 
-MoresamplerConfigsDelegate::MoresamplerConfigsDelegate(QObject *parent) : QStyledItemDelegate (parent)
+MoresamplerConfigsDelegate::MoresamplerConfigsDelegate(MoresamplerConfigReader *reader, QObject *parent) : QStyledItemDelegate (parent),reader(reader)
 {
 
 }
@@ -9,5 +9,21 @@ QWidget *MoresamplerConfigsDelegate::createEditor(QWidget *parent, const QStyleO
 {
     if (!index.isValid())
         return nullptr;
-//FIXME:
+    if (reader->getConfig(index.row())->getEditMode()->getValueType() == MoresamplerConfig::EditMode::ValueType::Choices && ((reader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Value )|| (reader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == MoresamplerConfigsModel::TableColumnsVoicebank::Value )))
+    {
+        auto sb = new QComboBox(parent);
+        sb->setFrame(false);
+        sb->addItems(reader->getConfig(index.row())->getEditMode()->getChoices());
+        sb->setCurrentText(reader->getConfig(index.row())->getValueString());
+        return sb;
+    }
+    if (reader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override)
+    {
+        auto sb = new QComboBox(parent);
+        sb->setFrame(false);
+        sb->addItems({tr(u8"是"),tr(u8"否")});
+        sb->setCurrentText(reader->getConfig(index.row())->isOverride()?tr(u8"是"):tr(u8"否"));
+        return sb;
+    }
+        return QStyledItemDelegate::createEditor(parent,option,index);
 }

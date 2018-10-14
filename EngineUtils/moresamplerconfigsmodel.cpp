@@ -87,10 +87,13 @@ QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
                 return configReader->getConfig(index.row())->getTypeString();
             case TableColumnsGlobal::Override:
                 //return tr(u8"是否覆盖声库配置");
-                return configReader->getConfig(index.row())->isOverride()?u8"是":u8"否";
+                if (!(configReader->getConfig(index.row())->isComment() || configReader->getConfig(index.row())->isBlankLine()))
+                    return configReader->getConfig(index.row())->isOverride()?tr(u8"是"):tr(u8"否");
+                else
+                    return tr(u8"（不支持）");
             case TableColumnsGlobal::Help:
                 //return tr(u8"说明");
-                return QVariant();//FIXME: 在此处放置说明
+                return configReader->getConfig(index.row())->getEntryHelp();
             default:
                 return QVariant();
             }
@@ -113,14 +116,32 @@ QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
                 return QVariant();
             }
     }
-    // FIXME: Implement me!
+    if (role == Qt::ItemDataRole::EditRole)
+    {
+        return configReader->getConfig(index.row())->getValue();
+    }
     return QVariant();
 }
 
 bool MoresamplerConfigsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
-        // FIXME: Implement me!
+        //FIXME:
+        if(!(configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override))
+        {
+            try {
+                configReader->getConfig(index.row())->setValue(value);
+            }
+            catch (MoresamplerConfig::ValueNotValidException&) {
+                emit ValueToSetIsNotValid();
+                return false;
+            }
+        }
+        else
+        {
+            configReader->getConfig(index.row())->setOverride(value.toString() == tr(u8"是"));
+        }
+        //
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -131,7 +152,7 @@ Qt::ItemFlags MoresamplerConfigsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
-    if ((configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == TableColumnsGlobal::Value) || (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == TableColumnsVoicebank::Value))
+    if ((configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == TableColumnsGlobal::Value) || ((configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == TableColumnsVoicebank::Value) && (configReader->getConfig(index.row())->getType() != MoresamplerConfig::ConfigType::Blank)) || (configReader->getConfig(index.row())->canEdit() && !configReader->getConfig(index.row())->isComment() && configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override))
         return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
     else
         return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
