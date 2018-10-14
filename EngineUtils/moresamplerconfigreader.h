@@ -22,7 +22,7 @@ public:
     }
     ~MoresamplerConfigReader();
     ConfigFileType getConfigFileType() const;
-
+    void removeConfig(int id);
 signals:
 
 public slots:

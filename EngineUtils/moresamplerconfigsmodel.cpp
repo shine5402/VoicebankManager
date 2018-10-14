@@ -157,3 +157,10 @@ Qt::ItemFlags MoresamplerConfigsModel::flags(const QModelIndex &index) const
     else
         return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
+
+void MoresamplerConfigsModel::removeConfig(int id)
+{
+    beginRemoveRows(QModelIndex(),id,id);
+    configReader->removeConfig(id);
+    endRemoveRows();
+}

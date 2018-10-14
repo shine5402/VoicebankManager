@@ -5,6 +5,7 @@
 #include "moresamplerconfigreader.h"
 #include "moresamplerconfigsmodel.h"
 #include "moresamplerconfigsdelegate.h"
+#include <QMessageBox>
 namespace Ui {
 class MoresamplerConfigsDialog;
 }
@@ -16,6 +17,9 @@ class MoresamplerConfigsDialog : public QDialog
 public:
     explicit MoresamplerConfigsDialog(const QString& path, const MoresamplerConfigReader::ConfigFileType configFileType, QWidget *parent = nullptr, QString voiceBankName = QString());
     ~MoresamplerConfigsDialog();
+
+private slots:
+    void on_deleteButton_clicked();
 
 private:
     Ui::MoresamplerConfigsDialog *ui;

@@ -27,3 +27,11 @@ MoresamplerConfigsDialog::~MoresamplerConfigsDialog()
 {
     delete ui;
 }
+
+void MoresamplerConfigsDialog::on_deleteButton_clicked()
+{
+    if (reader->getCount() > 0)
+        model->removeConfig(ui->configTableView->currentIndex().row());
+    else
+        QMessageBox::warning(this,tr(u8"没有可删除的项"),tr(u8"当前配置文件的配置项目数为0，所以无法删除项目。"));
+}

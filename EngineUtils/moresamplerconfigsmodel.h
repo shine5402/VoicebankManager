@@ -39,6 +39,7 @@ public:
         constexpr static int Type = 2;
         constexpr static int Help = 3;
     };
+    void removeConfig(int id);
 signals:
     void ValueToSetIsNotValid();
 private:

@@ -37,3 +37,8 @@ MoresamplerConfigReader::ConfigFileType MoresamplerConfigReader::getConfigFileTy
 {
     return configFileType;
 }
+
+void MoresamplerConfigReader::removeConfig(int id)
+{
+    configs.removeAt(id);
+}
