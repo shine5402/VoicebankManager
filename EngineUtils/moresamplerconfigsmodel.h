@@ -45,6 +45,8 @@ signals:
     void ValueToSetIsNotValid();
 private:
     MoresamplerConfigReader* configReader = nullptr;
+    bool isValueColumn(const QModelIndex &index) const;
+    bool isEditableOverrideColumn(const QModelIndex &index) const;
 };
 
 #endif // MORESAMPLERCONFIGSMODEL_H

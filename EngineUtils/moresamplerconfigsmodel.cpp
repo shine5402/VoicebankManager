@@ -148,11 +148,17 @@ bool MoresamplerConfigsModel::setData(const QModelIndex &index, const QVariant &
     return false;
 }
 
+bool MoresamplerConfigsModel::isValueColumn(const QModelIndex &index) const{
+    return (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == TableColumnsVoicebank::Value) || (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == TableColumnsGlobal::Value);
+}
+bool MoresamplerConfigsModel::isEditableOverrideColumn(const QModelIndex &index) const{
+    return (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override && !configReader->getConfig(index.row())->isComment() && !configReader->getConfig(index.row())->isBlankLine());
+}
 Qt::ItemFlags MoresamplerConfigsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
-    if ((configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == TableColumnsGlobal::Value) || ((configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == TableColumnsVoicebank::Value) && (configReader->getConfig(index.row())->getType() != MoresamplerConfig::ConfigType::Blank)) || (configReader->getConfig(index.row())->canEdit() && !configReader->getConfig(index.row())->isComment() && configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override))
+    if ((configReader->getConfig(index.row())->canEdit()) && (isValueColumn(index) || isEditableOverrideColumn(index)))
         return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
     else
         return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;

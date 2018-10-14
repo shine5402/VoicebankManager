@@ -1,4 +1,5 @@
 ﻿#include "moresamplerconfig.h"
+//FIXME: 考虑元标记
 
 MoresamplerConfig::MoresamplerConfig(QString &configString):configString(configString)
 {
@@ -59,6 +60,8 @@ void MoresamplerConfig::processString()
         valueString = splitted.at(1).trimmed();
     editMode = getEditMode(nameString);
     value = editMode->toVariantValueFromString(valueString);
+    if (valueString.trimmed().isEmpty())
+        valueString = editMode->toStringFromVariantValue(value);
 }
 
 MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByTypeName(const QString& configName)
