@@ -40,6 +40,7 @@ public:
         constexpr static int Help = 3;
     };
     void removeConfig(int id);
+    void addConfig(QString name);
 signals:
     void ValueToSetIsNotValid();
 private:

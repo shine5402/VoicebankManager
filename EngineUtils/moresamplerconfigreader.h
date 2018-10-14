@@ -23,6 +23,7 @@ public:
     ~MoresamplerConfigReader();
     ConfigFileType getConfigFileType() const;
     void removeConfig(int id);
+    int addConfig(QString &name);
 signals:
 
 public slots:

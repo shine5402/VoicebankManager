@@ -39,5 +39,14 @@ void MoresamplerConfigsDialog::on_deleteButton_clicked()
 void MoresamplerConfigsDialog::on_addButton_clicked()
 {
     auto dialog = new MoresamplerConfigAddNewDialog(this);
-    dialog->exec();
+    auto dialogCode = dialog->exec();
+    if (dialogCode == QDialog::Accepted)
+    {
+        auto name = dialog->getCurrentEntryName();
+        if (name == tr(u8"（空行）"))
+            name = QString();
+        else if (name == tr(u8"（注释）"))
+            name = u8"#";
+        model->addConfig(name);
+    }
 }

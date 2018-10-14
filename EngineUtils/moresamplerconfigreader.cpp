@@ -42,3 +42,9 @@ void MoresamplerConfigReader::removeConfig(int id)
 {
     configs.removeAt(id);
 }
+
+int MoresamplerConfigReader::addConfig(QString &name)
+{
+    configs.append(new MoresamplerConfig(name));
+    return configs.count() - 1;
+}

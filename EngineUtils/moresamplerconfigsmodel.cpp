@@ -164,3 +164,10 @@ void MoresamplerConfigsModel::removeConfig(int id)
     configReader->removeConfig(id);
     endRemoveRows();
 }
+
+void MoresamplerConfigsModel::addConfig(QString name)
+{
+    beginInsertRows(QModelIndex(),rowCount(),rowCount());
+    configReader->addConfig(name);
+    endInsertRows();
+}

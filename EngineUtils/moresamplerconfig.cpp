@@ -55,7 +55,8 @@ void MoresamplerConfig::processString()
     auto splitted = configString.split(" ",QString::SplitBehavior::SkipEmptyParts);
     nameString = splitted.at(0).trimmed();
     type = getTypeByTypeName(nameString);
-    valueString = splitted.at(1).trimmed();
+    if (splitted.count() >= 2)
+        valueString = splitted.at(1).trimmed();
     editMode = getEditMode(nameString);
     value = editMode->toVariantValueFromString(valueString);
 }
