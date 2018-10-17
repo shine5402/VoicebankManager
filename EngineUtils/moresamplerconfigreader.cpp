@@ -18,11 +18,24 @@ void MoresamplerConfigReader::readConfigs()
             configs.append(new MoresamplerConfig(string));
         }
     }
+    file->close();
+    file->deleteLater();
 }
 
 void MoresamplerConfigReader::saveConfigs()
 {
-
+    auto file = new QFile(path);
+    file->open(QFile::OpenModeFlag::WriteOnly | QFile::OpenModeFlag::Text);
+    QString result;
+    QTextStream textStream(&result);
+    for (auto config : configs)
+    {
+        textStream << config->toString() << endl;
+    }
+    result = result.trimmed();
+    file->write(result.toUtf8());
+    file->close();
+    file->deleteLater();
 }
 
 MoresamplerConfigReader::~MoresamplerConfigReader()

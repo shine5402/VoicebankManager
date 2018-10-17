@@ -47,6 +47,23 @@ void MoresamplerConfigsDialog::on_addButton_clicked()
             name = QString();
         else if (name == tr(u8"（注释）"))
             name = u8"#";
+        else if (name == tr(u8"（元标记）"))
+        {
+            bool ok = false;
+            auto num = QInputDialog::getInt(this,tr(u8"指定元标记的序数"),tr(u8"在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的系数。比如，您想要使用M1，就在下框中输入1."),1,1,100,1,&ok);
+            if (ok)
+            {
+                name = QString(u8"meta-flag-%1").arg(num);
+            }
+            else
+                return;
+        }
         model->addConfig(name);
     }
+}
+
+void MoresamplerConfigsDialog::accept()
+{
+    reader->saveConfigs();
+    QDialog::accept();
 }

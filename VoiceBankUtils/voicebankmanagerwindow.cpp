@@ -1,6 +1,6 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
-
+//TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
@@ -127,7 +127,7 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    auto dialog = new MoresamplerConfigsDialog(u8R"(E:\VocalUtau\bin\Debug\moreconfig.txt)",MoresamplerConfigReader::ConfigFileType::Global,this);
+    auto dialog = new MoresamplerConfigsDialog(u8R"(C:\Users\Bo\Desktop\moreconfig.txt)",MoresamplerConfigReader::ConfigFileType::Global,this);
     dialog->exec();
     qDebug() << "read done";
 }

@@ -29,7 +29,6 @@ public:
     bool isOverride() const{
         return decoration.override;
     }
-    void setValueString(const QString &value);
 
     QString getValueString() const;
     bool isBlankLine() const{
@@ -109,6 +108,10 @@ public:
     }
     static QStringList getAllEntrysName();
     static QString getEntryHelp(const QString& configName);
+    bool isMetaFlag() const{
+        return type == ConfigType::MetaFlag;
+    }
+    QString toString() const;
 private:
     struct ConfigDecoration
     {

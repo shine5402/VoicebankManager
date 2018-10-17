@@ -3,7 +3,7 @@
 MoresamplerConfigsAddNewModel::MoresamplerConfigsAddNewModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
-    entryNames.append({tr(u8"（空行）"),u8"（注释）"});
+    entryNames.append({tr(u8"（空行）"),u8"（注释）",u8"（元标记）"});
     entryNames.append(MoresamplerConfig::getAllEntrysName());
 }
 

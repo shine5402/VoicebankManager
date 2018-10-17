@@ -4,6 +4,7 @@
 #include <QObject>
 #include "moresamplerconfig.h"
 #include <QFile>
+#include <QTextStream>
 class MoresamplerConfigReader : public QObject
 {
     Q_OBJECT

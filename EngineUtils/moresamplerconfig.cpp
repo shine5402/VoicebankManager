@@ -104,7 +104,21 @@ QString MoresamplerConfig::getTypeString(const ConfigType &type)
 
 QString MoresamplerConfig::getEntryHelp(const QString &configName)
 {
+    if (configName.startsWith("meta-flag-") || configName == QCoreApplication::translate("MoresamplerConfig", u8"（元标记）"))
+        return QCoreApplication::translate("MoresamplerConfig", u8"元标记提供了一种快捷的方式让您多个flag合并为一个。元标记在全局配置文件中被定义,并通过 M+数字 (例如 M1, M2, M3) 的形式使用。通过在元标记之后放置点和数字，对应的 flag 的有效数值将按照数字缩放（以百分比表示，只要缩放的结果仍然在每个标志的允许范围内）。");
     return entryHelps.value(configName);
+}
+
+QString MoresamplerConfig::toString() const
+{
+    if (type == ConfigType::Blank)
+        return QString();
+   auto result = nameString + " " + valueString;
+   if (decoration.override)
+       result.insert(0,u8"*");
+   if (decoration.comment)
+       result.insert(0,u8"#");
+    return result;
 }
 
 MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &configName)
@@ -191,10 +205,6 @@ QString MoresamplerConfig::getValueString() const
     return valueString;
 }
 
-void MoresamplerConfig::setValueString(const QString &value)
-{
-    valueString = value;
-}
 const QHash<QString,QString> MoresamplerConfig::entryHelps{
     {u8"output-sampling-rate",QT_TRANSLATE_NOOP("", u8"输出的 .wav 文件的采样频率")},
     {u8"output-bit-depth",QT_TRANSLATE_NOOP("", u8"输出的 .wav 文件的位深")},
