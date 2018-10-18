@@ -93,6 +93,7 @@ private slots:
     void convertWavFileNameCodecActionSlot();
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
     void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
+    void moresamplerConfigEditActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

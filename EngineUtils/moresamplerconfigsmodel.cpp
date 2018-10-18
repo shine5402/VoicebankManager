@@ -55,7 +55,7 @@ int MoresamplerConfigsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return configReader->getCount();
+    return configReader->count();
 }
 
 int MoresamplerConfigsModel::columnCount(const QModelIndex &parent) const
@@ -126,14 +126,13 @@ QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
 bool MoresamplerConfigsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
-        //FIXME:
         if(!(configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override))
         {
             try {
                 configReader->getConfig(index.row())->setValue(value);
             }
             catch (MoresamplerConfig::ValueNotValidException&) {
-                emit ValueToSetIsNotValid();
+                emit ValueToSetIsNotValid(index.row(),value);
                 return false;
             }
         }

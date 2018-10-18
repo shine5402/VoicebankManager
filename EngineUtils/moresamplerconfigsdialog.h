@@ -26,6 +26,7 @@ private slots:
     void on_addButton_clicked();
 public slots:
     void accept() override;
+    void onInvalidValue(int row, QVariant data);
 private:
     Ui::MoresamplerConfigsDialog *ui;
     QString path;

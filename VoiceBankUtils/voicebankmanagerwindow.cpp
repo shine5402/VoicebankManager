@@ -178,7 +178,6 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     voiceBanksTableWidgetMenu->addMenu(copySubMenu);
 
-
     auto codecSubMenu = new QMenu(tr(u8"编码相关"),this);
 
     auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),this);
@@ -204,6 +203,15 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     codecSubMenu->addAction(convertWavFileNameCodecAction);
 
     voiceBanksTableWidgetMenu->addMenu(codecSubMenu);
+
+    auto engineMenu = new QMenu(tr(u8"引擎相关"),this);
+
+    auto moresamplerConfigEditAction = new QAction(tr(u8"编辑该音源的Moresampler声库配置"),this);
+    connect(moresamplerConfigEditAction,SIGNAL(triggered(bool)),this,SLOT(moresamplerConfigEditActionSlot()));
+    moresamplerConfigEditAction->setStatusTip(tr(u8"编辑该声库的Moresampler声库配置。只有在您使用Moresampler时起效。"));
+    engineMenu->addAction(moresamplerConfigEditAction);
+
+    voiceBanksTableWidgetMenu->addMenu(engineMenu);
 
     auto reloadAction = new QAction(tr(u8"重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
@@ -510,4 +518,30 @@ void VoiceBankManagerWindow::onVoiceBankViewCurrentChanged(const QModelIndex &cu
     auto voiceBank = getSelectedVoiceBank(current);
     if (voiceBank)
         setVoiceBankInfomation(voiceBank);
+}
+
+void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
+{
+    //FIXME:考虑子文件夹
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        QDir dir(voiceBank->getPath());
+        auto subDirs = dir.entryList(QDir::Dirs | QDir::NoDotDot);
+        if (subDirs == QStringList({u8"."}))
+        {
+            auto dialog = new MoresamplerConfigsDialog(voiceBank->getPath() + "moreconfig.txt",MoresamplerConfigReader::VoiceBank,this,voiceBank->getName());
+            dialog->exec();
+        }
+        else
+        {
+            bool ok = false;
+            auto choice = QInputDialog::getItem(this,tr(u8"选择一个子文件夹"),tr(u8"您选择的音源有子文件夹。Moresampler的配置文件只对一个同文件夹内的wav文件起效。请选择一个子文件夹来编辑配置："),subDirs,0,true,&ok);
+            if (ok)
+            {
+                auto dialog = new MoresamplerConfigsDialog(QDir::cleanPath(dir.absoluteFilePath(choice)) + u8"/" + "moreconfig.txt",MoresamplerConfigReader::VoiceBank,this,voiceBank->getName());
+                dialog->exec();
+            }
+        }
+    }
 }

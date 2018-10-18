@@ -8,6 +8,7 @@ MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const Mo
     ui->setupUi(this);
     reader = new MoresamplerConfigReader(path,configFileType,this);
     model = new MoresamplerConfigsModel(reader);
+    connect(model,SIGNAL(ValueToSetIsNotValid(int, QVariant)),this,SLOT(onInvalidValue(int, QVariant)));
     ui->configTableView->setModel(model);
     ui->configTableView->resizeColumnsToContents();
     ui->configTableView->setItemDelegate(new MoresamplerConfigsDelegate(reader,this));
@@ -30,7 +31,7 @@ MoresamplerConfigsDialog::~MoresamplerConfigsDialog()
 
 void MoresamplerConfigsDialog::on_deleteButton_clicked()
 {
-    if (reader->getCount() > 0)
+    if (reader->count() > 0)
         model->removeConfig(ui->configTableView->currentIndex().row());
     else
         QMessageBox::warning(this,tr(u8"没有可删除的项"),tr(u8"当前配置文件的配置项目数为0，所以无法删除项目。"));
@@ -64,6 +65,22 @@ void MoresamplerConfigsDialog::on_addButton_clicked()
 
 void MoresamplerConfigsDialog::accept()
 {
+    QString error;
+    for (int i = 0;i < reader->count();++i)
+    {
+        auto config = reader->getConfig(i);
+        if (!config->isValidValue())
+            error.append(tr(u8"您设置的值“%1”无法应用于第%2行。请修改后重试。\n").arg(config->getValueString()).arg(i));
+    }
+    if (!error.isEmpty()){
+        QMessageBox::warning(this,tr(u8"设置的值无效"),error.trimmed());
+        return;
+    }
     reader->saveConfigs();
     QDialog::accept();
+}
+
+void MoresamplerConfigsDialog::onInvalidValue(int row, QVariant data)
+{
+    QMessageBox::warning(this,tr(u8"设置的值无效"),tr(u8"您设置的值“%1”无法应用于第%2行。请修改后重试。").arg(data.toString()).arg(row));
 }

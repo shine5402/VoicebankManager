@@ -1,5 +1,4 @@
 ﻿#include "moresamplerconfig.h"
-//FIXME: 考虑元标记
 
 MoresamplerConfig::MoresamplerConfig(QString &configString):configString(configString)
 {
@@ -113,12 +112,17 @@ QString MoresamplerConfig::toString() const
 {
     if (type == ConfigType::Blank)
         return QString();
-   auto result = nameString + " " + valueString;
-   if (decoration.override)
-       result.insert(0,u8"*");
-   if (decoration.comment)
-       result.insert(0,u8"#");
+    auto result = nameString + " " + valueString;
+    if (decoration.override)
+        result.insert(0,u8"*");
+    if (decoration.comment)
+        result.insert(0,u8"#");
     return result;
+}
+
+bool MoresamplerConfig::isValidValue() const
+{
+    return editMode->isValidValue(value);
 }
 
 MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &configName)

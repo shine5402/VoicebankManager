@@ -112,6 +112,7 @@ public:
         return type == ConfigType::MetaFlag;
     }
     QString toString() const;
+    bool isValidValue() const;
 private:
     struct ConfigDecoration
     {

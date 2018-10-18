@@ -14,7 +14,7 @@ public:
     };
     explicit MoresamplerConfigReader(const QString& configFilePath, const ConfigFileType configFileType,QObject *parent = nullptr);
     void readConfigs();
-    int getCount() const{
+    int count() const{
         return configs.count();
     }
     void saveConfigs();
@@ -25,6 +25,7 @@ public:
     ConfigFileType getConfigFileType() const;
     void removeConfig(int id);
     int addConfig(QString &name);
+
 signals:
 
 public slots:

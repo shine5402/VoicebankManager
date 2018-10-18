@@ -42,7 +42,7 @@ public:
     void removeConfig(int id);
     void addConfig(QString name);
 signals:
-    void ValueToSetIsNotValid();
+    void ValueToSetIsNotValid(int row, QVariant data);
 private:
     MoresamplerConfigReader* configReader = nullptr;
     bool isValueColumn(const QModelIndex &index) const;
