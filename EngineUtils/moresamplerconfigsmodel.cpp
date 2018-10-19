@@ -87,7 +87,7 @@ QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
                 return configReader->getConfig(index.row())->getTypeString();
             case TableColumnsGlobal::Override:
                 //return tr(u8"是否覆盖声库配置");
-                if (!(configReader->getConfig(index.row())->isComment() || configReader->getConfig(index.row())->isBlankLine() || configReader->getConfig(index.row())->isMetaFlag()))
+                if (isEditableOverrideColumn(index))
                     return configReader->getConfig(index.row())->isOverride()?tr(u8"是"):tr(u8"否");
                 else
                     return tr(u8"（不支持）");
@@ -151,7 +151,7 @@ bool MoresamplerConfigsModel::isValueColumn(const QModelIndex &index) const{
     return (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank && index.column() == TableColumnsVoicebank::Value) || (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == TableColumnsGlobal::Value);
 }
 bool MoresamplerConfigsModel::isEditableOverrideColumn(const QModelIndex &index) const{
-    return (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override && !configReader->getConfig(index.row())->isComment() && !configReader->getConfig(index.row())->isBlankLine() && !configReader->getConfig(index.row())->isMetaFlag());
+    return (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global && index.column() == MoresamplerConfigsModel::TableColumnsGlobal::Override && (configReader->getConfig(index.row())->getType() == MoresamplerConfig::Analysis || configReader->getConfig(index.row())->getType() == MoresamplerConfig::Synthesis));
 }
 Qt::ItemFlags MoresamplerConfigsModel::flags(const QModelIndex &index) const
 {

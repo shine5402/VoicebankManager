@@ -503,7 +503,7 @@ void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
     auto count = QInputDialog::getInt(this,tr(u8"设定线程池的最大大小"),tr(u8"（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),voiceBankHandler->getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
     if (ok){
         voiceBankHandler->setThreadPoolMaxThreadCount(count);
-    ui->statusbar->showMessage(tr(u8"线程池大小已经被设置为%1").arg(count));
+        ui->statusbar->showMessage(tr(u8"线程池大小已经被设置为%1").arg(count));
     }
 }
 
@@ -522,7 +522,6 @@ void VoiceBankManagerWindow::onVoiceBankViewCurrentChanged(const QModelIndex &cu
 
 void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
 {
-    //FIXME:考虑子文件夹
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
@@ -548,5 +547,28 @@ void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
 
 void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
 {
-//FIXME:
+    QStringList configFilePaths;
+    for (auto path : monitorFolders)
+    {
+        QDir dir(path);
+        if (dir.cdUp()){
+            if (QFileInfo(dir.absoluteFilePath(u8"moreconfig.txt")).exists())
+                configFilePaths.append(QDir::cleanPath(dir.absoluteFilePath(u8"moreconfig.txt")));
+        }
+    }
+    if (!configFilePaths.isEmpty())
+    {
+        bool ok = false;
+        auto item = QInputDialog::getItem(this,tr(u8"检测到可能的全局配置"),tr(u8"在监视文件夹的父文件夹中发现了以下可能的Moresampler配置文件。您可以选择其中的一个打开，或者取消来进行浏览。"),configFilePaths,0,false,&ok);
+        if (ok)
+        {
+            auto dialog = new MoresamplerConfigsDialog(item,MoresamplerConfigReader::Global,this);
+            dialog->exec();
+            return;
+        }
+    }
+    if (auto filePath = QFileDialog::getOpenFileName(this,tr(u8"打开一个Moresampler全局配置文件"),QString(),tr(u8"Moresampler 配置文件 (moreconfig.txt)"));!filePath.isEmpty()){
+        auto dialog = new MoresamplerConfigsDialog(filePath,MoresamplerConfigReader::Global,this);
+        dialog->exec();
+    };
 }

@@ -21,6 +21,7 @@ MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const Mo
     }
     else
         setWindowTitle(tr(u8"编辑全局Moresampler配置"));
+    ui->whatIsEditingLabel->setText(tr(u8"当前正在编辑：%1").arg(path));
 
 }
 

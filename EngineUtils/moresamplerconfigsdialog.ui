@@ -14,15 +14,11 @@
    <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1">
-    <widget class="QPushButton" name="addButton">
-     <property name="text">
-      <string>添加</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="deleteButton">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮来删除当前选中的行。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>删除</string>
      </property>
@@ -41,8 +37,31 @@
      </property>
     </spacer>
    </item>
+   <item row="3" column="1" colspan="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="addButton">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮在文件的最后一行新建一个配置项。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>添加</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="4">
     <widget class="QTableView" name="configTableView">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;这里显示配置文件中的配置项。&lt;/p&gt;&lt;p&gt;您可以双击“值”一列来编辑配置项的值。如果您编辑的是全局配置，您可以双击“是否覆盖声库配置”来选择是否覆盖各个声库中定义的配置。&lt;/p&gt;&lt;p&gt;若要添加和删除配置项，使用左下角的“添加”和“删除”按钮。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
@@ -58,16 +77,6 @@
      <attribute name="horizontalHeaderHighlightSections">
       <bool>false</bool>
      </attribute>
-    </widget>
-   </item>
-   <item row="3" column="1" colspan="3">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
     </widget>
    </item>
    <item row="0" column="0" colspan="4">

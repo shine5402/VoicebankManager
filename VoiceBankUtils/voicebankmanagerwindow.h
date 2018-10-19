@@ -22,6 +22,7 @@
 #include "voicebanktablemodel.h"
 #include "EngineUtils/moresamplerconfigreader.h"
 #include "EngineUtils/moresamplerconfigsdialog.h"
+#include <QDir>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
