@@ -87,7 +87,7 @@ QString MoresamplerConfig::getTypeString(const ConfigType &type)
 {
     switch (type) {
     case ConfigType::Analysis:
-        return QCoreApplication::translate("MoresamplerConfig", u8"合成配置");
+        return QCoreApplication::translate("MoresamplerConfig", u8"分析配置");
     case ConfigType::MetaFlag:
         return QCoreApplication::translate("MoresamplerConfig", u8"元标记");
     case ConfigType::Misc:
