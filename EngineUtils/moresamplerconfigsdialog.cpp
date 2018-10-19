@@ -1,6 +1,6 @@
 ﻿#include "moresamplerconfigsdialog.h"
 #include "ui_moresamplerconfigsdialog.h"
-
+//TODO:删除llsm
 MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const MoresamplerConfigReader::ConfigFileType configFileType,QWidget *parent,QString voiceBankName) :
     QDialog(parent),
     ui(new Ui::MoresamplerConfigsDialog),path(path)
@@ -32,14 +32,17 @@ MoresamplerConfigsDialog::~MoresamplerConfigsDialog()
 void MoresamplerConfigsDialog::on_deleteButton_clicked()
 {
     if (reader->count() > 0)
+    {
         model->removeConfig(ui->configTableView->currentIndex().row());
+        ui->configTableView->resizeColumnsToContents();
+    }
     else
         QMessageBox::warning(this,tr(u8"没有可删除的项"),tr(u8"当前配置文件的配置项目数为0，所以无法删除项目。"));
 }
 
 void MoresamplerConfigsDialog::on_addButton_clicked()
 {
-    auto dialog = new MoresamplerConfigAddNewDialog(this);
+    auto dialog = new MoresamplerConfigAddNewDialog(reader,this);
     auto dialogCode = dialog->exec();
     if (dialogCode == QDialog::Accepted)
     {
@@ -60,6 +63,7 @@ void MoresamplerConfigsDialog::on_addButton_clicked()
                 return;
         }
         model->addConfig(name);
+        ui->configTableView->resizeColumnsToContents();
     }
 }
 

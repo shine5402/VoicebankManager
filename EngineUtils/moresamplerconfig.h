@@ -23,6 +23,7 @@ public:
     {
         return getTypeString(getType());
     }
+    static QString getTypeString(QString typeName);
     bool isComment() const{
         return decoration.comment;
     }
@@ -113,6 +114,7 @@ public:
     }
     QString toString() const;
     bool isValidValue() const;
+    static ConfigType getType(const QString &configName);
 private:
     struct ConfigDecoration
     {
@@ -123,7 +125,7 @@ private:
     QString configString;
     ConfigDecoration decoration{};
     ConfigType type{};
-    static ConfigType getTypeByTypeName(const QString &configName);
+
     static QString getTypeString(const ConfigType& type);
     static EditMode* getEditMode(const QString& configName);
     QString valueString;

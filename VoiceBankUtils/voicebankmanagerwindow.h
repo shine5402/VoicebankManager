@@ -94,6 +94,7 @@ private slots:
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
     void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
     void moresamplerConfigEditActionSlot();
+    void on_actionEdit_Global_MoresamplerConfig_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

@@ -25,7 +25,7 @@ public:
     ConfigFileType getConfigFileType() const;
     void removeConfig(int id);
     int addConfig(QString &name);
-
+    bool contains(QString &name);
 signals:
 
 public slots:

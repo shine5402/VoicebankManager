@@ -61,3 +61,13 @@ int MoresamplerConfigReader::addConfig(QString &name)
     configs.append(new MoresamplerConfig(name));
     return configs.count() - 1;
 }
+
+bool MoresamplerConfigReader::contains(QString &name)
+{
+    for (auto config : configs)
+    {
+        if (config->getNameString() == name)
+            return true;
+    }
+    return false;
+}

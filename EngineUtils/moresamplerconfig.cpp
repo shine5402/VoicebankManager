@@ -27,6 +27,11 @@ MoresamplerConfig::ConfigType MoresamplerConfig::getType() const
     return type;
 }
 
+QString MoresamplerConfig::getTypeString(QString name)
+{
+    return getTypeString(getType(name));
+}
+
 void MoresamplerConfig::processString()
 {
     configString = configString.trimmed();
@@ -54,7 +59,7 @@ void MoresamplerConfig::processString()
     }
     auto splitted = configString.split(" ",QString::SplitBehavior::SkipEmptyParts);
     nameString = splitted.at(0).trimmed();
-    type = getTypeByTypeName(nameString);
+    type = getType(nameString);
     if (splitted.count() >= 2)
         valueString = splitted.at(1).trimmed();
     editMode = getEditMode(nameString);
@@ -63,7 +68,7 @@ void MoresamplerConfig::processString()
         valueString = editMode->toStringFromVariantValue(value);
 }
 
-MoresamplerConfig::ConfigType MoresamplerConfig::getTypeByTypeName(const QString& configName)
+MoresamplerConfig::ConfigType MoresamplerConfig::getType(const QString& configName)
 {
     if (configName == "output-sampling-rate" || configName == "output-bit-depth" || configName == "resampler-compatibility")
         return ConfigType::Output;

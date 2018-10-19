@@ -3,13 +3,13 @@
 
 #include <QAbstractTableModel>
 #include "moresamplerconfig.h"
-
+#include "moresamplerconfigreader.h"
 class MoresamplerConfigsAddNewModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit MoresamplerConfigsAddNewModel(QObject *parent = nullptr);
+    explicit MoresamplerConfigsAddNewModel(MoresamplerConfigReader* reader,QObject *parent = nullptr);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -23,6 +23,7 @@ public:
 
 private:
     QStringList entryNames;
+    MoresamplerConfigReader* reader = nullptr;
 };
 
 #endif // MORESAMPLERCONFIGSADDNEWMODEL_H

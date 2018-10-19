@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "moresamplerconfigsaddnewmodel.h"
+#include "moresamplerconfigreader.h"
 namespace Ui {
     class MoresamplerConfigAddNewDialog;
 }
@@ -12,7 +13,7 @@ class MoresamplerConfigAddNewDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MoresamplerConfigAddNewDialog(QWidget *parent = nullptr);
+    explicit MoresamplerConfigAddNewDialog(MoresamplerConfigReader* reader,QWidget *parent = nullptr);
     ~MoresamplerConfigAddNewDialog();
     QString getCurrentEntryName() const;
 private:

@@ -545,3 +545,8 @@ void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
         }
     }
 }
+
+void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
+{
+//FIXME:
+}
