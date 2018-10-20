@@ -20,3 +20,8 @@ QString MoresamplerConfigAddNewDialog::getCurrentEntryName() const
 {
     return model->data(model->index(ui->tableView->currentIndex().row(),0)).toString();
 }
+
+void MoresamplerConfigAddNewDialog::on_tableView_doubleClicked(const QModelIndex &)
+{
+    accept();
+}

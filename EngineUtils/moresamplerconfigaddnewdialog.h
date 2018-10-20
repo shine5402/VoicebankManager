@@ -16,6 +16,9 @@ public:
     explicit MoresamplerConfigAddNewDialog(MoresamplerConfigReader* reader,QWidget *parent = nullptr);
     ~MoresamplerConfigAddNewDialog();
     QString getCurrentEntryName() const;
+private slots:
+    void on_tableView_doubleClicked(const QModelIndex &);
+
 private:
     Ui::MoresamplerConfigAddNewDialog *ui;
     MoresamplerConfigsAddNewModel* model = nullptr;
