@@ -40,7 +40,7 @@ public:
     QString getEntryHelp() const;
     class EditMode{
     public:
-        enum ValueType{Choices,Integer,Float,String};
+        enum ValueType{Choices,Integer,Double,String};
         EditMode(ValueType valueType,QStringList choices = QStringList());
         class NotChoicesException : std::runtime_error{
         public:

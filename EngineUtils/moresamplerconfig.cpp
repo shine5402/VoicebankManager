@@ -263,7 +263,7 @@ MoresamplerConfig::EditMode::~EditMode()
 
 }
 
-MoresamplerConfig::DoubleEditMode::DoubleEditMode() : EditMode(Choices)
+MoresamplerConfig::DoubleEditMode::DoubleEditMode() : EditMode(Double)
 {
 
 }
