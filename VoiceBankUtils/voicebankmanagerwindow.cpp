@@ -1,6 +1,6 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
-
+//TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
@@ -26,8 +26,8 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
-    //voiceBankHandler->clear();
-    voiceBankTableModel->clear();
+    voiceBankHandler->clear();
+    voiceBankTableModel->clearEmitter();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableView->setEnabled(false);
     ui->voicebankCountLabel->setText(tr(u8"加载中"));
@@ -127,7 +127,6 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-
 }
 
 
@@ -176,7 +175,6 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     voiceBanksTableWidgetMenu->addMenu(copySubMenu);
 
-
     auto codecSubMenu = new QMenu(tr(u8"编码相关"),this);
 
     auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),this);
@@ -202,6 +200,15 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     codecSubMenu->addAction(convertWavFileNameCodecAction);
 
     voiceBanksTableWidgetMenu->addMenu(codecSubMenu);
+
+    auto engineMenu = new QMenu(tr(u8"引擎相关"),this);
+
+    auto moresamplerConfigEditAction = new QAction(tr(u8"编辑该音源的Moresampler声库配置"),this);
+    connect(moresamplerConfigEditAction,SIGNAL(triggered(bool)),this,SLOT(moresamplerConfigEditActionSlot()));
+    moresamplerConfigEditAction->setStatusTip(tr(u8"编辑该声库的Moresampler声库配置。只有在您使用Moresampler时起效。"));
+    engineMenu->addAction(moresamplerConfigEditAction);
+
+    voiceBanksTableWidgetMenu->addMenu(engineMenu);
 
     auto reloadAction = new QAction(tr(u8"重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
@@ -493,7 +500,7 @@ void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
     auto count = QInputDialog::getInt(this,tr(u8"设定线程池的最大大小"),tr(u8"（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),voiceBankHandler->getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
     if (ok){
         voiceBankHandler->setThreadPoolMaxThreadCount(count);
-    ui->statusbar->showMessage(tr(u8"线程池大小已经被设置为%1").arg(count));
+        ui->statusbar->showMessage(tr(u8"线程池大小已经被设置为%1").arg(count));
     }
 }
 
@@ -508,4 +515,57 @@ void VoiceBankManagerWindow::onVoiceBankViewCurrentChanged(const QModelIndex &cu
     auto voiceBank = getSelectedVoiceBank(current);
     if (voiceBank)
         setVoiceBankInfomation(voiceBank);
+}
+
+void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
+{
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        QDir dir(voiceBank->getPath());
+        auto subDirs = dir.entryList(QDir::Dirs | QDir::NoDotDot);
+        if (subDirs == QStringList({u8"."}))
+        {
+            auto dialog = new MoresamplerConfigsDialog(voiceBank->getPath() + "moreconfig.txt",MoresamplerConfigReader::VoiceBank,this,voiceBank->getName());
+            dialog->exec();
+        }
+        else
+        {
+            bool ok = false;
+            auto choice = QInputDialog::getItem(this,tr(u8"选择一个子文件夹"),tr(u8"您选择的音源有子文件夹。Moresampler的配置文件只对一个同文件夹内的wav文件起效。请选择一个子文件夹来编辑配置："),subDirs,0,true,&ok);
+            if (ok)
+            {
+                auto dialog = new MoresamplerConfigsDialog(QDir::cleanPath(dir.absoluteFilePath(choice)) + u8"/" + "moreconfig.txt",MoresamplerConfigReader::VoiceBank,this,voiceBank->getName());
+                dialog->exec();
+            }
+        }
+    }
+}
+
+void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
+{
+    QStringList configFilePaths;
+    for (auto path : monitorFolders)
+    {
+        QDir dir(path);
+        if (dir.cdUp()){
+            if (QFileInfo(dir.absoluteFilePath(u8"moreconfig.txt")).exists())
+                configFilePaths.append(QDir::cleanPath(dir.absoluteFilePath(u8"moreconfig.txt")));
+        }
+    }
+    if (!configFilePaths.isEmpty())
+    {
+        bool ok = false;
+        auto item = QInputDialog::getItem(this,tr(u8"检测到可能的全局配置"),tr(u8"在监视文件夹的父文件夹中发现了以下可能的Moresampler配置文件。您可以选择其中的一个打开，或者取消来进行浏览。"),configFilePaths,0,false,&ok);
+        if (ok)
+        {
+            auto dialog = new MoresamplerConfigsDialog(item,MoresamplerConfigReader::Global,this);
+            dialog->exec();
+            return;
+        }
+    }
+    if (auto filePath = QFileDialog::getOpenFileName(this,tr(u8"打开一个Moresampler全局配置文件"),QString(),tr(u8"Moresampler 配置文件 (moreconfig.txt)"));!filePath.isEmpty()){
+        auto dialog = new MoresamplerConfigsDialog(filePath,MoresamplerConfigReader::Global,this);
+        dialog->exec();
+    };
 }

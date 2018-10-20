@@ -217,8 +217,15 @@
     <addaction name="actionAbout"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>工具</string>
+    </property>
+    <addaction name="actionEdit_Global_MoresamplerConfig"/>
+   </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_preference"/>
+   <addaction name="menuTools"/>
    <addaction name="menu_help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -316,6 +323,17 @@
    </property>
    <property name="statusTip">
     <string>（高级）改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。</string>
+   </property>
+  </action>
+  <action name="actionEdit_Global_MoresamplerConfig">
+   <property name="text">
+    <string>编辑全局Moresampler设置</string>
+   </property>
+   <property name="toolTip">
+    <string>在编辑器中打开一个moreconfig.txt并以全局模式编辑</string>
+   </property>
+   <property name="statusTip">
+    <string>在编辑器中打开一个moreconfig.txt并以全局模式编辑</string>
    </property>
   </action>
  </widget>

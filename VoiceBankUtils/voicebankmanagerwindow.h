@@ -20,6 +20,9 @@
 #include <QPair>
 #include <QInputDialog>
 #include "voicebanktablemodel.h"
+#include "EngineUtils/moresamplerconfigreader.h"
+#include "EngineUtils/moresamplerconfigsdialog.h"
+#include <QDir>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -91,6 +94,8 @@ private slots:
     void convertWavFileNameCodecActionSlot();
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
     void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
+    void moresamplerConfigEditActionSlot();
+    void on_actionEdit_Global_MoresamplerConfig_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

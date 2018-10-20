@@ -15,12 +15,11 @@ void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
     emit dataChanged(index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Name),index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Path));
 }
 
-void VoiceBankTableModel::clear()
+void VoiceBankTableModel::clearEmitter()
 {
     if (rowCount() > 0)
     {
         beginRemoveRows(QModelIndex(),0,rowCount()-1);
-        voicebankHandler->clear();
         endRemoveRows();
     }
 }
@@ -89,7 +88,7 @@ QVariant VoiceBankTableModel::headerData(int section, Qt::Orientation orientatio
         }
         else
         {
-            return QString("%1").arg(section);
+            return QString("%1").arg(section + 1);
         }
     }
     else
