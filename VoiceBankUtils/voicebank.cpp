@@ -29,11 +29,6 @@ QString VoiceBank::getName() const
     return name;
 }
 
-void VoiceBank::setName(const QString &value)
-{
-    name = value;
-}
-
 QString VoiceBank::getReadme() const
 {
     return readme;
@@ -82,6 +77,20 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
     return QString();
 }
 
+void VoiceBank::writeTextFileInTextCodec(const QString& content, const QString& path,QTextCodec* textCodec){
+    QFile* file = new QFile(path);
+    if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
+        QTextEncoder *encoder= textCodec->makeEncoder();
+        file->write(encoder->fromUnicode(content));
+        delete encoder;
+        file->close();
+        file->deleteLater();
+    }
+    else
+    {
+        LeafLogger::LogMessage(QString(u8"写入模式打开%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString()));
+    }
+}
 QTextCodec *VoiceBank::getDefaultWavFileNameTextCodec()
 {
     return DefaultWavFileNameTextCodec;
@@ -258,6 +267,13 @@ QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
     return errorStates;
 }
 
+void VoiceBank::rename(const QString &name)
+{
+    this->name = name;
+    changeCharacterFile();
+    readFromPath();
+}
+
 
 QByteArrayList VoiceBank::getWavFileNameRaw() const
 {
@@ -353,11 +369,11 @@ void VoiceBank::readCharacterFile()
                 }
                 if (list.at(0).compare(u8"image",Qt::CaseInsensitive) == 0)
                 {
-                    pixmapPath = path + list.at(1);
-                    QFileInfo imageFileInfo(pixmapPath);
+                    imagePath = path + list.at(1);
+                    QFileInfo imageFileInfo(imagePath);
                     if (imageFileInfo.exists()) {
                         try {
-                            image.load(pixmapPath);
+                            image.load(imagePath);
                             LeafLogger::LogMessage(QString(u8"%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
 
                             if (image.height() == 0 ||(!qFuzzyCompare(image.width() / image.height() , 1.0))){
@@ -388,7 +404,7 @@ void VoiceBank::readCharacterFile()
             errorStates.append(new NameNotSetErrorState(this));
             LeafLogger::LogMessage(QString(u8"%1的音源的name字段不存在。").arg(path));
         }
-        if (pixmapPath.isEmpty()){
+        if (imagePath.isEmpty()){
             errorStates.append(new ImageFileNotSetErrorState(this));
             LeafLogger::LogMessage(QString(u8"%1的音源的image字段不存在。").arg(path));}
     }
@@ -420,6 +436,47 @@ void VoiceBank::readReadme()
     {
         errorStates.append(new ReadmeFileCanNotOpenErrorState(this));
         LeafLogger::LogMessage(QString(u8"%1的音源的readme.txt无法打开。").arg(path));
+    }
+}
+
+void VoiceBank::changeCharacterFile()
+{
+    try
+    {
+        QString characterString{};
+        if (!isTextCodecFollowDefault)
+            characterString = readTextFileInTextCodec(path + u8"character.txt",CharacterTextCodec);
+        else
+            characterString = readTextFileInTextCodec(path + u8"character.txt",DefaultCharacterTextCodec);
+        LeafLogger::LogMessage(QString(u8"%1的character.txt被成功读取至characterString。").arg(path));
+        QString newCharacterString{};
+        QTextStream readStream(&characterString);
+        QTextStream writeStream(&newCharacterString);
+        while (!readStream.atEnd())
+        {
+            auto line = readStream.readLine();
+            if (line.trimmed().startsWith(u8"name=",Qt::CaseInsensitive))
+            {
+                line = QString("name=%1").arg(name);
+            }
+            writeStream << line << endl;
+        }
+        if (!isTextCodecFollowDefault)
+            writeTextFileInTextCodec(newCharacterString,path + u8"character.txt",CharacterTextCodec);
+        else
+            writeTextFileInTextCodec(newCharacterString,path + u8"character.txt",DefaultCharacterTextCodec);
+
+    }
+    catch(FileNotExists&){
+        LeafLogger::LogMessage(QString(u8"%1的音源的character.txt不存在。").arg(path));
+        QString newCharacterString{};
+        QTextStream writeStream(&newCharacterString);
+        writeStream << QString("name=%1").arg(name) << endl
+                    << QString("image=%1").arg(imagePath) << endl;
+    }
+    catch(FileCanNotOpen&)
+    {
+        LeafLogger::LogMessage(QString(u8"%1的音源的character.txt无法打开。").arg(path));
     }
 }
 
@@ -462,7 +519,7 @@ QString VoiceBank::getCalculateInformation()
 
 QString VoiceBank::getPixmapPath() const
 {
-    return pixmapPath;
+    return imagePath;
 }
 
 QTextCodec *VoiceBank::getCharacterTextCodec() const

@@ -25,7 +25,6 @@ public:
     void setImage(const QImage &value);
 
     QString getName() const;
-    void setName(const QString &value);
 
     QString getReadme() const;
     void setReadme(const QString &value);
@@ -141,10 +140,10 @@ public:
     bool isFirstRead() const{
         return ReadCount == 1 || ReadCount == 0;
     }
-
+    void rename(const QString& name);
 private:
     QImage image;
-    QString pixmapPath;
+    QString imagePath;
     QString name;
     QString readme;
     QString path;
@@ -156,6 +155,7 @@ private:
     QList<ErrorState *> errorStates;
     void readCharacterFile();
     void readReadme();
+    void changeCharacterFile();
     QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
     static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
@@ -168,6 +168,7 @@ private:
     QStringList wavFilePath{};
     //bool firstRead = true;
     int ReadCount = 0;
+    void writeTextFileInTextCodec(const QString &content, const QString &path, QTextCodec *textCodec);
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);

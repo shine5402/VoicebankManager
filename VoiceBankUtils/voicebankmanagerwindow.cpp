@@ -22,6 +22,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
     ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
     connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &)));
+
 }
 
 void VoiceBankManagerWindow::loadVoiceBanksList()
@@ -127,6 +128,7 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
+
 }
 
 
@@ -175,26 +177,35 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     voiceBanksTableWidgetMenu->addMenu(copySubMenu);
 
+    auto modifySubMenu = new QMenu(tr(u8"修改..."));
+
+    auto modifyNameAction = new QAction(tr(u8"修改音源的名称..."));
+    connect(modifyNameAction,SIGNAL(triggered(bool)),this,SLOT(modifyNameActionSlot()));
+    modifyNameAction->setStatusTip(tr(u8"为该音源指定一个新名称。"));
+    modifySubMenu->addAction(modifyNameAction);
+
+    voiceBanksTableWidgetMenu->addMenu(modifySubMenu);
+
     auto codecSubMenu = new QMenu(tr(u8"编码相关"),this);
 
-    auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码"),this);
+    auto setCodecAction = new QAction(tr(u8"为该音源单独设置文本编码..."),this);
     connect(setCodecAction,SIGNAL(triggered(bool)),this,SLOT(setCodecForVoiceBankActionSlot()));
     setCodecAction->setStatusTip(tr(u8"为该音源设置读取用文本编码。注意，这仅在本软件中有效。"));
     codecSubMenu->addAction(setCodecAction);
 
     codecSubMenu->addSeparator();
 
-    auto convertCharacterCodecAction = new QAction(tr(u8"对character.txt进行编码转换"),this);
+    auto convertCharacterCodecAction = new QAction(tr(u8"对character.txt进行编码转换..."),this);
     connect(convertCharacterCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertCharacterCodecActionSlot()));
     convertCharacterCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源character.txt的编码。"));
     codecSubMenu->addAction(convertCharacterCodecAction);
 
-    auto convertReadmeCodecAction = new QAction(tr(u8"对readme.txt进行编码转换"),this);
+    auto convertReadmeCodecAction = new QAction(tr(u8"对readme.txt进行编码转换..."),this);
     connect(convertReadmeCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertReadmeCodecActionSlot()));
     convertReadmeCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源readme.txt的编码。"));
     codecSubMenu->addAction(convertReadmeCodecAction);
 
-    auto convertWavFileNameCodecAction = new QAction(tr(u8"对WAV文件名进行编码转换"),this);
+    auto convertWavFileNameCodecAction = new QAction(tr(u8"对WAV文件名进行编码转换..."),this);
     connect(convertWavFileNameCodecAction,SIGNAL(triggered(bool)),this,SLOT(convertWavFileNameCodecActionSlot()));
     convertWavFileNameCodecAction->setStatusTip(tr(u8"在文件编码转换器中转换该音源的WAV文件名的编码。"));
     codecSubMenu->addAction(convertWavFileNameCodecAction);
@@ -203,7 +214,7 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     auto engineMenu = new QMenu(tr(u8"引擎相关"),this);
 
-    auto moresamplerConfigEditAction = new QAction(tr(u8"编辑该音源的Moresampler声库配置"),this);
+    auto moresamplerConfigEditAction = new QAction(tr(u8"编辑该音源的Moresampler声库配置..."),this);
     connect(moresamplerConfigEditAction,SIGNAL(triggered(bool)),this,SLOT(moresamplerConfigEditActionSlot()));
     moresamplerConfigEditAction->setStatusTip(tr(u8"编辑该声库的Moresampler声库配置。只有在您使用Moresampler时起效。"));
     engineMenu->addAction(moresamplerConfigEditAction);
@@ -568,4 +579,20 @@ void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
         auto dialog = new MoresamplerConfigsDialog(filePath,MoresamplerConfigReader::Global,this);
         dialog->exec();
     };
+}
+
+void VoiceBankManagerWindow::modifyNameActionSlot()
+{
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        bool ok = false;
+        auto name = QInputDialog::getText(this,tr(u8"为音源指定一个新名称"),tr(u8"为路径为%1的音源指定一个新名称（程序会自动转换编码）：").arg(voiceBank->getPath()),QLineEdit::Normal,voiceBank->getName(),&ok);
+        if (ok)
+        {
+            voiceBank->rename(name);
+            ui->statusbar->showMessage(tr(u8"已将路径为%1的音源的名称设置为%2。").arg(voiceBank->getPath()).arg(voiceBank->getName()));
+            setVoiceBankInfomation(voiceBank);
+        }
+    }
 }

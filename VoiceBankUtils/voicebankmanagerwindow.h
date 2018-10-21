@@ -96,6 +96,7 @@ private slots:
     void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
     void moresamplerConfigEditActionSlot();
     void on_actionEdit_Global_MoresamplerConfig_triggered();
+    void modifyNameActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H
