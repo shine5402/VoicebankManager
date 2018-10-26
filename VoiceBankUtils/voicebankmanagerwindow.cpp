@@ -249,13 +249,39 @@ void VoiceBankManagerWindow::openVoiceBankCharacterFileByOS(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
         auto url = QUrl(u8"file:" + voiceBank->getPath() + u8"character.txt");
-        QDesktopServices::openUrl(url);}
+        if (!QDesktopServices::openUrl(url)){
+            if (!QFileInfo(voiceBank->getPath() + u8"character.txt").exists())
+            {
+                auto id = QMessageBox::information(this,u8"文件不存在",u8"看起来该音源的character.txt不存在。是否需要程序创建一个？",QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
+                if (id == QMessageBox::Ok)
+                {
+                    modifyNameActionSlot();
+                    openVoiceBankCharacterFileByOS();
+                    return;
+                }
+            }
+            QMessageBox::warning(this,tr(u8"打开失败"),tr(u8"无法打开%1。").arg(url.url()));
+        };}
 }
 void VoiceBankManagerWindow::openVoiceBankReadmeFileByOS(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
         auto url = QUrl(u8"file:" + voiceBank->getPath() + u8"readme.txt");
-        QDesktopServices::openUrl(url);
+        if(!QDesktopServices::openUrl(url)){
+            if (!QFileInfo(voiceBank->getPath() + u8"readme.txt").exists())
+            {
+                auto id = QMessageBox::information(this,u8"文件不存在",u8"看起来该音源的readme.txt不存在。是否需要程序创建一个？",QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
+                if (id == QMessageBox::Ok)
+                {
+                    QFile file(voiceBank->getPath() + u8"readme.txt");
+                    file.open(QIODevice::WriteOnly);
+                    file.close();
+                    openVoiceBankReadmeFileByOS();
+                    return;
+                }
+            }
+            QMessageBox::warning(this,tr(u8"打开失败"),tr(u8"无法打开%1。").arg(url.url()));
+        };
     }
 }
 void VoiceBankManagerWindow::copyVoiceBankPathtoClipboard()
@@ -268,12 +294,34 @@ void VoiceBankManagerWindow::copyVoiceBankPathtoClipboard()
 void VoiceBankManagerWindow::copyVoiceBankCharacterFilePathtoClipboard(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
+        if (!QFileInfo(voiceBank->getPath() + u8"character.txt").exists())
+        {
+            auto id = QMessageBox::information(this,u8"文件不存在",u8"看起来该音源的character.txt不存在。是否需要程序创建一个？",QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
+            if (id == QMessageBox::Ok)
+            {
+                modifyNameActionSlot();
+            }
+            else
+                QMessageBox::information(this,tr(u8"剪贴板仍会被更改"),tr(u8"即使您没有要求程序创建character.txt，程序也将把路径复制到剪贴板。但还是请您注意，这个路径并没有指向有效的文件。"));
+        }
         QClipboard* clipboard = QApplication::clipboard();
         clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath() + u8"character.txt"));}
 }
 void VoiceBankManagerWindow::copyVoiceBankReadmeFilePathtoClipboard(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
+        if (!QFileInfo(voiceBank->getPath() + u8"readme.txt").exists())
+        {
+            auto id = QMessageBox::information(this,u8"文件不存在",u8"看起来该音源的readme.txt不存在。是否需要程序创建一个？",QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
+            if (id == QMessageBox::Ok)
+            {
+                QFile file(voiceBank->getPath() + u8"readme.txt");
+                file.open(QIODevice::WriteOnly);
+                file.close();
+            }
+            else
+                QMessageBox::information(this,tr(u8"剪贴板仍会被更改"),tr(u8"即使您没有要求程序创建readme.txt，程序也将把路径复制到剪贴板。但还是请您注意，这个路径并没有指向有效的文件。"));
+        }
         QClipboard* clipboard = QApplication::clipboard();
         clipboard->setText(QDir::toNativeSeparators(voiceBank->getPath() + u8"readme.txt"));}
 }
@@ -295,6 +343,11 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
         auto path = voiceBank->getPath() + u8"character.txt";
+        if (!QFileInfo(path).exists())
+        {
+            QMessageBox::warning(this,tr(u8"character.txt不存在"),tr(u8"您选定的音源不存在character.txt。所以无法进行转换操作。"));
+            return;
+        }
         auto isDone = processFileTextCodecConvert(path,voiceBank->getCharacterTextCodec(),VoiceBank::getDefaultCharacterTextCodec());
         if (isDone.first)
         {
@@ -309,6 +362,11 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
         auto path = voiceBank->getPath() + u8"readme.txt";
+        if (!QFileInfo(path).exists())
+        {
+            QMessageBox::warning(this,tr(u8"readme.txt不存在"),tr(u8"您选定的音源不存在readme.txt。所以无法进行转换操作。"));
+            return;
+        }
         auto isDone = processFileTextCodecConvert(path,voiceBank->getReadmeTextCodec(),VoiceBank::getDefaultReadmeTextCodec());
         if (isDone.first)
         {
@@ -332,7 +390,6 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
             QTextEncoder encoder(targetCodec);
             QTextDecoder decoder(sourceCodec);
             QTextDecoder decoderLocale(QTextCodec::codecForLocale());
-            //auto wavFileNameReDecoded = voiceBank->getWavFileNameReDecoded();
             auto wavFilePath = voiceBank->getWavFilePath();
             auto it = wavFilePath.begin();
             QStringList unsucess;
@@ -590,9 +647,16 @@ void VoiceBankManagerWindow::modifyNameActionSlot()
         auto name = QInputDialog::getText(this,tr(u8"为音源指定一个新名称"),tr(u8"为路径为%1的音源指定一个新名称（程序会自动转换编码）：").arg(voiceBank->getPath()),QLineEdit::Normal,voiceBank->getName(),&ok);
         if (ok)
         {
-            voiceBank->rename(name);
+            try{voiceBank->rename(name);
             ui->statusbar->showMessage(tr(u8"已将路径为%1的音源的名称设置为%2。").arg(voiceBank->getPath()).arg(voiceBank->getName()));
-            setVoiceBankInfomation(voiceBank);
+            setVoiceBankInfomation(voiceBank);}
+            catch(VoiceBank::FileCanNotOpen& e){
+                QMessageBox::critical(this,tr(u8"文件无法被打开"),tr(u8"有一个文件无法被打开。Qt提供的错误字符串为%1").arg(e.QFileError()));
+            }
+            catch(VoiceBank::FileNotExists&){
+                setVoiceBankInfomation(voiceBank);
+                ui->statusbar->showMessage(tr(u8"路径为%1的音源的character.txt不存在。程序已经自动创建并将名称设置为%1。").arg(voiceBank->getName()));
+            }
         }
     }
 }

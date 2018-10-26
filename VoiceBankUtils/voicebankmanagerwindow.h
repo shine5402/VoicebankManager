@@ -23,6 +23,7 @@
 #include "EngineUtils/moresamplerconfigreader.h"
 #include "EngineUtils/moresamplerconfigsdialog.h"
 #include <QDir>
+#include <QFileInfo>
 namespace Ui {
     class VoiceBankManagerWindow;
 }

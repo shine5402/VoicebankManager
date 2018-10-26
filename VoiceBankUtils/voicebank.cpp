@@ -270,7 +270,17 @@ QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
 void VoiceBank::rename(const QString &name)
 {
     this->name = name;
-    changeCharacterFile();
+    try
+    {
+        changeCharacterFile();
+    }
+    catch(FileNotExists& e){
+        readFromPath();
+        throw e;
+    }
+    catch(FileCanNotOpen& e){
+        throw e;
+    }
     readFromPath();
 }
 
@@ -461,22 +471,30 @@ void VoiceBank::changeCharacterFile()
             }
             writeStream << line << endl;
         }
+        newCharacterString = newCharacterString.trimmed();
         if (!isTextCodecFollowDefault)
             writeTextFileInTextCodec(newCharacterString,path + u8"character.txt",CharacterTextCodec);
         else
             writeTextFileInTextCodec(newCharacterString,path + u8"character.txt",DefaultCharacterTextCodec);
 
     }
-    catch(FileNotExists&){
+    catch(FileNotExists& e){
         LeafLogger::LogMessage(QString(u8"%1的音源的character.txt不存在。").arg(path));
         QString newCharacterString{};
         QTextStream writeStream(&newCharacterString);
         writeStream << QString("name=%1").arg(name) << endl
                     << QString("image=%1").arg(imagePath) << endl;
+        newCharacterString = newCharacterString.trimmed();
+        if (!isTextCodecFollowDefault)
+            writeTextFileInTextCodec(newCharacterString,path + u8"character.txt",CharacterTextCodec);
+        else
+            writeTextFileInTextCodec(newCharacterString,path + u8"character.txt",DefaultCharacterTextCodec);
+        throw e;
     }
-    catch(FileCanNotOpen&)
+    catch(FileCanNotOpen& e)
     {
         LeafLogger::LogMessage(QString(u8"%1的音源的character.txt无法打开。").arg(path));
+        throw e;
     }
 }
 

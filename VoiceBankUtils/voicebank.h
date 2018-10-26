@@ -104,7 +104,10 @@ public:
     };
     class FileCanNotOpen : public std::runtime_error{
     public:
-        FileCanNotOpen():std::runtime_error(u8"File can not open."){}
+        FileCanNotOpen(const QString QFileError):std::runtime_error(u8"File can not open."),_QFileError(QFileError){}
+        const QString& QFileError() const{return _QFileError;}
+    private:
+        QString _QFileError;
     };
     static void setDefaultCharacterTextCodec(QTextCodec *value);
     static void setDefaultReadmeTextCodec(QTextCodec *value);
