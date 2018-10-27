@@ -191,7 +191,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -222,6 +222,7 @@
      <string>工具</string>
     </property>
     <addaction name="actionEdit_Global_MoresamplerConfig"/>
+    <addaction name="actionchoose_a_voicebank_randomly"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_preference"/>
@@ -334,6 +335,17 @@
    </property>
    <property name="statusTip">
     <string>在编辑器中打开一个moreconfig.txt并以全局模式编辑</string>
+   </property>
+  </action>
+  <action name="actionchoose_a_voicebank_randomly">
+   <property name="text">
+    <string>随机选择一个音源</string>
+   </property>
+   <property name="toolTip">
+    <string>在音源列表中随机选择一个音源。在拿不定主意的时候说不定会有帮助。</string>
+   </property>
+   <property name="statusTip">
+    <string>在音源列表中随机选择一个音源。在拿不定主意的时候说不定会有帮助。</string>
    </property>
   </action>
  </widget>

@@ -24,6 +24,7 @@
 #include "EngineUtils/moresamplerconfigsdialog.h"
 #include <QDir>
 #include <QFileInfo>
+#include <QRandomGenerator>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -98,6 +99,7 @@ private slots:
     void moresamplerConfigEditActionSlot();
     void on_actionEdit_Global_MoresamplerConfig_triggered();
     void modifyNameActionSlot();
+    void on_actionchoose_a_voicebank_randomly_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

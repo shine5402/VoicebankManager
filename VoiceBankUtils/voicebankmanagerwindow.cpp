@@ -660,3 +660,20 @@ void VoiceBankManagerWindow::modifyNameActionSlot()
         }
     }
 }
+
+void VoiceBankManagerWindow::on_actionchoose_a_voicebank_randomly_triggered()
+{
+    if (voiceBankHandler->count() == 0)
+    {
+        QMessageBox::warning(this,tr(u8"没有音源"),tr(u8"没有音源，无法随机选择音源。"));
+        return;
+    }
+    QList<int> unHidden;
+    for (int i = 0;i < voiceBankHandler->count();++i)
+    {
+        if (!ui->voiceBanksTableView->isRowHidden(i))
+            unHidden.append(i);
+    }
+    int random = QRandomGenerator::global()->bounded(0,unHidden.count());
+    ui->voiceBanksTableView->setCurrentIndex(voiceBankTableModel->index(unHidden.at(random),0));
+}
