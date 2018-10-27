@@ -15,6 +15,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     createVoiceBanksTableMenu();
     connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
     ui->voiceBankBriefInfomationWidget->setVisible(false);
+    ui->voiceBankBriefInfomationWidget->setTitleBarWidget(new QWidget(this));
     auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
     readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
     ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
@@ -80,7 +81,6 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
         ui->voiceBankBriefInfomationWidget->setVisible(true);
     ui->voicebankNameLabel->setText(voiceBank->getName());
     ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage().scaled(100,100)));
-    //ui->voicebankReadmeTextBrowser->setText();
     ui->voicebankReadmeTextBrowser->clear();
     auto errors = voiceBank->getErrorStates();
     if (!errors.isEmpty()){
