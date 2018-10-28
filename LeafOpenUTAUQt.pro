@@ -42,7 +42,8 @@ SOURCES += \
     EngineUtils/moresamplerconfigsdialog.cpp \
     EngineUtils/moresamplerconfigsdelegate.cpp \
     EngineUtils/moresamplerconfigaddnewdialog.cpp \
-    EngineUtils/moresamplerconfigsaddnewmodel.cpp
+    EngineUtils/moresamplerconfigsaddnewmodel.cpp \
+    ../ImageCropper/src/imagecropper.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -64,7 +65,10 @@ HEADERS += \
     EngineUtils/moresamplerconfigsdialog.h \
     EngineUtils/moresamplerconfigsdelegate.h \
     EngineUtils/moresamplerconfigaddnewdialog.h \
-    EngineUtils/moresamplerconfigsaddnewmodel.h
+    EngineUtils/moresamplerconfigsaddnewmodel.h \
+    ../ImageCropper/src/imagecropper.h \
+    ../ImageCropper/src/imagecropper_e.h \
+    ../ImageCropper/src/imagecropper_p.h
 
 FORMS += \
         editorwindow.ui \
