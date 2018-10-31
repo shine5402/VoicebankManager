@@ -43,7 +43,9 @@ SOURCES += \
     EngineUtils/moresamplerconfigsdelegate.cpp \
     EngineUtils/moresamplerconfigaddnewdialog.cpp \
     EngineUtils/moresamplerconfigsaddnewmodel.cpp \
-    ../ImageCropper/src/imagecropper.cpp
+    ../ImageCropper/src/imagecropper.cpp \
+    VoiceBankUtils/voicebankiconcropdialog.cpp \
+    ../ImageCropper/src/imagecroppercontainer.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -68,7 +70,9 @@ HEADERS += \
     EngineUtils/moresamplerconfigsaddnewmodel.h \
     ../ImageCropper/src/imagecropper.h \
     ../ImageCropper/src/imagecropper_e.h \
-    ../ImageCropper/src/imagecropper_p.h
+    ../ImageCropper/src/imagecropper_p.h \
+    VoiceBankUtils/voicebankiconcropdialog.h \
+    ../ImageCropper/src/imagecroppercontainer.h
 
 FORMS += \
         editorwindow.ui \
@@ -80,7 +84,9 @@ FORMS += \
     TextCodecUtils/availabletextcodecdialog.ui \
     TextCodecUtils/textcodecconvertdialog.ui \
     EngineUtils/moresamplerconfigsdialog.ui \
-    EngineUtils/moresamplerconfigaddnewdialog.ui
+    EngineUtils/moresamplerconfigaddnewdialog.ui \
+    VoiceBankUtils/voicebankiconcropdialog.ui \
+    ../ImageCropper/src/imagecroppercontainer.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }

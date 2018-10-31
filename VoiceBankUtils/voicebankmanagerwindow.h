@@ -25,6 +25,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QRandomGenerator>
+#include "voicebankiconcropdialog.h"
 namespace Ui {
     class VoiceBankManagerWindow;
 }
