@@ -17,10 +17,10 @@
    <item row="2" column="1">
     <widget class="QLineEdit" name="targetFileNameLineEdit">
      <property name="text">
-      <string>icon.jpg</string>
+      <string/>
      </property>
      <property name="placeholderText">
-      <string>键入目标文件名，文件格式将根据后缀自动推断。透明度将会在白色背景上绘制后再保存。</string>
+      <string>键入目标文件名，文件格式将根据后缀自动推断。透明度将会在白色背景上绘制后再保存。默认为“icon.jpg”</string>
      </property>
     </widget>
    </item>
