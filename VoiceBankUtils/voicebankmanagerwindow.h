@@ -26,6 +26,7 @@
 #include <QFileInfo>
 #include <QRandomGenerator>
 #include "voicebankiconcropdialog.h"
+#include <QImageReader>
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -100,7 +101,10 @@ private slots:
     void moresamplerConfigEditActionSlot();
     void on_actionEdit_Global_MoresamplerConfig_triggered();
     void modifyNameActionSlot();
+    void modifyIconActionSlot();
     void on_actionchoose_a_voicebank_randomly_triggered();
+    void onBackupImageFileBecauseExists(VoiceBank * voicebank);
+    void onCannotBackupImageFile(VoiceBank* voicebank);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

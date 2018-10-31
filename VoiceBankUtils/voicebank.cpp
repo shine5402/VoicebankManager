@@ -284,6 +284,32 @@ void VoiceBank::rename(const QString &name)
     readFromPath();
 }
 
+void VoiceBank::changeImage(const QPixmap &_image,const QString newImageFileName)
+{
+    image = _image.toImage();
+    if (QFileInfo(imagePath).exists())
+    {
+        if (QFile(imagePath).rename(imagePath + u8".bak"))
+        {
+            emit backupImageFileBecauseExists(this);
+        }
+        else
+        {
+            emit cannotBackupImageFile(this);
+            return;
+        }
+    }
+    image = image.scaled(100,100);
+    QImage imageWhiteBackgroud(image.size(),image.format());
+    imageWhiteBackgroud.fill(QColor(Qt::white).rgb());
+    QPainter painter(&imageWhiteBackgroud);
+    painter.drawImage(0, 0, image);
+    imageWhiteBackgroud.save(path + newImageFileName);
+    //image.save(path + newImageFileName);
+    imagePathRelative = newImageFileName;
+    changeCharacterFile();
+}
+
 
 QByteArrayList VoiceBank::getWavFileNameRaw() const
 {
@@ -380,6 +406,7 @@ void VoiceBank::readCharacterFile()
                 if (list.at(0).compare(u8"image",Qt::CaseInsensitive) == 0)
                 {
                     imagePath = path + list.at(1);
+                    imagePathRelative = list.at(1);
                     QFileInfo imageFileInfo(imagePath);
                     if (imageFileInfo.exists()) {
                         try {
@@ -469,6 +496,10 @@ void VoiceBank::changeCharacterFile()
             {
                 line = QString("name=%1").arg(name);
             }
+            if (line.trimmed().startsWith(u8"image=",Qt::CaseInsensitive))
+            {
+                line = QString("image=%1").arg(imagePathRelative);
+            }
             writeStream << line << endl;
         }
         newCharacterString = newCharacterString.trimmed();
@@ -508,12 +539,13 @@ void VoiceBank::setIsFollowDefault(bool value)
     isTextCodecFollowDefault = value;
 }
 
-void VoiceBank::readFromPath()
+void VoiceBank::clear()
 {
-    path = QDir::fromNativeSeparators(path);
-    if (!path.endsWith(u8"/")){
-        path.append(u8"/");
-    }
+    name.clear();
+    image = QImage();
+    imagePath.clear();
+    imagePathRelative.clear();
+    readme.clear();
     if (!errorStates.isEmpty())
     {
         for (auto state : errorStates)
@@ -521,17 +553,21 @@ void VoiceBank::readFromPath()
     }
     errorStates.clear();
     clearWavFileReadStage();
+}
+
+void VoiceBank::readFromPath()
+{
+    path = QDir::fromNativeSeparators(path);
+    if (!path.endsWith(u8"/")){
+        path.append(u8"/");
+    }
+    clear();
     readSettings();
     readCharacterFile();
     readReadme();
     //firstRead = false;
     ++ReadCount;
     emit readDone(this);
-}
-
-QString VoiceBank::getCalculateInformation()
-{
-    return calculateInformation;
 }
 
 

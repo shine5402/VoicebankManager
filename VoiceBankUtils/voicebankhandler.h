@@ -62,6 +62,8 @@ private:
 private slots:
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
+    void backupImageFileBecauseExists(VoiceBank *);
+    void cannotBackupImageFile(VoiceBank *);
 public slots:
 };
 

@@ -128,9 +128,9 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    auto voicebank = getSelectedVoiceBank();
-    auto dialog = new VoiceBankIconCropDialog(voicebank->getImage());
-    dialog->exec();
+//    auto voicebank = getSelectedVoiceBank();
+//    auto dialog = new VoiceBankIconCropDialog(voicebank);
+//    dialog->exec();
 }
 
 
@@ -185,6 +185,12 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     connect(modifyNameAction,SIGNAL(triggered(bool)),this,SLOT(modifyNameActionSlot()));
     modifyNameAction->setStatusTip(tr(u8"为该音源指定一个新名称。"));
     modifySubMenu->addAction(modifyNameAction);
+
+    auto modifyIconAction = new QAction(tr(u8"修改音源的图标..."));
+    connect(modifyIconAction,SIGNAL(triggered(bool)),this,SLOT(modifyIconActionSlot()));
+    modifyIconAction->setStatusTip(tr(u8"为该音源指定一个新图标。"));
+    modifySubMenu->addAction(modifyIconAction);
+
 
     voiceBanksTableWidgetMenu->addMenu(modifySubMenu);
 
@@ -663,6 +669,32 @@ void VoiceBankManagerWindow::modifyNameActionSlot()
     }
 }
 
+void VoiceBankManagerWindow::modifyIconActionSlot()
+{
+    //TODO:
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        QByteArrayList supportedList = QImageReader::supportedImageFormats();
+        QString supportedListJoinedString;
+        for (auto i : supportedList)
+        {
+            supportedListJoinedString.append(u8"*." + QString::fromUtf8(i) + u8" ");
+        }
+        auto supportedFilterString = tr(u8"图像文件 (%1)").arg(supportedListJoinedString.trimmed());
+        auto rawImageFilePath = QFileDialog::getOpenFileName(this,tr(u8"选择要设定为图标的新图片"),voiceBank->getPath(),supportedFilterString);
+        if (!rawImageFilePath.isEmpty())
+        {
+            auto dialog = new VoiceBankIconCropDialog(voiceBank,rawImageFilePath,this);
+            auto id = dialog->exec();
+            if (id == QDialog::Accepted)
+            {
+                reloadVoiceBankActionSlot();
+            }
+        }
+    }
+}
+
 void VoiceBankManagerWindow::on_actionchoose_a_voicebank_randomly_triggered()
 {
     if (voiceBankHandler->count() == 0)
@@ -678,4 +710,14 @@ void VoiceBankManagerWindow::on_actionchoose_a_voicebank_randomly_triggered()
     }
     int random = QRandomGenerator::global()->bounded(0,unHidden.count());
     ui->voiceBanksTableView->setCurrentIndex(voiceBankTableModel->index(unHidden.at(random),0));
+}
+
+void VoiceBankManagerWindow::onBackupImageFileBecauseExists(VoiceBank *voicebank)
+{
+    ui->statusbar->showMessage(tr(u8"备份了%1原先的图标，因为目标文件名已存在。").arg(voicebank->getName()));
+}
+
+void VoiceBankManagerWindow::onCannotBackupImageFile(VoiceBank *voicebank)
+{
+    QMessageBox::critical(this,tr(u8"无法备份"),tr(u8"因为重名，程序尝试备份%1原先的图标，但是遇到错误无法完成，操作终止。").arg(voicebank->getName()));
 }

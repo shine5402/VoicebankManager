@@ -19,6 +19,8 @@ QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
 VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
     auto newVoiceBank = new VoiceBank(path,this);
     connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SIGNAL(backupImageFileBecauseExists(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
     auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(newVoiceBank);
     threadPool->start(newVoiceBankReadFunctionRunner);
     LeafLogger::LogMessage(QString(u8"%1的读取线程被加入线程池并由线程池管理启动。").arg(path));

@@ -15,6 +15,7 @@
 #include <QJsonObject>
 #include <../LeafPublicQtClasses/leaflogger.h>
 #include <public_defines.h>
+#include <QPainter>
 class VoiceBank : public QObject
 {
     Q_OBJECT
@@ -33,7 +34,6 @@ public:
     void setPath(const QString &value);
 
     void readFromPath();
-    QString getCalculateInformation();
     //错误标识类
     class ErrorState{
     public:
@@ -144,13 +144,17 @@ public:
         return ReadCount == 1 || ReadCount == 0;
     }
     void rename(const QString& name);
+    void changeImage(const QPixmap& _image, const QString newImageFileName = "icon.png");
+    void clear();
+
 private:
     QImage image;
     QString imagePath;
+    QString imagePathRelative;
     QString name;
     QString readme;
     QString path;
-    QString calculateInformation;
+    //QString calculateInformation;
     QTextCodec *CharacterTextCodec;
     QTextCodec *ReadmeTextCodec;
     QTextCodec *wavFileNameTextCodec;
@@ -175,6 +179,8 @@ private:
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);
+    void backupImageFileBecauseExists(VoiceBank *);
+    void cannotBackupImageFile(VoiceBank *);
 };
 
 
