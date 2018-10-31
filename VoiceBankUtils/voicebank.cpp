@@ -284,11 +284,15 @@ void VoiceBank::rename(const QString &name)
     readFromPath();
 }
 
-void VoiceBank::changeImage(const QPixmap &_image,const QString newImageFileName)
+void VoiceBank::changeImage(const QPixmap &_image,QString newImageFileName)
 {
+    if (newImageFileName.isEmpty())
+        newImageFileName = u8"icon.jpg";
     image = _image.toImage();
-    if (QFileInfo(imagePath).exists())
+    if (QFileInfo(path + newImageFileName).exists())
     {
+        if (QFileInfo(imagePath + u8".bak").exists())
+            QFile(imagePath + u8".bak").remove();
         if (QFile(imagePath).rename(imagePath + u8".bak"))
         {
             emit backupImageFileBecauseExists(this);

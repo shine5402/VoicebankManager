@@ -144,7 +144,7 @@ public:
         return ReadCount == 1 || ReadCount == 0;
     }
     void rename(const QString& name);
-    void changeImage(const QPixmap& _image, const QString newImageFileName = "icon.png");
+    void changeImage(const QPixmap& _image, QString newImageFileName = "icon.jpg");
     void clear();
 
 private:
