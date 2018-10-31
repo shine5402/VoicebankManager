@@ -563,7 +563,17 @@ void VoiceBankManagerWindow::on_actionExit_triggered()
 
 void VoiceBankManagerWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this,tr(u8"关于本程序"),tr(u8R"(<h3>音源管理器</h3><p>版本：%1 作者：shine_5402</p><p>本程序以 Apache 2.0 License 分发。</p><p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p><p>本程序是 <a href="https://github.com/shine5402/LeafOpenUTAUQt">Leaf OpenUTAU Qt Project</a> 的一部分</p><p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>)").arg(voicebankManagerVersion));
+    QMessageBox::about(this,tr(u8"关于本程序"),tr(u8R"(<h3>音源管理器</h3>
+                                             <p>版本：%1 作者：shine_5402</p>
+                                             <p>本程序以 Apache License Version 2.0 分发。</p>
+                                             <p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p>
+                                             <p>本程序是 <a href="https://github.com/shine5402/LeafOpenUTAUQt">Leaf OpenUTAU Qt Project</a> 的一部分</p>
+                                             <p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>
+                                             <p>本程序使用了以下开源项目：</p>
+                                             <ul>
+                                             <li>LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)</li>
+                                             <li>ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)</li>
+                                             </ul>)").arg(voicebankManagerVersion));
 }
 
 void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()

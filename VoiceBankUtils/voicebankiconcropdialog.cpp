@@ -8,6 +8,7 @@ VoiceBankIconCropDialog::VoiceBankIconCropDialog(VoiceBank *voicebank, QString n
 {
     ui->setupUi(this);
     ui->imageCropper->setImage(QPixmap::fromImage(image));
+    setWindowTitle(tr(u8"为音源库“%1”设定新图标").arg(voicebank->getName()));
 }
 
 VoiceBankIconCropDialog::~VoiceBankIconCropDialog()
