@@ -16,6 +16,7 @@
 #include <../LeafPublicQtClasses/leaflogger.h>
 #include <public_defines.h>
 #include <QPainter>
+
 class VoiceBank : public QObject
 {
     Q_OBJECT
@@ -100,11 +101,11 @@ public:
     void setReadmeTextCodec(QTextCodec *value);
     class FileNotExists : public std::runtime_error{
     public:
-        FileNotExists():std::runtime_error(u8"File not exists."){}
+        FileNotExists():std::runtime_error("File not exists."){}
     };
     class FileCanNotOpen : public std::runtime_error{
     public:
-        FileCanNotOpen(const QString QFileError):std::runtime_error(u8"File can not open."),_QFileError(QFileError){}
+        FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
         const QString& QFileError() const{return _QFileError;}
     private:
         QString _QFileError;
@@ -147,6 +148,8 @@ public:
     void changeImage(const QPixmap& _image, QString newImageFileName = "icon.jpg");
     void clear();
 
+    QString getSample() const;
+
 private:
     QImage image;
     QString imagePath;
@@ -154,6 +157,7 @@ private:
     QString name;
     QString readme;
     QString path;
+    QString sample;
     //QString calculateInformation;
     QTextCodec *CharacterTextCodec;
     QTextCodec *ReadmeTextCodec;

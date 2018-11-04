@@ -1,8 +1,8 @@
-#ifndef EDITORWINDOW_H
+﻿#ifndef EDITORWINDOW_H
 #define EDITORWINDOW_H
 
 #include <QMainWindow>
-
+#include <public_defines.h>
 namespace Ui {
     class EditorWindow;
 }

@@ -27,6 +27,9 @@
 #include <QRandomGenerator>
 #include "voicebankiconcropdialog.h"
 #include <QImageReader>
+#include <QMediaPlayer>
+#include <QProgressBar>
+
 namespace Ui {
     class VoiceBankManagerWindow;
 }
@@ -49,9 +52,11 @@ public slots:
 #endif
     void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 
+    void onSamplePlayerPositionChange(qint64 position);
+    void onSamplePlayerStateChanged(QMediaPlayer::State state);
 private:
     Ui::VoiceBankManagerWindow *ui;
-    QStringList monitorFolders = {u8"./voice"};
+    QStringList monitorFolders = {"./voice"};
     VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
     VoiceBankTableModel* voiceBankTableModel = nullptr;
     QStringList getFoldersInMonitorFolders() const;
@@ -71,8 +76,9 @@ private:
 
     QPair<bool, QTextCodec *> processFileTextCodecConvert(const QString &path, QTextCodec *sourceCodec, QTextCodec *targetCodec);
     VoiceBank *getSelectedVoiceBank();
-
     VoiceBank *getSelectedVoiceBank(const QModelIndex &current);
+    QProgressBar* samplePlayerProgress = new QProgressBar();
+    QMediaPlayer* samplePlayer = new QMediaPlayer(this);
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -105,6 +111,8 @@ private slots:
     void on_actionchoose_a_voicebank_randomly_triggered();
     void onBackupImageFileBecauseExists(VoiceBank * voicebank);
     void onCannotBackupImageFile(VoiceBank* voicebank);
+    void on_playSamplebutton_clicked();
+
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

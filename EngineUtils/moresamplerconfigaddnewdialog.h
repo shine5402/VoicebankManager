@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "moresamplerconfigsaddnewmodel.h"
 #include "moresamplerconfigreader.h"
+#include <public_defines.h>
 namespace Ui {
     class MoresamplerConfigAddNewDialog;
 }

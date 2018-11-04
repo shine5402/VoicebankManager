@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "../ImageCropper/src/imagecroppercontainer.h"
 #include "voicebank.h"
+#include <public_defines.h>
 namespace Ui {
 class VoiceBankIconCropDialog;
 }

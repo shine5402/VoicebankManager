@@ -13,15 +13,15 @@ QVariant MoresamplerConfigsModel::headerData(int section, Qt::Orientation orient
                 switch (section) {
                 //改变此处时注意更改ColumnCount
                 case TableColumnsGlobal::Name:
-                    return tr(u8"设置项");
+                    return tr("设置项");
                 case TableColumnsGlobal::Value:
-                    return tr(u8"值");
+                    return tr("值");
                 case TableColumnsGlobal::Type:
-                    return tr(u8"分类");
+                    return tr("分类");
                 case TableColumnsGlobal::Override:
-                    return tr(u8"是否覆盖声库配置");
+                    return tr("是否覆盖声库配置");
                 case TableColumnsGlobal::Help:
-                    return tr(u8"说明");
+                    return tr("说明");
                 default:
                     return QVariant();
                 }
@@ -29,13 +29,13 @@ QVariant MoresamplerConfigsModel::headerData(int section, Qt::Orientation orient
                 switch (section) {
                 //改变此处时注意更改ColumnCount
                 case TableColumnsVoicebank::Name:
-                    return tr(u8"设置项");
+                    return tr("设置项");
                 case TableColumnsVoicebank::Value:
-                    return tr(u8"值");
+                    return tr("值");
                 case TableColumnsVoicebank::Type:
-                    return tr(u8"分类");
+                    return tr("分类");
                 case TableColumnsVoicebank::Help:
-                    return tr(u8"说明");
+                    return tr("说明");
                 default:
                     return QVariant();
                 }
@@ -77,22 +77,22 @@ QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
             switch (index.column())
             {
             case TableColumnsGlobal::Name:
-                // return tr(u8"设置项");
+                // return tr("设置项");
                 return configReader->getConfig(index.row())->getNameString();
             case TableColumnsGlobal::Value:
-                //return tr(u8"值");
+                //return tr("值");
                 return configReader->getConfig(index.row())->getValueString();
             case TableColumnsGlobal::Type:
-                //return tr(u8"分类");
+                //return tr("分类");
                 return configReader->getConfig(index.row())->getTypeString();
             case TableColumnsGlobal::Override:
-                //return tr(u8"是否覆盖声库配置");
+                //return tr("是否覆盖声库配置");
                 if (isEditableOverrideColumn(index))
-                    return configReader->getConfig(index.row())->isOverride()?tr(u8"是"):tr(u8"否");
+                    return configReader->getConfig(index.row())->isOverride()?tr("是"):tr("否");
                 else
-                    return tr(u8"（不支持）");
+                    return tr("（不支持）");
             case TableColumnsGlobal::Help:
-                //return tr(u8"说明");
+                //return tr("说明");
                 return configReader->getConfig(index.row())->getEntryHelp();
             default:
                 return QVariant();
@@ -101,16 +101,16 @@ QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
             switch (index.column())
             {
             case TableColumnsVoicebank::Name:
-                // return tr(u8"设置项");
+                // return tr("设置项");
                 return configReader->getConfig(index.row())->getNameString();
             case TableColumnsVoicebank::Value:
-                //return tr(u8"值");
+                //return tr("值");
                 return configReader->getConfig(index.row())->getValueString();
             case TableColumnsVoicebank::Type:
-                //return tr(u8"分类");
+                //return tr("分类");
                 return configReader->getConfig(index.row())->getTypeString();
             case TableColumnsVoicebank::Help:
-                //return tr(u8"说明");
+                //return tr("说明");
                 return configReader->getConfig(index.row())->getEntryHelp();
             default:
                 return QVariant();
@@ -138,7 +138,7 @@ bool MoresamplerConfigsModel::setData(const QModelIndex &index, const QVariant &
         }
         else
         {
-            configReader->getConfig(index.row())->setOverride(value.toString() == tr(u8"是"));
+            configReader->getConfig(index.row())->setOverride(value.toString() == tr("是"));
         }
         //
         emit dataChanged(index, index, QVector<int>() << role);

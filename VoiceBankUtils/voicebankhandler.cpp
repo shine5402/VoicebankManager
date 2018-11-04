@@ -23,7 +23,7 @@ VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
     connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
     auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(newVoiceBank);
     threadPool->start(newVoiceBankReadFunctionRunner);
-    LeafLogger::LogMessage(QString(u8"%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
+    LeafLogger::LogMessage(QString("%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
     addVoiceBank(newVoiceBank);
     return newVoiceBank;
 }
@@ -73,14 +73,14 @@ QList<int> VoiceBankHandler::findIDByName(const QString &text) const
 void VoiceBankHandler::readThreadPoolMaxThreadCountSettings()
 {
     QSettings settings;
-    if (settings.contains(u8"VoiceBankHandler/ThreadPoolMaxThreadCount"))
-        threadPool->setMaxThreadCount(settings.value(u8"VoiceBankHandler/ThreadPoolMaxThreadCount",50).toInt());
+    if (settings.contains("VoiceBankHandler/ThreadPoolMaxThreadCount"))
+        threadPool->setMaxThreadCount(settings.value("VoiceBankHandler/ThreadPoolMaxThreadCount",50).toInt());
 }
 
 void VoiceBankHandler::saveThreadPoolMaxThreadCountSettings()
 {
     QSettings settings;
-    settings.setValue(u8"VoiceBankHandler/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
+    settings.setValue("VoiceBankHandler/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
 }
 
 

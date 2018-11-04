@@ -15,13 +15,13 @@ MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const Mo
     if (configFileType == MoresamplerConfigReader::ConfigFileType::VoiceBank)
     {
         if (!voiceBankName.isEmpty())
-            setWindowTitle(tr(u8"编辑“%1”的Moresampler配置").arg(voiceBankName));
+            setWindowTitle(tr("编辑“%1”的Moresampler配置").arg(voiceBankName));
         else
-            setWindowTitle(tr(u8"编辑名称位置的音源的Moresampler配置"));
+            setWindowTitle(tr("编辑名称位置的音源的Moresampler配置"));
     }
     else
-        setWindowTitle(tr(u8"编辑全局Moresampler配置"));
-    ui->whatIsEditingLabel->setText(tr(u8"当前正在编辑：%1").arg(path));
+        setWindowTitle(tr("编辑全局Moresampler配置"));
+    ui->whatIsEditingLabel->setText(tr("当前正在编辑：%1").arg(path));
 
 }
 
@@ -38,7 +38,7 @@ void MoresamplerConfigsDialog::on_deleteButton_clicked()
         ui->configTableView->resizeColumnsToContents();
     }
     else
-        QMessageBox::warning(this,tr(u8"没有可删除的项"),tr(u8"当前配置文件的配置项目数为0，所以无法删除项目。"));
+        QMessageBox::warning(this,tr("没有可删除的项"),tr("当前配置文件的配置项目数为0，所以无法删除项目。"));
 }
 
 void MoresamplerConfigsDialog::on_addButton_clicked()
@@ -48,17 +48,17 @@ void MoresamplerConfigsDialog::on_addButton_clicked()
     if (dialogCode == QDialog::Accepted)
     {
         auto name = dialog->getCurrentEntryName();
-        if (name == tr(u8"（空行）"))
+        if (name == tr("（空行）"))
             name = QString();
-        else if (name == tr(u8"（注释）"))
-            name = u8"#";
-        else if (name == tr(u8"（元标记）"))
+        else if (name == tr("（注释）"))
+            name = "#";
+        else if (name == tr("（元标记）"))
         {
             bool ok = false;
-            auto num = QInputDialog::getInt(this,tr(u8"指定元标记的序数"),tr(u8"在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的系数。比如，您想要使用M1，就在下框中输入1."),1,1,100,1,&ok);
+            auto num = QInputDialog::getInt(this,tr("指定元标记的序数"),tr("在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的系数。比如，您想要使用M1，就在下框中输入1."),1,1,100,1,&ok);
             if (ok)
             {
-                name = QString(u8"meta-flag-%1").arg(num);
+                name = QString("meta-flag-%1").arg(num);
             }
             else
                 return;
@@ -75,10 +75,10 @@ void MoresamplerConfigsDialog::accept()
     {
         auto config = reader->getConfig(i);
         if (!config->isValidValue())
-            error.append(tr(u8"您设置的值“%1”无法应用于第%2行。请修改后重试。\n").arg(config->getValueString()).arg(i));
+            error.append(tr("您设置的值“%1”无法应用于第%2行。请修改后重试。\n").arg(config->getValueString()).arg(i));
     }
     if (!error.isEmpty()){
-        QMessageBox::warning(this,tr(u8"设置的值无效"),error.trimmed());
+        QMessageBox::warning(this,tr("设置的值无效"),error.trimmed());
         return;
     }
     reader->saveConfigs();
@@ -87,5 +87,5 @@ void MoresamplerConfigsDialog::accept()
 
 void MoresamplerConfigsDialog::onInvalidValue(int row, QVariant data)
 {
-    QMessageBox::warning(this,tr(u8"设置的值无效"),tr(u8"您设置的值“%1”无法应用于第%2行。请修改后重试。").arg(data.toString()).arg(row));
+    QMessageBox::warning(this,tr("设置的值无效"),tr("您设置的值“%1”无法应用于第%2行。请修改后重试。").arg(data.toString()).arg(row));
 }

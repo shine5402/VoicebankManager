@@ -50,10 +50,10 @@ void MonitorFoldersSettingDialog::on_addButton_clicked()
                 monitorFolders.append(newPath);
             }
             else
-                QMessageBox::warning(this,tr(u8"路径不存在"),tr(u8"您输入的路径不存在。监视文件夹列表将不做更改。"));
+                QMessageBox::warning(this,tr("路径不存在"),tr("您输入的路径不存在。监视文件夹列表将不做更改。"));
         }
         else
-            QMessageBox::warning(this,tr(u8"路径为空"),tr(u8"您并没有输入路径。监视文件夹列表将不做更改。"));
+            QMessageBox::warning(this,tr("路径为空"),tr("您并没有输入路径。监视文件夹列表将不做更改。"));
     }
     dialog->deleteLater();
 }

@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "monitorfoldersadddialog.h"
 #include <QMessageBox>
+#include <public_defines.h>
 namespace Ui {
     class MonitorFoldersSettingDialog;
 }
@@ -32,7 +33,7 @@ private:
     Ui::MonitorFoldersSettingDialog *ui;
     QStringList monitorFolders;
     QStringList oldMonitorFolders;
-    static const inline QStringList defaultMonitorFolders = {u8"./voice"};
+    static const inline QStringList defaultMonitorFolders = {"./voice"};
 };
 
 #endif // MONITORFOLDERSSETTINGDIALOG_H

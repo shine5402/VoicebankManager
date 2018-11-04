@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include "moresamplerconfigaddnewdialog.h"
 #include <QInputDialog>
+#include <public_defines.h>
 namespace Ui {
 class MoresamplerConfigsDialog;
 }

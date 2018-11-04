@@ -4,8 +4,12 @@
 #include <QTranslator>
 #include <../LeafPublicQtClasses/leaflogger.h>
 #include <QLibraryInfo>
+#include <QTextCodec>
 #define VOICEBANK_MANAGER_ONLY
 #define NO_EDITOR
+#ifdef _MSC_VER
+#pragma execution_character_set("utf-8")
+#endif
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +22,7 @@ int main(int argc, char *argv[])
     translatorsys.load(":/translations/qt_zh_CN.qm");
     a.installTranslator(&translatorsys);
     QTranslator qtTranslator;
+
 #ifndef NO_EDITOR
     EditorWindow w;
     w.show();

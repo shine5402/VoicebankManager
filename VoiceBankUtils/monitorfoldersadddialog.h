@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QFileDialog>
 #include <QCloseEvent>
+#include <public_defines.h>
 namespace Ui {
     class MonitorFoldersAddDialog;
 }

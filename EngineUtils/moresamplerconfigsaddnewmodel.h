@@ -4,6 +4,7 @@
 #include <QAbstractTableModel>
 #include "moresamplerconfig.h"
 #include "moresamplerconfigreader.h"
+#include <public_defines.h>
 class MoresamplerConfigsAddNewModel : public QAbstractTableModel
 {
     Q_OBJECT

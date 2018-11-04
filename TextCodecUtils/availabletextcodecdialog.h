@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QClipboard>
 #include <QComboBox>
+#include <public_defines.h>
 namespace Ui {
     class AvailableTextCodecDialog;
 }

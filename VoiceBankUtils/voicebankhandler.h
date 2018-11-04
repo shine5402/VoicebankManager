@@ -5,6 +5,7 @@
 #include "voicebank.h"
 #include <QThread>
 #include <QThreadPool>
+#include <public_defines.h>
 class VoiceBankHandler : public QObject
 {
     Q_OBJECT

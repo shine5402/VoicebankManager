@@ -20,7 +20,7 @@ QString MonitorFoldersAddDialog::getNewPath() const
 
 void MonitorFoldersAddDialog::on_exploreButton_clicked()
 {
-    auto path = QFileDialog::getExistingDirectory(this,tr(u8"选择一个文件夹"),QString(),QFileDialog::ShowDirsOnly);
+    auto path = QFileDialog::getExistingDirectory(this,tr("选择一个文件夹"),QString(),QFileDialog::ShowDirsOnly);
     if (!path.isEmpty())
         ui->pathLineEdit->setText(path);
 }

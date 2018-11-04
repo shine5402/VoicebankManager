@@ -21,8 +21,8 @@ QWidget *MoresamplerConfigsDelegate::createEditor(QWidget *parent, const QStyleO
     {
         auto sb = new QComboBox(parent);
         sb->setFrame(false);
-        sb->addItems({tr(u8"是"),tr(u8"否")});
-        sb->setCurrentText(reader->getConfig(index.row())->isOverride()?tr(u8"是"):tr(u8"否"));
+        sb->addItems({tr("是"),tr("否")});
+        sb->setCurrentText(reader->getConfig(index.row())->isOverride()?tr("是"):tr("否"));
         return sb;
     }
         return QStyledItemDelegate::createEditor(parent,option,index);

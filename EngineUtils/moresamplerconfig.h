@@ -6,6 +6,7 @@
 #include <QHash>
 #include <QVariant>
 #include <QStringList>
+#include <public_defines.h>
 class MoresamplerConfig
 {
 public:

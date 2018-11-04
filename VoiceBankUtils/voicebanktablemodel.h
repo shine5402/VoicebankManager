@@ -3,6 +3,7 @@
 #include <QAbstractTableModel>
 #include "voicebankhandler.h"
 #include <QIcon>
+#include <public_defines.h>
 class VoiceBankTableModel : public QAbstractTableModel
 {
     Q_OBJECT

@@ -1,8 +1,8 @@
-#ifndef VOICEBANKREADMEINFORMATIONDIALOG_H
+﻿#ifndef VOICEBANKREADMEINFORMATIONDIALOG_H
 #define VOICEBANKREADMEINFORMATIONDIALOG_H
 
 #include <QDialog>
-
+#include <public_defines.h>
 namespace Ui {
     class VoiceBankReadmeInformationDialog;
 }

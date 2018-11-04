@@ -8,6 +8,7 @@
 #include <QComboBox>
 #include "moresamplerconfigsmodel.h"
 #include <QCheckBox>
+#include <public_defines.h>
 class MoresamplerConfigsDelegate : public QStyledItemDelegate
 {
 public:

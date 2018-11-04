@@ -5,6 +5,7 @@
 #include <QTextCodec>
 #include <public_defines.h>
 #include "availabletextcodecdialog.h"
+#include <public_defines.h>
 namespace Ui {
     class TextCodecConvertDialog;
 }

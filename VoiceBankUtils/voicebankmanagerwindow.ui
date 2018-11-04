@@ -78,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -108,8 +108,16 @@
     <property name="title">
      <string>工具</string>
     </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>（独立）编码转换器</string>
+     </property>
+     <addaction name="actionFor_text_file"/>
+     <addaction name="actionFor_File_Name"/>
+    </widget>
     <addaction name="actionEdit_Global_MoresamplerConfig"/>
     <addaction name="actionchoose_a_voicebank_randomly"/>
+    <addaction name="menu"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_preference"/>
@@ -203,7 +211,7 @@
         <item>
          <widget class="QPushButton" name="playSamplebutton">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="text">
            <string>播放样例</string>
@@ -393,6 +401,22 @@
    </property>
    <property name="statusTip">
     <string>在音源列表中随机选择一个音源。在拿不定主意的时候说不定会有帮助。</string>
+   </property>
+  </action>
+  <action name="actionFor_text_file">
+   <property name="text">
+    <string>转换文本文件...</string>
+   </property>
+   <property name="toolTip">
+    <string>在文件编码转换器中打开一个文本文件</string>
+   </property>
+  </action>
+  <action name="actionFor_File_Name">
+   <property name="text">
+    <string>转换文件名...</string>
+   </property>
+   <property name="toolTip">
+    <string>在文件编码转换器中打开一个文件夹以转换文件名</string>
    </property>
   </action>
  </widget>

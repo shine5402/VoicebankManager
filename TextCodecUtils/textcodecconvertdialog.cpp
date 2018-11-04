@@ -94,7 +94,7 @@ void TextCodecConvertDialog::reEncodeSource()
     else
     {
         auto systemDecodeString = getDecodedString(QTextCodec::codecForLocale(), encodedTargetByteArray);
-        auto preview = tr(u8"<h4>以%1进行解码的预览：</h4><pre>%2</pre><h4>使用系统编码重解码后的预览</h4><pre>%3</pre>").arg(QString::fromUtf8(targetCodec->name())).arg(reDecodeString).arg(systemDecodeString);
+        auto preview = tr("<h4>以%1进行解码的预览：</h4><pre>%2</pre><h4>使用系统编码重解码后的预览</h4><pre>%3</pre>").arg(QString::fromUtf8(targetCodec->name())).arg(reDecodeString).arg(systemDecodeString);
         ui->targetTextBrowser->setText(preview);
     }
     qApp->processEvents();
@@ -126,7 +126,7 @@ QByteArray TextCodecConvertDialog::getEncodedTargetByteArray() const
 
 void TextCodecConvertDialog::setShownFileName(QString name)
 {
-    setWindowTitle(tr(u8"对%1进行编码转换").arg(name));
+    setWindowTitle(tr("对%1进行编码转换").arg(name));
 }
 
 void TextCodecConvertDialog::on_availableCodecButton_source_clicked()

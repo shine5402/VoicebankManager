@@ -3,6 +3,7 @@
 
 #include <QAbstractTableModel>
 #include "moresamplerconfigreader.h"
+#include <public_defines.h>
 class MoresamplerConfigsModel : public QAbstractTableModel
 {
     Q_OBJECT

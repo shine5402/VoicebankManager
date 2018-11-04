@@ -6,6 +6,7 @@
 #include "./TextCodecUtils/availabletextcodecdialog.h"
 #include <QTextCodec>
 #include <QComboBox>
+#include <public_defines.h>
 namespace Ui {
     class TextCodecSettingDialog;
 }

@@ -80,9 +80,9 @@ QVariant VoiceBankTableModel::headerData(int section, Qt::Orientation orientatio
     if (role == Qt::ItemDataRole::DisplayRole){
         if (orientation == Qt::Orientation::Horizontal){
             if (section == TableColumns::Name)
-                return tr(u8"音源名称");
+                return tr("音源名称");
             else if (section == TableColumns::Path)
-                return tr(u8"音源路径");
+                return tr("音源路径");
             else
                 return QVariant();
         }

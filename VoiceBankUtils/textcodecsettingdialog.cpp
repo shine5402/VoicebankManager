@@ -46,7 +46,7 @@ void TextCodecSettingDialog::setFormInNoDefault()
 void TextCodecSettingDialog::initUI(){
     if (voiceBank){
         ui->voiceBankLabel->setText(voiceBank->getName());
-        setWindowTitle(tr(u8"设定%1的读取用文本编码").arg(voiceBank->getName()));
+        setWindowTitle(tr("设定%1的读取用文本编码").arg(voiceBank->getName()));
         ui->followDefaultTextCodecCheckBox->setChecked(voiceBank->getIsFollowDefault());
         if (!voiceBank->getIsFollowDefault()){
             setFormInNoDefault();
@@ -58,7 +58,7 @@ void TextCodecSettingDialog::initUI(){
     }
     else
     {
-        ui->voiceBankLabel->setText(tr(u8"（默认编码）"));
+        ui->voiceBankLabel->setText(tr("（默认编码）"));
         ui->followDefaultTextCodecCheckBox->setVisible(false);
         ui->followDefaultTextCodecLabel->setVisible(false);
         ui->characterTxtComboBox->setCurrentText(VoiceBank::getDefaultCharacterTextCodec()->name());

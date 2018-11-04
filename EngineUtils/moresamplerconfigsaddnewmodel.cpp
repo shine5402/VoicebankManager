@@ -3,9 +3,9 @@
 MoresamplerConfigsAddNewModel::MoresamplerConfigsAddNewModel(MoresamplerConfigReader *reader, QObject *parent)
     : QAbstractTableModel(parent),reader(reader)
 {
-    entryNames.append({tr(u8"（空行）"),tr(u8"（注释）")});
+    entryNames.append({tr("（空行）"),tr("（注释）")});
     if (reader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank)
-        entryNames.append(tr(u8"（元标记）"));
+        entryNames.append(tr("（元标记）"));
     auto allEntryNames = MoresamplerConfig::getAllEntrysName();
     for (auto name : allEntryNames)
     {
@@ -26,11 +26,11 @@ QVariant MoresamplerConfigsAddNewModel::headerData(int section, Qt::Orientation 
         if (orientation == Qt::Orientation::Horizontal){
             switch (section) {
             case 0:
-                return tr(u8"设置项");
+                return tr("设置项");
             case 1:
-                return tr(u8"类型");
+                return tr("类型");
             case 2:
-                return tr(u8"说明");
+                return tr("说明");
             default:
                 return QVariant();
             }
@@ -67,10 +67,10 @@ QVariant MoresamplerConfigsAddNewModel::data(const QModelIndex &index, int role)
             return entryNames.at(index.row());
         else if (index.column() == 1)
         {
-            if (entryNames.at(index.row()) == tr(u8"（空行）") || entryNames.at(index.row()) == tr(u8"（注释）"))
+            if (entryNames.at(index.row()) == tr("（空行）") || entryNames.at(index.row()) == tr("（注释）"))
                 return entryNames.at(index.row());
-            if (entryNames.at(index.row()) == tr(u8"（元标记）"))
-                return tr(u8"元标记");
+            if (entryNames.at(index.row()) == tr("（元标记）"))
+                return tr("元标记");
             return MoresamplerConfig::getTypeString(entryNames.at(index.row()));
         }
         else if (index.column() == 2){

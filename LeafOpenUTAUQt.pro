@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+QT       += core gui widgets multimedia
 
 TARGET = LeafOpenUTAUQt
 TEMPLATE = app
@@ -97,3 +97,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resource.qrc
+TRANSLATIONS = LeafOpenUTAUQt_en.ts
