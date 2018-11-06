@@ -11,6 +11,7 @@
 #include <public_defines.h>
 class MoresamplerConfigsDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
 public:
     explicit MoresamplerConfigsDelegate(MoresamplerConfigReader* reader,QObject *parent = nullptr);
     QWidget * createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;

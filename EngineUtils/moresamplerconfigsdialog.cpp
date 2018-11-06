@@ -17,7 +17,7 @@ MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const Mo
         if (!voiceBankName.isEmpty())
             setWindowTitle(tr("编辑“%1”的Moresampler配置").arg(voiceBankName));
         else
-            setWindowTitle(tr("编辑名称位置的音源的Moresampler配置"));
+            setWindowTitle(tr("编辑名称未知的音源的Moresampler配置"));
     }
     else
         setWindowTitle(tr("编辑全局Moresampler配置"));
@@ -55,7 +55,7 @@ void MoresamplerConfigsDialog::on_addButton_clicked()
         else if (name == tr("（元标记）"))
         {
             bool ok = false;
-            auto num = QInputDialog::getInt(this,tr("指定元标记的序数"),tr("在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的系数。比如，您想要使用M1，就在下框中输入1."),1,1,100,1,&ok);
+            auto num = QInputDialog::getInt(this,tr("指定元标记的序数"),tr("在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的序数。比如，您想要使用M1，就在下框中输入1."),1,1,100,1,&ok);
             if (ok)
             {
                 name = QString("meta-flag-%1").arg(num);

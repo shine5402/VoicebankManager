@@ -1,6 +1,6 @@
 ﻿#include "monitorfoldersadddialog.h"
 #include "ui_monitorfoldersadddialog.h"
-
+//NOTE:其实应该叫Watch Folder……不过无伤大雅
 MonitorFoldersAddDialog::MonitorFoldersAddDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MonitorFoldersAddDialog)

@@ -6,87 +6,90 @@
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="218"/>
         <source>输出的 .wav 文件的采样频率</source>
-        <translation type="unfinished"></translation>
+        <translation>Sampling frequency of output .wav file</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="219"/>
         <source>输出的 .wav 文件的位深</source>
-        <translation type="unfinished"></translation>
+        <translation>Bit depth of output .wav file</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="220"/>
-        <source>开启时, 在resampler模式下生成 .wav 文件 （用于与其他wavtool兼容）。此选项将减慢合成。 </source>
-        <translation type="unfinished"></translation>
+        <source>开启时, 在resampler模式下生成 .wav 文件 （用于与其他wavtool兼容）。此选项将减慢合成。</source>
+        <oldsource>开启时, 在resampler模式下生成 .wav 文件 （用于与其他wavtool兼容）。此选项将减慢合成。 </oldsource>
+        <translation>When turned on, generate .wav file in resampler mode (to be compatible with other wavtools); slows down synthesis。</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="221"/>
         <source>对每个音符应用自适应增益，使得当音量为100％时，合成波形的峰值达到最大幅度的一半。full: 对浊音和清音均进行增益； voiced: 只增益浊音；off: 不改变音量。</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply an adaptive gain to each note such that the peak of synthesized waveform goes to half of the maximum amplitude when volume is 100%; full: gain both voiced and unvoiced parts; voiced: only gain voiced part; off: do not adjust volume. Example (full,voiced,off from top to bottom).</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="222"/>
         <source>基于心理声学响度测量，在修改后使可感知响度保持。</source>
-        <translation type="unfinished"></translation>
+        <translation>Retain the perceived loudness after modification, based on a psychoacoustic loudness measure. Example (off, on from top to bottom).</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="223"/>
         <source>决定Moresampler如何使音符时间变长。auto: 根据源时长和目标时长自动决定是使用拉伸方式还是循环方式。可使用 e 和 Me flag 来覆盖这一行为。</source>
-        <translation type="unfinished"></translation>
+        <translation>Determines how Moresampler extends the duration of each note; auto: automatically stretch or loop the note based on its original and target duration. The effect can be overwritten by e and Me flags.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="224"/>
         <source>on: wavtool模式下的合成将多线程运行（将会更快）。full: resampler模式也将在多线程运行。“多线程”意味着将多个线程包装于一个进程中，与同一时间运行多个Moresampler的“多进程”有着本质不同。注意，该特性不被 moresampler-legacy.exe支持。</source>
-        <translation type="unfinished"></translation>
+        <translation>When turned on, the final synthesis stage in wavtool mode will run in multiple threads (which means faster). When set to &quot;full&quot;, resampler mode will also become multithreaded. &quot;multithread&quot;, which packs multiple threads into a process, is inherently different from &quot;multiprocess&quot; which launches multiple instances of Moresampler at a time. Note: this feature is not supported by moresampler-legacy.exe.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="225"/>
-        <source>检查.wav 文件与对应.llsm 文件和mrq数据项的最后修改时间。如果.wav文件比.llsm要新，则进行重分析。若.wav文件也比mrq数据项要新，则在重分析以生成.llsm文件前进行音高重估计。此特性或许对声库开发者有帮助。 </source>
-        <translation type="unfinished"></translation>
+        <source>检查.wav 文件与对应.llsm 文件和mrq数据项的最后修改时间。如果.wav文件比.llsm要新，则进行重分析。若.wav文件也比mrq数据项要新，则在重分析以生成.llsm文件前进行音高重估计。此特性或许对声库开发者有帮助。</source>
+        <oldsource>检查.wav 文件与对应.llsm 文件和mrq数据项的最后修改时间。如果.wav文件比.llsm要新，则进行重分析。若.wav文件也比mrq数据项要新，则在重分析以生成.llsm文件前进行音高重估计。此特性或许对声库开发者有帮助。 </oldsource>
+        <translation>Check the last modified time of .wav file and corresponding .llsm file and mrq data entry. If the .wav file is newer than the .llsm file, then reanalyze. If the .wav file is also newer than the mrq data entry, then reestimate pitch before reanalyzing .llsm. This feature might be helpful for voicebank developers.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="226"/>
         <source>在指定文件路径中输出Debug信息。</source>
-        <translation type="unfinished"></translation>
+        <translation>Output debug information into a specified file path.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="227"/>
         <source>从文件夹名推测音高。例如，如果给定的样本位于一个名为“C_D4”的文件夹下，Moresampler将在接近D4的范围（294 Hz左右）内进行音高分析。</source>
-        <translation type="unfinished"></translation>
+        <translation>Infer the pitch range from directory name. For example, if the given sample is under a directory named &quot;C_D4&quot;, Moresampler would run pitch analysis in a range close to D4 (around 294Hz).</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="228"/>
-        <source>在接合音高与浊音行为估计期间增大浊音化概率，随后进行浊音音高修正；旨在提高特异度和降低灵敏度；适用于嘈杂/粗糙的语音，但会降低干净/流畅语音的质量。 </source>
-        <translation type="unfinished"></translation>
+        <source>在接合音高与浊音行为估计期间增大浊音化概率，随后进行浊音音高修正；旨在提高特异度和降低灵敏度；适用于嘈杂/粗糙的语音，但会降低干净/流畅语音的质量。</source>
+        <oldsource>在接合音高与浊音行为估计期间增大浊音化概率，随后进行浊音音高修正；旨在提高特异度和降低灵敏度；适用于嘈杂/粗糙的语音，但会降低干净/流畅语音的质量。 </oldsource>
+        <translation>(over)Emphasize voicing probability during joint pitch &amp; voicing activity estimation, followed by a pitch &amp; voicing correction procedure; tend to reduce false negative but raise false positive rate; works for noisy/coarse speech but degrades the quality of clean/smooth speech.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="229"/>
         <source>音高的下界(以Hz为单位)。</source>
-        <translation type="unfinished"></translation>
+        <translation>The lower bound for pitch (in Hz).</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="230"/>
         <source>音高的上界(以Hz为单位)。</source>
-        <translation type="unfinished"></translation>
+        <translation>The upper bound for pitch (in Hz).</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="231"/>
         <source>strict : 当desc.mrq不可用时，从.frq 文件读取音高数据。on : 使用 .frq 文件的音高数据来修正Moresampler自己对音高的猜测。不管该选项是否开启，结果都会保存至desc.mrq。注意：除非被仔细修正，.frq文件提供的音高数据通常无法足够可靠地使Moresampler运作。</source>
-        <translation type="unfinished"></translation>
+        <translation>When desc.mrq is not available, load pitch data from .frq file when set to strict; when set to on, use pitch data from .frq file to correct the pitch estimated by Moresampler&apos;s own estimator. No matter this option is turned on or not, the result will always be written into desc.mrq. Note: unless carefully corrected, pitch provided by .frq files are often not robust enough for Moresampler to run properly.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="232"/>
         <source>on : Moresampler将自动修复由噪声失真或低音量（量化误差）引起的分析错误。这些错误可能造成音高变换后的“尖锐”与“粗糙”的声音。然而此特性（理论上）可能导致轻微模糊。</source>
-        <translation type="unfinished"></translation>
+        <translation>When turned on, Moresampler will automatically fix analysis inaccuracy caused by noise distortion or low volume (quantization error) which may result in &quot;sharp&quot;, &quot;gross&quot; voice after pitch shifting. However turning on this feature may (in theory) slightly blur the speech. Example (off, on from top to bottom).</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="233"/>
         <source>在从.wav文件分析LLSM时自动降噪。更适用于长录音。</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically reduces noise when analyzing LLSM from .wav; works better with longer recordings.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="234"/>
         <source>在分析时自动移除输入中存在的次谐波。对尖亮的声音可能有帮助，但会导致呼吸音的质量降低。</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically remove the subharmonics (if there&apos;s any) from input speech during analysis. Might be helpful for screamy voices but slightly degrades the quality of breathy voices.</translation>
     </message>
 </context>
 <context>
@@ -153,7 +156,7 @@
     <message>
         <location filename="VoiceBankUtils/monitorfoldersadddialog.ui" line="14"/>
         <source>添加一个监视文件夹</source>
-        <translation>Add a monitor folder</translation>
+        <translation>Add a watch folder</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfoldersadddialog.ui" line="20"/>
@@ -168,7 +171,7 @@
     <message>
         <location filename="VoiceBankUtils/monitorfoldersadddialog.cpp" line="23"/>
         <source>选择一个文件夹</source>
-        <translation type="unfinished"></translation>
+        <translation>Choose a folder</translation>
     </message>
 </context>
 <context>
@@ -176,42 +179,42 @@
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.ui" line="14"/>
         <source>监视文件夹设定</source>
-        <translation>Monitor Folders Seetings</translation>
+        <translation>Watch Folders Seetings</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.ui" line="20"/>
         <source>添加</source>
-        <translation type="unfinished"></translation>
+        <translation>Add</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.ui" line="27"/>
         <source>删除</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.ui" line="50"/>
         <source>监视文件夹列表：</source>
-        <translation type="unfinished"></translation>
+        <translation>Watch folders list:</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.cpp" line="53"/>
         <source>路径不存在</source>
-        <translation type="unfinished"></translation>
+        <translation>Path not exists</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.cpp" line="53"/>
         <source>您输入的路径不存在。监视文件夹列表将不做更改。</source>
-        <translation type="unfinished"></translation>
+        <translation>The path you entered does not exist.The watch folder list will not be changed.</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.cpp" line="56"/>
         <source>路径为空</source>
-        <translation type="unfinished"></translation>
+        <translation>Path is empty</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/monitorfolderssettingdialog.cpp" line="56"/>
         <source>您并没有输入路径。监视文件夹列表将不做更改。</source>
-        <translation type="unfinished"></translation>
+        <translation>You did not enter a path. The watch folder list will not be changed.</translation>
     </message>
 </context>
 <context>
@@ -220,63 +223,63 @@
         <location filename="EngineUtils/moresamplerconfig.cpp" line="41"/>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="42"/>
         <source>（空行）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Empty line)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="48"/>
         <source>（注释）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Comments)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="90"/>
         <source>分析配置</source>
-        <translation type="unfinished"></translation>
+        <translation>Analysis configuration</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="92"/>
         <source>元标记</source>
-        <translation type="unfinished"></translation>
+        <translation>Meta flags</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="94"/>
         <source>杂项</source>
-        <translation type="unfinished"></translation>
+        <translation>Miscellaneous configuration</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="96"/>
         <source>输出配置</source>
-        <translation type="unfinished"></translation>
+        <translation>Output configuration</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="98"/>
         <source>合成配置</source>
-        <translation type="unfinished"></translation>
+        <translation>Synthesis configuration</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="100"/>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="106"/>
         <source>未知</source>
-        <translation type="unfinished"></translation>
+        <translation>Unknown</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="102"/>
         <source>注释</source>
-        <translation type="unfinished"></translation>
+        <translation>Comments</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="104"/>
         <source>空行</source>
-        <translation type="unfinished"></translation>
+        <translation>Empty line</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="111"/>
         <source>（元标记）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Meta flags)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfig.cpp" line="112"/>
         <source>元标记提供了一种快捷的方式让您多个flag合并为一个。元标记在全局配置文件中被定义,并通过 M+数字 (例如 M1, M2, M3) 的形式使用。通过在元标记之后放置点和数字，对应的 flag 的有效数值将按照数字缩放（以百分比表示，只要缩放的结果仍然在每个标志的允许范围内）。</source>
-        <translation type="unfinished"></translation>
+        <translation>meta flag offers a shortcut that you can combine multiple flags into one which saves effort when typing flag sequences in UTAU&apos;s note settings panel. Meta flags are defined in the global configuration file, and activated in the format M+number (e.g. M1, M2, M3). By putting dot and number after a meta flag, the effectiveness can be scaled by the number (as a percentage, as long as the result of scaling is still within the allowed range of each flag).</translation>
     </message>
 </context>
 <context>
@@ -284,12 +287,12 @@
     <message>
         <location filename="EngineUtils/moresamplerconfigaddnewdialog.ui" line="14"/>
         <source>添加一个新的Moresampler配置项</source>
-        <translation type="unfinished"></translation>
+        <translation>Add a new Moresampler configuration item</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigaddnewdialog.ui" line="20"/>
         <source>从下列配置项中选择一个来添加：</source>
-        <translation type="unfinished"></translation>
+        <translation>Choose one from below configuration items:</translation>
     </message>
 </context>
 <context>
@@ -298,39 +301,39 @@
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="6"/>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="70"/>
         <source>（空行）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Empty line)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="6"/>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="70"/>
         <source>（注释）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Comments)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="8"/>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="72"/>
         <source>（元标记）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Meta flags)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="29"/>
         <source>设置项</source>
-        <translation type="unfinished"></translation>
+        <translation>Config entry</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="31"/>
         <source>类型</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="33"/>
         <source>说明</source>
-        <translation type="unfinished"></translation>
+        <translation>Note</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsaddnewmodel.cpp" line="73"/>
         <source>元标记</source>
-        <translation type="unfinished"></translation>
+        <translation>Meta flags</translation>
     </message>
 </context>
 <context>
@@ -339,13 +342,13 @@
         <location filename="EngineUtils/moresamplerconfigsdelegate.cpp" line="24"/>
         <location filename="EngineUtils/moresamplerconfigsdelegate.cpp" line="25"/>
         <source>是</source>
-        <translation type="unfinished"></translation>
+        <translation>Yes</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdelegate.cpp" line="24"/>
         <location filename="EngineUtils/moresamplerconfigsdelegate.cpp" line="25"/>
         <source>否</source>
-        <translation type="unfinished"></translation>
+        <translation>No</translation>
     </message>
 </context>
 <context>
@@ -353,99 +356,105 @@
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.ui" line="20"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮来删除当前选中的行。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can use this button to delete the currently selected line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.ui" line="23"/>
         <source>删除</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.ui" line="53"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮在文件的最后一行新建一个配置项。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This button allows you to create a new configuration item on the last line of the file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.ui" line="56"/>
         <source>添加</source>
-        <translation type="unfinished"></translation>
+        <translation>Add</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.ui" line="63"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;这里显示配置文件中的配置项。&lt;/p&gt;&lt;p&gt;您可以双击“值”一列来编辑配置项的值。如果您编辑的是全局配置，您可以双击“是否覆盖声库配置”来选择是否覆盖各个声库中定义的配置。&lt;/p&gt;&lt;p&gt;若要添加和删除配置项，使用左下角的“添加”和“删除”按钮。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This shows the configuration items in the configuration file.&lt;/p&gt;&lt;p&gt;You can double-click the Value column to edit the value of a configuration item. If you are editing a global configuration, you can double-click &quot;Overwrite voicebank configuration&quot; to choose whether to override the configuration defined in each voicebank.&lt;/p&gt;&lt;p&gt;To add and remove configuration items, use the Add and Remove buttons in the lower left corner.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="18"/>
         <source>编辑“%1”的Moresampler配置</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit Moresampler configurations of &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="20"/>
-        <source>编辑名称位置的音源的Moresampler配置</source>
-        <translation type="unfinished"></translation>
+        <source>编辑名称未知的音源的Moresampler配置</source>
+        <oldsource>编辑名称位置的音源的Moresampler配置</oldsource>
+        <translation>Edit the Moresampler configurationz for a voicebank whose name is unknown</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="23"/>
         <source>编辑全局Moresampler配置</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit Global Moresampler Configurations</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="24"/>
         <source>当前正在编辑：%1</source>
-        <translation type="unfinished"></translation>
+        <translation>Currently editing:%1</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="41"/>
         <source>没有可删除的项</source>
-        <translation type="unfinished"></translation>
+        <translation>There is no items to remove</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="41"/>
         <source>当前配置文件的配置项目数为0，所以无法删除项目。</source>
-        <translation type="unfinished"></translation>
+        <translation>There is no items in the current configuration file, so cannot remove item.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="51"/>
         <source>（空行）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Empty line)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="53"/>
         <source>（注释）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Comments)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="55"/>
         <source>（元标记）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Meta flags)</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="58"/>
         <source>指定元标记的序数</source>
-        <translation type="unfinished"></translation>
+        <translation>Specify the ordinal number meta flag uses</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="58"/>
+        <source>在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的序数。比如，您想要使用M1，就在下框中输入1.</source>
+        <translation>Enter a number in the input box below.This number will be used as the ordinal number that should be used when calling the meta tag.For example, if you want to use M1, just enter &quot;1&quot; in the box below.</translation>
+    </message>
+    <message>
         <source>在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的系数。比如，您想要使用M1，就在下框中输入1.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Enter a number in the input box below.</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="78"/>
         <source>您设置的值“%1”无法应用于第%2行。请修改后重试。
 </source>
-        <translation type="unfinished"></translation>
+        <translation>The value &quot;%1&quot; you set cannot be applied to line %2. Please modify and try again.
+</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="81"/>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="90"/>
         <source>设置的值无效</source>
-        <translation type="unfinished"></translation>
+        <translation>Invalid value</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsdialog.cpp" line="90"/>
         <source>您设置的值“%1”无法应用于第%2行。请修改后重试。</source>
-        <translation type="unfinished"></translation>
+        <translation>The value &quot;%1&quot; you set cannot be applied to line %2. Please modify and try again.</translation>
     </message>
 </context>
 <context>
@@ -454,46 +463,46 @@
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="16"/>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="32"/>
         <source>设置项</source>
-        <translation type="unfinished"></translation>
+        <translation>Configuration items</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="18"/>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="34"/>
         <source>值</source>
-        <translation type="unfinished"></translation>
+        <translation>Value</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="20"/>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="36"/>
         <source>分类</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="22"/>
         <source>是否覆盖声库配置</source>
-        <translation type="unfinished"></translation>
+        <translation>Overwrite voicebank configuration</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="24"/>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="38"/>
         <source>说明</source>
-        <translation type="unfinished"></translation>
+        <translation>Note</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="91"/>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="141"/>
         <source>是</source>
-        <translation type="unfinished"></translation>
+        <translation>Yes</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="91"/>
         <source>否</source>
-        <translation type="unfinished"></translation>
+        <translation>No</translation>
     </message>
     <message>
         <location filename="EngineUtils/moresamplerconfigsmodel.cpp" line="93"/>
         <source>（不支持）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Unsupported)</translation>
     </message>
 </context>
 <context>
@@ -501,67 +510,67 @@
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="14"/>
         <source>转换文本编码</source>
-        <translation type="unfinished"></translation>
+        <translation>Convert text encoding</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="20"/>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="61"/>
         <source>支持的编码</source>
-        <translation type="unfinished">Supported encoding</translation>
+        <translation>Supported encodings</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="31"/>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="95"/>
         <source>Shift-JIS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="36"/>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="100"/>
         <source>GB18030</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="41"/>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="105"/>
         <source>Big5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="46"/>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="110"/>
         <source>UTF-8</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="54"/>
         <source>转换后文本预览：</source>
-        <translation type="unfinished"></translation>
+        <translation>Converted text preview:</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="81"/>
         <source>转换前文本：</source>
-        <translation type="unfinished"></translation>
+        <translation>Original text:</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="118"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;打开此项后，程序将在预览窗口中同时输出系统编码下对您选择编码字符串的重解码后的显示效果。对文件名转换来说，此项十分有帮助。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When this item is turned on, the program will simultaneously output the re-decoded display effect of the selected encoding string under the system encoding in the preview window.This is very helpful for file name conversion.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.ui" line="121"/>
         <source>在预览中输出在系统编码下重解码的预览</source>
-        <translation type="unfinished"></translation>
+        <translation>Output preview of re-decoding under system encoding in preview</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.cpp" line="97"/>
         <source>&lt;h4&gt;以%1进行解码的预览：&lt;/h4&gt;&lt;pre&gt;%2&lt;/pre&gt;&lt;h4&gt;使用系统编码重解码后的预览&lt;/h4&gt;&lt;pre&gt;%3&lt;/pre&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;h4&gt;Preview decoding in %1:&lt;/h4&gt;&lt;pre&gt;%2&lt;/pre&gt;&lt;h4&gt;Preview re-decoding under system encoding:&lt;/h4&gt;&lt;pre&gt;%3&lt;/pre&gt;</translation>
     </message>
     <message>
         <location filename="TextCodecUtils/textcodecconvertdialog.cpp" line="129"/>
         <source>对%1进行编码转换</source>
-        <translation type="unfinished"></translation>
+        <translation>Convert encoding of %1</translation>
     </message>
 </context>
 <context>
@@ -569,73 +578,73 @@
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="14"/>
         <source>文本编码设定</source>
-        <translation type="unfinished"></translation>
+        <translation>Text encoding setting</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="25"/>
         <source>readme.txt的字符编码</source>
-        <translation type="unfinished"></translation>
+        <translation>Text encoding of readme.txt</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="36"/>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="77"/>
         <source>Shift-JIS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="41"/>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="82"/>
         <source>GB18030</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="46"/>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="87"/>
         <source>Big5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="51"/>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="92"/>
         <source>UTF-8</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="59"/>
         <source>跟随默认编码？</source>
-        <translation type="unfinished"></translation>
+        <translation>Follow default encoding?</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="66"/>
         <source>character.txt的字符编码</source>
-        <translation type="unfinished"></translation>
+        <translation>Text encoding of character.txt</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="103"/>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="110"/>
         <source>支持的编码</source>
-        <translation type="unfinished">Supported encoding</translation>
+        <translation>Supported encodings</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="119"/>
         <source>要设置文本编码的音源：</source>
-        <translation type="unfinished"></translation>
+        <translation>Voicebank to set text encoding:</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="126"/>
         <location filename="VoiceBankUtils/textcodecsettingdialog.cpp" line="61"/>
         <source>（默认编码）</source>
-        <translation type="unfinished"></translation>
+        <translation>(Default encoding)</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.ui" line="133"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;注意：如果您要手动指定编码的话，请注意输入QTextCodec的codecForName()函数支持的编码对应字符串。&lt;/p&gt;&lt;p&gt;您可以使用文本框旁的按钮来查看QTextCodec支持的编码及其别名，双击或选择后确定可以直接应用至本对话框。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Note: If you want to specify the encoding manually, please type the encoding corresponding string supported by QTextCodec&apos;s codecForName() function.&lt;/p&gt;&lt;p&gt;You can use the button next to the text box to view the encodings supported by QTextCodec and their aliases. Double-click or select to apply directly to this dialog.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/textcodecsettingdialog.cpp" line="49"/>
         <source>设定%1的读取用文本编码</source>
-        <translation type="unfinished"></translation>
+        <translation>Set reading text encoding for %1</translation>
     </message>
 </context>
 <context>
@@ -643,12 +652,12 @@
     <message>
         <location filename="VoiceBankUtils/voicebank.cpp" line="635"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：没有为此音源库找到character.txt。在音源使用过程中将无法查看音源名称、图像等信息。&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p style=&quot;color:red&quot;&gt;Error: No character.txt was found for this voicebank.You will not be able to view the name, image, etc. during the use of the voicebank.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/voicebank.cpp" line="649"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：character.txt中的name字段没有被设定。在音源使用过程中音源区域将显示文件夹名称。&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p style=&quot;color:red&quot;&gt;Error: The name field in character.txt is not set.The folder name will be displayed in the voicebank area.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="VoiceBankUtils/voicebank.cpp" line="663"/>
