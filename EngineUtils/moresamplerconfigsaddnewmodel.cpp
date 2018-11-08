@@ -4,7 +4,7 @@ MoresamplerConfigsAddNewModel::MoresamplerConfigsAddNewModel(MoresamplerConfigRe
     : QAbstractTableModel(parent),reader(reader)
 {
     entryNames.append({tr("（空行）"),tr("（注释）")});
-    if (reader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::VoiceBank)
+    if (reader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global)
         entryNames.append(tr("（元标记）"));
     auto allEntryNames = MoresamplerConfig::getAllEntrysName();
     for (auto name : allEntryNames)

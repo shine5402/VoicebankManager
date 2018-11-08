@@ -674,7 +674,7 @@ VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank 
 QString VoiceBank::ImageFileNotExistsErrorState::getErrorHTMLString()
 {
     if (voiceBank){
-        return tr("(<p style=\"color:red\">错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。</p>").arg(voiceBank->getPixmapPath());
+        return tr("<p style=\"color:red\">错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。</p>").arg(voiceBank->getPixmapPath());
     }
     else
         return QString();
