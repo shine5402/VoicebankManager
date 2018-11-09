@@ -12,21 +12,100 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     connect(debugFunctionAction,SIGNAL(triggered(bool)),this,SLOT(debugFunction()));
 #endif
     loadMonitorFoldersSettings();
-    createVoiceBanksTableMenu();
-    connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
+
+    //设置音源信息显示区域
     ui->voiceBankBriefInfomationWidget->setVisible(false);
     ui->voiceBankBriefInfomationWidget->setTitleBarWidget(new QWidget(this));
+    //确保样式与父统一
     auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
     readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
     ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
+    //设置TableView
     voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
     ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
     connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &)));
+    //连接Handler和主窗口的信号与槽
     connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
     connect(voiceBankHandler,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SLOT(onCannotBackupImageFile(VoiceBank*)));
-}
+    connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
+    auto languageActionGroup = new QActionGroup(this);
+    languageActionGroup->addAction(ui->actionAuto_detect);
+    languageActionGroup->addAction(ui->actionDon_t_translate);
+    languageActionGroup->addAction(ui->actionLoad_a_translation_file);
+    //加载语言文件
+    QSettings settings;
+    ui->actionAuto_detect->setChecked(settings.value("Translation/Auto",true).toBool());
+    if (settings.value("Translation/Auto",true).toBool())
+    {
+        autoDetectTranslate();
+    }
+    //连接语言菜单的槽
+    connect(ui->actionAuto_detect,SIGNAL(toggled(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
+    connect(ui->actionLoad_a_translation_file,SIGNAL(toggled(bool)),this,SLOT(dealLanguageMenuLoadFile()));
+    connect(ui->actionDon_t_translate,SIGNAL(toggled(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
 
+    createVoiceBanksTableMenu();
+}
+void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
+    if (ui->actionAuto_detect->isChecked())
+    {
+        autoDetectTranslate();
+    }
+    else if (ui->actionDon_t_translate->isChecked())
+    {
+        removeAllTranslators();
+    }
+}
+void VoiceBankManagerWindow::dealLanguageMenuLoadFile(){
+    if (ui->actionLoad_a_translation_file->isChecked()){
+        auto fileName = QFileDialog::getOpenFileName(this,tr("载入一个翻译文件（Load a translation file...）"),QString(),"Qt 语言文件 (*.qm)");
+        if (!fileName.isEmpty()){
+            auto translator = new QTranslator(this);
+            auto success = translator->load(fileName);
+            if (success)
+            {
+                qApp->installTranslator(translator);
+                translators.append(translator);
+                createVoiceBanksTableMenu();
+            }
+            else
+            {
+                ui->statusbar->showMessage(tr("无法加载语言文件%1。等同于自动推断。(Can't load language file %1. Equal to auto-detect.)").arg(fileName));
+                autoDetectTranslate();
+            }
+        }
+        else
+        {
+            ui->statusbar->showMessage(tr("没有指定语言文件。等同于自动推断。(No language file is selected. Equal to auto-detect.)"));
+            autoDetectTranslate();
+            return;
+        }
+    }
+}
+void VoiceBankManagerWindow::autoDetectTranslate(){
+    removeAllTranslators();
+    auto translator = new QTranslator(this);
+    auto success = translator->load(QLocale(),"LeafOpenUTAUQt",".","./translations",".qm");
+    LeafLogger::LogMessage(QString("QLocale detected:%1").arg(QLocale::system().name()));
+    if ((!success) && QLocale::system().name() != QLocale(QLocale::Chinese).name())
+    {
+        translator->load("./translations/LeafOpenUTAUQt_en.qm");
+    }
+    qApp->installTranslator(translator);
+    translators.append(translator);
+    createVoiceBanksTableMenu();
+}
+void VoiceBankManagerWindow::removeAllTranslators(){
+    LeafLogger::LogMessage("删除所有翻译。");
+    for (auto translator : translators)
+    {
+        qApp->removeTranslator(translator);
+    }
+    //ui->retranslateUi(this);
+    translators.clear();
+    createVoiceBanksTableMenu();
+}
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
     voiceBankHandler->clear();
@@ -142,6 +221,11 @@ void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *){
 
 void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 {
+    if (voiceBanksTableWidgetMenu)
+    {
+        voiceBanksTableWidgetMenu->deleteLater();
+        voiceBanksTableWidgetMenu = new QMenu(this);
+    }
     auto openSubMenu = new QMenu(tr("打开..."),this);
 
     auto openPathAction = new QAction(tr("打开音源文件夹"),this);
@@ -554,16 +638,16 @@ void VoiceBankManagerWindow::on_actionExit_triggered()
 void VoiceBankManagerWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this,tr("关于本程序"),tr("<h3>音源管理器</h3>"
-                                             "<p>版本：%1 作者：shine_5402</p>"
-                                             "<p>本程序以 Apache License Version 2.0 分发。</p>"
-                                             "<p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p>"
-                                             "<p>本程序是 <a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a> 的一部分</p>"
-                                             "<p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>"
-                                             "<p>本程序使用了以下开源项目：</p>"
-                                             "<ul>"
-                                             "<li>LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)</li>"
-                                             "<li>ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)</li>"
-                                             "</ul>").arg(voicebankManagerVersion));
+                                           "<p>版本：%1 作者：shine_5402</p>"
+                                           "<p>本程序以 Apache License Version 2.0 分发。</p>"
+                                           "<p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p>"
+                                           "<p>本程序是 <a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a> 的一部分</p>"
+                                           "<p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>"
+                                           "<p>本程序使用了以下开源项目：</p>"
+                                           "<ul>"
+                                           "<li>LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)</li>"
+                                           "<li>ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)</li>"
+                                           "</ul>").arg(voicebankManagerVersion));
 }
 
 void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
@@ -756,7 +840,7 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
         samplePlayer->setAudioRole(QAudio::Role::MusicRole);
         samplePlayer->setMedia(QUrl::fromLocalFile(sample));
         if (samplePlayerProgress)
-        samplePlayerProgress->setMinimum(0);
+            samplePlayerProgress->setMinimum(0);
         samplePlayerProgress->setMaximum(INT_MAX);
         samplePlayerProgress->setTextVisible(false);
         connect(samplePlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onSamplePlayerPositionChange(qint64)));
@@ -779,5 +863,17 @@ void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State stat
         ui->statusbar->removeWidget(samplePlayerProgress);
         ui->statusbar->clearMessage();
         samplePlayer->setMedia(QMediaContent());
+    }
+}
+
+void VoiceBankManagerWindow::changeEvent(QEvent *e)
+{
+    QWidget::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
     }
 }

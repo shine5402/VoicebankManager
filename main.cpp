@@ -17,14 +17,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationDomain("shine5402.top");
     QCoreApplication::setApplicationName("Leaf UTAU Qt");
     LeafLogger::LogInit();
-    QTranslator translator;
-    auto success = translator.load(QLocale(),"LeafOpenUTAUQt",".","./translations",".qm");
-    LeafLogger::LogMessage(QString("QLocale detected:%1").arg(QLocale::system().name()));
-    if ((!success) && QLocale::system().name() != QLocale(QLocale::Chinese).name())
-    {
-        translator.load("./translations/LeafOpenUTAUQt_en.qm");
-    }
-        a.installTranslator(&translator);
+
 #ifndef NO_EDITOR
     EditorWindow w;
     w.show();

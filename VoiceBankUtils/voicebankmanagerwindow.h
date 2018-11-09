@@ -29,9 +29,9 @@
 #include <QImageReader>
 #include <QMediaPlayer>
 #include <QProgressBar>
-
+#include <QTranslator>
 namespace Ui {
-    class VoiceBankManagerWindow;
+class VoiceBankManagerWindow;
 }
 
 class VoiceBankManagerWindow : public QMainWindow
@@ -40,7 +40,7 @@ class VoiceBankManagerWindow : public QMainWindow
 
 public:
     explicit VoiceBankManagerWindow(QWidget *parent = nullptr);
-    ~VoiceBankManagerWindow();
+    ~VoiceBankManagerWindow() override;
 
     QStringList getMonitorFolders() const;
     void setMonitorFolders(const QStringList &value);
@@ -54,6 +54,8 @@ public slots:
 
     void onSamplePlayerPositionChange(qint64 position);
     void onSamplePlayerStateChanged(QMediaPlayer::State state);
+protected:
+    void changeEvent(QEvent *e) override;
 private:
     Ui::VoiceBankManagerWindow *ui;
     QStringList monitorFolders = {"./voice"};
@@ -79,6 +81,9 @@ private:
     VoiceBank *getSelectedVoiceBank(const QModelIndex &current);
     QProgressBar* samplePlayerProgress = new QProgressBar();
     QMediaPlayer* samplePlayer = new QMediaPlayer(this);
+    void autoDetectTranslate();
+    QList<QTranslator*> translators;
+    void removeAllTranslators();
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -112,7 +117,8 @@ private slots:
     void onBackupImageFileBecauseExists(VoiceBank * voicebank);
     void onCannotBackupImageFile(VoiceBank* voicebank);
     void on_playSamplebutton_clicked();
-
+    void dealLanguageMenuAutoAndDontStates();
+    void dealLanguageMenuLoadFile();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

@@ -93,9 +93,18 @@
     <property name="title">
      <string>选项</string>
     </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string>语言（Language）</string>
+     </property>
+     <addaction name="actionAuto_detect"/>
+     <addaction name="actionDon_t_translate"/>
+     <addaction name="actionLoad_a_translation_file"/>
+    </widget>
     <addaction name="actionMonitor_Folders"/>
     <addaction name="actionDefault_TextCodec"/>
     <addaction name="actionSet_Thread_Pool_Max_Count"/>
+    <addaction name="menuLanguage"/>
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
@@ -358,6 +367,9 @@
    <property name="statusTip">
     <string>关于本程序</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
   </action>
   <action name="actionAbout_Qt">
    <property name="text">
@@ -368,6 +380,9 @@
    </property>
    <property name="statusTip">
     <string>关于本程序使用的 Qt 框架</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionSet_Thread_Pool_Max_Count">
@@ -417,6 +432,48 @@
    </property>
    <property name="toolTip">
     <string>在文件编码转换器中打开一个文件夹以转换文件名</string>
+   </property>
+  </action>
+  <action name="actionAuto_detect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>自动推断（Auto detect）</string>
+   </property>
+   <property name="toolTip">
+    <string>让程序自行确认所需使用的语言文件</string>
+   </property>
+   <property name="statusTip">
+    <string>让程序自行确认所需使用的语言文件</string>
+   </property>
+  </action>
+  <action name="actionDon_t_translate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>不翻译（简体中文）（Don't translate(Simplified Chinese)）</string>
+   </property>
+   <property name="toolTip">
+    <string>不使用翻译文件。程序将显示为简体中文。</string>
+   </property>
+   <property name="statusTip">
+    <string>不使用翻译文件。程序将显示为简体中文。</string>
+   </property>
+  </action>
+  <action name="actionLoad_a_translation_file">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>载入一个翻译文件（Load a translation file...）</string>
+   </property>
+   <property name="toolTip">
+    <string>浏览一个外部翻译文件并载入程序。</string>
    </property>
   </action>
  </widget>
