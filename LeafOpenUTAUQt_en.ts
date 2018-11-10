@@ -717,53 +717,53 @@
 <context>
     <name>VoiceBank</name>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="635"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="633"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：没有为此音源库找到character.txt。在音源使用过程中将无法查看音源名称、图像等信息。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: No character.txt was found for this voicebank. You will not be able to view the name, image, etc. during the use of the voicebank.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="649"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="647"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：character.txt中的name字段没有被设定。在音源使用过程中音源区域将显示文件夹名称。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: The name field in character.txt is not set. The folder name will be displayed in the voicebank information area.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="663"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="661"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：character.txt中的image字段没有被设定。在音源使用过程中音源区域将不显示图片。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: The image field in character.txt is not set. The voicebank icon will not be displayed in the voicebank information area.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="677"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="675"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。&lt;/p&gt;</source>
         <oldsource>(&lt;p style=&quot;color:red&quot;&gt;错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。&lt;/p&gt;</oldsource>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error：Can&apos;t found the image file setting in character.txt(%1). The voicebank icon will not be displayed in the voicebank information area.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="692"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="690"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：character.txt中设定的图片文件没有正常读取。是不是图片格式与后缀名不符？亦或是文件损坏？&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: The image file setting in character.txt is not read properly. Is the image format not matching the suffix name? Or is the file damaged?&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="694"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="692"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：character.txt中设定的图片文件（%1*%2）不符合UTAU的图标要求（比例1:1）。在音源使用过程中将音源区域图片可能显示不正确，或者无法显示。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: The image file (%1*%2) setting in character.txt does not meet the UTAU icon requirements (ratio 1:1). The voicebank icon may not be displayed correctly during the use of the voicebank or may not be displayed.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="708"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="706"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：找不到readme.txt。音源的README将无法显示。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: readme.txt could not be found. The README of the voicebank will not be displayed.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="722"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="720"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：在读取音源图片时发生了一个异常。或许重载此音源能解决这个问题。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: An exception occurred while reading the source image. Perhaps reloading this voicebank can solve this problem. &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="736"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="734"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：无法打开readme.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: Unable to open readme.txt. Perhaps occupied by other programs? Or is it a file system issue? The log can provide more information. &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebank.cpp" line="750"/>
+        <location filename="VoiceBankUtils/voicebank.cpp" line="748"/>
         <source>&lt;p style=&quot;color:red&quot;&gt;错误：无法打开character.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。&lt;/p&gt;</source>
         <translation>&lt;p style=&quot;color:red&quot;&gt;Error: Unable to open character.txt. Perhaps occupied by other programs? Or is it a file system issue? The log can provide more information. &lt;/p&gt;</translation>
     </message>
@@ -819,609 +819,680 @@
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="102"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="98"/>
+        <source>语言（Language）</source>
+        <translation>Language</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="111"/>
         <source>帮助</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="109"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="118"/>
         <source>工具</source>
         <translation>Tools</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="113"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="122"/>
         <source>（独立）编码转换器</source>
         <translation>(Independent) Encoding Converter</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="217"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="226"/>
         <source>播放样例</source>
         <translation>Play sample</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="259"/>
         <source>音源库名称</source>
-        <translation>Voicebank Name</translation>
+        <translation type="vanished">Voicebank Name</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="290"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="299"/>
         <source>导入音源库...</source>
         <translation>Import voicebanks...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="293"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="296"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="302"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="305"/>
         <source>导入一个外部音源库用于管理</source>
         <translation>Import an outside voicebank to manage</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="301"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="310"/>
         <source>重载</source>
         <translation>Reload</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="304"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="307"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="313"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="316"/>
         <source>重新载入监视文件夹下的音源库</source>
         <translation>Reload the voicebanks under the watched folder</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="312"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="321"/>
         <source>对选定的音源库进行原音设定（oto.ini）...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="315"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="318"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="324"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="327"/>
         <source>在原音设定编辑器中编辑该音源库的oto.ini</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="323"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="326"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="332"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="335"/>
         <source>退出</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="331"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="340"/>
         <source>监视文件夹...</source>
         <translation>Watched Folder...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="334"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="337"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="343"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="346"/>
         <source>修改程序寻找音源的位置</source>
         <translation>Modify the location to find the voicebank</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="342"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="351"/>
         <source>默认文本编码...</source>
         <translation>Default text encoding...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="345"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="348"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="354"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="357"/>
         <source>修改程序读取音源文件时默认使用的编码</source>
         <translation>Modify the text encoding used by the program when reading the voicebank&apos;s file by default</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="353"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="362"/>
         <source>关于</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="356"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="359"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="556"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="365"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="368"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="697"/>
         <source>关于本程序</source>
         <translation>About this program</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="364"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="571"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="376"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="712"/>
         <source>关于 Qt</source>
         <translation>About Qt</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="367"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="370"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="379"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="382"/>
         <source>关于本程序使用的 Qt 框架</source>
         <translation>About the Qt Framework this program uses</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="375"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="390"/>
         <source>设置读取用线程池的最大大小...</source>
         <translation>Set the maximum size of the thread pool for reading...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="378"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="381"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="393"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="396"/>
         <source>（高级）改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。</source>
         <translation>(Advanced) Change the maximum number of threads when the program reads the voicebank. Make sure you change this setting after you know what you are doing.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="386"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="401"/>
         <source>编辑全局Moresampler设置</source>
         <translation>Edit global Moresampler configuration</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="389"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="392"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="404"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="407"/>
         <source>在编辑器中打开一个moreconfig.txt并以全局模式编辑</source>
         <translation>Open a moreconfig.txt in the editor and edit it in global mode</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="397"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="412"/>
         <source>随机选择一个音源</source>
         <translation>Choose a voicebank randomly</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="400"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="403"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="415"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="418"/>
         <source>在音源列表中随机选择一个音源。在拿不定主意的时候说不定会有帮助。</source>
         <translation>Randomly select a voicebank in the list. Maybe it will help when you have no idea.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="408"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="423"/>
         <source>转换文本文件...</source>
         <translation>Convert text file...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="411"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="426"/>
         <source>在文件编码转换器中打开一个文本文件</source>
         <translation>Open a text file in the file encoding converter</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="416"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="431"/>
         <source>转换文件名...</source>
         <translation>Convert file names...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="419"/>
-        <source>在文件编码转换器中打开一个文件夹以转换文件名</source>
-        <translation>Open a folder in the text encoding converter to convert the file names in the folder</translation>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="434"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="437"/>
+        <source>在文件编码转换器中打开一个文件夹以转换文件名。程序只会转换当前文件夹下的文件和文件夹名。</source>
+        <oldsource>在文件编码转换器中打开一个文件夹以转换文件名。程序只会转换一级文件和文件夹的名称。</oldsource>
+        <translation>Open a folder in the text encoding converter to convert the file names in the folder. The program will only convert the file and folder names under the given folder.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="36"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="448"/>
+        <source>自动推断（Auto detect）</source>
+        <translation>Auto detect</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="451"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="454"/>
+        <source>让程序自行确认所需使用的语言文件</source>
+        <translation>Let program decide what translation file should use</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="462"/>
+        <source>不翻译（简体中文）（Don&apos;t translate(Simplified Chinese)）</source>
+        <translation>Don&apos;t translate (Simplified Chinese)</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="465"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="468"/>
+        <source>不使用翻译文件。程序将显示为简体中文。</source>
+        <translation>Don&apos;t use translation file. Program will show in Simplified Chinese.</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="476"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="85"/>
+        <source>载入一个翻译文件（Load a translation file...）</source>
+        <translation>Load a translation file...</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="479"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.ui" line="482"/>
+        <source>浏览一个外部翻译文件并载入程序。</source>
+        <translation>Open a external translation file and use it.</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="102"/>
+        <source>无法加载语言文件%1。等同于自动推断。(Can&apos;t load language file %1. Equal to auto-detect.)</source>
+        <translation>Can&apos;t load language file %1. Equal to auto-detect.</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="111"/>
+        <source>没有指定语言文件。等同于自动推断。(No language file is selected. Equal to auto-detect.)</source>
+        <translation>No language file is selected. Equal to auto-detect.</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="157"/>
         <source>加载中</source>
         <translation>Loading</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="110"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="231"/>
         <source>共 %1 个</source>
         <translation>%1 in total</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="113"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="234"/>
         <source>没有音源。</source>
         <translation>No voicebanks.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="124"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="126"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="245"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="247"/>
         <source>音源“%1”读取完毕</source>
         <translation>Voicebank &quot;%1&quot; read done</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="145"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="271"/>
         <source>打开...</source>
         <translation>Open...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="147"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="273"/>
         <source>打开音源文件夹</source>
         <translation>Open the folder of the voicebank</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="149"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="275"/>
         <source>在资源管理器中打开该音源的文件夹。</source>
         <translation>Open the folder of the voicebank in explorer.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="152"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="278"/>
         <source>打开character.txt</source>
         <translation>Open character.txt</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="154"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="280"/>
         <source>在系统关联的文本编辑器中打开该音源的character.txt。</source>
         <translation>Open the character.txt of the voicebank in the text editor associated with the system.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="157"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="283"/>
         <source>打开readme.txt</source>
         <translation>Open readme.txt</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="159"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="285"/>
         <source>在系统关联的文本编辑器中打开该音源的readme.txt。</source>
         <translation>Open the readme.txt of the voicebank in the text editor associated with the system.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="164"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="290"/>
         <source>复制...路径</source>
         <translation>Copy the path of ...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="166"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="292"/>
         <source>复制音源路径</source>
         <translation>Copy the path of the voicebank</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="168"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="294"/>
         <source>复制该音源的文件夹路径到剪贴板。</source>
         <translation>Copy the folder path of the voicebank to the clipboard.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="171"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="297"/>
         <source>复制character.txt的文件路径</source>
         <translation>Copy the path of the character.txt</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="173"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="299"/>
         <source>复制该音源的character.txt的路径到剪贴板。</source>
         <translation>Copy the folder path of the character.txt to the clipboard.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="176"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="302"/>
         <source>复制readme.txt的文件路径</source>
         <translation>Copy the path of the readme.txt</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="178"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="304"/>
         <source>复制该音源的readme.txt路径到剪贴板。</source>
         <translation>Copy the folder path of the readme.txt to the clipboard.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="183"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="309"/>
         <source>修改...</source>
         <translation>Modify...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="185"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="311"/>
         <source>修改音源的名称...</source>
         <translation>Modify the name of the voicebank...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="187"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="313"/>
         <source>为该音源指定一个新名称。</source>
         <translation>Give the voicebank a new name.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="190"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="316"/>
         <source>修改音源的图标...</source>
         <translation>Modify the icon of the voicebank...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="192"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="318"/>
         <source>为该音源指定一个新图标。</source>
         <translation>Assign a new icon to the voicebank.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="198"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="324"/>
         <source>编码相关</source>
         <translation>Encoding related</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="200"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="326"/>
         <source>为该音源单独设置文本编码...</source>
         <translation>Set the text encoding separately for the voicebank...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="202"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="328"/>
         <source>为该音源设置读取用文本编码。注意，这仅在本软件中有效。</source>
         <translation>Set the text encoding for reading for this voicebank. Note that this is only valid in this program.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="207"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="333"/>
         <source>对character.txt进行编码转换...</source>
         <translation>Convert text encoding of character.txt...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="209"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="335"/>
         <source>在文件编码转换器中转换该音源character.txt的编码。</source>
         <translation>Open the character.txt in the file encoding converter.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="212"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="338"/>
         <source>对readme.txt进行编码转换...</source>
         <translation>Convert text encoding of readme.txt...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="214"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="340"/>
         <source>在文件编码转换器中转换该音源readme.txt的编码。</source>
         <translation>Open the readme.txt in the file encoding converter.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="217"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="343"/>
         <source>对WAV文件名进行编码转换...</source>
         <translation>Convert text encoding of the WAV file names...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="219"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="345"/>
         <source>在文件编码转换器中转换该音源的WAV文件名的编码。</source>
         <translation>Convert the WAV file names in the text encoding converter.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="224"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="350"/>
         <source>引擎相关</source>
         <translation>Engine related</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="226"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="352"/>
         <source>编辑该音源的Moresampler声库配置...</source>
         <translation>Edit Moresampler configurations of the voicebank...</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="228"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="354"/>
         <source>编辑该声库的Moresampler声库配置。只有在您使用Moresampler时起效。</source>
         <translation>Edit the Moresampler configuration for this voicebank. Only works when you use Moresampler.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="233"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="359"/>
         <source>重载此音源</source>
         <translation>Reload the voicebank</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="235"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="361"/>
         <source>重新从硬盘加载此音源。</source>
         <translation>reload the voicebank from disk.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="272"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="292"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="398"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="418"/>
         <source>打开失败</source>
         <translation>Fail to open</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="272"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="292"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="398"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="418"/>
         <source>无法打开%1。</source>
         <translation>Can&apos;t open %1.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="314"/>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="332"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="440"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="458"/>
         <source>剪贴板仍会被更改</source>
         <translation>The clipboard will still be changed</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="314"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="440"/>
         <source>即使您没有要求程序创建character.txt，程序也将把路径复制到剪贴板。但还是请您注意，这个路径并没有指向有效的文件。</source>
         <translation>Even if you don&apos;t ask the program to create character.txt, the program will copy the path to the clipboard. But please note that this path does not point to a valid file.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="332"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="458"/>
         <source>即使您没有要求程序创建readme.txt，程序也将把路径复制到剪贴板。但还是请您注意，这个路径并没有指向有效的文件。</source>
         <translation>Even if you don&apos;t ask the program to create readme.txt, the program will copy the path to the clipboard. But please note that this path does not point to a valid file.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="357"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="483"/>
         <source>character.txt不存在</source>
         <translation>The character.txt does not exist</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="357"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="483"/>
         <source>您选定的音源不存在character.txt。所以无法进行转换操作。</source>
         <translation>The character.txt does not exist for the voicebank you selected. Therefore, the conversion operation cannot be performed.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="376"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="502"/>
         <source>readme.txt不存在</source>
         <translation>The readme.txt does not exist</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="376"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="502"/>
         <source>您选定的音源不存在readme.txt。所以无法进行转换操作。</source>
         <translation>The readme.txt does not exist for the voicebank you selected. Therefore, the conversion operation cannot be performed.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="394"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="569"/>
         <source>%1的WAV文件名</source>
         <translation>The WAV file names of %1</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="415"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="940"/>
+        <source>打开一个文本文件</source>
+        <translation>Open a text file</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="948"/>
+        <source>打开一个文件夹</source>
+        <translation>Open a folder</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="966"/>
+        <source>转换%1下的文件名</source>
+        <translation>Convert file name encoding in %1</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="967"/>
+        <source>对%1下的文件名的转换成功完成。</source>
+        <translation>The encoding conversion of the file name under %1 was completed successfully.</translation>
+    </message>
+    <message>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="540"/>
         <source>%1（%2）</source>
         <translation>%1 (%2)</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="424"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="549"/>
         <source>转换中出了些问题</source>
         <translation>Some problems in the conversion</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="424"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="549"/>
         <source>&lt;h3&gt;程序在转换以下文件时出了些错误&lt;/h3&gt;&lt;pre&gt;%1&lt;/pre&gt;&lt;p&gt;这些文件应当都保持在原有的状态。您可以排查问题后重试。&lt;/p&gt;</source>
         <translation>&lt;h3&gt;The program meet some errors while converting the following files.&lt;/h3&gt;&lt;pre&gt;%1&lt;/pre&gt;&lt;p&gt;These files should all remain in their original state. You can try after troubleshooting.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="430"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="573"/>
         <source>转换成功完成</source>
         <translation>Conversion completed successfully</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="430"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="573"/>
         <source>音源%1的WAV文件名均已从%2转换至%3。</source>
         <translation>The WAV file name of voicebank %1 has been converted from %2 to %3.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="441"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="582"/>
         <source>文件不存在</source>
         <translation>The file doesn&apos;t exist</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="441"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="582"/>
         <source>文件%1不存在</source>
         <translation>The file %1 doesn&apos;t exist</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="450"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="591"/>
         <source>即将执行编码转换</source>
         <translation>Encoding conversion is about to be performed</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="450"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="591"/>
         <source>&lt;h3&gt;程序即将对%1执行编码转换（%2 -&gt; %3）&lt;/h3&gt;&lt;p&gt;在您单击确定后，程序将会把转换后的结果保存至%1。&lt;/p&gt;&lt;p&gt;但是，程序有必要提醒您编码转换的&lt;b&gt;风险&lt;/b&gt;：由于源编码和目标编码间的可能的映射不对等关系，这种转换可能&lt;b&gt;不可逆&lt;/b&gt;，并且可能使您&lt;b&gt;丢失数据&lt;/b&gt;！&lt;/p&gt;&lt;p&gt;出于安全考虑，程序将保存一份源文件的备份副本（%1.bak），以便出现问题时您可以手动恢复。&lt;/p&gt;&lt;p&gt;确定要执行转换吗？&lt;/p&gt;</source>
         <translation>&lt;h3&gt;The program will perform code conversion on %1 (%2 -&gt; %3)&lt;/h3&gt;&lt;p&gt; After you click OK, the program will save the converted result to %1. &lt;/p&gt;&lt;p&gt;However, it is necessary for the program to remind you of the &lt;b&gt;risk&lt;/b&gt; of the encoding conversion: due to the possible not equal mapping between the source encoding and the target encoding, the conversion may be &lt;b&gt;irreversible&lt; /b&gt;, and may make you &lt;b&gt;lose data&lt;/b&gt;! &lt;/p&gt;&lt;p&gt;For security reasons, the program will save a backup copy of the source file (%1.bak) so that you can manually recover it if something goes wrong. &lt;/p&gt;&lt;p&gt;Are you sure you want to perform the conversion? &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="459"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="600"/>
         <source>转换失败</source>
         <translation>Fail to convert</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="459"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="600"/>
         <source>&lt;h3&gt;程序无法对%1进行写入&lt;/h3&gt;&lt;p&gt;在写入时出现错误。Qt提供的错误描述为%2。&lt;/p&gt;&lt;p&gt;文件应该没有被修改。&lt;/p&gt;</source>
         <translation>&lt;h3&gt;The program could not write to %1&lt;/h3&gt;&lt;p&gt;An error occurred while writing. The error description provided by Qt is %2. &lt;/p&gt;&lt;p&gt;The file should not have been modified. &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="463"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="604"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="967"/>
         <source>转换成功</source>
         <translation>Conversion completed successfully</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="463"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="604"/>
         <source>&lt;h3&gt;文件编码转换完成&lt;/h3&gt;&lt;p&gt;程序将自动修改该文件的读取用文本编码，之后将实施重载。&lt;/p&gt;</source>
         <translation>&lt;h3&gt;File encoding conversion completed&lt;/h3&gt;&lt;p&gt;The program will automatically modify the text encoding for reading the file, and then reload the voicebank. &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="471"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="612"/>
         <source>无法备份%1</source>
         <translation>Can&apos;t backup %1</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="471"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="612"/>
         <source>&lt;h3&gt;程序无法对%1进行备份&lt;/h3&gt;&lt;p&gt;在备份时出现错误。Qt提供的错误说明为：%2&lt;/p&gt;&lt;p&gt;你仍可以令程序继续转换，但是之前提到的&lt;b&gt;风险&lt;/b&gt;仍然存在，且出现问题时您无法恢复。&lt;/p&gt;&lt;p&gt;确定要继续转换吗？&lt;/p&gt;</source>
         <translation>&lt;h3&gt;The program could not backup %1&lt;/h3&gt;&lt;p&gt;An error occurred during backup. The error description provided by Qt is: %2&lt;/p&gt;&lt;p&gt;You can still make the program continue to convert, but the previously mentioned &lt;b&gt;risk&lt;/b&gt; still exists and you cannot recover when error occurs. &lt;/p&gt;&lt;p&gt;Are you sure you want to continue the conversion? &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="556"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="697"/>
         <source>&lt;h3&gt;音源管理器&lt;/h3&gt;&lt;p&gt;版本：%1 作者：shine_5402&lt;/p&gt;&lt;p&gt;本程序以 Apache License Version 2.0 分发。&lt;/p&gt;&lt;p&gt;“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。&lt;/p&gt;&lt;p&gt;本程序是 &lt;a href=&quot;https://github.com/shine5402/LeafOpenUTAUQt&quot;&gt;Leaf OpenUTAU Qt Project&lt;/a&gt; 的一部分&lt;/p&gt;&lt;p&gt;UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。&lt;/p&gt;&lt;p&gt;本程序使用了以下开源项目：&lt;/p&gt;&lt;ul&gt;&lt;li&gt;LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)&lt;/li&gt;&lt;li&gt;ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>&lt;h3&gt;Voicebank Manager&lt;/h3&gt;&lt;p&gt;Versioon: %1 Author: shine_5402&lt;/p&gt;&lt;p&gt;The program is licensed under Apache License Version 2.0.&lt;/p&gt;&lt;p&gt;&quot;Voicebank Manager&quot; is a information manager designed for the voicebanks for UTAU program.&lt;/p&gt;&lt;p&gt;The program is a part of &lt;a href=&quot;https://github.com/shine5402/LeafOpenUTAUQt&quot;&gt;Leaf OpenUTAU Qt Project&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;UTAU is a Japanese singing synthesizer application created by Ameya/Ayame.&lt;/p&gt;&lt;p&gt;The program uses following opensourse projects:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)&lt;/li&gt;&lt;li&gt;ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="577"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="718"/>
         <source>设定线程池的最大大小</source>
         <translation>Set the maximum size of the thread pool</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="577"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="718"/>
         <source>（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。</source>
         <translation>(Advanced) This setting changes the maximum number of threads when the program reads the voicebank. Make sure you change this setting after you know what you are doing.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="580"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="721"/>
         <source>线程池大小已经被设置为%1</source>
         <translation>The thread pool size has been set to %1</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="612"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="753"/>
         <source>选择一个子文件夹</source>
         <translation>Select a subfolder</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="612"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="753"/>
         <source>您选择的音源有子文件夹。Moresampler的配置文件只对一个同文件夹内的wav文件起效。请选择一个子文件夹来编辑配置：</source>
         <translation>The voicebank you selected has subfolders. Moresampler&apos;s configuration file only works for the wav files in the same folder. Please select a subfolder to edit the configuration:</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="636"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="777"/>
         <source>检测到可能的全局配置</source>
         <translation>Possible global configuration files was detected</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="636"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="777"/>
         <source>在监视文件夹的父文件夹中发现了以下可能的Moresampler配置文件。您可以选择其中的一个打开，或者取消来进行浏览。</source>
         <translation>The following possible Moresampler configuration files were found in the parent folders of the watched folders. You can choose one of them to open, or cancel to browse.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="644"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="785"/>
         <source>打开一个Moresampler全局配置文件</source>
         <translation>Edit a global Moresampler configuration file</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="644"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="785"/>
         <source>Moresampler 配置文件 (moreconfig.txt)</source>
         <translation>Moresampler configuration file (moreconfig.txt)</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="656"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="797"/>
         <source>为音源指定一个新名称</source>
         <translation>Give the voicebank a new name</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="656"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="797"/>
         <source>为路径为%1的音源指定一个新名称（程序会自动转换编码）：</source>
         <translation>Give the voicebank %1 a new name (program will convert text encoding automatically):</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="660"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="801"/>
         <source>已将路径为%1的音源的名称设置为%2。</source>
         <translation>The name of voicebank in &quot;%1&quot; has been set to %2.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="663"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="804"/>
         <source>文件无法被打开</source>
         <translation>The file can&apos;t be opened</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="663"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="804"/>
         <source>有一个文件无法被打开。Qt提供的错误字符串为%1</source>
         <translation>There is a file that cannot be opened. The error string provided by Qt is %1</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="667"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="808"/>
         <source>路径为%1的音源的character.txt不存在。程序已经自动创建并将名称设置为%1。</source>
         <translation>The character.txt of the voicebank whose path is %1 does not exist. The program has automatically created it and the name of voicebank is set to %1.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="684"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="825"/>
         <source>图像文件 (%1)</source>
         <translation>Image File (%1)</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="685"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="826"/>
         <source>选择要设定为图标的新图片</source>
         <translation>Select a new image to set as an icon</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="702"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="843"/>
         <source>没有音源</source>
         <translation>No voicebanks</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="702"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="843"/>
         <source>没有音源，无法随机选择音源。</source>
         <translation>There are no voicebanks here, so can&apos;t select a voicebank randomly.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="717"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="858"/>
         <source>备份了%1原先的图标，因为目标文件名已存在。</source>
         <translation>The previous icon of %1 was backed up because the target file name already exists.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="722"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="863"/>
         <source>无法备份</source>
         <translation>Can&apos;t backup</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="722"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="863"/>
         <source>因为重名，程序尝试备份%1原先的图标，但是遇到错误无法完成，操作终止。</source>
         <translation>The program tried to backup the previous icon of %1, but the operation was terminated because of the duplicate name.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="739"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="880"/>
         <source>没有可供播放的样例</source>
         <translation>There are no sample to play</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="739"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="880"/>
         <source>程序无法找到可供播放的样例文件。</source>
         <translation>The program could not find a sample file to play.</translation>
     </message>
     <message>
-        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="767"/>
+        <location filename="VoiceBankUtils/voicebankmanagerwindow.cpp" line="908"/>
         <source>正在播放%1的声音样例</source>
         <translation>Playing the sample of %1</translation>
     </message>

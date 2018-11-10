@@ -84,6 +84,8 @@ private:
     void autoDetectTranslate();
     QList<QTranslator*> translators;
     void removeAllTranslators();
+    bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *rawCodec, QTextCodec *targetCodec);
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -119,6 +121,8 @@ private slots:
     void on_playSamplebutton_clicked();
     void dealLanguageMenuAutoAndDontStates();
     void dealLanguageMenuLoadFile();
+    void on_actionFor_text_file_triggered();
+    void on_actionFor_File_Name_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

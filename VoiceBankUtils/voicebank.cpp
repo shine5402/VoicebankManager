@@ -109,7 +109,6 @@ void VoiceBank::decodeWavFileName()
     if (!wavFileName.isEmpty())
     {
         QTextEncoder encoder(QTextCodec::codecForLocale());
-        QTextDecoder decoder(wavFileNameTextCodec);
         for (auto name : wavFileName)
         {
             auto raw = encoder.fromUnicode(name);
@@ -122,7 +121,6 @@ void VoiceBank::readWavFileName()
 {
     if (!isWavFileNameReaded){
         wavFileName.clear();
-        //wavFilePathNameAndDecoded.clear();
         wavFilePath.clear();
         QDir dir(path);
         wavFileName.append(dir.entryList({"*.wav"},QDir::Files|QDir::NoDotAndDotDot));

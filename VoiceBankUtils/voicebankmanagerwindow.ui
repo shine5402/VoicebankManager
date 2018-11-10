@@ -265,7 +265,7 @@
            </font>
           </property>
           <property name="text">
-           <string>音源库名称</string>
+           <string notr="true"/>
           </property>
           <property name="textInteractionFlags">
            <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
@@ -431,7 +431,10 @@
     <string>转换文件名...</string>
    </property>
    <property name="toolTip">
-    <string>在文件编码转换器中打开一个文件夹以转换文件名</string>
+    <string>在文件编码转换器中打开一个文件夹以转换文件名。程序只会转换当前文件夹下的文件和文件夹名。</string>
+   </property>
+   <property name="statusTip">
+    <string>在文件编码转换器中打开一个文件夹以转换文件名。程序只会转换当前文件夹下的文件和文件夹名。</string>
    </property>
   </action>
   <action name="actionAuto_detect">
@@ -473,6 +476,9 @@
     <string>载入一个翻译文件（Load a translation file...）</string>
    </property>
    <property name="toolTip">
+    <string>浏览一个外部翻译文件并载入程序。</string>
+   </property>
+   <property name="statusTip">
     <string>浏览一个外部翻译文件并载入程序。</string>
    </property>
   </action>

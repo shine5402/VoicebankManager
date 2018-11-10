@@ -39,11 +39,34 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     if (settings.value("Translation/Auto",true).toBool())
     {
         autoDetectTranslate();
+        ui->actionAuto_detect->setChecked(true);
+        ui->actionDon_t_translate->setChecked(false);
+        ui->actionLoad_a_translation_file->setChecked(false);
+    }
+    else if (settings.value("Translation/isLoadOwnTranslationFile",false).toBool())
+    {
+        auto translator = new QTranslator(this);
+        auto success = translator->load(settings.value("Translation/OwnTranslationFile").toString());
+        if (success)
+        {
+            qApp->installTranslator(translator);
+            translators.append(translator);
+            createVoiceBanksTableMenu();
+            ui->actionAuto_detect->setChecked(false);
+            ui->actionDon_t_translate->setChecked(false);
+            ui->actionLoad_a_translation_file->setChecked(true);
+        }
+    }
+    else if (settings.value("Translation/NoTranslation",false).toBool())
+    {
+        ui->actionAuto_detect->setChecked(false);
+        ui->actionDon_t_translate->setChecked(true);
+        ui->actionLoad_a_translation_file->setChecked(false);
     }
     //连接语言菜单的槽
-    connect(ui->actionAuto_detect,SIGNAL(toggled(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
-    connect(ui->actionLoad_a_translation_file,SIGNAL(toggled(bool)),this,SLOT(dealLanguageMenuLoadFile()));
-    connect(ui->actionDon_t_translate,SIGNAL(toggled(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
+    connect(ui->actionAuto_detect,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
+    connect(ui->actionLoad_a_translation_file,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuLoadFile()));
+    connect(ui->actionDon_t_translate,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
 
     createVoiceBanksTableMenu();
 }
@@ -68,17 +91,28 @@ void VoiceBankManagerWindow::dealLanguageMenuLoadFile(){
                 qApp->installTranslator(translator);
                 translators.append(translator);
                 createVoiceBanksTableMenu();
+                QSettings settings;
+                settings.setValue("Translation/Auto",false);
+                settings.setValue("Translation/NoTranslation",false);
+                settings.setValue("Translation/isLoadOwnTranslationFile",true);
+                settings.setValue("Translation/OwnTranslationFile",fileName);
             }
             else
             {
                 ui->statusbar->showMessage(tr("无法加载语言文件%1。等同于自动推断。(Can't load language file %1. Equal to auto-detect.)").arg(fileName));
                 autoDetectTranslate();
+                ui->actionAuto_detect->setChecked(true);
+                ui->actionDon_t_translate->setChecked(false);
+                ui->actionLoad_a_translation_file->setChecked(false);
             }
         }
         else
         {
             ui->statusbar->showMessage(tr("没有指定语言文件。等同于自动推断。(No language file is selected. Equal to auto-detect.)"));
             autoDetectTranslate();
+            ui->actionAuto_detect->setChecked(true);
+            ui->actionDon_t_translate->setChecked(false);
+            ui->actionLoad_a_translation_file->setChecked(false);
             return;
         }
     }
@@ -95,6 +129,10 @@ void VoiceBankManagerWindow::autoDetectTranslate(){
     qApp->installTranslator(translator);
     translators.append(translator);
     createVoiceBanksTableMenu();
+    QSettings settings;
+    settings.setValue("Translation/Auto",true);
+    settings.setValue("Translation/NoTranslation",false);
+    settings.setValue("Translation/isLoadOwnTranslationFile",false);
 }
 void VoiceBankManagerWindow::removeAllTranslators(){
     LeafLogger::LogMessage("删除所有翻译。");
@@ -105,6 +143,10 @@ void VoiceBankManagerWindow::removeAllTranslators(){
     //ui->retranslateUi(this);
     translators.clear();
     createVoiceBanksTableMenu();
+    QSettings settings;
+    settings.setValue("Translation/Auto",false);
+    settings.setValue("Translation/NoTranslation",true);
+    settings.setValue("Translation/isLoadOwnTranslationFile",false);
 }
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
@@ -470,51 +512,66 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
         }
     }
 }
+bool VoiceBankManagerWindow::processFileNameConvert(QByteArrayList _fileNameRaw,QStringList _filePaths,QString title,QTextCodec* rawCodec,QTextCodec* targetCodec)
+{
+    auto fileNameRaw = _fileNameRaw;
+    auto showString = fileNameRaw.join("\n");
+    auto dialog = new TextCodecConvertDialog(title,showString,rawCodec,targetCodec,true,this);
+    auto dialogCode = dialog->exec();
+    if (dialogCode == QDialog::Accepted){
+        auto sourceCodec = dialog->getSourceCodec();
+        auto _targetCodec = dialog->getTargetCodec();
+        QTextEncoder encoder(_targetCodec);
+        QTextDecoder decoder(sourceCodec);
+        QTextDecoder decoderLocale(QTextCodec::codecForLocale());
+        auto filePaths = _filePaths;
+        auto it = filePaths.begin();
+        QStringList unsucess;
+        while (it != filePaths.end())
+        {
+            auto file = new QFile(*it);
+            if (file->exists()) {
+                QFileInfo fileInfo(*it);
+                auto newName = decoderLocale.toUnicode(encoder.fromUnicode(decoder.toUnicode(fileInfo.fileName().toLocal8Bit())));
+                auto newPath = fileInfo.absolutePath() + "/" + newName;
+                if (newName != fileInfo.fileName())
+                {
+                    if (!file->rename(newPath)) {
+                        unsucess.append(tr("%1（%2）").arg(file->fileName()).arg(file->errorString()));
+                        LeafLogger::LogMessage(QString("文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
+                    }
+                }
+            }
+            file->deleteLater();
+            ++it;
+        }
+        if (!unsucess.isEmpty()){
+            QMessageBox::warning(this,tr("转换中出了些问题"),tr("<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>这些文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join("\n")));
+            return false;
+        }
+        else
+        {
+            rawCodec = sourceCodec;
+            targetCodec = _targetCodec;
+            return true;
+                   }
+    }
+    dialog->deleteLater();
+    return false;
+}
+
 void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     voiceBank->readWavFileName();
     if (voiceBank){
-        auto showString = voiceBank->getWavFileNameRaw().join("\n");
-        auto dialog = new TextCodecConvertDialog(tr("%1的WAV文件名").arg(voiceBank->getName()),showString,voiceBank->getWavFileNameTextCodec(),QTextCodec::codecForLocale(),true,this);
-        auto dialogCode = dialog->exec();
-        if (dialogCode == QDialog::Accepted){
-            auto sourceCodec = dialog->getSourceCodec();
-            auto targetCodec = dialog->getTargetCodec();
-            QTextEncoder encoder(targetCodec);
-            QTextDecoder decoder(sourceCodec);
-            QTextDecoder decoderLocale(QTextCodec::codecForLocale());
-            auto wavFilePath = voiceBank->getWavFilePath();
-            auto it = wavFilePath.begin();
-            QStringList unsucess;
-            while (it != wavFilePath.end())
-            {
-                auto file = new QFile(*it);
-                if (file->exists()) {
-                    QFileInfo fileInfo(*it);
-                    auto newName = decoderLocale.toUnicode(encoder.fromUnicode(decoder.toUnicode(fileInfo.fileName().toLocal8Bit())));
-                    auto newPath = fileInfo.absolutePath() + "/" + newName;
-                    if (newName != fileInfo.fileName())
-                    {
-                        if (!file->rename(newPath)) {
-                            unsucess.append(tr("%1（%2）").arg(file->fileName()).arg(file->errorString()));
-                            LeafLogger::LogMessage(QString("文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
-                        }
-                    }
-                }
-                file->deleteLater();
-                ++it;
-            }
-            if (!unsucess.isEmpty()){
-                QMessageBox::warning(this,tr("转换中出了些问题"),tr("<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>这些文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join("\n")));
-            }
-            else
-            {
-                voiceBank->clearWavFileReadStage();
-                voiceBank->setWavFileNameTextCodec(targetCodec);
-                QMessageBox::information(this,tr("转换成功完成"),tr("音源%1的WAV文件名均已从%2转换至%3。").arg(voiceBank->getName()).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
-            }
+        auto sourceCodec = voiceBank->getWavFileNameTextCodec();
+        auto targetCodec = QTextCodec::codecForLocale();
+        if (processFileNameConvert(voiceBank->getWavFileNameRaw(),voiceBank->getWavFilePath(),tr("%1的WAV文件名").arg(voiceBank->getName()),sourceCodec,targetCodec))
+        {
+            voiceBank->clearWavFileReadStage();
+            voiceBank->setWavFileNameTextCodec(targetCodec);
+            QMessageBox::information(this,tr("转换成功完成"),tr("音源%1的WAV文件名均已从%2转换至%3。").arg(voiceBank->getName()).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
         }
-        dialog->deleteLater();
     }
 }
 QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(const QString& path,QTextCodec* sourceCodec,QTextCodec* targetCodec){
@@ -876,4 +933,36 @@ void VoiceBankManagerWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void VoiceBankManagerWindow::on_actionFor_text_file_triggered()
+{
+    auto path = QFileDialog::getOpenFileName(this,tr("打开一个文本文件"));
+    if (path.isEmpty())
+        return;
+    processFileTextCodecConvert(path,QTextCodec::codecForLocale(),QTextCodec::codecForLocale());
+}
+
+void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
+{
+    auto path = QFileDialog::getExistingDirectory(this,tr("打开一个文件夹"));
+    if (path.isEmpty())
+        return;
+    QStringList fileNames;
+    QStringList filePath;
+    QByteArrayList fileNameRaw;
+    QDir dir(path);
+    fileNames.append(dir.entryList(QDir::Dirs | QDir::Files|QDir::NoDotAndDotDot));
+    for (auto fileName : fileNames)
+    {
+        filePath.append(path + "/" + fileName);
+    }
+    QTextEncoder encoder(QTextCodec::codecForLocale());
+    for (auto name : fileNames)
+    {
+        auto raw = encoder.fromUnicode(name);
+        fileNameRaw.append(raw);
+    }
+    if (processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),QTextCodec::codecForLocale(),QTextCodec::codecForLocale()))
+        QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的转换成功完成。").arg(path));
 }
