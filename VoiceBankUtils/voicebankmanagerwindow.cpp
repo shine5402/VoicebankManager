@@ -150,8 +150,8 @@ void VoiceBankManagerWindow::removeAllTranslators(){
 }
 void VoiceBankManagerWindow::loadVoiceBanksList()
 {
-    voiceBankHandler->clear();
     voiceBankTableModel->clearEmitter();
+    voiceBankHandler->clear();
     voiceBankReadDoneCount = 0;
     ui->voiceBanksTableView->setEnabled(false);
     ui->voicebankCountLabel->setText(tr("加载中"));
