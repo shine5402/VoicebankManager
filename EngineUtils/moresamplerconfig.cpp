@@ -63,6 +63,9 @@ void MoresamplerConfig::processString()
     if (splitted.count() >= 2)
         valueString = splitted.at(1).trimmed();
     editMode = getEditMode(nameString);
+    if (valueString.trimmed().isEmpty()){
+        valueString = editMode->toStringFromVariantValue(value);
+    }
     value = editMode->toVariantValueFromString(valueString);
     if (valueString.trimmed().isEmpty())
         valueString = editMode->toStringFromVariantValue(value);
@@ -127,6 +130,7 @@ QString MoresamplerConfig::toString() const
 
 bool MoresamplerConfig::isValidValue() const
 {
+    LeafLogger::LogMessage(QString("Moresampler配置项%1的值为%2，有效性为%3").arg(nameString).arg(value.toString()).arg(editMode->isValidValue(value)));
     return editMode->isValidValue(value);
 }
 
@@ -380,7 +384,7 @@ QVariant MoresamplerConfig::ChoicesEditMode::toVariantValueFromString(QString va
     if (isValidValue(valueString))
         return valueString;
     else
-        return QVariant();
+        return choices.at(0);
 }
 
 QString MoresamplerConfig::ChoicesEditMode::toStringFromVariantValue(QVariant value) const
