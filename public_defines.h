@@ -2,7 +2,7 @@
 #define PUBLIC_DEFINES_H
 #include <QTextCodec>
 constexpr const char* defaultTextCodecName = "Shift-JIS";
-constexpr const char* voicebankManagerVersion = "0.9.1";
+constexpr const char* voicebankManagerVersion = "0.9.2";
 #ifdef _MSC_VER
 #pragma execution_character_set("utf-8")
 #endif

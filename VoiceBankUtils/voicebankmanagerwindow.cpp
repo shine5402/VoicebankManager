@@ -554,7 +554,7 @@ bool VoiceBankManagerWindow::processFileNameConvert(QByteArrayList _fileNameRaw,
             rawCodec = sourceCodec;
             targetCodec = _targetCodec;
             return true;
-                   }
+        }
     }
     dialog->deleteLater();
     return false;
@@ -892,8 +892,12 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
             }
         }
         else
-            sample = voiceBank->getPath() + sample + ".wav";
-        qDebug() << sample;
+        {
+            if (!sample.endsWith(".wav"))
+                sample = voiceBank->getPath() + sample + ".wav";
+            else
+                sample = voiceBank->getPath() + sample;
+        }
         samplePlayer->setAudioRole(QAudio::Role::MusicRole);
         samplePlayer->setMedia(QUrl::fromLocalFile(sample));
         if (samplePlayerProgress)
