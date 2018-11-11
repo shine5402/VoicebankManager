@@ -893,10 +893,13 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
         }
         else
         {
-            if (!sample.endsWith(".wav"))
+            if (QFileInfo(voiceBank->getPath() + sample + ".wav").exists())
                 sample = voiceBank->getPath() + sample + ".wav";
-            else
+            else if (QFileInfo(voiceBank->getPath() + sample).exists())
                 sample = voiceBank->getPath() + sample;
+            else{
+                QMessageBox::critical(this,tr("没有可供播放的样例"),tr("程序无法找到可供播放的样例文件。"));
+                return;}
         }
         samplePlayer->setAudioRole(QAudio::Role::MusicRole);
         samplePlayer->setMedia(QUrl::fromLocalFile(sample));
