@@ -17,8 +17,8 @@ void MoresamplerConfigReader::readConfigs()
         {
             configs.append(new MoresamplerConfig(string));
         }
-    }
     file->close();
+    }
     file->deleteLater();
 }
 

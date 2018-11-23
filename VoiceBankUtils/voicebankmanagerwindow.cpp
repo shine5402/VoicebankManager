@@ -222,7 +222,7 @@ void VoiceBankManagerWindow::readVoiceBanks(){
     else{
         voiceBankHandler->addVoiceBanks(pathList);
     }
-    
+
 }
 void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 {
@@ -257,7 +257,7 @@ void VoiceBankManagerWindow::debugFunction()
 
 
 void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *){
-    
+
 }
 #endif
 
@@ -378,7 +378,7 @@ void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
     if (voiceBank){
         auto url = QUrl("file:" + voiceBank->getPath());
         QDesktopServices::openUrl(url);}
-    
+
 }
 void VoiceBankManagerWindow::openVoiceBankCharacterFileByOS(){
     auto voiceBank = getSelectedVoiceBank();
@@ -782,7 +782,14 @@ void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
             return;
         }
     }
-    if (auto filePath = QFileDialog::getOpenFileName(this,tr("打开一个Moresampler全局配置文件"),QString(),tr("Moresampler 配置文件 (moreconfig.txt)"));!filePath.isEmpty()){
+    auto dialog = new QFileDialog(this);
+    dialog->setFileMode(QFileDialog::AnyFile);
+    dialog->setWindowTitle(tr("打开一个Moresampler全局配置文件"));
+    dialog->setNameFilter(tr("Moresampler 配置文件 (moreconfig.txt)"));
+    QString filePath;
+    if (dialog->exec())
+        filePath = dialog->selectedFiles().at(0);
+    if (!filePath.isEmpty()){
         auto dialog = new MoresamplerConfigsDialog(filePath,MoresamplerConfigReader::Global,this);
         dialog->exec();
     };
