@@ -210,9 +210,9 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
             ui->voicebankReadmeTextBrowser->append(state->getErrorHTMLString());
         }
     }
-    if (voiceBank->getIsTextCodecAutoDetect())
+    if (voiceBank->getHasTextCodecAutoDetected())
     {
-        ui->voicebankReadmeTextBrowser->append(tr("<p style=\"color:blue\">自动探测到的文本编码：character.txt：%1（可信度：%2）。readme.txt：%3（可信度：%4)</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(voiceBank->getCharacterFileAutoDetectConfidence()).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())).arg(voiceBank->getReadmeFileAutoDetectConfidence()));
+        ui->voicebankReadmeTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序使用的文本编码：character.txt：%1。readme.txt：%2</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
     ui->voicebankReadmeTextBrowser->append(QString("<p><pre style=\"color:black\">%1</pre></p>").arg(voiceBank->getReadme()));
     ui->voicebankReadmeTextBrowser->moveCursor(QTextCursor::Start);
@@ -880,7 +880,6 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
-        //FIXME:没有sample的音源的读取出错
         auto sample = voiceBank->getSample();
         if (sample.isEmpty())
         {

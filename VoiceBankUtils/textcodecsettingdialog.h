@@ -31,7 +31,7 @@ private slots:
 
     void on_availableCodecButton_Readme_clicked();
 
-    void on_autoDetectCheckBox_stateChanged(int arg1);
+    void on_autoDetectCheckBox_stateChanged(int state);
 
 private:
     Ui::TextCodecSettingDialog *ui;

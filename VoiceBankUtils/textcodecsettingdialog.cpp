@@ -46,6 +46,8 @@ void TextCodecSettingDialog::setFormInNoDefault()
 }
 void TextCodecSettingDialog::setFormInAutoDetect()
 {
+    if (voiceBank)
+    {
     ui->characterTxtComboBox->setCurrentText(voiceBank->getDefaultCharacterTextCodec()->name());
     ui->readmeTxtComboBox->setCurrentText(voiceBank->getDefaultReadmeTextCodec()->name());
     ui->characterTxtComboBox->setEnabled(false);
@@ -54,11 +56,18 @@ void TextCodecSettingDialog::setFormInAutoDetect()
     ui->readmeTxtLabel->setEnabled(false);
     ui->availableCodecButton_Character->setEnabled(false);
     ui->availableCodecButton_Readme->setEnabled(false);
-    ui->autoDetectCheckBox->setEnabled(false);
+    }
+    else
+    {
+        ui->characterTxtLabel->setText(tr("（备选）character.txt的字符编码"));
+        ui->readmeTxtLabel->setText(tr("（备选）readme.txt的字符编码"));
+    }
 }
 
 void TextCodecSettingDialog::setFormInNoAutoDetect()
 {
+    if (voiceBank)
+    {
     ui->characterTxtComboBox->setEnabled(true);
     ui->readmeTxtComboBox->setEnabled(true);
     ui->characterTxtLabel->setEnabled(true);
@@ -67,7 +76,12 @@ void TextCodecSettingDialog::setFormInNoAutoDetect()
     ui->availableCodecButton_Readme->setEnabled(true);
     ui->characterTxtComboBox->setCurrentText(voiceBank->getCharacterTextCodec()->name());
     ui->readmeTxtComboBox->setCurrentText(voiceBank->getReadmeTextCodec()->name());
-    ui->autoDetectCheckBox->setEnabled(true);
+    }
+    else
+    {
+        ui->characterTxtLabel->setText(tr("character.txt的字符编码"));
+        ui->readmeTxtLabel->setText(tr("readme.txt的字符编码"));
+    }
 }
 void TextCodecSettingDialog::initUI(){
     if (voiceBank){
@@ -135,7 +149,12 @@ void TextCodecSettingDialog::on_availableCodecButton_Readme_clicked()
     AvailableTextCodecDialog::onAvailbaleCodecButtonClicked(ui->readmeTxtComboBox);
 }
 
-void TextCodecSettingDialog::on_autoDetectCheckBox_stateChanged(int arg1)
+void TextCodecSettingDialog::on_autoDetectCheckBox_stateChanged(int state)
 {
-    //TODO:s
+    if (state == Qt::CheckState::Checked){
+        setFormInAutoDetect();
+    }
+    else if (state == Qt::CheckState::Unchecked){
+        setFormInNoAutoDetect();
+    }
 }

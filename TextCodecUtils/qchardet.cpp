@@ -5,7 +5,7 @@ QTextCodec *QChardet::encodingForByteArray(QByteArray data,float* confidence)
     DetectObj *detectObj;
     if ((detectObj = detect_obj_init()) != nullptr)
     {
-        char *charData = new char[static_cast<unsigned int>(data.size()) + 1];
+        char *charData = new char[data.size() + 1];
         strcpy(charData, data.data());
         switch (detect_r(charData,strlen(charData),&detectObj))
         {
@@ -19,7 +19,9 @@ QTextCodec *QChardet::encodingForByteArray(QByteArray data,float* confidence)
         }
         if (confidence)
             *confidence = detectObj->confidence;
-        return QTextCodec::codecForName(detectObj->encoding);
+        auto result = QTextCodec::codecForName(detectObj->encoding);
+        detect_obj_free(&detectObj);
+        return result;
     }
     else
         return nullptr;

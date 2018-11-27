@@ -98,6 +98,11 @@ public:
         explicit CharacterFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() override;
     };
+    class ReadmeFileTextCodecCanNotDetectErrorState : public ErrorState{
+    public:
+        explicit ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
     QString getPixmapPath() const;
 
     QTextCodec *getCharacterTextCodec() const;

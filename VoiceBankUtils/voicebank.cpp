@@ -216,7 +216,7 @@ void VoiceBank::readStaticSettings()
             DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
         }
         if (settings.contains("DefaultTextCodec/AutoDetect")){
-            DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",true).toBool();
+            DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",false).toBool();
         }
         isReadStaticSettings = true;
     }
@@ -295,7 +295,7 @@ void VoiceBank::readSettings(){
                 }
                 else
                     LeafLogger::LogMessage(QString("声库%1的TextCodec/WavFileName不存在。").arg(path));
-                if (isTextCodecAutoDetect || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
+                if ((!isTextCodecFollowDefault && isTextCodecAutoDetect) || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
                     autoDetectTextFileCodecs();
             }
             else
@@ -448,7 +448,7 @@ void VoiceBank::readCharacterFile()
     try
     {
         QString characterString{};
-        if (!isTextCodecFollowDefault)
+        if (!isTextCodecFollowDefault || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
             characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
             characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
@@ -524,7 +524,7 @@ void VoiceBank::readCharacterFile()
 void VoiceBank::readReadme()
 {
     try{
-        if (!isTextCodecFollowDefault)
+        if (!isTextCodecFollowDefault || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
             readme = readTextFileInTextCodec(path + "readme.txt",ReadmeTextCodec);
         else
             readme = readTextFileInTextCodec(path + "readme.txt",DefaultReadmeTextCodec);
@@ -601,12 +601,13 @@ void VoiceBank::autoDetectTextFileCodecs()
     int notAvaliableDetectCount = 0;
     if (!CharacterTextCodec){
         CharacterTextCodec = DefaultCharacterTextCodec;
-        //TODO:errorStates.append()
+        errorStates.append(new CharacterFileTextCodecCanNotDetectErrorState(this));
         ++notAvaliableDetectCount;
     }
     if (!ReadmeTextCodec)
     {
         ReadmeTextCodec = DefaultReadmeTextCodec;
+        errorStates.append(new ReadmeFileTextCodecCanNotDetectErrorState(this));
         ++notAvaliableDetectCount;
     }
     if (notAvaliableDetectCount < 2)
@@ -819,6 +820,34 @@ QString VoiceBank::CharacterFileCanNotOpenErrorState::getErrorHTMLString()
 {
     if (voiceBank){
         return tr("<p style=\"color:red\">错误：无法打开character.txt。或许被其他程序占用了？或者是文件系统问题？日志可以提供更多信息。</p>");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::CharacterFileTextCodecCanNotDetectErrorState(VoiceBank *voiceBank) : ErrorState (voiceBank)
+{
+
+}
+
+QString VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr("<p style=\"color:orange\">警告：无法探测character.txt的编码。程序将使用默认编码。</p>");
+    }
+    else
+        return QString();
+}
+
+VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank *voiceBank) : ErrorState (voiceBank)
+{
+
+}
+
+QString VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr("<p style=\"color:orange\">警告：无法探测readme.txt的编码。程序将使用默认编码。</p>");
     }
     else
         return QString();
