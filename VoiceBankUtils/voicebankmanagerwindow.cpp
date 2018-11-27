@@ -250,9 +250,7 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
 {
-    //    auto voicebank = getSelectedVoiceBank();
-    //    auto dialog = new VoiceBankIconCropDialog(voicebank);
-    //    dialog->exec();
+
 }
 
 

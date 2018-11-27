@@ -15,8 +15,20 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
-    inline int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    inline int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    inline int rowCount(const QModelIndex &parent = QModelIndex()) const override
+    {
+            if (parent.isValid())
+                return 0;
+            return configReader->count();
+    }
+    inline int columnCount(const QModelIndex &parent = QModelIndex()) const override{
+        if (parent.isValid())
+            return 0;
+        if (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global)
+            return TableColumnsGlobal::Count;
+        else
+            return TableColumnsVoicebank::Count;
+    }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 

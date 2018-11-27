@@ -30,6 +30,8 @@
 #include <QMediaPlayer>
 #include <QProgressBar>
 #include <QTranslator>
+#include "./TextCodecUtils/qchardet.h"
+
 namespace Ui {
 class VoiceBankManagerWindow;
 }

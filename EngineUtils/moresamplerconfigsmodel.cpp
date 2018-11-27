@@ -50,24 +50,6 @@ QVariant MoresamplerConfigsModel::headerData(int section, Qt::Orientation orient
 }
 
 
-
-int MoresamplerConfigsModel::rowCount(const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return 0;
-    return configReader->count();
-}
-
-int MoresamplerConfigsModel::columnCount(const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return 0;
-    if (configReader->getConfigFileType() == MoresamplerConfigReader::ConfigFileType::Global)
-        return TableColumnsGlobal::Count;
-    else
-        return TableColumnsVoicebank::Count;
-}
-
 QVariant MoresamplerConfigsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())

@@ -45,7 +45,8 @@ SOURCES += \
     EngineUtils/moresamplerconfigsaddnewmodel.cpp \
     ../ImageCropper/src/imagecropper.cpp \
     VoiceBankUtils/voicebankiconcropdialog.cpp \
-    ../ImageCropper/src/imagecroppercontainer.cpp
+    ../ImageCropper/src/imagecroppercontainer.cpp \
+    TextCodecUtils/qchardet.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -72,7 +73,8 @@ HEADERS += \
     ../ImageCropper/src/imagecropper_e.h \
     ../ImageCropper/src/imagecropper_p.h \
     VoiceBankUtils/voicebankiconcropdialog.h \
-    ../ImageCropper/src/imagecroppercontainer.h
+    ../ImageCropper/src/imagecroppercontainer.h \
+    TextCodecUtils/qchardet.h
 
 FORMS += \
         editorwindow.ui \
@@ -90,11 +92,18 @@ FORMS += \
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }
+win32-g++{
+QMAKE_CXXFLAGS += -std=c++1z
+}
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-RESOURCES += \
-    resource.qrc
+RESOURCES +=
 TRANSLATIONS = LeafOpenUTAUQt_en.ts
+
+unix|win32: LIBS += -L$$PWD/../../libchardet-1.0.5/lib/ -llibchardet -llibchardet.dll
+
+INCLUDEPATH += $$PWD/../../libchardet-1.0.5/include/chardet
+DEPENDPATH += $$PWD/../../libchardet-1.0.5/include/chardet
