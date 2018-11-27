@@ -708,6 +708,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                            "<ul>"
                                            "<li>LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)</li>"
                                            "<li>ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)</li>"
+                                           "<li>libchardet by JoungKyun.Kim (MPL 1.1 or LGPL 2.1)</li>"
                                            "</ul>").arg(voicebankManagerVersion));
 }
 

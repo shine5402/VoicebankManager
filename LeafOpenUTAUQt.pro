@@ -94,6 +94,9 @@ QMAKE_CXXFLAGS += /std:c++17
 }
 win32-g++{
 QMAKE_CXXFLAGS += -std=c++1z
+debug{
+QMAKE_CXXFLAGS += -DNDEBUG
+}
 }
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
