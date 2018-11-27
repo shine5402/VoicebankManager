@@ -77,6 +77,44 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
     return QString();
 }
 
+bool VoiceBank::getDefalutIsTextCodecAutoDetect()
+{
+    return DefalutIsTextCodecAutoDetect;
+}
+
+void VoiceBank::setDefalutIsTextCodecAutoDetect(bool value)
+{
+    DefalutIsTextCodecAutoDetect = value;
+    QSettings settings;
+    settings.setValue("DefaultTextCodec/AutoDetect",DefalutIsTextCodecAutoDetect);
+    LeafLogger::LogMessage(QString("DefaultTextCodec/AutoDetect被设置为%1").arg(DefalutIsTextCodecAutoDetect));
+}
+
+bool VoiceBank::getIsTextCodecAutoDetect() const
+{
+    return isTextCodecAutoDetect;
+}
+
+void VoiceBank::setIsTextCodecAutoDetect(bool value)
+{
+    isTextCodecAutoDetect = value;
+}
+
+float VoiceBank::getCharacterFileAutoDetectConfidence() const
+{
+    return characterFileAutoDetectConfidence;
+}
+
+float VoiceBank::getReadmeFileAutoDetectConfidence() const
+{
+    return readmeFileAutoDetectConfidence;
+}
+
+bool VoiceBank::getHasTextCodecAutoDetected() const
+{
+    return hasTextCodecAutoDetected;
+}
+
 void VoiceBank::writeTextFileInTextCodec(const QString& content, const QString& path,QTextCodec* textCodec){
     QFile* file = new QFile(path);
     if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
@@ -164,7 +202,6 @@ void VoiceBank::readStaticSettings()
 {
     if (!isReadStaticSettings){
         QSettings settings{};
-
         if (settings.contains("DefaultTextCodec/CharacterFile")){
             auto characterCodecName = settings.value("DefaultTextCodec/CharacterFile");
             DefaultCharacterTextCodec = QTextCodec::codecForName(characterCodecName.toByteArray());
@@ -177,6 +214,9 @@ void VoiceBank::readStaticSettings()
         if (settings.contains("DefaultTextCodec/WavFileName")){
             auto readmeCodecName = settings.value("DefaultTextCodec/WavFileName");
             DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
+        }
+        if (settings.contains("DefaultTextCodec/AutoDetect")){
+            DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",true).toBool();
         }
         isReadStaticSettings = true;
     }
@@ -195,11 +235,23 @@ void VoiceBank::readSettings(){
                     auto value = json.value("TextCodec/FollowDefault");
                     if (value.isBool()){
                         setIsFollowDefault(value.toBool());
-                    }else
+                    }
+                    else
                         LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
                 }
                 else
+                {
                     LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不存在。").arg(path));
+                }
+                if (json.contains("TextCodec/AutoDetect"))
+                {
+                    auto value = json.value("TextCodec/AutoDetect");
+                    isTextCodecAutoDetect = value.toBool(true);
+                }
+                else
+                {
+                    LeafLogger::LogMessage(QString("声库%1的TextCodec/AutoDetect不存在。").arg(path));
+                }
                 if (json.contains("TextCodec/CharacterFile"))
                 {
 
@@ -231,7 +283,6 @@ void VoiceBank::readSettings(){
                     LeafLogger::LogMessage(QString("声库%1的TextCodec/ReadmeFile不存在。").arg(path));
                 if (json.contains("TextCodec/WavFileName"))
                 {
-
                     auto value = json.value("TextCodec/WavFileName");
                     if (value.isString()){
                         auto value_string = value.toString();
@@ -244,6 +295,8 @@ void VoiceBank::readSettings(){
                 }
                 else
                     LeafLogger::LogMessage(QString("声库%1的TextCodec/WavFileName不存在。").arg(path));
+                if (isTextCodecAutoDetect || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
+                    autoDetectTextFileCodecs();
             }
             else
             {
@@ -312,7 +365,6 @@ void VoiceBank::changeImage(const QPixmap &_image,QString newImageFileName)
     QPainter painter(&imageWhiteBackgroud);
     painter.drawImage(0, 0, image);
     imageWhiteBackgroud.save(path + newImageFileName);
-    //image.save(path + newImageFileName);
     imagePathRelative = newImageFileName;
     changeCharacterFile();
 }
@@ -351,6 +403,7 @@ void VoiceBank::saveSettings(){
     else
     {
         json.insert("TextCodec/FollowDefault",false);
+        json.insert("TextCodec/AutoDetect",isTextCodecAutoDetect);
         json.insert("TextCodec/CharacterFile",QString::fromUtf8(CharacterTextCodec->name()));
         json.insert("TextCodec/ReadmeFile",QString::fromUtf8(ReadmeTextCodec->name()));
         json.insert("TextCodec/WavFileName",QString::fromUtf8(wavFileNameTextCodec->name()));
@@ -541,6 +594,25 @@ void VoiceBank::changeCharacterFile()
     }
 }
 
+void VoiceBank::autoDetectTextFileCodecs()
+{
+    CharacterTextCodec = QChardet::encodingForFile(path + "character.txt",&characterFileAutoDetectConfidence);
+    ReadmeTextCodec = QChardet::encodingForFile(path + "readme.txt",&readmeFileAutoDetectConfidence);
+    int notAvaliableDetectCount = 0;
+    if (!CharacterTextCodec){
+        CharacterTextCodec = DefaultCharacterTextCodec;
+        //TODO:errorStates.append()
+        ++notAvaliableDetectCount;
+    }
+    if (!ReadmeTextCodec)
+    {
+        ReadmeTextCodec = DefaultReadmeTextCodec;
+        ++notAvaliableDetectCount;
+    }
+    if (notAvaliableDetectCount < 2)
+        hasTextCodecAutoDetected = true;
+}
+
 bool VoiceBank::getIsFollowDefault() const
 {
     return isTextCodecFollowDefault;
@@ -566,6 +638,7 @@ void VoiceBank::clear()
     }
     errorStates.clear();
     clearWavFileReadStage();
+    hasTextCodecAutoDetected = false;
 }
 
 QString VoiceBank::getSample() const

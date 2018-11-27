@@ -22,6 +22,7 @@ public:
     QTextCodec* getCharacterTextCodec();
     QTextCodec* getReadmeTextCodec();
     bool getIsFollowDefaultCodec();
+    bool getIsAutoDetect();
 private slots:
 
     void on_followDefaultTextCodecCheckBox_stateChanged(int state);
@@ -30,6 +31,8 @@ private slots:
 
     void on_availableCodecButton_Readme_clicked();
 
+    void on_autoDetectCheckBox_stateChanged(int arg1);
+
 private:
     Ui::TextCodecSettingDialog *ui;
     VoiceBank* voiceBank = nullptr;
@@ -37,6 +40,8 @@ private:
     void initUI();
     void setFormInDefault();
     void setFormInNoDefault();
+    void setFormInAutoDetect();
+    void setFormInNoAutoDetect();
 };
 
 #endif // TEXTCODECSETTINGDIALOG_H

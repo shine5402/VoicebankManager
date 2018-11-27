@@ -24,3 +24,17 @@ QTextCodec *QChardet::encodingForByteArray(QByteArray data,float* confidence)
     else
         return nullptr;
 }
+
+QTextCodec *QChardet::encodingForFile(QFile *file, float *confidence)
+{
+    if (!file->isOpen())
+        file->open(QFile::ReadOnly | QFile::Text);
+    auto byteArray = file->readAll();
+    return encodingForByteArray(byteArray,confidence);
+}
+
+QTextCodec *QChardet::encodingForFile(QString fileName, float *confidence)
+{
+    auto file = new QFile(fileName);
+    return encodingForFile(file,confidence);
+}

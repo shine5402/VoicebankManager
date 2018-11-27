@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>484</width>
-    <height>300</height>
+    <height>306</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,14 +19,7 @@
      <property name="topMargin">
       <number>10</number>
      </property>
-     <item row="3" column="0">
-      <widget class="QLabel" name="readmeTxtLabel">
-       <property name="text">
-        <string>readme.txt的字符编码</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QComboBox" name="readmeTxtComboBox">
        <property name="editable">
         <bool>true</bool>
@@ -53,21 +46,21 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="followDefaultTextCodecLabel">
+     <item row="4" column="0">
+      <widget class="QLabel" name="readmeTxtLabel">
        <property name="text">
-        <string>跟随默认编码？</string>
+        <string>readme.txt的字符编码</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="characterTxtLabel">
        <property name="text">
         <string>character.txt的字符编码</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QComboBox" name="characterTxtComboBox">
        <property name="editable">
         <bool>true</bool>
@@ -94,20 +87,31 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QCheckBox" name="followDefaultTextCodecCheckBox"/>
-     </item>
-     <item row="3" column="2">
+     <item row="4" column="2">
       <widget class="QPushButton" name="availableCodecButton_Readme">
        <property name="text">
         <string>支持的编码</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="2" column="2">
       <widget class="QPushButton" name="availableCodecButton_Character">
        <property name="text">
         <string>支持的编码</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QCheckBox" name="followDefaultTextCodecCheckBox">
+       <property name="text">
+        <string>跟随默认编码？</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="3">
+      <widget class="QCheckBox" name="autoDetectCheckBox">
+       <property name="text">
+        <string>自动探测？（仅对文本文件生效）</string>
        </property>
       </widget>
      </item>

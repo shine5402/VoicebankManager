@@ -16,6 +16,7 @@
 #include <../LeafPublicQtClasses/leaflogger.h>
 #include <public_defines.h>
 #include <QPainter>
+#include "./TextCodecUtils/qchardet.h"
 
 class VoiceBank : public QObject
 {
@@ -92,6 +93,11 @@ public:
         explicit CharacterFileCanNotOpenErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() override;
     };
+    class CharacterFileTextCodecCanNotDetectErrorState : public ErrorState{
+    public:
+        explicit CharacterFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
     QString getPixmapPath() const;
 
     QTextCodec *getCharacterTextCodec() const;
@@ -150,6 +156,18 @@ public:
 
     QString getSample() const;
 
+    static bool getDefalutIsTextCodecAutoDetect();
+    static void setDefalutIsTextCodecAutoDetect(bool value);
+
+    bool getIsTextCodecAutoDetect() const;
+    void setIsTextCodecAutoDetect(bool value);
+
+    float getCharacterFileAutoDetectConfidence() const;
+
+    float getReadmeFileAutoDetectConfidence() const;
+
+    bool getHasTextCodecAutoDetected() const;
+
 private:
     QImage image;
     QString imagePath;
@@ -163,15 +181,21 @@ private:
     QTextCodec *ReadmeTextCodec;
     QTextCodec *wavFileNameTextCodec;
     bool isTextCodecFollowDefault = true;
+    bool isTextCodecAutoDetect = true;
+    bool hasTextCodecAutoDetected = false;
+    float characterFileAutoDetectConfidence = 0.0f;
+    float readmeFileAutoDetectConfidence = 0.0f;
     QList<ErrorState *> errorStates;
     void readCharacterFile();
     void readReadme();
     void changeCharacterFile();
+    void autoDetectTextFileCodecs();
     QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
     static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec *DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline bool isReadStaticSettings = false;
+    static inline bool DefalutIsTextCodecAutoDetect = false;
     void readSettings();
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};

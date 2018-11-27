@@ -210,6 +210,10 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
             ui->voicebankReadmeTextBrowser->append(state->getErrorHTMLString());
         }
     }
+    if (voiceBank->getIsTextCodecAutoDetect())
+    {
+        ui->voicebankReadmeTextBrowser->append(tr("<p style=\"color:blue\">自动探测到的文本编码：character.txt：%1（可信度：%2）。readme.txt：%3（可信度：%4)</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(voiceBank->getCharacterFileAutoDetectConfidence()).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())).arg(voiceBank->getReadmeFileAutoDetectConfidence()));
+    }
     ui->voicebankReadmeTextBrowser->append(QString("<p><pre style=\"color:black\">%1</pre></p>").arg(voiceBank->getReadme()));
     ui->voicebankReadmeTextBrowser->moveCursor(QTextCursor::Start);
 }
@@ -467,6 +471,7 @@ void VoiceBankManagerWindow::setCodecForVoiceBankActionSlot(){
             voiceBank->setIsFollowDefault(dialog->getIsFollowDefaultCodec());
             voiceBank->setCharacterTextCodec(dialog->getCharacterTextCodec());
             voiceBank->setReadmeTextCodec(dialog->getReadmeTextCodec());
+            voiceBank->setIsTextCodecAutoDetect(dialog->getIsAutoDetect());
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
         }
@@ -652,6 +657,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
     if (dialogCode == QDialog::Accepted){
         VoiceBank::setDefaultCharacterTextCodec(dialog->getCharacterTextCodec());
         VoiceBank::setDefaultReadmeTextCodec(dialog->getReadmeTextCodec());
+        VoiceBank::setDefalutIsTextCodecAutoDetect(dialog->getIsAutoDetect());
         auto clickedButton = QMessageBox::information(this,"默认文本读取编码被更改","您更改了默认的读取用文本编码，是否立即重载音源库列表？",QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksList();

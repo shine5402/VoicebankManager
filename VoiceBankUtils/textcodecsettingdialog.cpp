@@ -29,6 +29,7 @@ void TextCodecSettingDialog::setFormInDefault()
     ui->readmeTxtLabel->setEnabled(false);
     ui->availableCodecButton_Character->setEnabled(false);
     ui->availableCodecButton_Readme->setEnabled(false);
+    ui->autoDetectCheckBox->setEnabled(false);
 }
 
 void TextCodecSettingDialog::setFormInNoDefault()
@@ -41,8 +42,33 @@ void TextCodecSettingDialog::setFormInNoDefault()
     ui->availableCodecButton_Readme->setEnabled(true);
     ui->characterTxtComboBox->setCurrentText(voiceBank->getCharacterTextCodec()->name());
     ui->readmeTxtComboBox->setCurrentText(voiceBank->getReadmeTextCodec()->name());
+    ui->autoDetectCheckBox->setEnabled(true);
+}
+void TextCodecSettingDialog::setFormInAutoDetect()
+{
+    ui->characterTxtComboBox->setCurrentText(voiceBank->getDefaultCharacterTextCodec()->name());
+    ui->readmeTxtComboBox->setCurrentText(voiceBank->getDefaultReadmeTextCodec()->name());
+    ui->characterTxtComboBox->setEnabled(false);
+    ui->characterTxtLabel->setEnabled(false);
+    ui->readmeTxtComboBox->setEnabled(false);
+    ui->readmeTxtLabel->setEnabled(false);
+    ui->availableCodecButton_Character->setEnabled(false);
+    ui->availableCodecButton_Readme->setEnabled(false);
+    ui->autoDetectCheckBox->setEnabled(false);
 }
 
+void TextCodecSettingDialog::setFormInNoAutoDetect()
+{
+    ui->characterTxtComboBox->setEnabled(true);
+    ui->readmeTxtComboBox->setEnabled(true);
+    ui->characterTxtLabel->setEnabled(true);
+    ui->readmeTxtLabel->setEnabled(true);
+    ui->availableCodecButton_Character->setEnabled(true);
+    ui->availableCodecButton_Readme->setEnabled(true);
+    ui->characterTxtComboBox->setCurrentText(voiceBank->getCharacterTextCodec()->name());
+    ui->readmeTxtComboBox->setCurrentText(voiceBank->getReadmeTextCodec()->name());
+    ui->autoDetectCheckBox->setEnabled(true);
+}
 void TextCodecSettingDialog::initUI(){
     if (voiceBank){
         ui->voiceBankLabel->setText(voiceBank->getName());
@@ -60,9 +86,9 @@ void TextCodecSettingDialog::initUI(){
     {
         ui->voiceBankLabel->setText(tr("（默认编码）"));
         ui->followDefaultTextCodecCheckBox->setVisible(false);
-        ui->followDefaultTextCodecLabel->setVisible(false);
         ui->characterTxtComboBox->setCurrentText(VoiceBank::getDefaultCharacterTextCodec()->name());
         ui->readmeTxtComboBox->setCurrentText(VoiceBank::getDefaultReadmeTextCodec()->name());
+        ui->autoDetectCheckBox->setChecked(VoiceBank::getDefalutIsTextCodecAutoDetect());
     }
 }
 
@@ -79,6 +105,11 @@ QTextCodec *TextCodecSettingDialog::getReadmeTextCodec()
 bool TextCodecSettingDialog::getIsFollowDefaultCodec()
 {
     return ui->followDefaultTextCodecCheckBox->isChecked();
+}
+
+bool TextCodecSettingDialog::getIsAutoDetect()
+{
+    return ui->autoDetectCheckBox->isChecked();
 }
 
 
@@ -102,4 +133,9 @@ void TextCodecSettingDialog::on_availableCodecButton_Character_clicked()
 void TextCodecSettingDialog::on_availableCodecButton_Readme_clicked()
 {
     AvailableTextCodecDialog::onAvailbaleCodecButtonClicked(ui->readmeTxtComboBox);
+}
+
+void TextCodecSettingDialog::on_autoDetectCheckBox_stateChanged(int arg1)
+{
+    //TODO:s
 }
