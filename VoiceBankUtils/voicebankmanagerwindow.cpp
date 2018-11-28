@@ -638,7 +638,7 @@ void VoiceBankManagerWindow::on_actionMonitor_Folders_triggered()
     auto dialogCode = dialog->exec();
     if (dialogCode == 1 && monitorFolders != dialog->getMonitorFolders()){
         monitorFolders = dialog->getMonitorFolders();
-        auto clickedButton = QMessageBox::information(this,"监视文件夹列表被更改","您更改了监视文件夹列表，是否立即重载音源库列表？",QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+        auto clickedButton = QMessageBox::information(this,tr("监视文件夹列表被更改"),tr("您更改了监视文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksList();
     }
@@ -658,7 +658,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
         VoiceBank::setDefaultCharacterTextCodec(dialog->getCharacterTextCodec());
         VoiceBank::setDefaultReadmeTextCodec(dialog->getReadmeTextCodec());
         VoiceBank::setDefalutIsTextCodecAutoDetect(dialog->getIsAutoDetect());
-        auto clickedButton = QMessageBox::information(this,"默认文本读取编码被更改","您更改了默认的读取用文本编码，是否立即重载音源库列表？",QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+        auto clickedButton = QMessageBox::information(this,tr("默认文本读取编码被更改"),tr("您更改了默认的读取用文本编码，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksList();
     }
