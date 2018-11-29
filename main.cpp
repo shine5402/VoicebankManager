@@ -5,8 +5,7 @@
 #include <../LeafPublicQtClasses/leaflogger.h>
 #include <QLibraryInfo>
 #include <QTextCodec>
-#define VOICEBANK_MANAGER_ONLY
-#define NO_EDITOR
+#define VOICEBANK_MANAGER
 #ifdef _MSC_VER
 #pragma execution_character_set("utf-8")
 #endif
@@ -18,11 +17,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Leaf UTAU Qt");
     LeafLogger::LogInit();
 
-#ifndef NO_EDITOR
+#ifdef EDITOR
     EditorWindow w;
     w.show();
 #endif
-#ifdef VOICEBANK_MANAGER_ONLY
+#ifdef VOICEBANK_MANAGER
     VoiceBankManagerWindow v;
     v.show();
     v.loadVoiceBanksList();
