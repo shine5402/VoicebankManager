@@ -209,6 +209,13 @@ private:
     //bool firstRead = true;
     int ReadCount = 0;
     void writeTextFileInTextCodec(const QString &content, const QString &path, QTextCodec *textCodec);
+    QString category;
+    QStringList labels;
+    bool needRecommmendCategoryAndLabels;
+    QString recommmendCategory;
+    QStringList recommendLabels;
+    void readTextCodecFollowDefault(QJsonObject json);
+
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);

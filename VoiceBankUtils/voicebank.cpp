@@ -222,6 +222,22 @@ void VoiceBank::readStaticSettings()
     }
 }
 
+void VoiceBank::readTextCodecFollowDefault(QJsonObject json)
+{
+    if (json.contains("TextCodec/FollowDefault")){
+        auto value = json.value("TextCodec/FollowDefault");
+        if (value.isBool()){
+            setIsFollowDefault(value.toBool());
+        }
+        else
+            LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
+    }
+    else
+    {
+        LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不存在。").arg(path));
+    }
+}
+
 void VoiceBank::readSettings(){
     LeafLogger::LogMessage(QString("开始读取%1的声库单独设置。").arg(path));
     try{
@@ -231,18 +247,8 @@ void VoiceBank::readSettings(){
         if (!json_doc.isNull()){
             auto json = json_doc.object();
             if (!json.isEmpty()){
-                if (json.contains("TextCodec/FollowDefault")){
-                    auto value = json.value("TextCodec/FollowDefault");
-                    if (value.isBool()){
-                        setIsFollowDefault(value.toBool());
-                    }
-                    else
-                        LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
-                }
-                else
-                {
-                    LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不存在。").arg(path));
-                }
+                readTextCodecFollowDefault(json);
+                //TODO:拆掉下面的操作
                 if (json.contains("TextCodec/AutoDetect"))
                 {
                     auto value = json.value("TextCodec/AutoDetect");
@@ -297,6 +303,7 @@ void VoiceBank::readSettings(){
                     LeafLogger::LogMessage(QString("声库%1的TextCodec/WavFileName不存在。").arg(path));
                 if ((!isTextCodecFollowDefault && isTextCodecAutoDetect) || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
                     autoDetectTextFileCodecs();
+
             }
             else
             {
