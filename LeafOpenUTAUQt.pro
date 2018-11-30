@@ -47,7 +47,10 @@ SOURCES += \
     VoiceBankUtils/voicebankiconcropdialog.cpp \
     ../ImageCropper/src/imagecroppercontainer.cpp \
     TextCodecUtils/qchardet.cpp \
-    categoriesandlabelslistwidget.cpp
+    VoiceBankUtils/categoriesandlabelstreeview.cpp \
+    VoiceBankUtils/categoriesandlabelslistwidget.cpp \
+    VoiceBankUtils/categoriesmodel.cpp \
+    VoiceBankUtils/labelsmodel.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -76,7 +79,10 @@ HEADERS += \
     VoiceBankUtils/voicebankiconcropdialog.h \
     ../ImageCropper/src/imagecroppercontainer.h \
     TextCodecUtils/qchardet.h \
-    categoriesandlabelslistwidget.h
+    VoiceBankUtils/categoriesandlabelstreeview.h \
+    VoiceBankUtils/categoriesandlabelslistwidget.h \
+    VoiceBankUtils/categoriesmodel.h \
+    VoiceBankUtils/labelsmodel.h
 
 FORMS += \
         editorwindow.ui \
@@ -91,7 +97,7 @@ FORMS += \
     EngineUtils/moresamplerconfigaddnewdialog.ui \
     VoiceBankUtils/voicebankiconcropdialog.ui \
     ../ImageCropper/src/imagecroppercontainer.ui \
-    categoriesandlabelslistwidget.ui
+    VoiceBankUtils/categoriesandlabelslistwidget.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }

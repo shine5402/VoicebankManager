@@ -81,6 +81,9 @@
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
         </widget>
        </item>
        <item>
@@ -100,6 +103,9 @@
         <widget class="QListView" name="labelListView">
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
         </widget>
        </item>

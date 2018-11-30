@@ -17,6 +17,7 @@
 #include <public_defines.h>
 #include <QPainter>
 #include "./TextCodecUtils/qchardet.h"
+#include <QJsonArray>
 
 class VoiceBank : public QObject
 {
@@ -36,6 +37,65 @@ public:
     void setPath(const QString &value);
 
     void readFromPath();
+
+    QString getPixmapPath() const;
+
+    QTextCodec *getCharacterTextCodec() const;
+    void setCharacterTextCodec(QTextCodec *value);
+
+    QTextCodec *getReadmeTextCodec() const;
+    void setReadmeTextCodec(QTextCodec *value);
+
+    static void setDefaultCharacterTextCodec(QTextCodec *value);
+    static void setDefaultReadmeTextCodec(QTextCodec *value);
+
+    static QTextCodec *getDefaultCharacterTextCodec();
+
+    static QTextCodec *getDefaultReadmeTextCodec();
+    static void readStaticSettings();
+
+    bool getIsFollowDefault() const;
+    void setIsFollowDefault(bool value);
+    void saveSettings();
+    bool getIsWavFileNameReaded() const;
+
+    static QTextCodec *getDefaultWavFileNameTextCodec();
+    static void setDefaultWavFileNameTextCodec(QTextCodec *value);
+
+    void readWavFileName();
+
+    QTextCodec *getWavFileNameTextCodec() const;
+    void setWavFileNameTextCodec(QTextCodec *value);
+
+    QStringList getWavFileName() const;
+
+    QByteArrayList getWavFileNameRaw() const;
+    void clearWavFileReadStage();
+    void decodeWavFileName();
+
+    QStringList getWavFilePath() const;
+
+    bool isFirstRead() const{
+        return ReadCount == 1 || ReadCount == 0;
+    }
+    void rename(const QString& name);
+    void changeImage(const QPixmap& _image, QString newImageFileName = "icon.jpg");
+    void clear();
+
+    QString getSample() const;
+
+    static bool getDefalutIsTextCodecAutoDetect();
+    static void setDefalutIsTextCodecAutoDetect(bool value);
+
+    bool getIsTextCodecAutoDetect() const;
+    void setIsTextCodecAutoDetect(bool value);
+
+    float getCharacterFileAutoDetectConfidence() const;
+
+    float getReadmeFileAutoDetectConfidence() const;
+
+    bool getHasTextCodecAutoDetected() const;
+
     //错误标识类
     class ErrorState{
     public:
@@ -103,75 +163,13 @@ public:
         explicit ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() override;
     };
-    QString getPixmapPath() const;
-
-    QTextCodec *getCharacterTextCodec() const;
-    void setCharacterTextCodec(QTextCodec *value);
-
-    QTextCodec *getReadmeTextCodec() const;
-    void setReadmeTextCodec(QTextCodec *value);
-    class FileNotExists : public std::runtime_error{
-    public:
-        FileNotExists():std::runtime_error("File not exists."){}
-    };
-    class FileCanNotOpen : public std::runtime_error{
-    public:
-        FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
-        const QString& QFileError() const{return _QFileError;}
-    private:
-        QString _QFileError;
-    };
-    static void setDefaultCharacterTextCodec(QTextCodec *value);
-    static void setDefaultReadmeTextCodec(QTextCodec *value);
-
-    static QTextCodec *getDefaultCharacterTextCodec();
-
-    static QTextCodec *getDefaultReadmeTextCodec();
-    static void readStaticSettings();
-
-    bool getIsFollowDefault() const;
-    void setIsFollowDefault(bool value);
-    void saveSettings();
-    bool getIsWavFileNameReaded() const;
-
-    static QTextCodec *getDefaultWavFileNameTextCodec();
-    static void setDefaultWavFileNameTextCodec(QTextCodec *value);
-
-    void readWavFileName();
-
-    QTextCodec *getWavFileNameTextCodec() const;
-    void setWavFileNameTextCodec(QTextCodec *value);
-
-    QStringList getWavFileName() const;
-
-    // QHash<QString, QString> getWavFileNameReDecoded() const;
-
-    QByteArrayList getWavFileNameRaw() const;
-    void clearWavFileReadStage();
-    void decodeWavFileName();
-
-    QStringList getWavFilePath() const;
     QList<ErrorState *> getErrorStates() const;
-    bool isFirstRead() const{
-        return ReadCount == 1 || ReadCount == 0;
-    }
-    void rename(const QString& name);
-    void changeImage(const QPixmap& _image, QString newImageFileName = "icon.jpg");
-    void clear();
+    QString getCategory() const;
 
-    QString getSample() const;
+    void setCategory(const QString &value);
 
-    static bool getDefalutIsTextCodecAutoDetect();
-    static void setDefalutIsTextCodecAutoDetect(bool value);
-
-    bool getIsTextCodecAutoDetect() const;
-    void setIsTextCodecAutoDetect(bool value);
-
-    float getCharacterFileAutoDetectConfidence() const;
-
-    float getReadmeFileAutoDetectConfidence() const;
-
-    bool getHasTextCodecAutoDetected() const;
+    QStringList getLabels() const;
+    void setLabels(const QStringList &value);
 
 private:
     QImage image;
@@ -214,13 +212,36 @@ private:
     bool needRecommmendCategoryAndLabels;
     QString recommmendCategory;
     QStringList recommendLabels;
-    void readTextCodecFollowDefault(QJsonObject json);
+    void readTextCodec_FollowDefault(QJsonObject json);
 
+    void readTextCodec_AutoDetect(QJsonObject json);
+
+    void readTextCodec_ChracterFile(QJsonObject json);
+
+    void readTextCodec_ReadmeFile(QJsonObject json);
+
+    void readTextCodec_WavFileName(QJsonObject json);
+
+    void readCategory(QJsonObject json);
+    class FileNotExists : public std::runtime_error{
+    public:
+        FileNotExists():std::runtime_error("File not exists."){}
+    };
+    class FileCanNotOpen : public std::runtime_error{
+    public:
+        FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
+        const QString& QFileError() const{return _QFileError;}
+    private:
+        QString _QFileError;
+    };
+    void readLabels(QJsonObject json);
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);
     void backupImageFileBecauseExists(VoiceBank *);
     void cannotBackupImageFile(VoiceBank *);
+    void categoryChanged();
+    void labelsChanged();
 };
 
 

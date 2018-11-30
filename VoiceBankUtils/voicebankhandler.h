@@ -65,6 +65,9 @@ signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
     void backupImageFileBecauseExists(VoiceBank *);
     void cannotBackupImageFile(VoiceBank *);
+    void categoriesChanged();
+    void labelsChanged();
+    void categroiesAndLabelsChanged();
 public slots:
 };
 
