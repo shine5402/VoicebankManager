@@ -31,6 +31,7 @@
 #include <QProgressBar>
 #include <QTranslator>
 #include "./TextCodecUtils/qchardet.h"
+#include "categoriesandlabelslistwidget.h"
 
 namespace Ui {
 class VoiceBankManagerWindow;
@@ -88,6 +89,7 @@ private:
     void removeAllTranslators();
     bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *rawCodec, QTextCodec *targetCodec);
 
+    CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
 private slots:
 #ifndef NDEBUG
     void debugFunction();

@@ -69,6 +69,13 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     connect(ui->actionDon_t_translate,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
 
     createVoiceBanksTableMenu();
+
+    QGridLayout* layout = qobject_cast<QGridLayout *>(ui->centralwidget->layout());
+    if (layout)
+    {
+        //FIXME:布局问题
+        layout->addWidget(categoriesAndLabelsListWidget,layout->rowCount(),0);
+    }
 }
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())

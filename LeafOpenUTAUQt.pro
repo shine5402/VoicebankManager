@@ -47,7 +47,6 @@ SOURCES += \
     VoiceBankUtils/voicebankiconcropdialog.cpp \
     ../ImageCropper/src/imagecroppercontainer.cpp \
     TextCodecUtils/qchardet.cpp \
-    VoiceBankUtils/categoriesandlabelstreeview.cpp \
     VoiceBankUtils/categoriesandlabelslistwidget.cpp \
     VoiceBankUtils/categoriesmodel.cpp \
     VoiceBankUtils/labelsmodel.cpp
@@ -79,7 +78,6 @@ HEADERS += \
     VoiceBankUtils/voicebankiconcropdialog.h \
     ../ImageCropper/src/imagecroppercontainer.h \
     TextCodecUtils/qchardet.h \
-    VoiceBankUtils/categoriesandlabelstreeview.h \
     VoiceBankUtils/categoriesandlabelslistwidget.h \
     VoiceBankUtils/categoriesmodel.h \
     VoiceBankUtils/labelsmodel.h
@@ -103,9 +101,7 @@ QMAKE_CXXFLAGS += /std:c++17
 }
 win32-g++{
 QMAKE_CXXFLAGS += -std=c++1z
-debug{
-QMAKE_CXXFLAGS += -DNDEBUG
-}
+QMAKE_CXXFLAGS_RELEASE += -DNDEBUG
 }
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

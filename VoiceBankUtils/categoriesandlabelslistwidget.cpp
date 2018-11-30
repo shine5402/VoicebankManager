@@ -17,7 +17,6 @@ CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoiceBankHandler *h
 CategoriesAndLabelsListWidget::~CategoriesAndLabelsListWidget()
 {
     saveSettingsCategoriesAndLabels();
-    readCategoriesFromVoicebankHandler();
     delete ui;
 }
 

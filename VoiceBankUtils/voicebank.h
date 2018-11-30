@@ -171,6 +171,17 @@ public:
     QStringList getLabels() const;
     void setLabels(const QStringList &value);
 
+    class FileNotExists : public std::runtime_error{
+    public:
+        FileNotExists():std::runtime_error("File not exists."){}
+    };
+    class FileCanNotOpen : public std::runtime_error{
+    public:
+        FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
+        const QString& QFileError() const{return _QFileError;}
+    private:
+        QString _QFileError;
+    };
 private:
     QImage image;
     QString imagePath;
@@ -223,17 +234,7 @@ private:
     void readTextCodec_WavFileName(QJsonObject json);
 
     void readCategory(QJsonObject json);
-    class FileNotExists : public std::runtime_error{
-    public:
-        FileNotExists():std::runtime_error("File not exists."){}
-    };
-    class FileCanNotOpen : public std::runtime_error{
-    public:
-        FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
-        const QString& QFileError() const{return _QFileError;}
-    private:
-        QString _QFileError;
-    };
+
     void readLabels(QJsonObject json);
 signals:
     void readDone(VoiceBank *);
