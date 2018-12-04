@@ -50,6 +50,16 @@ void CategoriesAndLabelsListWidget::saveSettingsCategoriesAndLabels()
     }
 }
 
+int CategoriesAndLabelsListWidget::getNoLabelsCount() const
+{
+    return noLabelsCount;
+}
+
+int CategoriesAndLabelsListWidget::getNoCategoriesCount() const
+{
+    return noCategoriesCount;
+}
+
 void CategoriesAndLabelsListWidget::readCategoriesFromVoicebankHandler()
 {
     for (int i = 0;i < handler->count();++i)
@@ -59,6 +69,8 @@ void CategoriesAndLabelsListWidget::readCategoriesFromVoicebankHandler()
         categoriesUsedCount.insert(category,categoriesUsedCount.value(category,0));
         if (!category.isEmpty() && !categories.contains(category))
             categories.append(category);
+        if (category.isEmpty())
+            ++noCategoriesCount;
     }
     emit categoriesChanged();
 }
@@ -73,8 +85,27 @@ void CategoriesAndLabelsListWidget::readLabelsFromVoiceBankHandler()
             labelsUsedCount.insert(label,labelsUsedCount.value(label,0));
         if (!labels_vb.isEmpty())
             labels.append(labels_vb);
+        else
+            ++noLabelsCount;
     }
     emit labelsChanged();
+}
+
+QStringList CategoriesAndLabelsListWidget::getLabels() const
+{
+    return labels;
+}
+
+void CategoriesAndLabelsListWidget::addCategory(const QString &category)
+{
+    if (!categories.contains(category))
+        categories.append(category);
+    emit categoriesChanged();
+}
+
+QStringList CategoriesAndLabelsListWidget::getCategories() const
+{
+    return categories;
 }
 
 void CategoriesAndLabelsListWidget::removeUnusedCategories()

@@ -15,7 +15,6 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     //设置音源信息显示区域
     ui->voiceBankBriefInfomationWidget->setVisible(false);
-    ui->voiceBankBriefInfomationWidget->setTitleBarWidget(new QWidget(this));
     //确保样式与父统一
     auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
     readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
@@ -70,12 +69,26 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     createVoiceBanksTableMenu();
 
-    QGridLayout* layout = qobject_cast<QGridLayout *>(ui->centralwidget->layout());
-    if (layout)
-    {
-        //FIXME:布局问题
-        layout->addWidget(categoriesAndLabelsListWidget,layout->rowCount(),0);
-    }
+    //处理分裂器布局
+    //横向
+    ui->splitter_2->insertWidget(0,categoriesAndLabelsListWidget);
+    QWidget *hWidget0 = ui->splitter_2->widget(0);
+    auto sizePolicy0 = hWidget0->sizePolicy();
+    sizePolicy0.setHorizontalStretch(1);
+    hWidget0->setSizePolicy(sizePolicy0);
+    QWidget *hWidget1 = ui->splitter_2->widget(1);
+    auto sizePolicy1 = hWidget1->sizePolicy();
+    sizePolicy1.setHorizontalStretch(5);
+    hWidget1->setSizePolicy(sizePolicy1);
+    //纵向
+    ui->splitter->setStretchFactor(0,2);
+    ui->splitter->setStretchFactor(1,1);
+
+    //连接分类和标签相关信号与handler
+    connect(voiceBankHandler,SIGNAL(categoriesChanged()),categoriesAndLabelsListWidget,SLOT(readCategoriesFromVoicebankHandler()));
+    connect(voiceBankHandler,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
+    connect(voiceBankHandler,SIGNAL(labelsChanged()),categoriesAndLabelsListWidget,SLOT(readLabelsFromVoiceBankHandler()));
+
 }
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())
@@ -250,6 +263,8 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     if (voiceBank->isFirstRead())
         if (++voiceBankReadDoneCount == voiceBankPathsCount){
             setUIAfterVoiceBanksReadDone();
+            categoriesAndLabelsListWidget->readCategoriesFromVoicebankHandler();
+            categoriesAndLabelsListWidget->readLabelsFromVoiceBankHandler();
         }
     auto name  = voiceBank->getName();
     if (!name.isEmpty())
@@ -272,11 +287,8 @@ void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *){
 
 void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 {
-    if (voiceBanksTableWidgetMenu)
-    {
-        voiceBanksTableWidgetMenu->deleteLater();
-        voiceBanksTableWidgetMenu = new QMenu(this);
-    }
+    voiceBanksTableWidgetMenu->clear();
+
     auto openSubMenu = new QMenu(tr("打开..."),this);
 
     auto openPathAction = new QAction(tr("打开音源文件夹"),this);
@@ -365,12 +377,51 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
     voiceBanksTableWidgetMenu->addMenu(engineMenu);
 
+    createVoiceBanksCategoriesSubMenu();
+
+    voiceBanksTableWidgetMenu->addMenu(voiceBankCategoriesSubMenu);
+
     auto reloadAction = new QAction(tr("重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
     reloadAction->setStatusTip(tr("重新从硬盘加载此音源。"));
     voiceBanksTableWidgetMenu->addAction(reloadAction);
 
 }
+void VoiceBankManagerWindow::createVoiceBanksCategoriesSubMenu(){
+    voiceBankCategoriesSubMenu->clear();
+    voiceBankCategoriesActionGroup->deleteLater();
+    voiceBankCategoriesActionGroup = new QActionGroup(this);
+
+    auto addNewCategoryAction = new QAction(tr("新建一个分类..."),this);
+    connect(addNewCategoryAction,SIGNAL(triggered(bool)),this,SLOT(addNewCategoryActionSlot()));
+    voiceBankCategoriesSubMenu->addAction(addNewCategoryAction);
+
+    voiceBankCategoriesSubMenu->addSeparator();
+    auto noAction = new QAction(tr("未分类"),voiceBankCategoriesActionGroup);
+    noAction->setCheckable(true);
+    for (auto i : categoriesAndLabelsListWidget->getCategories())
+    {
+        auto action = new QAction(i,voiceBankCategoriesActionGroup);
+        action->setCheckable(true);
+        //TODO:connect
+    }
+    voiceBankCategoriesSubMenu->addActions(voiceBankCategoriesActionGroup->actions());
+}
+
+void VoiceBankManagerWindow::addNewCategoryActionSlot(){
+    auto newCategory = QInputDialog::getText(this,tr("输入新分类的名称"),tr("输入新分类的名称："));
+    newCategory = newCategory.trimmed();
+    if (!newCategory.isEmpty())
+    {
+        categoriesAndLabelsListWidget->addCategory(newCategory);
+    }
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        voiceBank->setCategory(newCategory);
+    }
+}
+
 VoiceBank* VoiceBankManagerWindow::getSelectedVoiceBank()
 {
     return getSelectedVoiceBank(ui->voiceBanksTableView->currentIndex());
@@ -736,7 +787,20 @@ void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
 
 void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(const QPoint &)
 {
-    voiceBanksTableWidgetMenu->exec(QCursor::pos());
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        for (auto i : voiceBankCategoriesActionGroup->actions())
+        {
+            i->setChecked(i->text() == voiceBank->getCategory());
+            if (voiceBank->getCategory().isEmpty() && i->text() == tr("未分类"))
+            {
+                i->setChecked(true);
+            }
+        }
+
+        voiceBanksTableWidgetMenu->exec(QCursor::pos());
+    }
 }
 
 

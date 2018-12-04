@@ -57,10 +57,12 @@ public slots:
 
     void onSamplePlayerPositionChange(qint64 position);
     void onSamplePlayerStateChanged(QMediaPlayer::State state);
+    void createVoiceBanksCategoriesSubMenu();
 protected:
     void changeEvent(QEvent *e) override;
 private:
     Ui::VoiceBankManagerWindow *ui;
+
     QStringList monitorFolders = {"./voice"};
     VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
     VoiceBankTableModel* voiceBankTableModel = nullptr;
@@ -73,7 +75,11 @@ private:
         static constexpr int Name = 0;
         static constexpr int Path = 1;
     };
+
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
+    QMenu* voiceBankCategoriesSubMenu = new QMenu(tr("分类"),this);
+    QActionGroup* voiceBankCategoriesActionGroup = new QActionGroup(this);
+
     void createVoiceBanksTableMenu();
     void loadMonitorFoldersSettings();
     void saveMonitorFoldersSettings();
@@ -88,8 +94,8 @@ private:
     QList<QTranslator*> translators;
     void removeAllTranslators();
     bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *rawCodec, QTextCodec *targetCodec);
-
     CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -127,6 +133,7 @@ private slots:
     void dealLanguageMenuLoadFile();
     void on_actionFor_text_file_triggered();
     void on_actionFor_File_Name_triggered();
+    void addNewCategoryActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

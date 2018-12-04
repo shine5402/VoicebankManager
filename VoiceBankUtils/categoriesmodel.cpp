@@ -12,15 +12,19 @@ int CategoriesModel::rowCount(const QModelIndex &parent) const
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
         return 0;
-    return dataSource->categories.count();
+    return dataSource->categories.count() + 1;
 }
 
 QVariant CategoriesModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-    if (role == Qt::ItemDataRole::DisplayRole)
-        return QString("%1 (%2)").arg(dataSource->categories.at(index.row())).arg(dataSource->categoriesUsedCount.value(dataSource->categories.at(index.row())));
+    if (role == Qt::ItemDataRole::DisplayRole){
+        if (index.row() > 1)
+            return QString("%1 (%2)").arg(dataSource->categories.at(index.row() - 1)).arg(dataSource->categoriesUsedCount.value(dataSource->categories.at(index.row() - 1)));
+        else
+            return tr("未分类 (%1)").arg(dataSource->getNoCategoriesCount());
+    }
     return QVariant();
 }
 

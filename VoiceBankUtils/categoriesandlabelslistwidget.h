@@ -20,6 +20,16 @@ class CategoriesAndLabelsListWidget : public QWidget
 public:
     explicit CategoriesAndLabelsListWidget(VoiceBankHandler *handler,QWidget *parent = nullptr);
     ~CategoriesAndLabelsListWidget();
+    int getNoCategoriesCount() const;
+
+    int getNoLabelsCount() const;
+
+    QStringList getCategories() const;
+
+    QStringList getLabels() const;
+
+    void addCategory(const QString& category);
+
 public slots:
     void removeUnusedCategories();
     void removeUnusedLabels();
@@ -35,6 +45,8 @@ private:
     void saveSettingsCategoriesAndLabels();
     QHash<QString,int> categoriesUsedCount;
     QHash<QString,int> labelsUsedCount;
+    int noCategoriesCount = 0;
+    int noLabelsCount = 0;
     CategoriesModel* categoriesModel = new CategoriesModel(this);
     LabelsModel* labelsModel = new LabelsModel(this);
 signals:
