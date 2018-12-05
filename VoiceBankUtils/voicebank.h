@@ -170,6 +170,9 @@ public:
 
     QStringList getLabels() const;
     void setLabels(const QStringList &value);
+    void appendLabel(const QString& label);
+    void appendLabels(const QStringList& label);
+    void changeLabelStatus(const QString& label);
 
     class FileNotExists : public std::runtime_error{
     public:
@@ -182,6 +185,7 @@ public:
     private:
         QString _QFileError;
     };
+    void removeLabel(const QString &label);
 private:
     QImage image;
     QString imagePath;

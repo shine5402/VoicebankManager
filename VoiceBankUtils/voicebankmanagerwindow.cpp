@@ -19,6 +19,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
     readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
     ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
+    //设置分类列表的背景颜色
     //设置TableView
     voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
@@ -86,9 +87,9 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     //连接分类和标签相关信号与handler
     connect(voiceBankHandler,SIGNAL(categoriesChanged()),categoriesAndLabelsListWidget,SLOT(readCategoriesFromVoicebankHandler()));
-    connect(voiceBankHandler,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
+    connect(categoriesAndLabelsListWidget,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
     connect(voiceBankHandler,SIGNAL(labelsChanged()),categoriesAndLabelsListWidget,SLOT(readLabelsFromVoiceBankHandler()));
-
+    connect(categoriesAndLabelsListWidget,SIGNAL(labelsChanged()),this,SLOT(createVoiceBanksLabelsSubMenu()));
 }
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())
@@ -378,8 +379,10 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     voiceBanksTableWidgetMenu->addMenu(engineMenu);
 
     createVoiceBanksCategoriesSubMenu();
+    createVoiceBanksLabelsMenu();
 
     voiceBanksTableWidgetMenu->addMenu(voiceBankCategoriesSubMenu);
+    voiceBanksTableWidgetMenu->addMenu(voiceBankLabelsSubMenu);
 
     auto reloadAction = new QAction(tr("重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
@@ -403,11 +406,63 @@ void VoiceBankManagerWindow::createVoiceBanksCategoriesSubMenu(){
     {
         auto action = new QAction(i,voiceBankCategoriesActionGroup);
         action->setCheckable(true);
-        //TODO:connect
     }
+    connect(voiceBankCategoriesActionGroup,SIGNAL(triggered(QAction *)),this,SLOT(setCategoryActionsSlot(QAction*)));
     voiceBankCategoriesSubMenu->addActions(voiceBankCategoriesActionGroup->actions());
 }
 
+void VoiceBankManagerWindow::createVoiceBanksLabelsMenu(){
+    voiceBankLabelsSubMenu->clear();
+    voiceBankLabelsActionGroup->deleteLater();
+    voiceBankLabelsActionGroup = new QActionGroup(this);
+    voiceBankLabelsActionGroup->setExclusive(false);
+
+    auto addNewLabelAction = new QAction(tr("新建一个标签..."),this);
+    connect(addNewLabelAction,SIGNAL(triggered(bool)),this,SLOT(addNewLabelActionSlot()));
+    voiceBankLabelsSubMenu->addAction(addNewLabelAction);
+
+    voiceBankLabelsSubMenu->addSeparator();
+
+    for (auto i : categoriesAndLabelsListWidget->getLabels())
+    {
+        auto action = new QAction(i,voiceBankLabelsActionGroup);
+        action->setCheckable(true);
+    }
+    connect(voiceBankLabelsActionGroup,SIGNAL(triggered(QAction *)),this,SLOT(setLabelActionSlot(QAction*)));
+    voiceBankLabelsSubMenu->addActions(voiceBankLabelsActionGroup->actions());
+
+}
+//TODO:add slots up
+void VoiceBankManagerWindow::addNewLabelActionSlot(){
+    auto newLabel = QInputDialog::getText(this,tr("输入新标签的名称"),tr("输入新标签的名称："));
+    newLabel = newLabel.trimmed();
+    if (!newLabel.isEmpty())
+    {
+        categoriesAndLabelsListWidget->addLabel(newLabel);
+    }
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        voiceBank->appendLabel(newLabel);
+    }
+}
+void VoiceBankManagerWindow::setLabelActionSlot(QAction* action){
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        voiceBank->changeLabelStatus(action->text());
+    }
+}
+void VoiceBankManagerWindow::setCategoryActionsSlot(QAction* action){
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        if (action->text() != tr("未分类"))
+            voiceBank->setCategory(action->text());
+        else
+            voiceBank->setCategory("");
+    }
+}
 void VoiceBankManagerWindow::addNewCategoryActionSlot(){
     auto newCategory = QInputDialog::getText(this,tr("输入新分类的名称"),tr("输入新分类的名称："));
     newCategory = newCategory.trimmed();
@@ -798,7 +853,10 @@ void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(c
                 i->setChecked(true);
             }
         }
-
+        for (auto i : voiceBankLabelsActionGroup->actions())
+        {
+            i->setChecked(voiceBank->getLabels().contains(i->text()));
+        }
         voiceBanksTableWidgetMenu->exec(QCursor::pos());
     }
 }

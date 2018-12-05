@@ -20,7 +20,7 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
     if (role == Qt::ItemDataRole::DisplayRole){
-        if (index.row() > 1)
+        if (index.row() > 0)
             return QString("%1 (%2)").arg(dataSource->categories.at(index.row() - 1)).arg(dataSource->categoriesUsedCount.value(dataSource->categories.at(index.row() - 1)));
         else
             return tr("未分类 (%1)").arg(dataSource->getNoCategoriesCount());

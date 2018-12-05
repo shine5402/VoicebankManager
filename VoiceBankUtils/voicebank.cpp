@@ -141,6 +141,32 @@ void VoiceBank::setLabels(const QStringList &value)
     emit labelsChanged();
 }
 
+void VoiceBank::appendLabel(const QString &label)
+{
+    if (!labels.contains(label))
+        labels.append(label);
+    emit labelsChanged();
+}
+
+void VoiceBank::appendLabels(const QStringList &label)
+{
+    for (auto i : label)
+        appendLabel(i);
+}
+
+void VoiceBank::changeLabelStatus(const QString &label)
+{
+    if (labels.contains(label))
+        removeLabel(label);
+    else
+        appendLabel(label);
+}
+
+void VoiceBank::removeLabel(const QString &label)
+{
+    labels.removeOne(label);
+    emit labelsChanged();
+}
 void VoiceBank::setCategory(const QString &value)
 {
     category = value;
@@ -429,6 +455,7 @@ void VoiceBank::saveSettings(){
     auto json_file = new QFile(path + "leafUTAUQtSettings.json");
     json_file->open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream json_writer(json_file);
+    json_writer.setCodec(QTextCodec::codecForName("UTF-8"));
     json_writer << json_doc.toJson();
     json_file->close();
     json_file->deleteLater();

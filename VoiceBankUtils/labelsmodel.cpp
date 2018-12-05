@@ -21,7 +21,7 @@ QVariant LabelsModel::data(const QModelIndex &index, int role) const
         return QVariant();
     if (role == Qt::ItemDataRole::DisplayRole)
     {
-        if (index.row() > 1)
+        if (index.row() > 0)
             return QString("%1 (%2)").arg(dataSource->labels.at(index.row() - 1)).arg(dataSource->labelsUsedCount.value(dataSource->labels.at(index.row() - 1)));
         else
             return tr("无标签 (%1)").arg(dataSource->getNoLabelsCount());

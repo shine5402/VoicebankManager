@@ -10,12 +10,10 @@
     <height>540</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
   <property name="styleSheet">
-   <string notr="true">background-color:white
-</string>
+   <string notr="true">QWidget#CategoriesAndLabelsListWidget{
+background-color:white
+}</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <property name="leftMargin">
@@ -32,6 +30,11 @@
    </property>
    <item row="0" column="0">
     <widget class="QFrame" name="frame">
+     <property name="styleSheet">
+      <string notr="true">QWidget#frame{
+background-color:white
+}</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -39,6 +42,18 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>11</number>
+      </property>
+      <property name="topMargin">
+       <number>11</number>
+      </property>
+      <property name="rightMargin">
+       <number>11</number>
+      </property>
+      <property name="bottomMargin">
+       <number>11</number>
+      </property>
       <item row="0" column="0">
        <widget class="QScrollArea" name="scrollArea">
         <property name="sizePolicy">
@@ -46,6 +61,11 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget#scrollArea{
+background-color:white
+}</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -61,6 +81,11 @@
            <width>261</width>
            <height>516</height>
           </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QWidget#scrollAreaWidgetContents{
+background-color:white
+}</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <property name="leftMargin">
@@ -83,6 +108,9 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
             <property name="text">
              <string>分类</string>
             </property>
@@ -98,6 +126,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
@@ -130,6 +161,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>

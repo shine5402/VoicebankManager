@@ -5,6 +5,7 @@
 #include "voicebankhandler.h"
 #include "categoriesmodel.h"
 #include "labelsmodel.h"
+#include <QMenu>
 
 namespace Ui {
 class CategoriesAndLabelsListWidget;
@@ -19,7 +20,7 @@ class CategoriesAndLabelsListWidget : public QWidget
 
 public:
     explicit CategoriesAndLabelsListWidget(VoiceBankHandler *handler,QWidget *parent = nullptr);
-    ~CategoriesAndLabelsListWidget();
+    ~CategoriesAndLabelsListWidget() override;
     int getNoCategoriesCount() const;
 
     int getNoLabelsCount() const;
@@ -29,13 +30,19 @@ public:
     QStringList getLabels() const;
 
     void addCategory(const QString& category);
+    void addLabel(const QString& label);
 
 public slots:
     void removeUnusedCategories();
     void removeUnusedLabels();
     void readCategoriesFromVoicebankHandler();
     void readLabelsFromVoiceBankHandler();
+
 private slots:
+    void on_categoriesListView_customContextMenuRequested(const QPoint &);
+
+    void on_labelListView_customContextMenuRequested(const QPoint &);
+
 private:
     Ui::CategoriesAndLabelsListWidget *ui;
     VoiceBankHandler* handler = nullptr;

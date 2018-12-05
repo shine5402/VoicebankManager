@@ -79,6 +79,8 @@ private:
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
     QMenu* voiceBankCategoriesSubMenu = new QMenu(tr("分类"),this);
     QActionGroup* voiceBankCategoriesActionGroup = new QActionGroup(this);
+    QMenu* voiceBankLabelsSubMenu = new QMenu(tr("标签"),this);
+    QActionGroup* voiceBankLabelsActionGroup = new QActionGroup(this);
 
     void createVoiceBanksTableMenu();
     void loadMonitorFoldersSettings();
@@ -134,6 +136,10 @@ private slots:
     void on_actionFor_text_file_triggered();
     void on_actionFor_File_Name_triggered();
     void addNewCategoryActionSlot();
+    void setCategoryActionsSlot(QAction *action);
+    void createVoiceBanksLabelsMenu();
+    void addNewLabelActionSlot();
+    void setLabelActionSlot(QAction *action);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H
