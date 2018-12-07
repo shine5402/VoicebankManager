@@ -11,6 +11,8 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->menubar->addAction(debugFunctionAction);
     connect(debugFunctionAction,SIGNAL(triggered(bool)),this,SLOT(debugFunction()));
 #endif
+
+
     loadMonitorFoldersSettings();
 
     //设置音源信息显示区域
@@ -70,21 +72,10 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     createVoiceBanksTableMenu();
 
-    //处理分裂器布局
-    //横向
-    ui->splitter_2->insertWidget(0,categoriesAndLabelsListWidget);
-    QWidget *hWidget0 = ui->splitter_2->widget(0);
-    auto sizePolicy0 = hWidget0->sizePolicy();
-    sizePolicy0.setHorizontalStretch(1);
-    hWidget0->setSizePolicy(sizePolicy0);
-    QWidget *hWidget1 = ui->splitter_2->widget(1);
-    auto sizePolicy1 = hWidget1->sizePolicy();
-    sizePolicy1.setHorizontalStretch(5);
-    hWidget1->setSizePolicy(sizePolicy1);
-    //纵向
-    ui->splitter->setStretchFactor(0,2);
-    ui->splitter->setStretchFactor(1,1);
+    //在分类器里加入分类和标签
+    ui->categoryAndLabelsAndListSplitter->insertWidget(0,categoriesAndLabelsListWidget);
 
+    loadWindowStatus();
     //连接分类和标签相关信号与handler
     connect(voiceBankHandler,SIGNAL(categoriesChanged()),categoriesAndLabelsListWidget,SLOT(readCategoriesFromVoicebankHandler()));
     connect(categoriesAndLabelsListWidget,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
@@ -183,6 +174,7 @@ void VoiceBankManagerWindow::loadVoiceBanksList()
 
 VoiceBankManagerWindow::~VoiceBankManagerWindow()
 {
+    saveWindowStatus();
     delete ui;
     saveMonitorFoldersSettings();
 }
@@ -198,6 +190,53 @@ void VoiceBankManagerWindow::saveMonitorFoldersSettings()
 {
     QSettings settings;
     settings.setValue("MonitorFolders",monitorFolders);
+}
+
+void VoiceBankManagerWindow::loadWindowStatus()
+{
+    QSettings settings;
+    if (settings.contains("VoiceBankManager/WindowGeometry"))
+        restoreGeometry(settings.value("VoiceBankManager/WindowGeometry").toByteArray());
+    if (settings.contains("VoiceBankManager/categoryAndLabelsAndListSplitterState"))
+    {
+        bool a = ui->categoryAndLabelsAndListSplitter->restoreState(settings.value("VoiceBankManager/categoryAndLabelsAndListSplitterState").toByteArray());
+        qDebug() << a;
+    }
+    else
+    {
+        //处理分裂器布局
+        //横向
+        //ui->categoryAndLabelsAndListSplitter->insertWidget(0,categoriesAndLabelsListWidget);
+        QWidget *hWidget0 = ui->categoryAndLabelsAndListSplitter->widget(0);
+        auto sizePolicy0 = hWidget0->sizePolicy();
+        sizePolicy0.setHorizontalStretch(1);
+        hWidget0->setSizePolicy(sizePolicy0);
+        QWidget *hWidget1 = ui->categoryAndLabelsAndListSplitter->widget(1);
+        auto sizePolicy1 = hWidget1->sizePolicy();
+        sizePolicy1.setHorizontalStretch(5);
+        hWidget1->setSizePolicy(sizePolicy1);
+
+    }
+    if (settings.contains("VoiceBankManager/informationAndListSplitterState"))
+        ui->informationAndListSplitter->restoreState(settings.value("VoiceBankManager/informationAndListSplitterState").toByteArray());
+    else
+    {
+        //纵向
+        ui->informationAndListSplitter->setStretchFactor(0,2);
+        ui->informationAndListSplitter->setStretchFactor(1,1);
+    }
+}
+
+void VoiceBankManagerWindow::saveWindowStatus()
+{
+    QSettings settings;
+    //    settings.setValue("VoiceBankManager/WindowGeometry/x",geometry().x());
+    //    settings.setValue("VoiceBankManager/WindowGeometry/y",geometry().y());
+    //    settings.setValue("VoiceBankManager/WindowGeometry/width",geometry().width());
+    //    settings.setValue("VoiceBankManager/WindowGeometry/height",geometry().height());
+    settings.setValue("VoiceBankManager/WindowGeometry",saveGeometry());
+    settings.setValue("VoiceBankManager/categoryAndLabelsAndListSplitterState",ui->categoryAndLabelsAndListSplitter->saveState());
+    settings.setValue("VoiceBankManager/informationAndListSplitterState",ui->informationAndListSplitter->saveState());
 }
 QStringList VoiceBankManagerWindow::getMonitorFolders() const
 {
@@ -456,7 +495,7 @@ void VoiceBankManagerWindow::setLabelActionSlot(QAction* action){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
-        voiceBank->changeLabelStatus(action->text());
+        voiceBank->toggleLabelStatus(action->text());
     }
 }
 void VoiceBankManagerWindow::setCategoryActionsSlot(QAction* action){

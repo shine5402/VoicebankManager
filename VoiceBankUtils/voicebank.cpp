@@ -154,7 +154,7 @@ void VoiceBank::appendLabels(const QStringList &label)
         appendLabel(i);
 }
 
-void VoiceBank::changeLabelStatus(const QString &label)
+void VoiceBank::toggleLabelStatus(const QString &label)
 {
     if (labels.contains(label))
         removeLabel(label);

@@ -27,9 +27,9 @@ CategoriesAndLabelsListWidget::~CategoriesAndLabelsListWidget()
 void CategoriesAndLabelsListWidget::readSettingsCategoriesAndLabels()
 {
     QSettings settings;
-    if (settings.contains("Categories"))
+    if (settings.contains("VoiceBankManager/Categories"))
     {
-        auto value = settings.value("Categories");
+        auto value = settings.value("VoiceBankManager/Categories");
         categories = value.toStringList();
         for (auto i : categories)
         {
@@ -37,9 +37,9 @@ void CategoriesAndLabelsListWidget::readSettingsCategoriesAndLabels()
         }
         emit categoriesChanged();
     }
-    if (settings.contains("Labels"))
+    if (settings.contains("VoiceBankManager/Labels"))
     {
-        auto value = settings.value("Labels");
+        auto value = settings.value("VoiceBankManager/Labels");
         labels = value.toStringList();
         for (auto i : labels)
         {
@@ -52,8 +52,8 @@ void CategoriesAndLabelsListWidget::readSettingsCategoriesAndLabels()
 void CategoriesAndLabelsListWidget::saveSettingsCategoriesAndLabels()
 {
     QSettings settings;
-    settings.setValue("Categories",categories);
-    settings.setValue("Labels",labels);
+    settings.setValue("VoiceBankManager/Categories",categories);
+    settings.setValue("VoiceBankManager/Labels",labels);
 }
 
 int CategoriesAndLabelsListWidget::getNoLabelsCount() const
@@ -248,8 +248,10 @@ void CategoriesAndLabelsListWidget::on_labelCheckBox_stateChanged(int state)
 {
     if (state == Qt::CheckState::Unchecked)
     {
-        emit currentLabelChanged("");
+        //emit currentLabelChanged("");
         //TODO:清除选择
+        ui->labelListView->selectionModel()->select(labelsModel->index(0),QItemSelectionModel::SelectCurrent);
+
     }
 }
 
@@ -257,7 +259,8 @@ void CategoriesAndLabelsListWidget::on_categoriesCheckBox_stateChanged(int state
 {
     if (state == Qt::CheckState::Unchecked)
     {
-        emit currentLabelChanged("");
+        //emit currentLabelChanged("");
         //TODO:
+        ui->categoriesListView->selectionModel()->select(categoriesModel->index(0),QItemSelectionModel::SelectCurrent);
     }
 }

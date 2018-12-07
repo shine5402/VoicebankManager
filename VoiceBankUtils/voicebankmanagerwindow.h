@@ -104,6 +104,8 @@ private:
     void showVoiceBanksRows(const QList<int> &voiceBankIDs);
     void dealFilters();
     QList<int> getIntersection(QList<QList<int> > lists);
+    void loadWindowStatus();
+    void saveWindowStatus();
 private slots:
 #ifndef NDEBUG
     void debugFunction();
