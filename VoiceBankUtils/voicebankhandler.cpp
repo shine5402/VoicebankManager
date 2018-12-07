@@ -93,6 +93,15 @@ QList<int> VoiceBankHandler::findIDByCategory(const QString &category) const
         }
         return result;
     }
+    if (category == tr("未分类"))
+    {
+        for (auto voiceBank : voiceBanks)
+        {
+            if (voiceBank->getCategory().isEmpty())
+                result.append(getVoiceBankID(voiceBank));
+        }
+        return result;
+    }
     for (auto voiceBank : voiceBanks)
     {
         if (voiceBank->getCategory() == category)
@@ -111,6 +120,14 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
             result.append(i);
         }
         return result;
+    }
+    if (label == tr("无标签"))
+    {
+        for (auto voiceBank : voiceBanks)
+        {
+            if (voiceBank->getLabels().isEmpty())
+                result.append(getVoiceBankID(voiceBank));
+        }
     }
     for (auto voiceBank : voiceBanks)
     {

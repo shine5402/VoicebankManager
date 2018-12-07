@@ -190,31 +190,6 @@ void CategoriesAndLabelsListWidget::on_labelListView_customContextMenuRequested(
     menu->popup(QCursor::pos());
 }
 
-void CategoriesAndLabelsListWidget::on_categoriesListView_activated(const QModelIndex &index)
-{
-    if (index.isValid())
-    {
-        if (index.row() == 0)
-        {
-            emit currentCategoryChanged("");
-            return;
-        }
-        emit currentCategoryChanged(categories.at(index.row() - 1));
-    }
-}
-
-void CategoriesAndLabelsListWidget::on_labelListView_activated(const QModelIndex &index)
-{
-    if (index.isValid())
-    {
-        if (index.row() == 0)
-        {
-            emit currentLabelChanged("");
-            return;
-        }
-        emit currentLabelChanged(labels.at(index.row() - 1));
-    }
-}
 
 void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
 {
@@ -226,7 +201,12 @@ void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal
                 emit currentCategoryChanged("");
                 return;
             }
-            emit currentCategoryChanged(categories.at(index.row() - 1));
+            if (index.row() == 1)
+            {
+                emit currentCategoryChanged(tr("未分类"));
+                return;
+            }
+            emit currentCategoryChanged(categories.at(index.row() - 2));
         }
 }
 
@@ -240,7 +220,12 @@ void CategoriesAndLabelsListWidget::on_labelListView_selectionChangedSignal(cons
                 emit currentLabelChanged("");
                 return;
             }
-            emit currentLabelChanged(labels.at(index.row() - 1));
+            if (index.row() == 1)
+            {
+                emit currentLabelChanged(tr("无标签"));
+                return;
+            }
+            emit currentLabelChanged(labels.at(index.row() - 2));
         }
 }
 
@@ -248,8 +233,6 @@ void CategoriesAndLabelsListWidget::on_labelCheckBox_stateChanged(int state)
 {
     if (state == Qt::CheckState::Unchecked)
     {
-        //emit currentLabelChanged("");
-        //TODO:清除选择
         ui->labelListView->selectionModel()->select(labelsModel->index(0),QItemSelectionModel::SelectCurrent);
 
     }
@@ -259,8 +242,6 @@ void CategoriesAndLabelsListWidget::on_categoriesCheckBox_stateChanged(int state
 {
     if (state == Qt::CheckState::Unchecked)
     {
-        //emit currentLabelChanged("");
-        //TODO:
         ui->categoriesListView->selectionModel()->select(categoriesModel->index(0),QItemSelectionModel::SelectCurrent);
     }
 }

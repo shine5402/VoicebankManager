@@ -44,10 +44,6 @@ private slots:
 
     void on_labelListView_customContextMenuRequested(const QPoint &);
 
-    void on_categoriesListView_activated(const QModelIndex &index);
-
-    void on_labelListView_activated(const QModelIndex &index);
-
     void on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);
 
     void on_labelListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);

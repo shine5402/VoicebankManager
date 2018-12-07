@@ -12,7 +12,7 @@ int LabelsModel::rowCount(const QModelIndex &parent) const
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
         return 0;
-    return dataSource->labels.count() + 1;
+    return dataSource->labels.count() + 2;
 }
 
 QVariant LabelsModel::data(const QModelIndex &index, int role) const
@@ -21,10 +21,12 @@ QVariant LabelsModel::data(const QModelIndex &index, int role) const
         return QVariant();
     if (role == Qt::ItemDataRole::DisplayRole)
     {
-        if (index.row() > 0)
-            return QString("%1 (%2)").arg(dataSource->labels.at(index.row() - 1)).arg(dataSource->labelsUsedCount.value(dataSource->labels.at(index.row() - 1)));
-        else
+        if (index.row() > 1)
+            return QString("%1 (%2)").arg(dataSource->labels.at(index.row() - 2)).arg(dataSource->labelsUsedCount.value(dataSource->labels.at(index.row() - 2)));
+        else if (index.row() == 1)
             return tr("无标签 (%1)").arg(dataSource->getNoLabelsCount());
+        else if (index.row() == 0)
+            return tr("全部 (%1)").arg(dataSource->handler->getVoiceBankCount());
     }
     return QVariant();
 }
