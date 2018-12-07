@@ -189,3 +189,75 @@ void CategoriesAndLabelsListWidget::on_labelListView_customContextMenuRequested(
     menu->addAction(action);
     menu->popup(QCursor::pos());
 }
+
+void CategoriesAndLabelsListWidget::on_categoriesListView_activated(const QModelIndex &index)
+{
+    if (index.isValid())
+    {
+        if (index.row() == 0)
+        {
+            emit currentCategoryChanged("");
+            return;
+        }
+        emit currentCategoryChanged(categories.at(index.row() - 1));
+    }
+}
+
+void CategoriesAndLabelsListWidget::on_labelListView_activated(const QModelIndex &index)
+{
+    if (index.isValid())
+    {
+        if (index.row() == 0)
+        {
+            emit currentLabelChanged("");
+            return;
+        }
+        emit currentLabelChanged(labels.at(index.row() - 1));
+    }
+}
+
+void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
+{
+    for (auto index : selected.indexes())
+        if (index.isValid())
+        {
+            if (index.row() == 0)
+            {
+                emit currentCategoryChanged("");
+                return;
+            }
+            emit currentCategoryChanged(categories.at(index.row() - 1));
+        }
+}
+
+void CategoriesAndLabelsListWidget::on_labelListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
+{
+    for (auto index : selected.indexes())
+        if (index.isValid())
+        {
+            if (index.row() == 0)
+            {
+                emit currentLabelChanged("");
+                return;
+            }
+            emit currentLabelChanged(labels.at(index.row() - 1));
+        }
+}
+
+void CategoriesAndLabelsListWidget::on_labelCheckBox_stateChanged(int state)
+{
+    if (state == Qt::CheckState::Unchecked)
+    {
+        emit currentLabelChanged("");
+        //TODO:清除选择
+    }
+}
+
+void CategoriesAndLabelsListWidget::on_categoriesCheckBox_stateChanged(int state)
+{
+    if (state == Qt::CheckState::Unchecked)
+    {
+        emit currentLabelChanged("");
+        //TODO:
+    }
+}

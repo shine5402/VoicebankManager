@@ -58,6 +58,7 @@ public slots:
     void onSamplePlayerPositionChange(qint64 position);
     void onSamplePlayerStateChanged(QMediaPlayer::State state);
     void createVoiceBanksCategoriesSubMenu();
+
 protected:
     void changeEvent(QEvent *e) override;
 private:
@@ -98,6 +99,11 @@ private:
     bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *rawCodec, QTextCodec *targetCodec);
     CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
 
+    QString currentCategoryFilter;
+    QString currentLabelFilter;
+    void showVoiceBanksRows(const QList<int> &voiceBankIDs);
+    void dealFilters();
+    QList<int> getIntersection(QList<QList<int> > lists);
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -113,7 +119,7 @@ private slots:
     void on_actionDefault_TextCodec_triggered();
     void setCodecForVoiceBankActionSlot();
     void reloadVoiceBankActionSlot();
-    void on_searchLineEdit_textChanged(const QString &arg1);
+    void on_searchLineEdit_textChanged(const QString &);
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
     void on_actionAbout_Qt_triggered();
@@ -137,9 +143,12 @@ private slots:
     void on_actionFor_File_Name_triggered();
     void addNewCategoryActionSlot();
     void setCategoryActionsSlot(QAction *action);
-    void createVoiceBanksLabelsMenu();
+    void createVoiceBanksLabelsSubMenu();
     void addNewLabelActionSlot();
     void setLabelActionSlot(QAction *action);
+    void on_voicebankImage_customContextMenuRequested(const QPoint &);
+    void onCurrentCategoryChanged(const QString& current);
+    void onCurrentLabelChanged(const QString& current);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

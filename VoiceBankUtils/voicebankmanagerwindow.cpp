@@ -90,6 +90,8 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     connect(categoriesAndLabelsListWidget,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
     connect(voiceBankHandler,SIGNAL(labelsChanged()),categoriesAndLabelsListWidget,SLOT(readLabelsFromVoiceBankHandler()));
     connect(categoriesAndLabelsListWidget,SIGNAL(labelsChanged()),this,SLOT(createVoiceBanksLabelsSubMenu()));
+    connect(categoriesAndLabelsListWidget,SIGNAL(currentCategoryChanged(QString)),this,SLOT(onCurrentCategoryChanged(const QString&)));
+    connect(categoriesAndLabelsListWidget,SIGNAL(currentLabelChanged(QString)),this,SLOT(onCurrentLabelChanged(const QString&)));
 }
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())
@@ -379,10 +381,12 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     voiceBanksTableWidgetMenu->addMenu(engineMenu);
 
     createVoiceBanksCategoriesSubMenu();
-    createVoiceBanksLabelsMenu();
+    createVoiceBanksLabelsSubMenu();
 
+    voiceBanksTableWidgetMenu->addSeparator();
     voiceBanksTableWidgetMenu->addMenu(voiceBankCategoriesSubMenu);
     voiceBanksTableWidgetMenu->addMenu(voiceBankLabelsSubMenu);
+    voiceBanksTableWidgetMenu->addSeparator();
 
     auto reloadAction = new QAction(tr("重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
@@ -411,7 +415,7 @@ void VoiceBankManagerWindow::createVoiceBanksCategoriesSubMenu(){
     voiceBankCategoriesSubMenu->addActions(voiceBankCategoriesActionGroup->actions());
 }
 
-void VoiceBankManagerWindow::createVoiceBanksLabelsMenu(){
+void VoiceBankManagerWindow::createVoiceBanksLabelsSubMenu(){
     voiceBankLabelsSubMenu->clear();
     voiceBankLabelsActionGroup->deleteLater();
     voiceBankLabelsActionGroup = new QActionGroup(this);
@@ -432,7 +436,7 @@ void VoiceBankManagerWindow::createVoiceBanksLabelsMenu(){
     voiceBankLabelsSubMenu->addActions(voiceBankLabelsActionGroup->actions());
 
 }
-//TODO:add slots up
+
 void VoiceBankManagerWindow::addNewLabelActionSlot(){
     auto newLabel = QInputDialog::getText(this,tr("输入新标签的名称"),tr("输入新标签的名称："));
     newLabel = newLabel.trimmed();
@@ -440,6 +444,8 @@ void VoiceBankManagerWindow::addNewLabelActionSlot(){
     {
         categoriesAndLabelsListWidget->addLabel(newLabel);
     }
+    else
+        return;
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
@@ -470,6 +476,8 @@ void VoiceBankManagerWindow::addNewCategoryActionSlot(){
     {
         categoriesAndLabelsListWidget->addCategory(newCategory);
     }
+    else
+        return;
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
@@ -778,30 +786,51 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
     dialog->deleteLater();
 }
 
-void VoiceBankManagerWindow::on_searchLineEdit_textChanged(const QString &text)
+void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
 {
     int rowCount = voiceBankHandler->getVoiceBankCount();//获得行号
-    if (text.isEmpty())//判断输入是否为空
+    for (int i = 0; i < rowCount; i++)
     {
-        for (int i = 0; i < rowCount; i++)
+        ui->voiceBanksTableView->setRowHidden(i, true);//隐藏所有行
+    }
+    if (!voiceBankIDs.isEmpty())//不为空
+    {
+        for (auto i : voiceBankIDs)
+            ui->voiceBanksTableView->setRowHidden(i,false);
+    }
+}
+
+QList<int> VoiceBankManagerWindow::getIntersection(QList<QList<int>> lists)
+{
+    QHash<int,int> counts;
+    QList<int> result;
+    for (auto list : lists)
+    {
+        for (auto i : list)
         {
-            ui->voiceBanksTableView->setRowHidden(i, false);//显示所有行
+            counts.insert(i,counts.value(i) + 1);
         }
     }
-    else
+    for (auto it = counts.begin();it != counts.end();++it)
     {
-        auto voiceBankIDs = voiceBankHandler->findIDByName(text);
-        for (int i = 0; i < rowCount; i++)
-        {
-            ui->voiceBanksTableView->setRowHidden(i, true);//隐藏所有行
-        }
-        if (!voiceBankIDs.isEmpty())//不为空
-        {
-            for (auto i : voiceBankIDs)
-                ui->voiceBanksTableView->setRowHidden(i,false);
-        }
+        if (it.value() == lists.count())
+            result.append(it.key());
     }
-    qApp->processEvents();
+    return result;
+}
+
+void VoiceBankManagerWindow::dealFilters()
+{
+    auto byName = voiceBankHandler->findIDByName(ui->searchLineEdit->text());
+    auto byCategory = voiceBankHandler->findIDByCategory(currentCategoryFilter);
+    auto byLabel = voiceBankHandler->findIDByLabel(currentLabelFilter);
+    auto intersection = getIntersection({byName,byCategory,byLabel});
+    showVoiceBanksRows(intersection);
+}
+
+void VoiceBankManagerWindow::on_searchLineEdit_textChanged(const QString &)
+{
+    dealFilters();
 }
 
 void VoiceBankManagerWindow::on_actionExit_triggered()
@@ -1112,4 +1141,26 @@ void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
     }
     if (processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),QTextCodec::codecForLocale(),QTextCodec::codecForLocale()))
         QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的转换成功完成。").arg(path));
+}
+
+void VoiceBankManagerWindow::on_voicebankImage_customContextMenuRequested(const QPoint &)
+{
+    auto menu = new QMenu(this);
+    auto modifyIconAction = new QAction(tr("修改音源的图标..."),menu);
+    connect(modifyIconAction,SIGNAL(triggered(bool)),this,SLOT(modifyIconActionSlot()));
+    modifyIconAction->setStatusTip(tr("为该音源指定一个新图标。"));
+    menu->addAction(modifyIconAction);
+    menu->popup(QCursor::pos());
+}
+
+void VoiceBankManagerWindow::onCurrentCategoryChanged(const QString &current)
+{
+    currentCategoryFilter = current;
+    dealFilters();
+}
+
+void VoiceBankManagerWindow::onCurrentLabelChanged(const QString &current)
+{
+    currentLabelFilter = current;
+    dealFilters();
 }

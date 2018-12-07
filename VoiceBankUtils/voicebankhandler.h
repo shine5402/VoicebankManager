@@ -52,6 +52,8 @@ public:
     int getVoiceBankCount() const{
         return voiceBanks.count();
     }
+    QList<int> findIDByCategory(const QString &category) const;
+    QList<int> findIDByLabel(const QString &label) const;
 private:
     QList<VoiceBank *> voiceBanks{};
     void addVoiceBank(VoiceBank * newVoiceBank){
@@ -60,6 +62,7 @@ private:
     QThreadPool* threadPool = new QThreadPool(this);
     void readThreadPoolMaxThreadCountSettings();
     void saveThreadPoolMaxThreadCountSettings();
+
 private slots:
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);

@@ -49,7 +49,8 @@ SOURCES += \
     TextCodecUtils/qchardet.cpp \
     VoiceBankUtils/categoriesandlabelslistwidget.cpp \
     VoiceBankUtils/categoriesmodel.cpp \
-    VoiceBankUtils/labelsmodel.cpp
+    VoiceBankUtils/labelsmodel.cpp \
+    ../LeafPublicQtClasses/qlistviewwithselectsignal.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -80,7 +81,8 @@ HEADERS += \
     TextCodecUtils/qchardet.h \
     VoiceBankUtils/categoriesandlabelslistwidget.h \
     VoiceBankUtils/categoriesmodel.h \
-    VoiceBankUtils/labelsmodel.h
+    VoiceBankUtils/labelsmodel.h \
+    ../LeafPublicQtClasses/qlistviewwithselectsignal.h
 
 FORMS += \
         editorwindow.ui \

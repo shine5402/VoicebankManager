@@ -164,6 +164,9 @@
                <height>100</height>
               </size>
              </property>
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
              <property name="text">
               <string/>
              </property>

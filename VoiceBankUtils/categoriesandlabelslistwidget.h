@@ -6,6 +6,7 @@
 #include "categoriesmodel.h"
 #include "labelsmodel.h"
 #include <QMenu>
+#include <QItemSelection>
 
 namespace Ui {
 class CategoriesAndLabelsListWidget;
@@ -43,6 +44,18 @@ private slots:
 
     void on_labelListView_customContextMenuRequested(const QPoint &);
 
+    void on_categoriesListView_activated(const QModelIndex &index);
+
+    void on_labelListView_activated(const QModelIndex &index);
+
+    void on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);
+
+    void on_labelListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);
+
+    void on_labelCheckBox_stateChanged(int state);
+
+    void on_categoriesCheckBox_stateChanged(int state);
+
 private:
     Ui::CategoriesAndLabelsListWidget *ui;
     VoiceBankHandler* handler = nullptr;
@@ -59,6 +72,8 @@ private:
 signals:
     void categoriesChanged();
     void labelsChanged();
+    void currentCategoryChanged(QString category);
+    void currentLabelChanged(QString label);
 };
 
 #endif // CATEGORIESANDLABELSLISTWIDGET_H

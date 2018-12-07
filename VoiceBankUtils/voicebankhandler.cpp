@@ -50,10 +50,10 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
     if (sortWhat == SortableInformationID::Name)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank *value1,VoiceBank *value2)->bool{
             if (order == Qt::AscendingOrder)
-            return value1->getName() < value2->getName();
-        else
-            return value1->getName() > value2->getName();
-    });
+                return value1->getName() < value2->getName();
+            else
+                return value1->getName() > value2->getName();
+        });
     else if (sortWhat == SortableInformationID::Path)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const VoiceBank *value1,const VoiceBank *value2)->bool{
             if (order == Qt::AscendingOrder)
@@ -66,9 +66,55 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
 QList<int> VoiceBankHandler::findIDByName(const QString &text) const
 {
     QList<int> result{};
+    if (text.trimmed().isEmpty())
+    {
+        for (auto i = 0; i < voiceBanks.count(); ++i)
+        {
+            result.append(i);
+        }
+        return result;
+    }
     for (auto voiceBank : voiceBanks)
     {
         if (voiceBank->getName().contains(text) || voiceBank->getPath().contains(text))
+            result.append(getVoiceBankID(voiceBank));
+    }
+    return result;
+}
+
+QList<int> VoiceBankHandler::findIDByCategory(const QString &category) const
+{
+    QList<int> result{};
+    if (category.trimmed().isEmpty())
+    {
+        for (auto i = 0; i < voiceBanks.count(); ++i)
+        {
+            result.append(i);
+        }
+        return result;
+    }
+    for (auto voiceBank : voiceBanks)
+    {
+        if (voiceBank->getCategory() == category)
+            result.append(getVoiceBankID(voiceBank));
+    }
+    return result;
+}
+
+QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
+{
+    QList<int> result{};
+    if (label.trimmed().isEmpty())
+    {
+        for (auto i = 0; i < voiceBanks.count(); ++i)
+        {
+            result.append(i);
+        }
+        return result;
+    }
+    for (auto voiceBank : voiceBanks)
+    {
+        if (voiceBank->getLabels().contains(label))
             result.append(getVoiceBankID(voiceBank));
     }
     return result;
