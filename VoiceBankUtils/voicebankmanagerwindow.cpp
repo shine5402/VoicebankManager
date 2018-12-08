@@ -247,18 +247,40 @@ void VoiceBankManagerWindow::setMonitorFolders(const QStringList &value)
 {
     monitorFolders = value;
 }
-QStringList VoiceBankManagerWindow::getFoldersInMonitorFolders() const{
+QStringList VoiceBankManagerWindow::getVoiceBankFoldersInFolder(const QString& dir)
+{
     QStringList folderList{};
-    for (auto monitorFolder : monitorFolders){
-        QDir monitorDir(monitorFolder);
-        auto entrys = monitorDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        for (auto path : entrys){
-            folderList.append(monitorDir.absolutePath() + "/" + path);
+    QDir pDir(dir);
+    auto entrys = pDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (auto entry : entrys){
+        auto path = pDir.absolutePath() + "/" + entry;
+        if (isVoiceBankPath(path))
+            folderList.append(path);
+        else
+        {
+            notVoiceBankPaths.append(path);
+            LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
+            folderList.append(getVoiceBankFoldersInFolder(path));
         }
     }
     return folderList;
 }
 
+QStringList VoiceBankManagerWindow::getFoldersInMonitorFolders(){
+    QStringList folderList{};
+    for (auto monitorFolder : monitorFolders){
+
+        //        for (auto entry : entrys){
+        //            folderList.append(monitorDir.absolutePath() + "/" + entry);
+        //        }
+        //TODO:添加新旧版本切换
+        folderList.append(getVoiceBankFoldersInFolder(monitorFolder));
+    }
+    return folderList;
+}
+bool VoiceBankManagerWindow::isVoiceBankPath(const QString& path) const {
+    return (QFileInfo(path + "/character.txt").exists() || QFileInfo(path + "/prefix.map").exists() || QFileInfo(path + "/oto.ini").exists());
+}
 void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 {
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
@@ -290,6 +312,7 @@ void VoiceBankManagerWindow::readVoiceBanks(){
     }
 
 }
+
 void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 {
     ui->voiceBanksTableView->setEnabled(true);

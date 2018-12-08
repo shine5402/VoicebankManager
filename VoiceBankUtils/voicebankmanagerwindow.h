@@ -67,7 +67,7 @@ private:
     QStringList monitorFolders = {"./voice"};
     VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
     VoiceBankTableModel* voiceBankTableModel = nullptr;
-    QStringList getFoldersInMonitorFolders() const;
+    QStringList getFoldersInMonitorFolders();
     void setVoiceBankInfomation(VoiceBank *voiceBank);
     int voiceBankPathsCount{};
     int voiceBankReadDoneCount{};
@@ -106,6 +106,10 @@ private:
     QList<int> getIntersection(QList<QList<int> > lists);
     void loadWindowStatus();
     void saveWindowStatus();
+    bool isVoiceBankPath(const QString &path) const;
+    QStringList notVoiceBankPaths;
+    QStringList getVoiceBankFoldersInFolder(const QString &dir);
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
