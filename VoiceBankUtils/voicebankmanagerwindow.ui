@@ -267,6 +267,10 @@
     </property>
     <addaction name="actionRefresh"/>
     <addaction name="separator"/>
+    <addaction name="actionOutside_VoiceBanks"/>
+    <addaction name="actionIgnored_folders"/>
+    <addaction name="actionView_scan_details"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_preference">
@@ -282,9 +286,15 @@
      <addaction name="actionLoad_a_translation_file"/>
     </widget>
     <addaction name="actionMonitor_Folders"/>
+    <addaction name="actionuse_old_watched_folder_scan_strategy"/>
+    <addaction name="separator"/>
     <addaction name="actionDefault_TextCodec"/>
+    <addaction name="separator"/>
     <addaction name="actionSet_Thread_Pool_Max_Count"/>
+    <addaction name="separator"/>
     <addaction name="menuLanguage"/>
+    <addaction name="separator"/>
+    <addaction name="actionshow_more_infomation_in_total_count_label"/>
    </widget>
    <widget class="QMenu" name="menu_help">
     <property name="title">
@@ -314,17 +324,6 @@
    <addaction name="menu_help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionImport_VoiceBank">
-   <property name="text">
-    <string>导入音源库...</string>
-   </property>
-   <property name="toolTip">
-    <string>导入一个外部音源库用于管理</string>
-   </property>
-   <property name="statusTip">
-    <string>导入一个外部音源库用于管理</string>
-   </property>
-  </action>
   <action name="actionRefresh">
    <property name="text">
     <string>重载</string>
@@ -500,6 +499,67 @@
    </property>
    <property name="statusTip">
     <string>浏览一个外部翻译文件并载入程序。</string>
+   </property>
+  </action>
+  <action name="actionOutside_VoiceBanks">
+   <property name="text">
+    <string>外部音源库...</string>
+   </property>
+   <property name="toolTip">
+    <string>查看、添加、删除手动添加至程序列表中的音源库...</string>
+   </property>
+   <property name="statusTip">
+    <string>查看、添加、删除手动添加至程序列表中的音源库...</string>
+   </property>
+  </action>
+  <action name="actionuse_old_watched_folder_scan_strategy">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>使用旧的音源文件夹扫描策略</string>
+   </property>
+   <property name="toolTip">
+    <string>（旧版本）直接把监视文件夹的子文件夹认作音源文件夹，而不进行判断和递归查找</string>
+   </property>
+   <property name="statusTip">
+    <string>（旧版本）直接把监视文件夹的子文件夹认作音源文件夹，而不进行判断和递归查找</string>
+   </property>
+  </action>
+  <action name="actionshow_more_infomation_in_total_count_label">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>在音源总数文本中显示更多信息</string>
+   </property>
+   <property name="toolTip">
+    <string>开启后，程序将在音源总数文本中显示检测到的音源数量、忽略的文件夹数量、递归查找到的文件夹数量等信息。</string>
+   </property>
+   <property name="statusTip">
+    <string>开启后，程序将在音源总数文本中显示检测到的音源数量、忽略的文件夹数量、递归查找到的文件夹数量等信息。</string>
+   </property>
+  </action>
+  <action name="actionIgnored_folders">
+   <property name="text">
+    <string>忽略文件夹...</string>
+   </property>
+   <property name="toolTip">
+    <string>指定程序要忽略哪些文件夹</string>
+   </property>
+   <property name="statusTip">
+    <string>指定程序要忽略哪些文件夹</string>
+   </property>
+  </action>
+  <action name="actionView_scan_details">
+   <property name="text">
+    <string>查看音源库扫描详情...</string>
+   </property>
+   <property name="toolTip">
+    <string>查看程序扫描音源库相关的具体信息。</string>
+   </property>
+   <property name="statusTip">
+    <string>查看程序扫描音源库相关的具体信息。</string>
    </property>
   </action>
  </widget>

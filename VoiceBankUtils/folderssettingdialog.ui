@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MonitorFoldersSettingDialog</class>
- <widget class="QDialog" name="MonitorFoldersSettingDialog">
+ <class>FoldersSettingDialog</class>
+ <widget class="QDialog" name="FoldersSettingDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>监视文件夹设定</string>
+   <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">
@@ -42,12 +42,12 @@
     </spacer>
    </item>
    <item row="1" column="0" colspan="4">
-    <widget class="QListWidget" name="monitorFoldersListWidget"/>
+    <widget class="QListWidget" name="foldersListWidget"/>
    </item>
    <item row="0" column="0" colspan="4">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>监视文件夹列表：</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -68,7 +68,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>MonitorFoldersSettingDialog</receiver>
+   <receiver>FoldersSettingDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -84,7 +84,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>MonitorFoldersSettingDialog</receiver>
+   <receiver>FoldersSettingDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

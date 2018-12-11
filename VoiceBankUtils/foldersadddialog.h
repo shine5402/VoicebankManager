@@ -6,21 +6,21 @@
 #include <QCloseEvent>
 #include <public_defines.h>
 namespace Ui {
-    class MonitorFoldersAddDialog;
+    class FoldersAddDialog;
 }
 
-class MonitorFoldersAddDialog : public QDialog
+class FoldersAddDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MonitorFoldersAddDialog(QWidget *parent = 0);
-    ~MonitorFoldersAddDialog();
+    explicit FoldersAddDialog(QWidget *parent = nullptr);
+    ~FoldersAddDialog();
     QString getNewPath() const;
 private slots:
     void on_exploreButton_clicked();
 private:
-    Ui::MonitorFoldersAddDialog *ui;
+    Ui::FoldersAddDialog *ui;
 };
 
 #endif // MONITORFOLDERSADDDIALOG_H

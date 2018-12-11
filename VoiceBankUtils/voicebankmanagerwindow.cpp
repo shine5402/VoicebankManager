@@ -83,6 +83,10 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     connect(categoriesAndLabelsListWidget,SIGNAL(labelsChanged()),this,SLOT(createVoiceBanksLabelsSubMenu()));
     connect(categoriesAndLabelsListWidget,SIGNAL(currentCategoryChanged(QString)),this,SLOT(onCurrentCategoryChanged(const QString&)));
     connect(categoriesAndLabelsListWidget,SIGNAL(currentLabelChanged(QString)),this,SLOT(onCurrentLabelChanged(const QString&)));
+
+    showMoreInformationInTotalCountLabel = settings.value("VoiceBankManager/showMoreInformationInTotalCountLabel",true).toBool();
+    ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
+
 }
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())
@@ -167,8 +171,12 @@ void VoiceBankManagerWindow::loadVoiceBanksList()
     voiceBankTableModel->clearEmitter();
     voiceBankHandler->clear();
     voiceBankReadDoneCount = 0;
-    ui->voiceBanksTableView->setEnabled(false);
+    //ui->voiceBanksTableView->setEnabled(false);
+    ui->categoryAndLabelsAndListSplitter->setEnabled(false);
+    ui->searchLineEdit->setEnabled(false);
     ui->voicebankCountLabel->setText(tr("加载中"));
+    ignoredVoiceBankFolders.clear();
+    notVoiceBankPaths.clear();
     readVoiceBanks();
 }
 
@@ -177,19 +185,24 @@ VoiceBankManagerWindow::~VoiceBankManagerWindow()
     saveWindowStatus();
     delete ui;
     saveMonitorFoldersSettings();
+    QSettings settings;
+    settings.setValue("VoiceBankManager/showMoreInformationInTotalCountLabel",showMoreInformationInTotalCountLabel);
 }
 void VoiceBankManagerWindow::loadMonitorFoldersSettings(){
     QSettings settings;
-    if (settings.contains("MonitorFolders"))
-    {
-        auto value = settings.value("MonitorFolders");
-        monitorFolders = value.toStringList();
-    }
+    monitorFolders = settings.value("MonitorFolders").toStringList();
+    useOldFolderScan = settings.value("useOldFolderScan",false).toBool();
+    ui->actionuse_old_watched_folder_scan_strategy->setChecked(useOldFolderScan);
+    outsideVoiceBankFolders = settings.value("OutsideVoiceBankFolders").toStringList();
+    ignoreVoiceBankFolders = settings.value("ignoreVoiceBankFolders").toStringList();
 }
 void VoiceBankManagerWindow::saveMonitorFoldersSettings()
 {
     QSettings settings;
     settings.setValue("MonitorFolders",monitorFolders);
+    settings.setValue("useOldFolderScan",useOldFolderScan);
+    settings.setValue("OutsideVoiceBankFolders",outsideVoiceBankFolders);
+    settings.setValue("ignoreVoiceBankFolders",ignoreVoiceBankFolders);
 }
 
 void VoiceBankManagerWindow::loadWindowStatus()
@@ -254,13 +267,31 @@ QStringList VoiceBankManagerWindow::getVoiceBankFoldersInFolder(const QString& d
     auto entrys = pDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     for (auto entry : entrys){
         auto path = pDir.absolutePath() + "/" + entry;
-        if (isVoiceBankPath(path))
-            folderList.append(path);
+        auto isIgnore = false;
+        for (auto i : ignoreVoiceBankFolders)
+        {
+            if (QDir(i).path() == QDir(path).path())
+            {
+                ignoredVoiceBankFolders.append(i);
+                isIgnore = true;
+                break;
+            }
+        }
+        if (isIgnore)
+            continue;
+        if (!useOldFolderScan){
+            if (isVoiceBankPath(path))
+                folderList.append(path);
+            else
+            {
+                notVoiceBankPaths.append(path);
+                LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
+                folderList.append(getVoiceBankFoldersInFolder(path));
+            }
+        }
         else
         {
-            notVoiceBankPaths.append(path);
-            LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
-            folderList.append(getVoiceBankFoldersInFolder(path));
+            folderList.append(path);
         }
     }
     return folderList;
@@ -269,13 +300,9 @@ QStringList VoiceBankManagerWindow::getVoiceBankFoldersInFolder(const QString& d
 QStringList VoiceBankManagerWindow::getFoldersInMonitorFolders(){
     QStringList folderList{};
     for (auto monitorFolder : monitorFolders){
-
-        //        for (auto entry : entrys){
-        //            folderList.append(monitorDir.absolutePath() + "/" + entry);
-        //        }
-        //TODO:添加新旧版本切换
         folderList.append(getVoiceBankFoldersInFolder(monitorFolder));
     }
+    folderList.append(outsideVoiceBankFolders);
     return folderList;
 }
 bool VoiceBankManagerWindow::isVoiceBankPath(const QString& path) const {
@@ -313,14 +340,26 @@ void VoiceBankManagerWindow::readVoiceBanks(){
 
 }
 
-void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
+void VoiceBankManagerWindow::updateVoiceBankCountLabel()
 {
-    ui->voiceBanksTableView->setEnabled(true);
     if (voiceBankHandler->count() != 0){
-        ui->voicebankCountLabel->setText(tr("共 %1 个").arg(voiceBankHandler->count()));
+        if (!showMoreInformationInTotalCountLabel)
+            ui->voicebankCountLabel->setText(tr("共 %1 个").arg(voiceBankHandler->count()));
+        else if (!useOldFolderScan)
+            ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个，不是音源文件夹的 %3 个）").arg(voiceBankHandler->count()).arg(ignoredVoiceBankFolders.count()).arg(notVoiceBankPaths.count()));
+        else
+            ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个）").arg(voiceBankHandler->count()).arg(ignoredVoiceBankFolders.count()));
         voiceBankTableModel->sort(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);}
     else
         ui->voicebankCountLabel->setText(tr("没有音源。"));
+}
+
+void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
+{
+   // ui->voiceBanksTableView->setEnabled(true);
+    ui->categoryAndLabelsAndListSplitter->setEnabled(true);
+    ui->searchLineEdit->setEnabled(true);
+    updateVoiceBankCountLabel();
     ui->voiceBankBriefInfomationWidget->setVisible(false);
 }
 
@@ -331,12 +370,12 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
             categoriesAndLabelsListWidget->readCategoriesFromVoicebankHandler();
             categoriesAndLabelsListWidget->readLabelsFromVoiceBankHandler();
         }
-    auto name  = voiceBank->getName();
-    if (!name.isEmpty())
-        ui->statusbar->showMessage(tr("音源“%1”读取完毕").arg(name));
-    else
-        ui->statusbar->showMessage(tr("音源“%1”读取完毕").arg(voiceBank->getPath()));
-    LeafLogger::LogMessage(QString("读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
+    //    auto name  = voiceBank->getName();
+    //    if (!name.isEmpty())
+    //        ui->statusbar->showMessage(tr("音源“%1”读取完毕").arg(name));
+    //    else
+    //        ui->statusbar->showMessage(tr("音源“%1”读取完毕").arg(voiceBank->getPath()));
+    //    LeafLogger::LogMessage(QString("读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
 }
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
@@ -816,11 +855,10 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
 
 void VoiceBankManagerWindow::on_actionMonitor_Folders_triggered()
 {
-    auto dialog = new MonitorFoldersSettingDialog(this);
-    dialog->setMonitorFolders(monitorFolders);
+    auto dialog = new FoldersSettingDialog(monitorFolders,tr("设定监视文件夹列表："),tr("监视文件夹列表设定"),this,{"./voice"});
     auto dialogCode = dialog->exec();
-    if (dialogCode == 1 && monitorFolders != dialog->getMonitorFolders()){
-        monitorFolders = dialog->getMonitorFolders();
+    if (dialogCode == 1 && monitorFolders != dialog->getFolders()){
+        monitorFolders = dialog->getFolders();
         auto clickedButton = QMessageBox::information(this,tr("监视文件夹列表被更改"),tr("您更改了监视文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksList();
@@ -1225,4 +1263,56 @@ void VoiceBankManagerWindow::onCurrentLabelChanged(const QString &current)
 {
     currentLabelFilter = current;
     dealFilters();
+}
+
+void VoiceBankManagerWindow::on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked)
+{
+    useOldFolderScan = checked;
+}
+
+void VoiceBankManagerWindow::on_actionshow_more_infomation_in_total_count_label_toggled(bool checked)
+{
+    showMoreInformationInTotalCountLabel = checked;
+    updateVoiceBankCountLabel();
+}
+
+void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
+{
+    auto dialog = new FoldersSettingDialog(outsideVoiceBankFolders,tr("设定外部音源文件夹列表："),tr("外部音源文件夹列表设定"),this,{"./voice"});
+    auto dialogCode = dialog->exec();
+    if (dialogCode == 1 && outsideVoiceBankFolders != dialog->getFolders()){
+        outsideVoiceBankFolders = dialog->getFolders();
+        auto clickedButton = QMessageBox::information(this,tr("外部音源文件夹列表被更改"),tr("您更改了外部音源文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+        if (clickedButton == QMessageBox::Ok)
+            loadVoiceBanksList();
+    }
+    dialog->deleteLater();
+}
+
+void VoiceBankManagerWindow::on_actionIgnored_folders_triggered()
+{
+    auto dialog = new FoldersSettingDialog(ignoreVoiceBankFolders,tr("设定忽略文件夹列表（不包括子文件夹）："),tr("忽略文件夹列表设定"),this,{"./voice"});
+    auto dialogCode = dialog->exec();
+    if (dialogCode == 1 && ignoreVoiceBankFolders != dialog->getFolders()){
+        ignoreVoiceBankFolders = dialog->getFolders();
+        auto clickedButton = QMessageBox::information(this,tr("忽略文件夹列表被更改"),tr("您更改了忽略文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+        if (clickedButton == QMessageBox::Ok)
+            loadVoiceBanksList();
+    }
+    dialog->deleteLater();
+}
+
+void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
+{
+    auto html = tr("<h4>已忽略的文件夹</h4>"
+                   "<pre>%1</pre>"
+                   "<h4>不是音源的文件夹</h4>"
+                   "<pre>%2</pre>"
+                   "<h4>手动添加的音源文件夹</h4>"
+                   "<pre>%3</pre>")
+            .arg(ignoredVoiceBankFolders.join("\n"))
+            .arg(notVoiceBankPaths.join("\n"))
+            .arg(outsideVoiceBankFolders.join("\n"));
+    auto dialog = new ShowHTMLDialog(html,tr("音源文件夹扫描详情"),this);
+    dialog->exec();
 }

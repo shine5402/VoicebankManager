@@ -12,7 +12,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QClipboard>
-#include "monitorfolderssettingdialog.h"
+#include "folderssettingdialog.h"
 #include "textcodecsettingdialog.h"
 #include <QSettings>
 #include <public_defines.h>
@@ -32,6 +32,7 @@
 #include <QTranslator>
 #include "./TextCodecUtils/qchardet.h"
 #include "categoriesandlabelslistwidget.h"
+#include "CommonUtils/showhtmldialog.h"
 
 namespace Ui {
 class VoiceBankManagerWindow;
@@ -110,6 +111,17 @@ private:
     QStringList notVoiceBankPaths;
     QStringList getVoiceBankFoldersInFolder(const QString &dir);
 
+    bool useOldFolderScan = false;
+
+    bool showMoreInformationInTotalCountLabel = true;
+
+    QStringList outsideVoiceBankFolders;
+    QStringList ignoreVoiceBankFolders;
+
+    QStringList ignoredVoiceBankFolders;
+
+    void updateVoiceBankCountLabel();
+
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -155,6 +167,11 @@ private slots:
     void on_voicebankImage_customContextMenuRequested(const QPoint &);
     void onCurrentCategoryChanged(const QString& current);
     void onCurrentLabelChanged(const QString& current);
+    void on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked);
+    void on_actionshow_more_infomation_in_total_count_label_toggled(bool checked);
+    void on_actionOutside_VoiceBanks_triggered();
+    void on_actionIgnored_folders_triggered();
+    void on_actionView_scan_details_triggered();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

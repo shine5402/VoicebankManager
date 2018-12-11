@@ -29,8 +29,6 @@ SOURCES += \
     VoiceBankUtils/voicebankreadmeinformationdialog.cpp \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
-    VoiceBankUtils/monitorfolderssettingdialog.cpp \
-    VoiceBankUtils/monitorfoldersadddialog.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
     ../LeafPublicQtClasses/leaflogger.cpp \
     TextCodecUtils/availabletextcodecdialog.cpp \
@@ -50,7 +48,11 @@ SOURCES += \
     VoiceBankUtils/categoriesandlabelslistwidget.cpp \
     VoiceBankUtils/categoriesmodel.cpp \
     VoiceBankUtils/labelsmodel.cpp \
-    ../LeafPublicQtClasses/qlistviewwithselectsignal.cpp
+    ../LeafPublicQtClasses/qlistviewwithselectsignal.cpp \
+    VoiceBankUtils/outsidevoicebankslistdialog.cpp \
+    VoiceBankUtils/folderssettingdialog.cpp \
+    VoiceBankUtils/foldersadddialog.cpp \
+    CommonUtils/showhtmldialog.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -58,8 +60,6 @@ HEADERS += \
     VoiceBankUtils/voicebankreadmeinformationdialog.h \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
-    VoiceBankUtils/monitorfolderssettingdialog.h \
-    VoiceBankUtils/monitorfoldersadddialog.h \
     VoiceBankUtils/textcodecsettingdialog.h \
     ../LeafPublicQtClasses/leaflogger.h \
     TextCodecUtils/availabletextcodecdialog.h \
@@ -82,14 +82,16 @@ HEADERS += \
     VoiceBankUtils/categoriesandlabelslistwidget.h \
     VoiceBankUtils/categoriesmodel.h \
     VoiceBankUtils/labelsmodel.h \
-    ../LeafPublicQtClasses/qlistviewwithselectsignal.h
+    ../LeafPublicQtClasses/qlistviewwithselectsignal.h \
+    VoiceBankUtils/outsidevoicebankslistdialog.h \
+    VoiceBankUtils/folderssettingdialog.h \
+    VoiceBankUtils/foldersadddialog.h \
+    CommonUtils/showhtmldialog.h
 
 FORMS += \
         editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
     VoiceBankUtils/voicebankreadmeinformationdialog.ui \
-    VoiceBankUtils/monitorfolderssettingdialog.ui \
-    VoiceBankUtils/monitorfoldersadddialog.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
     TextCodecUtils/availabletextcodecdialog.ui \
     TextCodecUtils/textcodecconvertdialog.ui \
@@ -97,7 +99,11 @@ FORMS += \
     EngineUtils/moresamplerconfigaddnewdialog.ui \
     VoiceBankUtils/voicebankiconcropdialog.ui \
     ../ImageCropper/src/imagecroppercontainer.ui \
-    VoiceBankUtils/categoriesandlabelslistwidget.ui
+    VoiceBankUtils/categoriesandlabelslistwidget.ui \
+    VoiceBankUtils/outsidevoicebankslistdialog.ui \
+    VoiceBankUtils/folderssettingdialog.ui \
+    VoiceBankUtils/foldersadddialog.ui \
+    CommonUtils/showhtmldialog.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }

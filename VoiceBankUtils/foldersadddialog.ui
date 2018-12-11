@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MonitorFoldersAddDialog</class>
- <widget class="QDialog" name="MonitorFoldersAddDialog">
+ <class>FoldersAddDialog</class>
+ <widget class="QDialog" name="FoldersAddDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>567</width>
-    <height>94</height>
+    <height>114</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>添加一个监视文件夹</string>
+   <string>添加一个文件夹</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>输入要添加的被监视文件夹路径，或者使用浏览：</string>
+      <string>输入要添加的文件夹路径，或者使用浏览：</string>
      </property>
     </widget>
    </item>
@@ -65,7 +65,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>MonitorFoldersAddDialog</receiver>
+   <receiver>FoldersAddDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -81,7 +81,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>MonitorFoldersAddDialog</receiver>
+   <receiver>FoldersAddDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
