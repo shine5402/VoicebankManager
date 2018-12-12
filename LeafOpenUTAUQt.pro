@@ -49,7 +49,6 @@ SOURCES += \
     VoiceBankUtils/categoriesmodel.cpp \
     VoiceBankUtils/labelsmodel.cpp \
     ../LeafPublicQtClasses/qlistviewwithselectsignal.cpp \
-    VoiceBankUtils/outsidevoicebankslistdialog.cpp \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
     CommonUtils/showhtmldialog.cpp
@@ -83,7 +82,6 @@ HEADERS += \
     VoiceBankUtils/categoriesmodel.h \
     VoiceBankUtils/labelsmodel.h \
     ../LeafPublicQtClasses/qlistviewwithselectsignal.h \
-    VoiceBankUtils/outsidevoicebankslistdialog.h \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
     CommonUtils/showhtmldialog.h
@@ -100,7 +98,6 @@ FORMS += \
     VoiceBankUtils/voicebankiconcropdialog.ui \
     ../ImageCropper/src/imagecroppercontainer.ui \
     VoiceBankUtils/categoriesandlabelslistwidget.ui \
-    VoiceBankUtils/outsidevoicebankslistdialog.ui \
     VoiceBankUtils/folderssettingdialog.ui \
     VoiceBankUtils/foldersadddialog.ui \
     CommonUtils/showhtmldialog.ui

@@ -177,6 +177,7 @@ void VoiceBankManagerWindow::loadVoiceBanksList()
     ui->voicebankCountLabel->setText(tr("加载中"));
     ignoredVoiceBankFolders.clear();
     notVoiceBankPaths.clear();
+    scannedSubFolders.clear();
     readVoiceBanks();
 }
 
@@ -330,6 +331,7 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 }
 void VoiceBankManagerWindow::readVoiceBanks(){
     auto pathList = getFoldersInMonitorFolders();
+    voiceBankPaths = pathList;
     voiceBankPathsCount = pathList.count();
     LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(pathList.count()));
     if (voiceBankPathsCount == 0)
@@ -342,11 +344,12 @@ void VoiceBankManagerWindow::readVoiceBanks(){
 
 void VoiceBankManagerWindow::updateVoiceBankCountLabel()
 {
+
     if (voiceBankHandler->count() != 0){
         if (!showMoreInformationInTotalCountLabel)
             ui->voicebankCountLabel->setText(tr("共 %1 个").arg(voiceBankHandler->count()));
         else if (!useOldFolderScan)
-            ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个，不是音源文件夹的 %3 个）").arg(voiceBankHandler->count()).arg(ignoredVoiceBankFolders.count()).arg(notVoiceBankPaths.count()));
+            ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个，不是音源文件夹的 %3 个，子文件夹递归得到 %4 个）").arg(voiceBankHandler->count()).arg(ignoredVoiceBankFolders.count()).arg(notVoiceBankPaths.count()).arg(scannedSubFolders.count()));
         else
             ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个）").arg(voiceBankHandler->count()).arg(ignoredVoiceBankFolders.count()));
         voiceBankTableModel->sort(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);}
@@ -356,7 +359,7 @@ void VoiceBankManagerWindow::updateVoiceBankCountLabel()
 
 void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 {
-   // ui->voiceBanksTableView->setEnabled(true);
+    // ui->voiceBanksTableView->setEnabled(true);
     ui->categoryAndLabelsAndListSplitter->setEnabled(true);
     ui->searchLineEdit->setEnabled(true);
     updateVoiceBankCountLabel();
@@ -366,6 +369,7 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     if (voiceBank->isFirstRead())
         if (++voiceBankReadDoneCount == voiceBankPathsCount){
+            findScannedSubFolders();
             setUIAfterVoiceBanksReadDone();
             categoriesAndLabelsListWidget->readCategoriesFromVoicebankHandler();
             categoriesAndLabelsListWidget->readLabelsFromVoiceBankHandler();
@@ -376,6 +380,30 @@ void VoiceBankManagerWindow::voiceBankReadDoneSlot(VoiceBank *voiceBank){
     //    else
     //        ui->statusbar->showMessage(tr("音源“%1”读取完毕").arg(voiceBank->getPath()));
     //    LeafLogger::LogMessage(QString("读取完成数为%1个，共需要读取%2个。").arg(voiceBankReadDoneCount).arg(voiceBankPathsCount));
+}
+
+void VoiceBankManagerWindow::findScannedSubFolders()
+{
+    QStringList firstSubFolders;
+    for (auto i : monitorFolders)
+    {
+        QDir iDir(i);
+        for (auto j : iDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        {
+            firstSubFolders.append(iDir.absoluteFilePath(j));
+        }
+    }
+    auto outsideFolders = this->outsideVoiceBankFolders;
+    for (auto i : outsideFolders)
+    {
+        if (i.endsWith("/") || i.endsWith("\\"))
+            i.remove(i.count() - 1,1);
+    }
+    for (auto i : voiceBankPaths)
+    {
+        if (!(firstSubFolders.contains(i) || outsideFolders.contains(i)))
+            scannedSubFolders.append(i);
+    }
 }
 #ifndef NDEBUG
 void VoiceBankManagerWindow::debugFunction()
@@ -489,12 +517,18 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     voiceBanksTableWidgetMenu->addMenu(voiceBankLabelsSubMenu);
     voiceBanksTableWidgetMenu->addSeparator();
 
+    auto ignoreAction = new QAction(tr("忽略该文件夹"),this);
+    connect(ignoreAction,SIGNAL(triggered(bool)),this,SLOT(ignoreActionSlot()));
+    ignoreAction->setStatusTip(tr("将该文件夹加入忽略文件夹列表。"));
+    voiceBanksTableWidgetMenu->addAction(ignoreAction);
+
     auto reloadAction = new QAction(tr("重载此音源"),this);
     connect(reloadAction,SIGNAL(triggered(bool)),this,SLOT(reloadVoiceBankActionSlot()));
     reloadAction->setStatusTip(tr("重新从硬盘加载此音源。"));
     voiceBanksTableWidgetMenu->addAction(reloadAction);
 
 }
+
 void VoiceBankManagerWindow::createVoiceBanksCategoriesSubMenu(){
     voiceBankCategoriesSubMenu->clear();
     voiceBankCategoriesActionGroup->deleteLater();
@@ -536,6 +570,19 @@ void VoiceBankManagerWindow::createVoiceBanksLabelsSubMenu(){
     connect(voiceBankLabelsActionGroup,SIGNAL(triggered(QAction *)),this,SLOT(setLabelActionSlot(QAction*)));
     voiceBankLabelsSubMenu->addActions(voiceBankLabelsActionGroup->actions());
 
+}
+
+void VoiceBankManagerWindow::ignoreActionSlot(){
+    auto voiceBank = getSelectedVoiceBank();
+    if (voiceBank)
+    {
+        auto button = QMessageBox::warning(this,tr("确定？"),tr("确定要把该文件夹中加入忽略列表吗？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Cancel);
+        if (button == QMessageBox::Ok)
+            ignoreVoiceBankFolders.append(voiceBank->getPath());
+        auto clickedButton = QMessageBox::information(this,tr("忽略文件夹列表被更改"),tr("您更改了忽略文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+        if (clickedButton == QMessageBox::Ok)
+            loadVoiceBanksList();
+    }
 }
 
 void VoiceBankManagerWindow::addNewLabelActionSlot(){
@@ -737,7 +784,7 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
         }
     }
 }
-bool VoiceBankManagerWindow::processFileNameConvert(QByteArrayList _fileNameRaw,QStringList _filePaths,QString title,QTextCodec* rawCodec,QTextCodec* targetCodec)
+bool VoiceBankManagerWindow::processFileNameConvert(QByteArrayList _fileNameRaw,QStringList _filePaths,QString title,QTextCodec* &rawCodec,QTextCodec* &targetCodec)
 {
     auto fileNameRaw = _fileNameRaw;
     auto showString = fileNameRaw.join("\n");
@@ -826,7 +873,7 @@ QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(cons
                     }
                     else
                     {
-                        QMessageBox::information(this,tr("转换成功"),tr("<h3>文件编码转换完成</h3><p>程序将自动修改该文件的读取用文本编码，之后将实施重载。</p>"));
+                        QMessageBox::information(this,tr("转换成功"),tr("<h3>文件编码转换完成</h3><p>程序将自动修改该文件的读取用文本编码，之后将实施重载（如果需要）。</p>"));
                         isDone = true;
                     }
                     file->close();
@@ -1239,8 +1286,10 @@ void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
         auto raw = encoder.fromUnicode(name);
         fileNameRaw.append(raw);
     }
-    if (processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),QTextCodec::codecForLocale(),QTextCodec::codecForLocale()))
-        QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的转换成功完成。").arg(path));
+    auto sourceCodec = QTextCodec::codecForLocale();
+    auto targetCodec = QTextCodec::codecForLocale();
+    if (processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),sourceCodec,targetCodec))
+        QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的从%2到%3的转换成功完成。").arg(path).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
 }
 
 void VoiceBankManagerWindow::on_voicebankImage_customContextMenuRequested(const QPoint &)
@@ -1309,10 +1358,13 @@ void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
                    "<h4>不是音源的文件夹</h4>"
                    "<pre>%2</pre>"
                    "<h4>手动添加的音源文件夹</h4>"
-                   "<pre>%3</pre>")
+                   "<pre>%3</pre>"
+                   "<h4>子文件夹递归确定得到的声库文件夹</h4>"
+                   "<pre>%4</pre>")
             .arg(ignoredVoiceBankFolders.join("\n"))
             .arg(notVoiceBankPaths.join("\n"))
-            .arg(outsideVoiceBankFolders.join("\n"));
+            .arg(outsideVoiceBankFolders.join("\n"))
+            .arg(scannedSubFolders.join("\n"));
     auto dialog = new ShowHTMLDialog(html,tr("音源文件夹扫描详情"),this);
     dialog->exec();
 }

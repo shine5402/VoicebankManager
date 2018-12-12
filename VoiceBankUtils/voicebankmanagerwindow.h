@@ -71,6 +71,7 @@ private:
     QStringList getFoldersInMonitorFolders();
     void setVoiceBankInfomation(VoiceBank *voiceBank);
     int voiceBankPathsCount{};
+    QStringList voiceBankPaths;
     int voiceBankReadDoneCount{};
     struct TableColumn
     {
@@ -97,7 +98,7 @@ private:
     void autoDetectTranslate();
     QList<QTranslator*> translators;
     void removeAllTranslators();
-    bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *rawCodec, QTextCodec *targetCodec);
+    bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *&rawCodec, QTextCodec *&targetCodec);
     CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
 
     QString currentCategoryFilter;
@@ -122,6 +123,8 @@ private:
 
     void updateVoiceBankCountLabel();
 
+    void findScannedSubFolders();
+    QStringList scannedSubFolders;
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -172,6 +175,7 @@ private slots:
     void on_actionOutside_VoiceBanks_triggered();
     void on_actionIgnored_folders_triggered();
     void on_actionView_scan_details_triggered();
+    void ignoreActionSlot();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H
