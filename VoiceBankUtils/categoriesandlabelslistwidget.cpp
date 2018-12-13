@@ -255,7 +255,7 @@ void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal
     emit currentCategoriesChanged(currentCategories);
 }
 
-void CategoriesAndLabelsListWidget::on_labelListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
+void CategoriesAndLabelsListWidget::on_labelListView_selectionChangedSignal(const QItemSelection &, const QItemSelection &)
 {
     QStringList currentLabels;
     auto indexes = ui->labelListView->selectionModel()->selection().indexes();

@@ -52,7 +52,7 @@ private slots:
 
     void on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);
 
-    void on_labelListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);
+    void on_labelListView_selectionChangedSignal(const QItemSelection &, const QItemSelection &deselected);
 
     void on_labelCheckBox_stateChanged(int state);
 
