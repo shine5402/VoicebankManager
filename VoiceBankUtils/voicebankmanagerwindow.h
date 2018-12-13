@@ -101,11 +101,12 @@ private:
     bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *&rawCodec, QTextCodec *&targetCodec);
     CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
 
-    QString currentCategoryFilter;
-    QString currentLabelFilter;
+    QStringList currentCategoriesFilter = {""};
+    QStringList currentLabelFilter = {""};
     void showVoiceBanksRows(const QList<int> &voiceBankIDs);
-    void dealFilters();
-    QList<int> getIntersection(QList<QList<int> > lists);
+
+    template <typename T>
+    QList<T> getIntersection(QList<QList<T> > lists);
     void loadWindowStatus();
     void saveWindowStatus();
     bool isVoiceBankPath(const QString &path) const;
@@ -125,6 +126,8 @@ private:
 
     void findScannedSubFolders();
     QStringList scannedSubFolders;
+    template <typename T>
+    QList<T> getUnion(QList<QList<T> > lists);
 private slots:
 #ifndef NDEBUG
     void debugFunction();
@@ -168,14 +171,15 @@ private slots:
     void addNewLabelActionSlot();
     void setLabelActionSlot(QAction *action);
     void on_voicebankImage_customContextMenuRequested(const QPoint &);
-    void onCurrentCategoryChanged(const QString& current);
-    void onCurrentLabelChanged(const QString& current);
+    void onCurrentCategoriesChanged(const QStringList& current);
+    void onCurrentLabelsChanged(const QStringList& current);
     void on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked);
     void on_actionshow_more_infomation_in_total_count_label_toggled(bool checked);
     void on_actionOutside_VoiceBanks_triggered();
     void on_actionIgnored_folders_triggered();
     void on_actionView_scan_details_triggered();
     void ignoreActionSlot();
+    void dealFilters();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

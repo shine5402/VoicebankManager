@@ -56,6 +56,11 @@ void CategoriesAndLabelsListWidget::saveSettingsCategoriesAndLabels()
     settings.setValue("VoiceBankManager/Labels",labels);
 }
 
+CategoriesAndLabelsListWidget::LabelSelectionStrategy CategoriesAndLabelsListWidget::getSelectionStrategy() const
+{
+    return selectionStrategy;
+}
+
 int CategoriesAndLabelsListWidget::getNoLabelsCount() const
 {
     return noLabelsCount;
@@ -183,50 +188,92 @@ void CategoriesAndLabelsListWidget::on_categoriesListView_customContextMenuReque
 void CategoriesAndLabelsListWidget::on_labelListView_customContextMenuRequested(const QPoint &)
 {
     auto menu = new QMenu(this);
-    auto action = new QAction(tr("清除未使用的标签"),menu);
+
+    auto removeUnusedAction = new QAction(tr("清除未使用的标签"),menu);
     menu->setPalette(QGuiApplication::palette());
-    connect(action,SIGNAL(triggered(bool)),this,SLOT(removeUnusedLabels()));
-    menu->addAction(action);
+    connect(removeUnusedAction,SIGNAL(triggered(bool)),this,SLOT(removeUnusedLabels()));
+    menu->addAction(removeUnusedAction);
+
+    //TODO:
+    menu->addSeparator();
+
+    auto multiSelectionStrategyActionGroup = new QActionGroup(this);
+    connect(multiSelectionStrategyActionGroup,SIGNAL(triggered(QAction*)),this,SLOT(onMultiSelectionStrategyActionGroupTriggered(QAction*)));
+
+    auto interAction = new QAction(tr("交集"),multiSelectionStrategyActionGroup);
+    interAction->setCheckable(true);
+    auto unionAction = new QAction(tr("并集"),multiSelectionStrategyActionGroup);
+    unionAction->setCheckable(true);
+
+    switch (selectionStrategy) {
+    case Intersection:
+        interAction->setChecked(true);
+        break;
+    case Union:
+        unionAction->setChecked(true);
+    }
+
+    auto multiSelectionStrategyMenu = new QMenu(tr("多选筛选策略"),menu);
+
+    multiSelectionStrategyMenu->addActions(multiSelectionStrategyActionGroup->actions());
+    menu->addMenu(multiSelectionStrategyMenu);
+
     menu->popup(QCursor::pos());
 }
 
+void CategoriesAndLabelsListWidget::onMultiSelectionStrategyActionGroupTriggered(QAction* action)
+{
+    if (action->text() == tr("交集"))
+    {
+        selectionStrategy = Intersection;
+        emit labelSelectionStrategyChanged();
+    }
+    else if(action->text() == tr("并集"))
+    {
+        selectionStrategy = Union;
+        emit labelSelectionStrategyChanged();
+    }
+}
 
 void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
 {
+    QStringList currentCategories;
     for (auto index : selected.indexes())
         if (index.isValid())
         {
             if (index.row() == 0)
             {
-                emit currentCategoryChanged("");
-                return;
+                currentCategories.append("");
             }
-            if (index.row() == 1)
+            else if (index.row() == 1)
             {
-                emit currentCategoryChanged(tr("未分类"));
-                return;
+                currentCategories.append(tr("未分类"));
             }
-            emit currentCategoryChanged(categories.at(index.row() - 2));
+            else
+                currentCategories.append(categories.at(index.row() - 2));
         }
+    emit currentCategoriesChanged(currentCategories);
 }
 
 void CategoriesAndLabelsListWidget::on_labelListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
 {
-    for (auto index : selected.indexes())
+    QStringList currentLabels;
+    auto indexes = ui->labelListView->selectionModel()->selection().indexes();
+    for (auto index : indexes)
         if (index.isValid())
         {
             if (index.row() == 0)
             {
-                emit currentLabelChanged("");
-                return;
+                currentLabels.append("");
             }
-            if (index.row() == 1)
+            else if (index.row() == 1)
             {
-                emit currentLabelChanged(tr("无标签"));
-                return;
+                currentLabels.append(tr("无标签"));
             }
-            emit currentLabelChanged(labels.at(index.row() - 2));
+            else
+                currentLabels.append(labels.at(index.row() - 2));
         }
+    emit currentLabelsChanged(currentLabels);
 }
 
 void CategoriesAndLabelsListWidget::on_labelCheckBox_stateChanged(int state)

@@ -81,8 +81,9 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     connect(categoriesAndLabelsListWidget,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
     connect(voiceBankHandler,SIGNAL(labelsChanged()),categoriesAndLabelsListWidget,SLOT(readLabelsFromVoiceBankHandler()));
     connect(categoriesAndLabelsListWidget,SIGNAL(labelsChanged()),this,SLOT(createVoiceBanksLabelsSubMenu()));
-    connect(categoriesAndLabelsListWidget,SIGNAL(currentCategoryChanged(QString)),this,SLOT(onCurrentCategoryChanged(const QString&)));
-    connect(categoriesAndLabelsListWidget,SIGNAL(currentLabelChanged(QString)),this,SLOT(onCurrentLabelChanged(const QString&)));
+    connect(categoriesAndLabelsListWidget,SIGNAL(currentCategoriesChanged(QStringList)),this,SLOT(onCurrentCategoriesChanged(const QStringList&)));
+    connect(categoriesAndLabelsListWidget,SIGNAL(currentLabelsChanged(QStringList)),this,SLOT(onCurrentLabelsChanged(const QStringList&)));
+    connect(categoriesAndLabelsListWidget,SIGNAL(labelSelectionStrategyChanged()),this,SLOT(dealFilters()));
 
     showMoreInformationInTotalCountLabel = settings.value("VoiceBankManager/showMoreInformationInTotalCountLabel",true).toBool();
     ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
@@ -946,11 +947,11 @@ void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
             ui->voiceBanksTableView->setRowHidden(i,false);
     }
 }
-
-QList<int> VoiceBankManagerWindow::getIntersection(QList<QList<int>> lists)
+template <typename T>
+QList<T> VoiceBankManagerWindow::getIntersection(QList<QList<T>> lists)
 {
-    QHash<int,int> counts;
-    QList<int> result;
+    QHash<T,int> counts;
+    QList<T> result;
     for (auto list : lists)
     {
         for (auto i : list)
@@ -965,14 +966,52 @@ QList<int> VoiceBankManagerWindow::getIntersection(QList<QList<int>> lists)
     }
     return result;
 }
-
-void VoiceBankManagerWindow::dealFilters()
+template <typename T>
+QList<T> VoiceBankManagerWindow::getUnion(QList<QList<T>> lists)
 {
+    QList<T> result;
+    for (auto list : lists)
+    {
+        for (auto i : list)
+        {
+            if (!result.contains(i))
+                result.append(i);
+        }
+    }
+    return result;
+}
+void VoiceBankManagerWindow::dealFilters()
+{//TODO:
     auto byName = voiceBankHandler->findIDByName(ui->searchLineEdit->text());
-    auto byCategory = voiceBankHandler->findIDByCategory(currentCategoryFilter);
-    auto byLabel = voiceBankHandler->findIDByLabel(currentLabelFilter);
-    auto intersection = getIntersection({byName,byCategory,byLabel});
-    showVoiceBanksRows(intersection);
+    QList<int> byCategory;
+    if (currentCategoriesFilter.count() == 1)
+        byCategory.append(voiceBankHandler->findIDByCategory(currentCategoriesFilter.at(0)));
+    else
+    {
+        for (auto i : currentCategoriesFilter){
+            byCategory.append(voiceBankHandler->findIDByCategory(i));
+        }
+    }
+    QList<int> byLabel;
+    if (currentLabelFilter.count() == 1)
+        byLabel.append(voiceBankHandler->findIDByLabel(currentLabelFilter.at(0)));
+    else
+    {
+        if (categoriesAndLabelsListWidget->getSelectionStrategy() == CategoriesAndLabelsListWidget::Intersection)
+            byLabel.append(voiceBankHandler->findIDByLabel(""));
+        for (auto i : currentLabelFilter){
+            auto byLabeli = voiceBankHandler->findIDByLabel(i);
+            switch (categoriesAndLabelsListWidget->getSelectionStrategy()){
+            case CategoriesAndLabelsListWidget::Intersection:
+                byLabel = getIntersection<int>({byLabel,byLabeli});
+                break;
+            case CategoriesAndLabelsListWidget::Union:
+                byLabel = getUnion<int>({byLabel,byLabeli});
+            }
+        }
+    }
+    auto result = getIntersection<int>({byName,byCategory,byLabel});
+    showVoiceBanksRows(result);
 }
 
 void VoiceBankManagerWindow::on_searchLineEdit_textChanged(const QString &)
@@ -1302,13 +1341,13 @@ void VoiceBankManagerWindow::on_voicebankImage_customContextMenuRequested(const 
     menu->popup(QCursor::pos());
 }
 
-void VoiceBankManagerWindow::onCurrentCategoryChanged(const QString &current)
+void VoiceBankManagerWindow::onCurrentCategoriesChanged(const QStringList &current)
 {
-    currentCategoryFilter = current;
+    currentCategoriesFilter = current;
     dealFilters();
 }
 
-void VoiceBankManagerWindow::onCurrentLabelChanged(const QString &current)
+void VoiceBankManagerWindow::onCurrentLabelsChanged(const QStringList &current)
 {
     currentLabelFilter = current;
     dealFilters();

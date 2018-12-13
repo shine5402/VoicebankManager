@@ -33,6 +33,12 @@ public:
     void addCategory(const QString& category);
     void addLabel(const QString& label);
 
+    enum LabelSelectionStrategy{
+        Intersection, Union
+    };
+
+    LabelSelectionStrategy getSelectionStrategy() const;
+
 public slots:
     void removeUnusedCategories();
     void removeUnusedLabels();
@@ -51,7 +57,8 @@ private slots:
     void on_labelCheckBox_stateChanged(int state);
 
     void on_categoriesCheckBox_stateChanged(int state);
-
+    
+    void onMultiSelectionStrategyActionGroupTriggered(QAction *action);
 private:
     Ui::CategoriesAndLabelsListWidget *ui;
     VoiceBankHandler* handler = nullptr;
@@ -65,11 +72,15 @@ private:
     int noLabelsCount = 0;
     CategoriesModel* categoriesModel = new CategoriesModel(this);
     LabelsModel* labelsModel = new LabelsModel(this);
+    LabelSelectionStrategy selectionStrategy = Intersection;
 signals:
     void categoriesChanged();
     void labelsChanged();
-    void currentCategoryChanged(QString category);
-    void currentLabelChanged(QString label);
+//    void currentCategoryChanged(QString category);
+//    void currentLabelChanged(QString label);
+    void currentCategoriesChanged(QStringList categories);
+    void currentLabelsChanged(QStringList labels);
+    void labelSelectionStrategyChanged();
 };
 
 #endif // CATEGORIESANDLABELSLISTWIDGET_H
