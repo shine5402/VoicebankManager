@@ -16,11 +16,15 @@ CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoiceBankHandler *h
     //    _palette.setColor(QPalette::ColorRole::Window,QColor("white"));
     //    setPalette(_palette);
     //    ui->frame->setPalette(_palette);
+    QSettings settings;
+    selectionStrategy = static_cast<LabelSelectionStrategy>(settings.value("VoiceBankManager/LabelsFilterSelectionStrategy").toInt());
 }
 
 CategoriesAndLabelsListWidget::~CategoriesAndLabelsListWidget()
 {
     saveSettingsCategoriesAndLabels();
+    QSettings settings;
+    settings.setValue("VoiceBankManager/LabelsFilterSelectionStrategy",selectionStrategy);
     delete ui;
 }
 

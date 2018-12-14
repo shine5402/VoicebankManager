@@ -986,6 +986,8 @@ void VoiceBankManagerWindow::dealFilters()
     QList<int> byCategory;
     if (currentCategoriesFilter.count() == 1)
         byCategory.append(voiceBankHandler->findIDByCategory(currentCategoriesFilter.at(0)));
+    else if (currentCategoriesFilter.isEmpty())
+        byCategory.append(voiceBankHandler->findIDByCategory(""));
     else
     {
         for (auto i : currentCategoriesFilter){
@@ -995,6 +997,8 @@ void VoiceBankManagerWindow::dealFilters()
     QList<int> byLabel;
     if (currentLabelFilter.count() == 1)
         byLabel.append(voiceBankHandler->findIDByLabel(currentLabelFilter.at(0)));
+    else if (currentLabelFilter.isEmpty())
+        byLabel.append(voiceBankHandler->findIDByLabel(""));
     else
     {
         if (categoriesAndLabelsListWidget->getSelectionStrategy() == CategoriesAndLabelsListWidget::Intersection)
