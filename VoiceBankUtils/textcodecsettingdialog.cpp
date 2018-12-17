@@ -90,10 +90,17 @@ void TextCodecSettingDialog::initUI(){
         ui->followDefaultTextCodecCheckBox->setChecked(voiceBank->getIsFollowDefault());
         if (!voiceBank->getIsFollowDefault()){
             setFormInNoDefault();
+            if (voiceBank->getIsTextCodecAutoDetect()){
+                ui->autoDetectCheckBox->setChecked(true);
+                setFormInAutoDetect();
+            }
+            else
+                setFormInNoAutoDetect();
         }
         else
         {
             setFormInDefault();
+            return;
         }
     }
     else

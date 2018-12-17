@@ -80,9 +80,9 @@ private:
     };
 
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
-    QMenu* voiceBankCategoriesSubMenu = new QMenu(tr("分类"),this);
+    QMenu* voiceBankCategoriesSubMenu = nullptr;
     QActionGroup* voiceBankCategoriesActionGroup = new QActionGroup(this);
-    QMenu* voiceBankLabelsSubMenu = new QMenu(tr("标签"),this);
+    QMenu* voiceBankLabelsSubMenu = nullptr;
     QActionGroup* voiceBankLabelsActionGroup = new QActionGroup(this);
 
     void createVoiceBanksTableMenu();

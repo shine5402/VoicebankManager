@@ -39,6 +39,8 @@ public:
 
     LabelSelectionStrategy getSelectionStrategy() const;
 
+protected:
+    void changeEvent(QEvent *e) override;
 public slots:
     void removeUnusedCategories();
     void removeUnusedLabels();

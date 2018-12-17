@@ -420,6 +420,8 @@ void VoiceBankManagerWindow::debug_voiceBank_readDone_Slot(VoiceBank *){
 
 void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 {
+    voiceBankCategoriesSubMenu = new QMenu(tr("分类"),this);
+    voiceBankLabelsSubMenu = new QMenu(tr("标签"),this);
     voiceBanksTableWidgetMenu->clear();
 
     auto openSubMenu = new QMenu(tr("打开..."),this);

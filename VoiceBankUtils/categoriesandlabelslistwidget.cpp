@@ -65,6 +65,18 @@ CategoriesAndLabelsListWidget::LabelSelectionStrategy CategoriesAndLabelsListWid
     return selectionStrategy;
 }
 
+void CategoriesAndLabelsListWidget::changeEvent(QEvent *e)
+{
+    QWidget::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
+    }
+}
+
 int CategoriesAndLabelsListWidget::getNoLabelsCount() const
 {
     return noLabelsCount;
