@@ -993,7 +993,8 @@ void VoiceBankManagerWindow::dealFilters()
     else
     {
         for (auto i : currentCategoriesFilter){
-            byCategory.append(voiceBankHandler->findIDByCategory(i));
+            //byCategory.append(voiceBankHandler->findIDByCategory(i));
+            byCategory = getUnion<int>({byCategory,voiceBankHandler->findIDByCategory(i)});
         }
     }
     QList<int> byLabel;

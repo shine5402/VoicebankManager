@@ -120,7 +120,7 @@ background-color:white
            </widget>
           </item>
           <item>
-           <widget class="QListViewWithSelectSignal" name="categoriesListView">
+           <widget class="QListView" name="categoriesListView">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -158,7 +158,7 @@ background-color:white
            </widget>
           </item>
           <item>
-           <widget class="QListViewWithSelectSignal" name="labelListView">
+           <widget class="QListView" name="labelListView">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -188,16 +188,6 @@ background-color:white
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QListViewWithSelectSignal</class>
-   <extends>QListView</extends>
-   <header>../LeafPublicQtClasses/qlistviewwithselectsignal.h</header>
-   <slots>
-    <signal>selectionChangedSignal(QItemSelection,QItemSelection)</signal>
-   </slots>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>

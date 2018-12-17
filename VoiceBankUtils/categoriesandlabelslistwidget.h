@@ -52,15 +52,14 @@ private slots:
 
     void on_labelListView_customContextMenuRequested(const QPoint &);
 
-    void on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &deselected);
-
-    void on_labelListView_selectionChangedSignal(const QItemSelection &, const QItemSelection &deselected);
-
     void on_labelCheckBox_stateChanged(int state);
 
     void on_categoriesCheckBox_stateChanged(int state);
     
     void onMultiSelectionStrategyActionGroupTriggered(QAction *action);
+
+    void onCategoriesListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &);
+    void onLabelListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &);
 private:
     Ui::CategoriesAndLabelsListWidget *ui;
     VoiceBankHandler* handler = nullptr;

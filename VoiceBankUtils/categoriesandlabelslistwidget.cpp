@@ -12,12 +12,10 @@ CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoiceBankHandler *h
     ui->labelListView->setModel(labelsModel);
     readCategoriesFromVoicebankHandler();
     readLabelsFromVoiceBankHandler();
-    //    auto _palette = palette();
-    //    _palette.setColor(QPalette::ColorRole::Window,QColor("white"));
-    //    setPalette(_palette);
-    //    ui->frame->setPalette(_palette);
     QSettings settings;
     selectionStrategy = static_cast<LabelSelectionStrategy>(settings.value("VoiceBankManager/LabelsFilterSelectionStrategy").toInt());
+    connect(ui->categoriesListView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onCategoriesListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &)));
+    connect(ui->labelListView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onLabelListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &)));
 }
 
 CategoriesAndLabelsListWidget::~CategoriesAndLabelsListWidget()
@@ -251,10 +249,11 @@ void CategoriesAndLabelsListWidget::onMultiSelectionStrategyActionGroupTriggered
     }
 }
 
-void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal(const QItemSelection &selected, const QItemSelection &)
+void CategoriesAndLabelsListWidget::onCategoriesListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &)
 {
     QStringList currentCategories;
-    for (auto index : selected.indexes())
+    auto indexes = ui->categoriesListView->selectionModel()->selection().indexes();
+    for (auto index : indexes)
         if (index.isValid())
         {
             if (index.row() == 0)
@@ -271,7 +270,7 @@ void CategoriesAndLabelsListWidget::on_categoriesListView_selectionChangedSignal
     emit currentCategoriesChanged(currentCategories);
 }
 
-void CategoriesAndLabelsListWidget::on_labelListView_selectionChangedSignal(const QItemSelection &, const QItemSelection &)
+void CategoriesAndLabelsListWidget::onLabelListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &)
 {
     QStringList currentLabels;
     auto indexes = ui->labelListView->selectionModel()->selection().indexes();
