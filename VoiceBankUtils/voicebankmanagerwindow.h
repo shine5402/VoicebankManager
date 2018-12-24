@@ -33,6 +33,7 @@
 #include "./TextCodecUtils/qchardet.h"
 #include "categoriesandlabelslistwidget.h"
 #include "CommonUtils/showhtmldialog.h"
+#include <quazip.h>
 
 namespace Ui {
 class VoiceBankManagerWindow;

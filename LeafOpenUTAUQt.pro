@@ -120,3 +120,10 @@ unix|win32: LIBS += -L$$PWD/../../libchardet-1.0.5/lib/ -llibchardet -llibcharde
 
 INCLUDEPATH += $$PWD/../../libchardet-1.0.5/include/chardet
 DEPENDPATH += $$PWD/../../libchardet-1.0.5/include/chardet
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../Quazip-MinGW8.1.0-i686/ -lquazip
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Quazip-MinGW8.1.0-i686/ -lquazipd
+else:unix: LIBS += -L$$PWD/../../Quazip-MinGW8.1.0-i686/ -lquazip
+
+INCLUDEPATH += $$PWD/../../Quazip-MinGW8.1.0-i686/include
+DEPENDPATH += $$PWD/../../Quazip-MinGW8.1.0-i686/include
