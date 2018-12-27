@@ -6,7 +6,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui(new Ui::VoiceBankManagerWindow)
 {
     /*!
-      \c VoiceBankManagerWindow 的构造函数。它将会自动加载音源库和相关设置。
+      \c VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。但是，如果VoiceBankHandler中已有音源库，那么它也将正常显示。
      */
     ui->setupUi(this);
 #ifndef NDEBUG
@@ -96,6 +96,27 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
 
 }
+
+void VoiceBankManagerWindow::loadVoiceBanksAndTable()
+{
+    /*!
+      加载音源库列表，并填充窗口中的表格。
+      \c VoiceBankManagerWindow 会自动处理相关的UI变化，所以在合适的时机调用该函数即可。
+      注意，构造函数\b {不会}调用本函数。
+    */
+    voiceBankTableModel->clearEmitter();
+    voiceBankHandler->clear();
+    voiceBankReadDoneCount = 0;
+    //ui->voiceBanksTableView->setEnabled(false);
+    ui->categoryAndLabelsAndListSplitter->setEnabled(false);
+    ui->searchLineEdit->setEnabled(false);
+    ui->voicebankCountLabel->setText(tr("加载中"));
+    ignoredVoiceBankFolders.clear();
+    notVoiceBankPaths.clear();
+    scannedSubFolders.clear();
+    readVoiceBanks();
+}
+
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())
     {
@@ -171,25 +192,7 @@ void VoiceBankManagerWindow::removeAllTranslators(){
     settings.setValue("Translation/NoTranslation",true);
     settings.setValue("Translation/isLoadOwnTranslationFile",false);
 }
-void VoiceBankManagerWindow::loadVoiceBanksAndTable()
-{
-    /*!
-      加载音源库列表，并填充窗口中的表格。
-      \c VoiceBankManagerWindow 会自动处理相关的UI变化，所以在合适的时机调用该函数即可。
-      注意，构造函数\b {不会}调用本函数。
-    */
-    voiceBankTableModel->clearEmitter();
-    voiceBankHandler->clear();
-    voiceBankReadDoneCount = 0;
-    //ui->voiceBanksTableView->setEnabled(false);
-    ui->categoryAndLabelsAndListSplitter->setEnabled(false);
-    ui->searchLineEdit->setEnabled(false);
-    ui->voicebankCountLabel->setText(tr("加载中"));
-    ignoredVoiceBankFolders.clear();
-    notVoiceBankPaths.clear();
-    scannedSubFolders.clear();
-    readVoiceBanks();
-}
+
 
 VoiceBankManagerWindow::~VoiceBankManagerWindow()
 {
@@ -203,6 +206,7 @@ VoiceBankManagerWindow::~VoiceBankManagerWindow()
     settings.setValue("VoiceBankManager/showMoreInformationInTotalCountLabel",showMoreInformationInTotalCountLabel);
 }
 void VoiceBankManagerWindow::loadMonitorFoldersSettings(){
+
     QSettings settings;
     monitorFolders = settings.value("MonitorFolders").toStringList();
     useOldFolderScan = settings.value("useOldFolderScan",false).toBool();
@@ -286,7 +290,7 @@ QStringList VoiceBankManagerWindow::getVoiceBankFoldersInFolder(const QString& d
         if (isIgnore)
             continue;
         if (!useOldFolderScan){
-            if (isVoiceBankPath(path))
+            if (VoiceBank::isVoiceBankPath(path))
                 folderList.append(path);
             else
             {
@@ -310,9 +314,6 @@ QStringList VoiceBankManagerWindow::getFoldersInMonitorFolders(){
     }
     folderList.append(outsideVoiceBankFolders);
     return folderList;
-}
-bool VoiceBankManagerWindow::isVoiceBankPath(const QString& path) const {
-    return (QFileInfo(path + "/character.txt").exists() || QFileInfo(path + "/prefix.map").exists() || QFileInfo(path + "/oto.ini").exists());
 }
 void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 {

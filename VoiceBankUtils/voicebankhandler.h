@@ -9,9 +9,13 @@
 class VoiceBankHandler : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool useOldFolderScan READ isOldFolderScan WRITE setUseOldFolderScan NOTIFY useOldFolderScanChanged)
 public:
     explicit VoiceBankHandler(QObject *parent = nullptr);
     ~VoiceBankHandler();
+
+    void readVoiceBanksFromMonitorFolders();
+
     QList<VoiceBank *> getVoiceBanks() const;
 
     VoiceBank* addVoiceBank(QString& path);
@@ -19,8 +23,7 @@ public:
         QList<VoiceBank*> voiceBanks;
         for (auto path : paths)
         {
-            auto voiceBank = addVoiceBank(path);
-            voiceBanks.append(voiceBank);
+            addVoiceBank(path);
         }
         return voiceBanks;
     }
@@ -54,7 +57,30 @@ public:
     }
     QList<int> findIDByCategory(const QString &category) const;
     QList<int> findIDByLabel(const QString &label) const;
+    bool isUseOldFolderScan() const;
+
+    void setUseOldFolderScan(bool value);
+
 private:
+
+
+    int voiceBankReadDoneCount{};
+
+    QStringList getVoiceBankFoldersInFolder(const QString &dir);
+    bool useOldFolderScan = false;
+    QStringList outsideVoiceBankFolders;
+    QStringList ignoreVoiceBankFolders;
+    QStringList ignoredVoiceBankFolders;
+    QStringList notVoiceBankPaths;
+    void findScannedSubFolders();
+    QStringList scannedSubFolders;
+
+    QStringList monitorFolders = {"./voice"};
+
+    QStringList getFoldersInMonitorFolders();
+    void loadMonitorFoldersSettings();
+    void saveMonitorFoldersSettings();
+
     QList<VoiceBank *> voiceBanks{};
     void addVoiceBank(VoiceBank * newVoiceBank){
         voiceBanks.append(newVoiceBank);
@@ -71,6 +97,8 @@ signals:
     void categoriesChanged();
     void labelsChanged();
     void categroiesAndLabelsChanged();
+    void useOldFolderScanChanged();
+    void voiceBanksReadDone();
 public slots:
 };
 

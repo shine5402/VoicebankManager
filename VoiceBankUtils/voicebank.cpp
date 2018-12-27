@@ -167,6 +167,11 @@ void VoiceBank::removeLabel(const QString &label)
     labels.removeOne(label);
     emit labelsChanged();
 }
+
+bool VoiceBank::isVoiceBankPath(const QString &path)
+{
+    return (QFileInfo(path + "/character.txt").exists() || QFileInfo(path + "/prefix.map").exists() || QFileInfo(path + "/oto.ini").exists());
+}
 void VoiceBank::setCategory(const QString &value)
 {
     category = value;

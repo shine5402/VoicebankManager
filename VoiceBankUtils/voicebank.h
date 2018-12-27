@@ -185,6 +185,8 @@ public:
         QString _QFileError;
     };
     void removeLabel(const QString &label);
+
+    static bool isVoiceBankPath(const QString &path);
 private:
     QImage image;
     QString imagePath;

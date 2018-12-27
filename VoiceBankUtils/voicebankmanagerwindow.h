@@ -47,6 +47,7 @@ class VoiceBankManagerWindow : public QMainWindow
   \c VoiceBankManagerWindow 是音源管理器组件的主窗口和相关动作的主要执行者。
   */
 public:
+    //TODO:加入VoiceBankHandler的构造函数
     explicit VoiceBankManagerWindow(QWidget *parent = nullptr);
     ~VoiceBankManagerWindow() override;
 
@@ -59,12 +60,13 @@ protected:
 private:
     Ui::VoiceBankManagerWindow *ui;
 
+    VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
+
     //TODO:将读取VoiceBank的函数移到Handler
     void readVoiceBanks();
 
     int voiceBankReadDoneCount{};
     QStringList voiceBankPaths;
-    bool isVoiceBankPath(const QString &path) const;
     QStringList getVoiceBankFoldersInFolder(const QString &dir);
     bool useOldFolderScan = false;
     QStringList outsideVoiceBankFolders;
@@ -76,7 +78,7 @@ private:
 
     //TODO:将监视文件夹相关功能移到Handler
     QStringList monitorFolders = {"./voice"};
-    VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
+
     QStringList getFoldersInMonitorFolders();
     void loadMonitorFoldersSettings();
     void saveMonitorFoldersSettings();
@@ -121,7 +123,7 @@ private:
     QStringList currentCategoriesFilter = {""};
     QStringList currentLabelFilter = {""};
 
-    //TODO:移动到PublicClasses中去
+    //TODO:移动到PublicClasses中去，并使用相关代码
     template <typename T>
     QList<T> getIntersection(QList<QList<T> > lists);
     template <typename T>

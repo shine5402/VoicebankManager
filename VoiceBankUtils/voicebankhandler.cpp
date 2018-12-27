@@ -13,6 +13,32 @@ VoiceBankHandler::~VoiceBankHandler()
     saveThreadPoolMaxThreadCountSettings();
 }
 
+void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
+{
+    /*
+      从需要读取的文件夹中读取音源库。
+    */
+    auto voiceBankPaths = getFoldersInMonitorFolders();
+    LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(voiceBankPaths.count()));
+    if (voiceBankPaths.count() == 0)
+       // setUIAfterVoiceBanksReadDone();
+        emit voiceBanksReadDone();
+    else{
+        addVoiceBanks(voiceBankPaths);
+    }
+}
+
+void VoiceBankHandler::loadMonitorFoldersSettings()
+{
+    QSettings settings;
+    monitorFolders = settings.value("MonitorFolders").toStringList();
+    setUseOldFolderScan(settings.value("useOldFolderScan",false).toBool());
+    //ui->actionuse_old_watched_folder_scan_strategy->setChecked(useOldFolderScan);
+    outsideVoiceBankFolders = settings.value("OutsideVoiceBankFolders").toStringList();
+    ignoreVoiceBankFolders = settings.value("ignoreVoiceBankFolders").toStringList();
+
+}
+
 QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
 {
     return voiceBanks;
@@ -135,6 +161,64 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
             result.append(getVoiceBankID(voiceBank));
     }
     return result;
+}
+
+bool VoiceBankHandler::isUseOldFolderScan() const
+{
+    return useOldFolderScan;
+}
+
+void VoiceBankHandler::setUseOldFolderScan(bool value)
+{
+    useOldFolderScan = value;
+    emit useOldFolderScanChanged();
+}
+
+QStringList VoiceBankHandler::getVoiceBankFoldersInFolder(const QString &dir)
+{
+    QStringList folderList{};
+    QDir pDir(dir);
+    auto entrys = pDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (auto entry : entrys){
+        auto path = pDir.absolutePath() + "/" + entry;
+        auto isIgnore = false;
+        for (auto i : ignoreVoiceBankFolders)
+        {
+            if (QDir(i).path() == QDir(path).path())
+            {
+                ignoredVoiceBankFolders.append(i);
+                isIgnore = true;
+                break;
+            }
+        }
+        if (isIgnore)
+            continue;
+        if (!useOldFolderScan){
+            if (VoiceBank::isVoiceBankPath(path))
+                folderList.append(path);
+            else
+            {
+                notVoiceBankPaths.append(path);
+                LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
+                folderList.append(getVoiceBankFoldersInFolder(path));
+            }
+        }
+        else
+        {
+            folderList.append(path);
+        }
+    }
+    return folderList;
+}
+
+QStringList VoiceBankHandler::getFoldersInMonitorFolders()
+{
+    QStringList folderList{};
+    for (auto monitorFolder : monitorFolders){
+        folderList.append(getVoiceBankFoldersInFolder(monitorFolder));
+    }
+    folderList.append(outsideVoiceBankFolders);
+    return folderList;
 }
 
 void VoiceBankHandler::readThreadPoolMaxThreadCountSettings()
