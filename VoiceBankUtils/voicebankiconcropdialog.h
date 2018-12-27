@@ -2,7 +2,7 @@
 #define VOICEBANKICONCROPDIALOG_H
 
 #include <QDialog>
-#include "../ImageCropper/src/imagecroppercontainer.h"
+#include <imagecroppercontainer.h>
 #include "voicebank.h"
 #include <public_defines.h>
 namespace Ui {

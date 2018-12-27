@@ -64,7 +64,7 @@
   <customwidget>
    <class>ImageCropperContainer</class>
    <extends>QWidget</extends>
-   <header>../ImageCropper/src/imagecroppercontainer.h</header>
+   <header location="global">imagecroppercontainer.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

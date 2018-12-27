@@ -30,7 +30,6 @@ SOURCES += \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
-    ../LeafPublicQtClasses/leaflogger.cpp \
     TextCodecUtils/availabletextcodecdialog.cpp \
     TextCodecUtils/textcodecconvertdialog.cpp \
     VoiceBankUtils/voicebanktablemodel.cpp \
@@ -41,14 +40,11 @@ SOURCES += \
     EngineUtils/moresamplerconfigsdelegate.cpp \
     EngineUtils/moresamplerconfigaddnewdialog.cpp \
     EngineUtils/moresamplerconfigsaddnewmodel.cpp \
-    ../ImageCropper/src/imagecropper.cpp \
     VoiceBankUtils/voicebankiconcropdialog.cpp \
-    ../ImageCropper/src/imagecroppercontainer.cpp \
     TextCodecUtils/qchardet.cpp \
     VoiceBankUtils/categoriesandlabelslistwidget.cpp \
     VoiceBankUtils/categoriesmodel.cpp \
     VoiceBankUtils/labelsmodel.cpp \
-    ../LeafPublicQtClasses/qlistviewwithselectsignal.cpp \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
     CommonUtils/showhtmldialog.cpp
@@ -60,7 +56,6 @@ HEADERS += \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
     VoiceBankUtils/textcodecsettingdialog.h \
-    ../LeafPublicQtClasses/leaflogger.h \
     TextCodecUtils/availabletextcodecdialog.h \
     TextCodecUtils/textcodecconvertdialog.h \
     public_defines.h \
@@ -72,16 +67,11 @@ HEADERS += \
     EngineUtils/moresamplerconfigsdelegate.h \
     EngineUtils/moresamplerconfigaddnewdialog.h \
     EngineUtils/moresamplerconfigsaddnewmodel.h \
-    ../ImageCropper/src/imagecropper.h \
-    ../ImageCropper/src/imagecropper_e.h \
-    ../ImageCropper/src/imagecropper_p.h \
     VoiceBankUtils/voicebankiconcropdialog.h \
-    ../ImageCropper/src/imagecroppercontainer.h \
     TextCodecUtils/qchardet.h \
     VoiceBankUtils/categoriesandlabelslistwidget.h \
     VoiceBankUtils/categoriesmodel.h \
     VoiceBankUtils/labelsmodel.h \
-    ../LeafPublicQtClasses/qlistviewwithselectsignal.h \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
     CommonUtils/showhtmldialog.h
@@ -115,8 +105,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES +=
 TRANSLATIONS = LeafOpenUTAUQt_en.ts
-
-unix|win32: LIBS += -L$$PWD/../../libchardet-1.0.5/lib/ -llibchardet -llibchardet.dll
-
-INCLUDEPATH += $$PWD/../../libchardet-1.0.5/include/chardet
-DEPENDPATH += $$PWD/../../libchardet-1.0.5/include/chardet
+!exists($$PWD/outsideLibrarys.pri){
+    error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
+}
+DISTFILES += \
+    outsideLibrarys.pri \
+    module.pri
+include(outsideLibrarys.pri)
+include(module.pri)

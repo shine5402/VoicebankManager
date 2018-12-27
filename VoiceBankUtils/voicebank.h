@@ -13,7 +13,6 @@
 #include <QMessageBox>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <../LeafPublicQtClasses/leaflogger.h>
 #include <public_defines.h>
 #include <QPainter>
 #include "./TextCodecUtils/qchardet.h"
