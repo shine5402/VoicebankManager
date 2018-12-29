@@ -6,22 +6,22 @@ VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
     readThreadPoolMaxThreadCountSettings();
     connect(this,SIGNAL(categoriesChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
     connect(this,SIGNAL(labelsChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
+    loadMonitorFoldersSettings();
 }
 
 VoiceBankHandler::~VoiceBankHandler()
 {
     saveThreadPoolMaxThreadCountSettings();
+    saveMonitorFoldersSettings();
 }
 
 void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
 {
-    /*
-      从需要读取的文件夹中读取音源库。
-    */
     auto voiceBankPaths = getFoldersInMonitorFolders();
     LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(voiceBankPaths.count()));
     if (voiceBankPaths.count() == 0)
-       // setUIAfterVoiceBanksReadDone();
+        // setUIAfterVoiceBanksReadDone();
+        //TODO:mainwindow应响应此处信号
         emit voiceBanksReadDone();
     else{
         addVoiceBanks(voiceBankPaths);
@@ -39,6 +39,15 @@ void VoiceBankHandler::loadMonitorFoldersSettings()
 
 }
 
+void VoiceBankHandler::saveMonitorFoldersSettings()
+{
+    QSettings settings;
+    settings.setValue("MonitorFolders",monitorFolders);
+    settings.setValue("useOldFolderScan",useOldFolderScan);
+    settings.setValue("OutsideVoiceBankFolders",outsideVoiceBankFolders);
+    settings.setValue("ignoreVoiceBankFolders",ignoreVoiceBankFolders);
+}
+
 QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
 {
     return voiceBanks;
@@ -47,6 +56,7 @@ QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
 VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
     auto newVoiceBank = new VoiceBank(path,this);
     connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank *)));
     connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SIGNAL(backupImageFileBecauseExists(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(categoryChanged()),this,SIGNAL(categoriesChanged()));
@@ -64,6 +74,10 @@ void VoiceBankHandler::clear()
         item->deleteLater();
     }
     voiceBanks.clear();
+    voiceBankReadDoneCount = 0;
+    ignoredVoiceBankFolders.clear();
+    notVoiceBankPaths.clear();
+    scannedSubFolders.clear();
 }
 
 void VoiceBankHandler::setThreadPoolMaxThreadCount(int maxCount)
@@ -163,7 +177,7 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
     return result;
 }
 
-bool VoiceBankHandler::isUseOldFolderScan() const
+bool VoiceBankHandler::isUseOldFolderScan()
 {
     return useOldFolderScan;
 }
@@ -191,8 +205,10 @@ QStringList VoiceBankHandler::getVoiceBankFoldersInFolder(const QString &dir)
                 break;
             }
         }
-        if (isIgnore)
+        if (isIgnore){
+            folderList.append(getVoiceBankFoldersInFolder(path));
             continue;
+        }
         if (!useOldFolderScan){
             if (VoiceBank::isVoiceBankPath(path))
                 folderList.append(path);
@@ -209,6 +225,80 @@ QStringList VoiceBankHandler::getVoiceBankFoldersInFolder(const QString &dir)
         }
     }
     return folderList;
+}
+
+QStringList VoiceBankHandler::getIgnoreVoiceBankFolders()
+{
+    return ignoreVoiceBankFolders;
+}
+
+void VoiceBankHandler::setIgnoreVoiceBankFolders(const QStringList &value)
+{
+    ignoreVoiceBankFolders = value;
+}
+
+QStringList VoiceBankHandler::getOutsideVoiceBankFolders()
+{
+    return outsideVoiceBankFolders;
+}
+
+void VoiceBankHandler::setOutsideVoiceBankFolders(const QStringList &value)
+{
+    outsideVoiceBankFolders = value;
+}
+
+QStringList VoiceBankHandler::getNotVoiceBankPaths() const
+{
+    return notVoiceBankPaths;
+}
+
+QStringList VoiceBankHandler::getIgnoredVoiceBankFolders() const
+{
+    return ignoredVoiceBankFolders;
+}
+
+void VoiceBankHandler::addIgnoreVoiceBankFolder(QString path)
+{
+    ignoreVoiceBankFolders.append(path);
+}
+
+void VoiceBankHandler::findScannedSubFolders()
+{
+    QStringList firstSubFolders;
+    for (auto i : monitorFolders)
+    {
+        QDir iDir(i);
+        for (auto j : iDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
+        {
+            firstSubFolders.append(iDir.absoluteFilePath(j));
+        }
+    }
+    auto outsideFolders = this->outsideVoiceBankFolders;
+    for (auto i : outsideFolders)
+    {
+        if (i.endsWith("/") || i.endsWith("\\"))
+            i.remove(i.count() - 1,1);
+    }
+    for (auto i : voiceBanks)
+    {
+        if (!(firstSubFolders.contains(i->getPath()) || outsideFolders.contains(i->getPath())))
+            scannedSubFolders.append(i->getPath());
+    }
+}
+
+void VoiceBankHandler::setMonitorFolders(const QStringList &value)
+{
+    monitorFolders = value;
+}
+
+QStringList VoiceBankHandler::getMonitorFolders()
+{
+    return monitorFolders;
+}
+
+QStringList VoiceBankHandler::getScannedSubFolders() const
+{
+    return scannedSubFolders;
 }
 
 QStringList VoiceBankHandler::getFoldersInMonitorFolders()
@@ -232,6 +322,15 @@ void VoiceBankHandler::saveThreadPoolMaxThreadCountSettings()
 {
     QSettings settings;
     settings.setValue("VoiceBankHandler/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
+}
+
+void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank *voiceBank)
+{
+    if (voiceBank->isFirstRead())
+        if (++voiceBankReadDoneCount == voiceBanks.count()){
+            findScannedSubFolders();
+            emit voiceBanksReadDone();
+        }
 }
 
 

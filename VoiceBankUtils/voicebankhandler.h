@@ -9,8 +9,8 @@
 class VoiceBankHandler : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool useOldFolderScan READ isOldFolderScan WRITE setUseOldFolderScan NOTIFY useOldFolderScanChanged)
 public:
+    //TODO:让main来创建Handler
     explicit VoiceBankHandler(QObject *parent = nullptr);
     ~VoiceBankHandler();
 
@@ -57,14 +57,31 @@ public:
     }
     QList<int> findIDByCategory(const QString &category) const;
     QList<int> findIDByLabel(const QString &label) const;
-    bool isUseOldFolderScan() const;
+    bool isUseOldFolderScan();
 
     void setUseOldFolderScan(bool value);
+
+    QStringList getIgnoredVoiceBankFolders() const;
+
+    QStringList getNotVoiceBankPaths() const;
+
+    QStringList getScannedSubFolders() const;
+
+    QStringList getMonitorFolders();
+
+    void setMonitorFolders(const QStringList &value);
+
+    QStringList getOutsideVoiceBankFolders();
+    void setOutsideVoiceBankFolders(const QStringList &value);
+
+    QStringList getIgnoreVoiceBankFolders();
+    void setIgnoreVoiceBankFolders(const QStringList &value);
+    void addIgnoreVoiceBankFolder(QString path);
 
 private:
 
 
-    int voiceBankReadDoneCount{};
+    int voiceBankReadDoneCount = 0;
 
     QStringList getVoiceBankFoldersInFolder(const QString &dir);
     bool useOldFolderScan = false;
@@ -90,6 +107,7 @@ private:
     void saveThreadPoolMaxThreadCountSettings();
 
 private slots:
+    void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 signals:
     void aVoiceBankReadDone(VoiceBank* voicebank);
     void backupImageFileBecauseExists(VoiceBank *);

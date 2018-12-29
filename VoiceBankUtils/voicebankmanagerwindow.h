@@ -63,25 +63,25 @@ private:
     VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
 
     //TODO:将读取VoiceBank的函数移到Handler
-    void readVoiceBanks();
+//    void readVoiceBanks();
 
-    int voiceBankReadDoneCount{};
-    QStringList voiceBankPaths;
-    QStringList getVoiceBankFoldersInFolder(const QString &dir);
-    bool useOldFolderScan = false;
-    QStringList outsideVoiceBankFolders;
-    QStringList ignoreVoiceBankFolders;
-    QStringList ignoredVoiceBankFolders;
-    QStringList notVoiceBankPaths;
-    void findScannedSubFolders();
-    QStringList scannedSubFolders;
+//    int voiceBankReadDoneCount{};
+//    QStringList voiceBankPaths;
+//    QStringList getVoiceBankFoldersInFolder(const QString &dir);
+//    bool useOldFolderScan = false;
+//    QStringList outsideVoiceBankFolders;
+//    QStringList ignoreVoiceBankFolders;
+//    QStringList ignoredVoiceBankFolders;
+//    QStringList notVoiceBankPaths;
+//    void findScannedSubFolders();
+//    QStringList scannedSubFolders;
 
-    //TODO:将监视文件夹相关功能移到Handler
-    QStringList monitorFolders = {"./voice"};
+//    //TODO:将监视文件夹相关功能移到Handler
+//    QStringList monitorFolders = {"./voice"};
 
-    QStringList getFoldersInMonitorFolders();
-    void loadMonitorFoldersSettings();
-    void saveMonitorFoldersSettings();
+//    QStringList getFoldersInMonitorFolders();
+//    void loadMonitorFoldersSettings();
+//    void saveMonitorFoldersSettings();
 
     struct TableColumn
     {
@@ -92,7 +92,7 @@ private:
 
     void showVoiceBanksRows(const QList<int> &voiceBankIDs);
 
-    void setUIAfterVoiceBanksReadDone();
+
     bool showMoreInformationInTotalCountLabel = true;
     void updateVoiceBankCountLabel();
 
@@ -138,7 +138,7 @@ private slots:
     void debugFunction();
 #endif
 
-    void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+    //void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 
     void createVoiceBanksCategoriesSubMenu();
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
@@ -203,6 +203,10 @@ private slots:
     void on_playSamplebutton_clicked();
     void onSamplePlayerPositionChange(qint64 position);
     void onSamplePlayerStateChanged(QMediaPlayer::State state);
+
+    void setUIAfterVoiceBanksReadDone();
+
+    void onUseOldFolderScanChanged();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

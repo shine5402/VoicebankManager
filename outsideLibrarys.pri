@@ -1,5 +1,4 @@
 # Configure outside librarys' include path here.
-# This project needs libchardet, imagecropper.
 
 unix|win32: LIBS += -L$$PWD/../../libchardet-1.0.5/lib/ -llibchardet -llibchardet.dll
 
