@@ -201,23 +201,6 @@ VoiceBankManagerWindow::~VoiceBankManagerWindow()
     QSettings settings;
     settings.setValue("VoiceBankManager/showMoreInformationInTotalCountLabel",showMoreInformationInTotalCountLabel);
 }
-//void VoiceBankManagerWindow::loadMonitorFoldersSettings(){
-
-//    QSettings settings;
-//    monitorFolders = settings.value("MonitorFolders").toStringList();
-//    useOldFolderScan = settings.value("useOldFolderScan",false).toBool();
-//    ui->actionuse_old_watched_folder_scan_strategy->setChecked(useOldFolderScan);
-//    outsideVoiceBankFolders = settings.value("OutsideVoiceBankFolders").toStringList();
-//    ignoreVoiceBankFolders = settings.value("ignoreVoiceBankFolders").toStringList();
-//}
-//void VoiceBankManagerWindow::saveMonitorFoldersSettings()
-//{
-//    QSettings settings;
-//    settings.setValue("MonitorFolders",monitorFolders);
-//    settings.setValue("useOldFolderScan",useOldFolderScan);
-//    settings.setValue("OutsideVoiceBankFolders",outsideVoiceBankFolders);
-//    settings.setValue("ignoreVoiceBankFolders",ignoreVoiceBankFolders);
-//}
 
 void VoiceBankManagerWindow::loadWindowStatus()
 {
@@ -257,60 +240,11 @@ void VoiceBankManagerWindow::loadWindowStatus()
 void VoiceBankManagerWindow::saveWindowStatus()
 {
     QSettings settings;
-    //    settings.setValue("VoiceBankManager/WindowGeometry/x",geometry().x());
-    //    settings.setValue("VoiceBankManager/WindowGeometry/y",geometry().y());
-    //    settings.setValue("VoiceBankManager/WindowGeometry/width",geometry().width());
-    //    settings.setValue("VoiceBankManager/WindowGeometry/height",geometry().height());
     settings.setValue("VoiceBankManager/WindowGeometry",saveGeometry());
     settings.setValue("VoiceBankManager/categoryAndLabelsAndListSplitterState",ui->categoryAndLabelsAndListSplitter->saveState());
     settings.setValue("VoiceBankManager/informationAndListSplitterState",ui->informationAndListSplitter->saveState());
 }
 
-//QStringList VoiceBankManagerWindow::getVoiceBankFoldersInFolder(const QString& dir)
-//{
-//    QStringList folderList{};
-//    QDir pDir(dir);
-//    auto entrys = pDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-//    for (auto entry : entrys){
-//        auto path = pDir.absolutePath() + "/" + entry;
-//        auto isIgnore = false;
-//        for (auto i : ignoreVoiceBankFolders)
-//        {
-//            if (QDir(i).path() == QDir(path).path())
-//            {
-//                ignoredVoiceBankFolders.append(i);
-//                isIgnore = true;
-//                break;
-//            }
-//        }
-//        if (isIgnore)
-//            continue;
-//        if (!useOldFolderScan){
-//            if (VoiceBank::isVoiceBankPath(path))
-//                folderList.append(path);
-//            else
-//            {
-//                notVoiceBankPaths.append(path);
-//                LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
-//                folderList.append(getVoiceBankFoldersInFolder(path));
-//            }
-//        }
-//        else
-//        {
-//            folderList.append(path);
-//        }
-//    }
-//    return folderList;
-//}
-
-//QStringList VoiceBankManagerWindow::getFoldersInMonitorFolders(){
-//    QStringList folderList{};
-//    for (auto monitorFolder : monitorFolders){
-//        folderList.append(getVoiceBankFoldersInFolder(monitorFolder));
-//    }
-//    folderList.append(outsideVoiceBankFolders);
-//    return folderList;
-//}
 void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 {
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
@@ -873,15 +807,7 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
 
 void VoiceBankManagerWindow::on_actionMonitor_Folders_triggered()
 {
-    auto dialog = new FoldersSettingDialog(voiceBankHandler->getMonitorFolders(),tr("设定监视文件夹列表："),tr("监视文件夹列表设定"),this,{"./voice"});
-    auto dialogCode = dialog->exec();
-    if (dialogCode == 1 && voiceBankHandler->getMonitorFolders() != dialog->getFolders()){
-        voiceBankHandler->setMonitorFolders(dialog->getFolders());
-        auto clickedButton = QMessageBox::information(this,tr("监视文件夹列表被更改"),tr("您更改了监视文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
-        if (clickedButton == QMessageBox::Ok)
-            loadVoiceBanksAndTable();
-    }
-    dialog->deleteLater();
+    letUserModifyFolder(&VoiceBankHandler::getMonitorFolders,&VoiceBankHandler::setMonitorFolders,tr("监视文件夹列表"),{"./voice"});
 }
 
 void VoiceBankManagerWindow::on_actionRefresh_triggered()
@@ -929,7 +855,6 @@ void VoiceBankManagerWindow::dealFilters()
     else
     {
         for (auto i : currentCategoriesFilter){
-            //byCategory.append(voiceBankHandler->findIDByCategory(i));
             byCategory = SetOperations::getUnion<int>({byCategory,voiceBankHandler->findIDByCategory(i)});
         }
     }
@@ -1312,31 +1237,27 @@ void VoiceBankManagerWindow::on_actionshow_more_infomation_in_total_count_label_
     updateVoiceBankCountLabel();
 }
 
-void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
+void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(VoiceBankHandler*)>getFunc,std::function<void(VoiceBankHandler*,const QStringList&)>setFunc,const QString& name,const QStringList& defaultList)
 {
-    auto dialog = new FoldersSettingDialog(voiceBankHandler->getOutsideVoiceBankFolders(),tr("设定外部音源文件夹列表："),tr("外部音源文件夹列表设定"),this,{"./voice"});
+    auto dialog = new FoldersSettingDialog(getFunc(voiceBankHandler),tr("设定%1：").arg(name),tr("%1设定").arg(name),this,defaultList);
     auto dialogCode = dialog->exec();
-    if (dialogCode == 1 && voiceBankHandler->getOutsideVoiceBankFolders() != dialog->getFolders()){
-        voiceBankHandler->setOutsideVoiceBankFolders(dialog->getFolders());
-        //TODO:重构下列重复代码
-        auto clickedButton = QMessageBox::information(this,tr("外部音源文件夹列表被更改"),tr("您更改了外部音源文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+    if (dialogCode == 1 && getFunc(voiceBankHandler) != dialog->getFolders()){
+        setFunc(voiceBankHandler,dialog->getFolders());
+        auto clickedButton = QMessageBox::information(this,tr("%1被更改").arg(name),tr("您更改了%1，是否立即重载音源库列表？").arg(name),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksAndTable();
     }
     dialog->deleteLater();
 }
 
+void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
+{
+    letUserModifyFolder(std::mem_fn(&VoiceBankHandler::getOutsideVoiceBankFolders),std::mem_fn(&VoiceBankHandler::setOutsideVoiceBankFolders),tr("外部音源文件夹列表"));
+}
+
 void VoiceBankManagerWindow::on_actionIgnored_folders_triggered()
 {
-    auto dialog = new FoldersSettingDialog(voiceBankHandler->getIgnoreVoiceBankFolders(),tr("设定忽略文件夹列表（不包括子文件夹）："),tr("忽略文件夹列表设定"),this,{"./voice"});
-    auto dialogCode = dialog->exec();
-    if (dialogCode == 1 && voiceBankHandler->getIgnoreVoiceBankFolders() != dialog->getFolders()){
-        voiceBankHandler->setIgnoreVoiceBankFolders(dialog->getFolders());
-        auto clickedButton = QMessageBox::information(this,tr("忽略文件夹列表被更改"),tr("您更改了忽略文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
-        if (clickedButton == QMessageBox::Ok)
-            loadVoiceBanksAndTable();
-    }
-    dialog->deleteLater();
+    letUserModifyFolder(std::mem_fn(&VoiceBankHandler::getIgnoreVoiceBankFolders),std::mem_fn(&VoiceBankHandler::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"));
 }
 
 void VoiceBankManagerWindow::on_actionView_scan_details_triggered()

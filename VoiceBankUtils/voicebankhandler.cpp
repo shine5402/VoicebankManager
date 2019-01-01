@@ -29,7 +29,7 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
 void VoiceBankHandler::loadMonitorFoldersSettings()
 {
     QSettings settings;
-    monitorFolders = settings.value("MonitorFolders").toStringList();
+    monitorFolders = settings.value("MonitorFolders",{"./voice"}).toStringList();
     setUseOldFolderScan(settings.value("useOldFolderScan",false).toBool());
     //ui->actionuse_old_watched_folder_scan_strategy->setChecked(useOldFolderScan);
     outsideVoiceBankFolders = settings.value("OutsideVoiceBankFolders").toStringList();

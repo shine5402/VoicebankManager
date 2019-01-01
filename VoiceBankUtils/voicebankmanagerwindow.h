@@ -34,6 +34,7 @@
 #include "categoriesandlabelslistwidget.h"
 #include "CommonUtils/showhtmldialog.h"
 #include <setoperations.h>
+#include <functional>
 
 namespace Ui {
 class VoiceBankManagerWindow;
@@ -127,6 +128,7 @@ private:
     void loadWindowStatus();
     void saveWindowStatus();
 
+    void letUserModifyFolder(std::function<QStringList(VoiceBankHandler*)>getFunc, std::function<void(VoiceBankHandler*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {});
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽
@@ -162,6 +164,8 @@ private slots:
 
     //UI菜单点击触发槽
     void on_actionMonitor_Folders_triggered();
+    void on_actionOutside_VoiceBanks_triggered();
+    void on_actionIgnored_folders_triggered();
     void on_actionRefresh_triggered();
     void on_actionDefault_TextCodec_triggered();
     void on_actionExit_triggered();
@@ -172,8 +176,6 @@ private slots:
     void on_actionFor_File_Name_triggered();
     void on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked);
     void on_actionshow_more_infomation_in_total_count_label_toggled(bool checked);
-    void on_actionOutside_VoiceBanks_triggered();
-    void on_actionIgnored_folders_triggered();
     void on_actionView_scan_details_triggered();
     void on_actionEdit_Global_MoresamplerConfig_triggered();
     void on_actionchoose_a_voicebank_randomly_triggered();
