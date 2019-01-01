@@ -33,6 +33,7 @@
 #include "./TextCodecUtils/qchardet.h"
 #include "categoriesandlabelslistwidget.h"
 #include "CommonUtils/showhtmldialog.h"
+#include <setoperations.h>
 
 namespace Ui {
 class VoiceBankManagerWindow;
@@ -122,12 +123,6 @@ private:
     CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
     QStringList currentCategoriesFilter = {""};
     QStringList currentLabelFilter = {""};
-
-    //TODO:移动到PublicClasses中去，并使用相关代码
-    template <typename T>
-    QList<T> getIntersection(QList<QList<T> > lists);
-    template <typename T>
-    QList<T> getUnion(QList<QList<T> > lists);
 
     void loadWindowStatus();
     void saveWindowStatus();

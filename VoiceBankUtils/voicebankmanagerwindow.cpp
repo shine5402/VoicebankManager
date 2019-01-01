@@ -917,41 +917,9 @@ void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
             ui->voiceBanksTableView->setRowHidden(i,false);
     }
 }
-template <typename T>
-QList<T> VoiceBankManagerWindow::getIntersection(QList<QList<T>> lists)
-{
-    QHash<T,int> counts;
-    QList<T> result;
-    for (auto list : lists)
-    {
-        for (auto i : list)
-        {
-            counts.insert(i,counts.value(i) + 1);
-        }
-    }
-    for (auto it = counts.begin();it != counts.end();++it)
-    {
-        if (it.value() == lists.count())
-            result.append(it.key());
-    }
-    return result;
-}
-template <typename T>
-QList<T> VoiceBankManagerWindow::getUnion(QList<QList<T>> lists)
-{
-    QList<T> result;
-    for (auto list : lists)
-    {
-        for (auto i : list)
-        {
-            if (!result.contains(i))
-                result.append(i);
-        }
-    }
-    return result;
-}
+
 void VoiceBankManagerWindow::dealFilters()
-{//TODO:
+{
     auto byName = voiceBankHandler->findIDByName(ui->searchLineEdit->text());
     QList<int> byCategory;
     if (currentCategoriesFilter.count() == 1)
@@ -962,7 +930,7 @@ void VoiceBankManagerWindow::dealFilters()
     {
         for (auto i : currentCategoriesFilter){
             //byCategory.append(voiceBankHandler->findIDByCategory(i));
-            byCategory = getUnion<int>({byCategory,voiceBankHandler->findIDByCategory(i)});
+            byCategory = SetOperations::getUnion<int>({byCategory,voiceBankHandler->findIDByCategory(i)});
         }
     }
     QList<int> byLabel;
@@ -978,14 +946,14 @@ void VoiceBankManagerWindow::dealFilters()
             auto byLabeli = voiceBankHandler->findIDByLabel(i);
             switch (categoriesAndLabelsListWidget->getSelectionStrategy()){
             case CategoriesAndLabelsListWidget::Intersection:
-                byLabel = getIntersection<int>({byLabel,byLabeli});
+                byLabel = SetOperations::getIntersection<int>({byLabel,byLabeli});
                 break;
             case CategoriesAndLabelsListWidget::Union:
-                byLabel = getUnion<int>({byLabel,byLabeli});
+                byLabel = SetOperations::getUnion<int>({byLabel,byLabeli});
             }
         }
     }
-    auto result = getIntersection<int>({byName,byCategory,byLabel});
+    auto result = SetOperations::getIntersection<int>({byName,byCategory,byLabel});
     showVoiceBanksRows(result);
 }
 

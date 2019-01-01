@@ -20,8 +20,6 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
     auto voiceBankPaths = getFoldersInMonitorFolders();
     LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(voiceBankPaths.count()));
     if (voiceBankPaths.count() == 0)
-        // setUIAfterVoiceBanksReadDone();
-        //TODO:mainwindow应响应此处信号
         emit voiceBanksReadDone();
     else{
         addVoiceBanks(voiceBankPaths);

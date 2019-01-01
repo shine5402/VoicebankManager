@@ -19,9 +19,4 @@ else:unix: LIBS += -L$$PWD/../LeafPublicQtClasses/LeafLogger-release/ -lLeafLogg
 INCLUDEPATH += $$PWD/../LeafPublicQtClasses/LeafLogger/include
 DEPENDPATH += $$PWD/../LeafPublicQtClasses/LeafLogger/include
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../LeafPublicQtClasses/SetOperations-release/ -lSetOperations
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../LeafPublicQtClasses/SetOperations-release/ -lSetOperationsd
-else:unix: LIBS += -L$$PWD/../LeafPublicQtClasses/SetOperations-release/ -lSetOperations
-
 INCLUDEPATH += $$PWD/../LeafPublicQtClasses/SetOperations/include
-DEPENDPATH += $$PWD/../LeafPublicQtClasses/SetOperations/include
