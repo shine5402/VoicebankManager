@@ -660,11 +660,13 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
             QMessageBox::warning(this,tr("character.txt不存在"),tr("您选定的音源不存在character.txt。所以无法进行转换操作。"));
             return;
         }
-        auto isDone = processFileTextCodecConvert(path,voiceBank->getCharacterTextCodec(),VoiceBank::getDefaultCharacterTextCodec());
-        if (isDone.first)
+        auto sourceCodec = voiceBank->getCharacterTextCodec();
+        auto targetCodec = VoiceBank::getDefaultCharacterTextCodec();
+        auto isDone = TextConvertHelper::processFileTextCodecConvert(path,&sourceCodec,&targetCodec,this);
+        if (isDone)
         {
             voiceBank->setIsFollowDefault(false);
-            voiceBank->setCharacterTextCodec(isDone.second);
+            voiceBank->setCharacterTextCodec(targetCodec);
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
         }
@@ -679,11 +681,13 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
             QMessageBox::warning(this,tr("readme.txt不存在"),tr("您选定的音源不存在readme.txt。所以无法进行转换操作。"));
             return;
         }
-        auto isDone = processFileTextCodecConvert(path,voiceBank->getReadmeTextCodec(),VoiceBank::getDefaultReadmeTextCodec());
-        if (isDone.first)
+        auto sourceCodec = voiceBank->getReadmeTextCodec();
+        auto targetCodec = VoiceBank::getDefaultReadmeTextCodec();
+        auto isDone = TextConvertHelper::processFileTextCodecConvert(path,&sourceCodec,&targetCodec,this);
+        if (isDone)
         {
             voiceBank->setIsFollowDefault(false);
-            voiceBank->setReadmeTextCodec(isDone.second);
+            voiceBank->setReadmeTextCodec(targetCodec);
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
         }
@@ -751,51 +755,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
         }
     }
 }
-QPair<bool,QTextCodec*> VoiceBankManagerWindow::processFileTextCodecConvert(const QString& path,QTextCodec* sourceCodec,QTextCodec* targetCodec){
-    bool isDone = false;
-    QFile* file = new QFile(path);
-    if (!file->exists()){
-        file->deleteLater();
-        QMessageBox::warning(this,tr("文件不存在"),tr("文件%1不存在").arg(path));
-        return QPair<bool,QTextCodec*>(false,nullptr);}
-    QByteArray rawData;
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
-        rawData = file->readAll();
-        file->close();}
-    auto dialog = new TextCodecConvertDialog(path,rawData,sourceCodec,targetCodec,false,this);
-    auto dialogCode = dialog->exec();
-    if (dialogCode == QDialog::Accepted){
-        auto infoDialogCode = QMessageBox::information(this,tr("即将执行编码转换"),tr("<h3>程序即将对%1执行编码转换（%2 -> %3）</h3><p>在您单击确定后，程序将会把转换后的结果保存至%1。</p><p>但是，程序有必要提醒您编码转换的<b>风险</b>：由于源编码和目标编码间的可能的映射不对等关系，这种转换可能<b>不可逆</b>，并且可能使您<b>丢失数据</b>！</p><p>出于安全考虑，程序将保存一份源文件的备份副本（%1.bak），以便出现问题时您可以手动恢复。</p><p>确定要执行转换吗？</p>").arg(path).arg(QString::fromUtf8(dialog->getSourceCodec()->name())).arg(QString::fromUtf8(dialog->getTargetCodec()->name())),QMessageBox::Ok | QMessageBox::Cancel);
-        if (infoDialogCode == QMessageBox::Ok){
-            QFile bakFile(path + ".bak");
-            if (bakFile.exists())
-                bakFile.remove();
-            if (file->copy(path + ".bak")){
-                if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
-                    auto fileWriteCode = file->write(dialog->getEncodedTargetByteArray());
-                    if (fileWriteCode == -1){
-                        QMessageBox::critical(this,tr("转换失败"),tr("<h3>程序无法对%1进行写入</h3><p>在写入时出现错误。Qt提供的错误描述为%2。</p><p>文件应该没有被修改。</p>").arg(path).arg(file->errorString()));
-                    }
-                    else
-                    {
-                        QMessageBox::information(this,tr("转换成功"),tr("<h3>文件编码转换完成</h3><p>程序将自动修改该文件的读取用文本编码，之后将实施重载（如果需要）。</p>"));
-                        isDone = true;
-                    }
-                    file->close();
-                }
-            }
-            else
-            {
-                QMessageBox::critical(this,tr("无法备份%1").arg(path + ".bak"),tr("<h3>程序无法对%1进行备份</h3><p>在备份时出现错误。Qt提供的错误说明为：%2</p><p>你仍可以令程序继续转换，但是之前提到的<b>风险</b>仍然存在，且出现问题时您无法恢复。</p><p>确定要继续转换吗？</p>").arg(path).arg(file->errorString()));
-            }
-        }
-    }
-    if (file->isOpen())
-        file->close();
-    file->deleteLater();
-    dialog->deleteLater();
-    return QPair<bool,QTextCodec*>(isDone,dialog->getTargetCodec());
-}
+
 void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
@@ -1157,7 +1117,7 @@ void VoiceBankManagerWindow::changeEvent(QEvent *e)
 {
     /*
       继承自QWidget的changeEvent。
-      此处用于处理语言变化后的相关操作。
+      此函数用于处理语言变化后的相关操作。
     */
     QWidget::changeEvent(e);
     switch (e->type()) {
@@ -1175,7 +1135,9 @@ void VoiceBankManagerWindow::on_actionFor_text_file_triggered()
     auto path = QFileDialog::getOpenFileName(this,tr("打开一个文本文件"));
     if (path.isEmpty())
         return;
-    processFileTextCodecConvert(path,QTextCodec::codecForLocale(),QTextCodec::codecForLocale());
+    auto sourceCodec = QTextCodec::codecForLocale();
+    auto targetCodec = QTextCodec::codecForLocale();
+    TextConvertHelper::processFileTextCodecConvert(path,&sourceCodec,&targetCodec,this);
 }
 
 void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()

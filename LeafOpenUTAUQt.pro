@@ -47,7 +47,8 @@ SOURCES += \
     VoiceBankUtils/labelsmodel.cpp \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
-    CommonUtils/showhtmldialog.cpp
+    CommonUtils/showhtmldialog.cpp \
+    TextCodecUtils/textconverthelper.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -74,7 +75,8 @@ HEADERS += \
     VoiceBankUtils/labelsmodel.h \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
-    CommonUtils/showhtmldialog.h
+    CommonUtils/showhtmldialog.h \
+    TextCodecUtils/textconverthelper.h
 
 FORMS += \
         editorwindow.ui \

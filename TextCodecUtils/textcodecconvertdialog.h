@@ -27,8 +27,6 @@ public:
     QTextCodec *getSourceCodec() const;
     QTextCodec *getTargetCodec() const;
 
-    void reDecodeAndReEncodeSource();
-
 signals:
     void targetTextCodecModified();
     void sourceTextCodecModified();
@@ -39,6 +37,7 @@ private slots:
     void on_targetTextCodecComboBox_currentTextChanged(const QString &arg1);
     void reDecodeSource();
     void reEncodeSource();
+    void reDecodeAndReEncodeSource();
     void on_availableCodecButton_source_clicked();
 
     void on_availableCodecButton_target_clicked();
@@ -54,6 +53,7 @@ private:
     QTextCodec* targetCodec = QTextCodec::codecForName(defaultTextCodecName);
 
     QByteArray getEncodedByteArray(QTextCodec *codec, QString rawData);
+
 };
 
 #endif // TEXTCODECCONVERTDIALOG_H

@@ -35,6 +35,7 @@
 #include "CommonUtils/showhtmldialog.h"
 #include <setoperations.h>
 #include <functional>
+#include "TextCodecUtils/textconverthelper.h"
 
 namespace Ui {
 class VoiceBankManagerWindow;
@@ -64,27 +65,6 @@ private:
 
     VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
 
-    //TODO:将读取VoiceBank的函数移到Handler
-//    void readVoiceBanks();
-
-//    int voiceBankReadDoneCount{};
-//    QStringList voiceBankPaths;
-//    QStringList getVoiceBankFoldersInFolder(const QString &dir);
-//    bool useOldFolderScan = false;
-//    QStringList outsideVoiceBankFolders;
-//    QStringList ignoreVoiceBankFolders;
-//    QStringList ignoredVoiceBankFolders;
-//    QStringList notVoiceBankPaths;
-//    void findScannedSubFolders();
-//    QStringList scannedSubFolders;
-
-//    //TODO:将监视文件夹相关功能移到Handler
-//    QStringList monitorFolders = {"./voice"};
-
-//    QStringList getFoldersInMonitorFolders();
-//    void loadMonitorFoldersSettings();
-//    void saveMonitorFoldersSettings();
-
     struct TableColumn
     {
         static constexpr int Name = 0;
@@ -113,9 +93,6 @@ private:
     QProgressBar* samplePlayerProgress = new QProgressBar();
     QMediaPlayer* samplePlayer = new QMediaPlayer(this);
 
-    //TODO:移动
-    QPair<bool, QTextCodec *> processFileTextCodecConvert(const QString &path, QTextCodec *sourceCodec, QTextCodec *targetCodec);
-
     void autoDetectTranslate();
     QList<QTranslator*> translators;
     void removeAllTranslators();
@@ -129,6 +106,7 @@ private:
     void saveWindowStatus();
 
     void letUserModifyFolder(std::function<QStringList(VoiceBankHandler*)>getFunc, std::function<void(VoiceBankHandler*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {});
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽
