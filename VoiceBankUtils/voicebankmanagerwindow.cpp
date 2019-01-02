@@ -662,7 +662,7 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
         }
         auto sourceCodec = voiceBank->getCharacterTextCodec();
         auto targetCodec = VoiceBank::getDefaultCharacterTextCodec();
-        auto isDone = TextConvertHelper::processFileTextCodecConvert(path,&sourceCodec,&targetCodec,this);
+        auto isDone = TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
         if (isDone)
         {
             voiceBank->setIsFollowDefault(false);
@@ -683,7 +683,7 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
         }
         auto sourceCodec = voiceBank->getReadmeTextCodec();
         auto targetCodec = VoiceBank::getDefaultReadmeTextCodec();
-        auto isDone = TextConvertHelper::processFileTextCodecConvert(path,&sourceCodec,&targetCodec,this);
+        auto isDone = TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
         if (isDone)
         {
             voiceBank->setIsFollowDefault(false);
@@ -693,53 +693,6 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
         }
     }
 }
-bool VoiceBankManagerWindow::processFileNameConvert(QByteArrayList _fileNameRaw,QStringList _filePaths,QString title,QTextCodec* &rawCodec,QTextCodec* &targetCodec)
-{
-    auto fileNameRaw = _fileNameRaw;
-    auto showString = fileNameRaw.join("\n");
-    auto dialog = new TextCodecConvertDialog(title,showString,rawCodec,targetCodec,true,this);
-    auto dialogCode = dialog->exec();
-    if (dialogCode == QDialog::Accepted){
-        auto sourceCodec = dialog->getSourceCodec();
-        auto _targetCodec = dialog->getTargetCodec();
-        QTextEncoder encoder(_targetCodec);
-        QTextDecoder decoder(sourceCodec);
-        QTextDecoder decoderLocale(QTextCodec::codecForLocale());
-        auto filePaths = _filePaths;
-        auto it = filePaths.begin();
-        QStringList unsucess;
-        while (it != filePaths.end())
-        {
-            auto file = new QFile(*it);
-            if (file->exists()) {
-                QFileInfo fileInfo(*it);
-                auto newName = decoderLocale.toUnicode(encoder.fromUnicode(decoder.toUnicode(fileInfo.fileName().toLocal8Bit())));
-                auto newPath = fileInfo.absolutePath() + "/" + newName;
-                if (newName != fileInfo.fileName())
-                {
-                    if (!file->rename(newPath)) {
-                        unsucess.append(tr("%1（%2）").arg(file->fileName()).arg(file->errorString()));
-                        LeafLogger::LogMessage(QString("文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
-                    }
-                }
-            }
-            file->deleteLater();
-            ++it;
-        }
-        if (!unsucess.isEmpty()){
-            QMessageBox::warning(this,tr("转换中出了些问题"),tr("<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>这些文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join("\n")));
-            return false;
-        }
-        else
-        {
-            rawCodec = sourceCodec;
-            targetCodec = _targetCodec;
-            return true;
-        }
-    }
-    dialog->deleteLater();
-    return false;
-}
 
 void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
@@ -747,7 +700,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     if (voiceBank){
         auto sourceCodec = voiceBank->getWavFileNameTextCodec();
         auto targetCodec = QTextCodec::codecForLocale();
-        if (processFileNameConvert(voiceBank->getWavFileNameRaw(),voiceBank->getWavFilePath(),tr("%1的WAV文件名").arg(voiceBank->getName()),sourceCodec,targetCodec))
+        if (TextConvertHelper::processFileNameConvert(voiceBank->getWavFileNameRaw(),voiceBank->getWavFilePath(),tr("%1的WAV文件名").arg(voiceBank->getName()),sourceCodec,targetCodec,this))
         {
             voiceBank->clearWavFileReadStage();
             voiceBank->setWavFileNameTextCodec(targetCodec);
@@ -883,8 +836,9 @@ void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
     }
 }
 
-void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(const QPoint &)
+void VoiceBankManagerWindow::refreshCategoryAndLabelsActionsChecked()
 {
+    //TODO:使用空voicebank
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
@@ -902,6 +856,11 @@ void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(c
         }
         voiceBanksTableWidgetMenu->exec(QCursor::pos());
     }
+}
+
+void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(const QPoint &)
+{
+    refreshCategoryAndLabelsActionsChecked();
 }
 
 
@@ -1137,7 +1096,7 @@ void VoiceBankManagerWindow::on_actionFor_text_file_triggered()
         return;
     auto sourceCodec = QTextCodec::codecForLocale();
     auto targetCodec = QTextCodec::codecForLocale();
-    TextConvertHelper::processFileTextCodecConvert(path,&sourceCodec,&targetCodec,this);
+    TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
 }
 
 void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
@@ -1162,7 +1121,7 @@ void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
     }
     auto sourceCodec = QTextCodec::codecForLocale();
     auto targetCodec = QTextCodec::codecForLocale();
-    if (processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),sourceCodec,targetCodec))
+    if (TextConvertHelper::processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),sourceCodec,targetCodec,this))
         QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的从%2到%3的转换成功完成。").arg(path).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
 }
 

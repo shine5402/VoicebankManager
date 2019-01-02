@@ -96,7 +96,6 @@ private:
     void autoDetectTranslate();
     QList<QTranslator*> translators;
     void removeAllTranslators();
-    bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *&rawCodec, QTextCodec *&targetCodec);
 
     CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
     QStringList currentCategoriesFilter = {""};
@@ -106,6 +105,8 @@ private:
     void saveWindowStatus();
 
     void letUserModifyFolder(std::function<QStringList(VoiceBankHandler*)>getFunc, std::function<void(VoiceBankHandler*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {});
+
+    void refreshCategoryAndLabelsActionsChecked();
 
 private slots:
 #ifndef NDEBUG

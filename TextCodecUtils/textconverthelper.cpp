@@ -15,7 +15,7 @@ bool TextConvertHelper::backupFile(QFile* file,QWidget* messageBoxParent)
     return true;
 }
 
-bool TextConvertHelper::processFileTextCodecConvert(const QString& path, QTextCodec **sourceCodec, QTextCodec **targetCodec,QWidget* messageBoxParent){
+bool TextConvertHelper::processFileTextCodecConvert(const QString& path, QTextCodec *&sourceCodec, QTextCodec *&targetCodec, QWidget* messageBoxParent){
     //返回Target和是否成功
     bool isDone = false;
     QFile* file = new QFile(path);
@@ -33,7 +33,7 @@ bool TextConvertHelper::processFileTextCodecConvert(const QString& path, QTextCo
         file->close();
     }
 
-    auto dialog = new TextCodecConvertDialog(path,rawData,*sourceCodec,*targetCodec,false,messageBoxParent);
+    auto dialog = new TextCodecConvertDialog(path,rawData,sourceCodec,targetCodec,false,messageBoxParent);
     auto dialogCode = dialog->exec();
     if (dialogCode == QDialog::Accepted){
         auto infoDialogCode = QMessageBox::information(messageBoxParent,
@@ -50,7 +50,7 @@ bool TextConvertHelper::processFileTextCodecConvert(const QString& path, QTextCo
                                                        .arg(QString::fromUtf8(dialog->getTargetCodec()->name())),
                                                        QMessageBox::Ok | QMessageBox::Cancel);
         if (infoDialogCode == QMessageBox::Ok){
-            *targetCodec = dialog->getTargetCodec();
+            targetCodec = dialog->getTargetCodec();
             if (backupFile(file,messageBoxParent)){
                 if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
                     auto fileWriteCode = file->write(dialog->getEncodedTargetByteArray());
@@ -72,4 +72,52 @@ bool TextConvertHelper::processFileTextCodecConvert(const QString& path, QTextCo
     file->deleteLater();
     dialog->deleteLater();
     return isDone;
+}
+
+bool TextConvertHelper::processFileNameConvert(const QByteArrayList &_fileNameRaw, const QStringList &_filePaths, const QString &title, QTextCodec *&rawCodec, QTextCodec *&targetCodec, QWidget* messageBoxParent)
+{
+    auto fileNameRaw = _fileNameRaw;
+    auto showString = fileNameRaw.join("\n");
+    auto dialog = new TextCodecConvertDialog(title,showString,rawCodec,targetCodec,true,messageBoxParent);
+    auto dialogCode = dialog->exec();
+    if (dialogCode == QDialog::Accepted){
+        auto sourceCodec = dialog->getSourceCodec();
+        auto _targetCodec = dialog->getTargetCodec();
+        QTextEncoder encoder(_targetCodec);
+        QTextDecoder decoder(sourceCodec);
+        QTextDecoder decoderLocale(QTextCodec::codecForLocale());
+        auto filePaths = _filePaths;
+        auto it = filePaths.begin();
+        QStringList unsucess;
+        while (it != filePaths.end())
+        {
+            auto file = new QFile(*it);
+            if (file->exists()) {
+                QFileInfo fileInfo(*it);
+                auto newName = decoderLocale.toUnicode(encoder.fromUnicode(decoder.toUnicode(fileInfo.fileName().toLocal8Bit())));
+                auto newPath = fileInfo.absolutePath() + "/" + newName;
+                if (newName != fileInfo.fileName())
+                {
+                    if (!file->rename(newPath)) {
+                        unsucess.append(QCoreApplication::translate("TextConvertHelper", "%1（%2）").arg(file->fileName()).arg(file->errorString()));
+                        LeafLogger::LogMessage(QString("文件重命名时发生错误。QFile的错误信息为%1。").arg(file->errorString()));
+                    }
+                }
+            }
+            file->deleteLater();
+            ++it;
+        }
+        if (!unsucess.isEmpty()){
+            QMessageBox::warning(messageBoxParent,QCoreApplication::translate("TextConvertHelper", "转换中出了些问题"),QCoreApplication::translate("TextConvertHelper", "<h3>程序在转换以下文件时出了些错误</h3><pre>%1</pre><p>这些文件应当都保持在原有的状态。您可以排查问题后重试。</p>").arg(unsucess.join("\n")));
+            return false;
+        }
+        else
+        {
+            rawCodec = sourceCodec;
+            targetCodec = _targetCodec;
+            return true;
+        }
+    }
+    dialog->deleteLater();
+    return false;
 }
