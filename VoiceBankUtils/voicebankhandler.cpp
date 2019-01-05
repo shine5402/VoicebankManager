@@ -15,6 +15,13 @@ VoiceBankHandler::~VoiceBankHandler()
     saveMonitorFoldersSettings();
 }
 
+VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
+{
+    if (!s_voiceBankHanlder)
+        s_voiceBankHanlder = new VoiceBankHandler();
+    return s_voiceBankHanlder;
+}
+
 void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
 {
     auto voiceBankPaths = getFoldersInMonitorFolders();
@@ -340,3 +347,7 @@ void VoiceBankHandler::VoiceBankReadFuctionRunner::run()
 {
     voicebank->readFromPath();
 }
+
+VoiceBankHandler* VoiceBankHandler::s_voiceBankHanlder = nullptr;
+VoiceBankHandler::DestroyHelper VoiceBankHandler::destoryHelper{};
+

@@ -1,5 +1,4 @@
 ﻿#include "textconverthelper.h"
-//TODO:测试
 
 bool TextConvertHelper::backupFile(QFile* file,QWidget* messageBoxParent)
 {
@@ -16,7 +15,7 @@ bool TextConvertHelper::backupFile(QFile* file,QWidget* messageBoxParent)
 }
 
 bool TextConvertHelper::processFileTextCodecConvert(const QString& path, QTextCodec *&sourceCodec, QTextCodec *&targetCodec, QWidget* messageBoxParent){
-    //返回Target和是否成功
+
     bool isDone = false;
     QFile* file = new QFile(path);
     if (!file->exists())

@@ -745,7 +745,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
 
 void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
 {
-    int rowCount = voiceBankHandler->getVoiceBankCount();//获得行号
+    int rowCount = voiceBankHandler->count();//获得行号
     for (int i = 0; i < rowCount; i++)
     {
         ui->voiceBanksTableView->setRowHidden(i, true);//隐藏所有行
