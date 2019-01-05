@@ -197,6 +197,12 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
 
 bool VoiceBankHandler::isUseOldFolderScan()
 {
+    ///返回 VoiceBankHandler 是否使用旧式文件夹扫描策略
+    /*!
+      Leaf Open UTAU Qt 这部分代码的早期版本中，将监视文件夹的子文件夹直接作为 VoiceBank 的路径。这种策略与 UTAU 相同，但是在某些场景下不够实用。所以在较新版本的代码中， VoiceBankHandler 将会递归查找监视文件夹的子文件夹来确定音源库所在的文件夹。 \n
+      VoiceBankHandler 使用 VoiceBank::isVoiceBankPath(const QString &path) 来确定一个文件夹是否是一个音源库文件夹。\n
+      如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。
+    */
     return useOldFolderScan;
 }
 
@@ -257,6 +263,7 @@ QStringList VoiceBankHandler::getIgnoreVoiceBankFolders()
 
 void VoiceBankHandler::setIgnoreVoiceBankFolders(const QStringList &value)
 {
+    ///设置忽略文件夹列表
     ignoreVoiceBankFolders = value;
 }
 
@@ -285,8 +292,13 @@ QStringList VoiceBankHandler::getIgnoredVoiceBankFolders() const
     return ignoredVoiceBankFolders;
 }
 
-void VoiceBankHandler::addIgnoreVoiceBankFolder(QString path)
+void VoiceBankHandler::addIgnoreVoiceBankFolder(const QString& path)
 {
+    ///在忽略文件夹列表中添加一个文件夹
+    /*!
+      该函数为添加一个文件夹到忽略文件夹列表提供一个方便的途径。
+    \param[in] path 要添加的文件夹路径。
+    */
     ignoreVoiceBankFolders.append(path);
 }
 

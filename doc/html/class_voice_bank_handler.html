@@ -137,17 +137,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0d4d6bfff7f76537d359893338eec1a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83c27c3593a9219ec1bb93427ac64838"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_handler.html#a83c27c3593a9219ec1bb93427ac64838">setOutsideVoiceBankFolders</a> (const QStringList &amp;value)</td></tr>
 <tr class="separator:a83c27c3593a9219ec1bb93427ac64838"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d024fc6eb5ff21c5780434d3361d393"><td class="memItemLeft" align="right" valign="top"><a id="a0d024fc6eb5ff21c5780434d3361d393"></a>
-QStringList&#160;</td><td class="memItemRight" valign="bottom"><b>getIgnoreVoiceBankFolders</b> ()</td></tr>
+<tr class="memitem:a0d024fc6eb5ff21c5780434d3361d393"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_handler.html#a0d024fc6eb5ff21c5780434d3361d393">getIgnoreVoiceBankFolders</a> ()</td></tr>
 <tr class="separator:a0d024fc6eb5ff21c5780434d3361d393"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e94fa8c8ebe579e3b09e58745b4f47a"><td class="memItemLeft" align="right" valign="top"><a id="a6e94fa8c8ebe579e3b09e58745b4f47a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setIgnoreVoiceBankFolders</b> (const QStringList &amp;value)</td></tr>
+<tr class="memitem:a6e94fa8c8ebe579e3b09e58745b4f47a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_handler.html#a6e94fa8c8ebe579e3b09e58745b4f47a">setIgnoreVoiceBankFolders</a> (const QStringList &amp;value)</td></tr>
 <tr class="separator:a6e94fa8c8ebe579e3b09e58745b4f47a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa418f9ffffdd521574cb9a2a8389d1dc"><td class="memItemLeft" align="right" valign="top"><a id="aa418f9ffffdd521574cb9a2a8389d1dc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addIgnoreVoiceBankFolder</b> (QString path)</td></tr>
-<tr class="separator:aa418f9ffffdd521574cb9a2a8389d1dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3331895211e1c7195863d7e7f666b8d1"><td class="memItemLeft" align="right" valign="top"><a id="a3331895211e1c7195863d7e7f666b8d1"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isUseOldFolderScan</b> ()</td></tr>
+<tr class="memitem:ac38cb6b73187e102229ac904500b77a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_handler.html#ac38cb6b73187e102229ac904500b77a4">addIgnoreVoiceBankFolder</a> (const QString &amp;path)</td></tr>
+<tr class="separator:ac38cb6b73187e102229ac904500b77a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3331895211e1c7195863d7e7f666b8d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_handler.html#a3331895211e1c7195863d7e7f666b8d1">isUseOldFolderScan</a> ()</td></tr>
 <tr class="separator:a3331895211e1c7195863d7e7f666b8d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6ba96b7b6e9b9f0edc46e51bec5d73f"><td class="memItemLeft" align="right" valign="top"><a id="ac6ba96b7b6e9b9f0edc46e51bec5d73f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setUseOldFolderScan</b> (bool value)</td></tr>
@@ -234,6 +230,50 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac38cb6b73187e102229ac904500b77a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac38cb6b73187e102229ac904500b77a4">&#9670;&nbsp;</a></span>addIgnoreVoiceBankFolder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VoiceBankHandler::addIgnoreVoiceBankFolder </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>在忽略文件夹列表中添加一个文件夹</p>
+<p>该函数为添加一个文件夹到忽略文件夹列表提供一个方便的途径。 </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>要添加的文件夹路径。</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0d024fc6eb5ff21c5780434d3361d393"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d024fc6eb5ff21c5780434d3361d393">&#9670;&nbsp;</a></span>getIgnoreVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList VoiceBankHandler::getIgnoreVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取忽略文件夹列表</p>
+<p>忽略文件夹列表中的文件夹将在扫描时被直接忽略，但仍然会去搜寻其子文件夹。</p>
+
+</div>
+</div>
 <a id="af4c8113b0035231fe91ac947ff3f516e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4c8113b0035231fe91ac947ff3f516e">&#9670;&nbsp;</a></span>getMonitorFolders()</h2>
 
@@ -249,7 +289,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>获取监视文件夹列表</p>
-<p>监视文件夹列表定义 <a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 去哪里寻找 <a class="el" href="class_voice_bank.html">VoiceBank</a> 所在的文件夹。监视文件夹应是 <a class="el" href="class_voice_bank.html">VoiceBank</a> 的父文件夹。 根据扫描文件夹策略设定的不同，VoiceBank 文件夹的确定方式也会有不同。参见 isUseOldFolderScan() 。</p>
+<p>监视文件夹列表定义 <a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 去哪里寻找 <a class="el" href="class_voice_bank.html">VoiceBank</a> 所在的文件夹。监视文件夹应是 <a class="el" href="class_voice_bank.html">VoiceBank</a> 的父文件夹。 根据扫描文件夹策略设定的不同，VoiceBank 文件夹的确定方式也会有不同。参见 <a class="el" href="class_voice_bank_handler.html#a3331895211e1c7195863d7e7f666b8d1">isUseOldFolderScan()</a> 。</p>
 
 </div>
 </div>
@@ -267,7 +307,8 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>获取外部音源文件夹列表 </p>
+<p>获取外部音源文件夹列表</p>
+<p>外部音源文件夹列表中的文件夹将在扫描时直接加入音源库列表中，不管其是否在监视文件夹内，不管其运行 VoiceBank::isVoiceBankPath(const QString &amp;path) 的结果是否为真。但是其仍然受忽略文件夹列表的限制。</p>
 
 </div>
 </div>
@@ -298,6 +339,26 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a3331895211e1c7195863d7e7f666b8d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3331895211e1c7195863d7e7f666b8d1">&#9670;&nbsp;</a></span>isUseOldFolderScan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VoiceBankHandler::isUseOldFolderScan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>返回 <a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 是否使用旧式文件夹扫描策略</p>
+<p>Leaf Open UTAU Qt 这部分代码的早期版本中，将监视文件夹的子文件夹直接作为 <a class="el" href="class_voice_bank.html">VoiceBank</a> 的路径。这种策略与 UTAU 相同，但是在某些场景下不够实用。所以在较新版本的代码中， <a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 将会递归查找监视文件夹的子文件夹来确定音源库所在的文件夹。 <br />
+<a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 使用 VoiceBank::isVoiceBankPath(const QString &amp;path) 来确定一个文件夹是否是一个音源库文件夹。 如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。</p>
+
+</div>
+</div>
 <a id="a256ecd28588492543c58c81e5de9cc7a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a256ecd28588492543c58c81e5de9cc7a">&#9670;&nbsp;</a></span>readVoiceBanksFromMonitorFolders()</h2>
 
@@ -314,6 +375,25 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>从监视文件夹中读取音源库。</p>
 <p>在确定待读取文件夹列表时，程序会考虑是否递归查找、忽略文件夹列表、外部文件夹列表等。参见这些设置相关的函数以获取详情。</p>
+
+</div>
+</div>
+<a id="a6e94fa8c8ebe579e3b09e58745b4f47a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e94fa8c8ebe579e3b09e58745b4f47a">&#9670;&nbsp;</a></span>setIgnoreVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VoiceBankHandler::setIgnoreVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>设置忽略文件夹列表 </p>
 
 </div>
 </div>

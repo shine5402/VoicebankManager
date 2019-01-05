@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['changeevent',['changeEvent',['../class_voice_bank_manager_window.html#aa6614e672e3cb410fa1c34188766a24b',1,'VoiceBankManagerWindow']]]
+  ['addignorevoicebankfolder',['addIgnoreVoiceBankFolder',['../class_voice_bank_handler.html#ac38cb6b73187e102229ac904500b77a4',1,'VoiceBankHandler']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['voicebankmanagerwindow',['VoiceBankManagerWindow',['../class_voice_bank_manager_window.html#a5e7b3465040017be37c8777e8eb54513',1,'VoiceBankManagerWindow']]]
+  ['readvoicebanksfrommonitorfolders',['readVoiceBanksFromMonitorFolders',['../class_voice_bank_handler.html#a256ecd28588492543c58c81e5de9cc7a',1,'VoiceBankHandler']]]
 ];

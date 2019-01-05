@@ -37,7 +37,7 @@ public:
 
     QStringList getIgnoreVoiceBankFolders();
     void setIgnoreVoiceBankFolders(const QStringList &value);
-    void addIgnoreVoiceBankFolder(QString path);
+    void addIgnoreVoiceBankFolder(const QString &path);
 
     bool isUseOldFolderScan();
     void setUseOldFolderScan(bool value);
@@ -83,15 +83,6 @@ public:
 
     void clear();
 
-    class VoiceBankReadFuctionRunner : public QRunnable
-    {
-    public:
-        VoiceBankReadFuctionRunner(VoiceBank* voicebank);
-        void run() override;
-    private:
-        VoiceBank* voicebank;
-    };
-
     void setThreadPoolMaxThreadCount(int maxCount);
     int getThreadPoolMaxThreadCount() const{
         return threadPool->maxThreadCount();
@@ -100,7 +91,14 @@ public:
     enum class SortableInformationID{Name,Path};
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 
-
+    class VoiceBankReadFuctionRunner : public QRunnable
+    {
+    public:
+        VoiceBankReadFuctionRunner(VoiceBank* voicebank);
+        void run() override;
+    private:
+        VoiceBank* voicebank;
+    };
 
 private:
     explicit VoiceBankHandler(QObject *parent = nullptr);
@@ -141,6 +139,7 @@ private:
                 delete VoiceBankHandler::s_voiceBankHanlder;
         }
     };
+
     static DestroyHelper destoryHelper;
     friend DestroyHelper;
 private slots:
