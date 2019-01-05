@@ -6,7 +6,8 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui(new Ui::VoiceBankManagerWindow)
 {
     /*!
-      \c VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。但是，如果VoiceBankHandler中已有音源库，那么它也将正常显示。
+      \l VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。因为那是 \l VoiceBankHandler 的工作。
+      \l VoiceBankManagerWindow 会自动获取 \l VoiceBankHandler 的实例。您只需要调用 \l {VoiceBankManagerWindow::} {loadVoiceBanksAndTable()} 即可让 \l VoiceBankManager 加载音源库。
      */
     ui->setupUi(this);
 #ifndef NDEBUG
@@ -101,8 +102,8 @@ void VoiceBankManagerWindow::loadVoiceBanksAndTable()
 {
     /*!
       加载音源库列表，并填充窗口中的表格。
-      \c VoiceBankManagerWindow 会自动处理相关的UI变化，所以在合适的时机调用该函数即可。
-      注意，构造函数\b {不会}调用本函数。
+      \l VoiceBankManagerWindow 会自动处理相关的UI变化，所以在合适的时机调用该函数即可。
+      如果您不是在 \l VoiceBankManagerWindow 打开之时加载音源库，您可以直接使用 \l VoiceBankHandler::readVoiceBanksFromMonitorFolders() 。
     */
     voiceBankTableModel->clearEmitter();
     voiceBankHandler->clear();

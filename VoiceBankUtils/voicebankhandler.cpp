@@ -17,6 +17,10 @@ VoiceBankHandler::~VoiceBankHandler()
 
 VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
 {
+    /*!
+      \l VoiceBankHandler 的工厂函数。
+      \l VoiceBankHandler 使用单件模式来保证程序中只有一份音源库列表，所以您应当使用本函数获取实例，而不是通过构造函数（您也无法这么做）。
+    */
     if (!s_voiceBankHanlder)
         s_voiceBankHanlder = new VoiceBankHandler();
     return s_voiceBankHanlder;
