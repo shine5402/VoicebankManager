@@ -1,13 +1,14 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
+//TODO:使用doxygen重写文档
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
 {
     /*!
-      \l VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。因为那是 \l VoiceBankHandler 的工作。
-      \l VoiceBankManagerWindow 会自动获取 \l VoiceBankHandler 的实例。您只需要调用 \l {VoiceBankManagerWindow::} {loadVoiceBanksAndTable()} 即可让 \l VoiceBankManager 加载音源库。
+      VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。因为那是 VoiceBankHandler 的工作。 \n
+      VoiceBankManagerWindow 会自动获取 VoiceBankHandler 的实例。您只需要调用 VoiceBankManagerWindow::loadVoiceBanksAndTable() 即可让 VoiceBankManager 加载音源库。
      */
     ui->setupUi(this);
 #ifndef NDEBUG
@@ -98,12 +99,13 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
 }
 
+
 void VoiceBankManagerWindow::loadVoiceBanksAndTable()
 {
     /*!
-      加载音源库列表，并填充窗口中的表格。
-      \l VoiceBankManagerWindow 会自动处理相关的UI变化，所以在合适的时机调用该函数即可。
-      如果您不是在 \l VoiceBankManagerWindow 打开之时加载音源库，您可以直接使用 \l VoiceBankHandler::readVoiceBanksFromMonitorFolders() 。
+      加载音源库列表，并填充窗口中的表格。\n
+       VoiceBankManagerWindow 会自动处理相关的UI变化，所以在合适的时机调用该函数即可。\n
+      如果您不是在 VoiceBankManagerWindow 打开之时加载音源库，您可以直接使用 VoiceBankHandler::readVoiceBanksFromMonitorFolders() 。
     */
     voiceBankTableModel->clearEmitter();
     voiceBankHandler->clear();
@@ -194,7 +196,7 @@ void VoiceBankManagerWindow::removeAllTranslators(){
 VoiceBankManagerWindow::~VoiceBankManagerWindow()
 {
     /*!
-      \c VoiceBankManagerWindow 的析构函数。它将自动保存窗口状态，监视文件夹等设置。
+       VoiceBankManagerWindow 的析构函数。它将自动保存窗口状态，监视文件夹等设置。
      */
     saveWindowStatus();
     delete ui;
@@ -1075,8 +1077,8 @@ void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State stat
 
 void VoiceBankManagerWindow::changeEvent(QEvent *e)
 {
-    /*
-      继承自QWidget的changeEvent。
+    /*!
+      继承自QWidget的changeEvent(QEvent *e)。
       此函数用于处理语言变化后的相关操作。
     */
     QWidget::changeEvent(e);

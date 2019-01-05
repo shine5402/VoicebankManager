@@ -11,15 +11,20 @@ VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 
 VoiceBankHandler::~VoiceBankHandler()
 {
+    ///VoiceBankHandler 的析构函数。
+    /*!
+      将由内部的一个辅助类调用以在程序退出时保存相关状态。
+    */
+
     saveThreadPoolMaxThreadCountSettings();
     saveMonitorFoldersSettings();
 }
 
 VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
 {
+    ///VoiceBankHandler 的工厂函数。调用此函数以获取 VoiceBankHandler 的实例。
     /*!
-      \l VoiceBankHandler 的工厂函数。
-      \l VoiceBankHandler 使用单件模式来保证程序中只有一份音源库列表，所以您应当使用本函数获取实例，而不是通过构造函数（您也无法这么做）。
+      VoiceBankHandler 使用单件模式来保证程序中只有一份音源库列表，所以您应当使用本函数获取实例，而不是通过构造函数（您也无法这么做）。
     */
     if (!s_voiceBankHanlder)
         s_voiceBankHanlder = new VoiceBankHandler();
@@ -28,6 +33,10 @@ VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
 
 void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
 {
+    ///从监视文件夹中读取音源库。
+    /*!
+      在确定待读取文件夹列表时，程序会考虑是否递归查找、忽略文件夹列表、外部文件夹列表等。参见这些设置相关的函数以获取详情。
+    */
     auto voiceBankPaths = getFoldersInMonitorFolders();
     LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(voiceBankPaths.count()));
     if (voiceBankPaths.count() == 0)
@@ -238,6 +247,11 @@ QStringList VoiceBankHandler::getVoiceBankFoldersInFolder(const QString &dir)
 
 QStringList VoiceBankHandler::getIgnoreVoiceBankFolders()
 {
+    ///获取忽略文件夹列表
+    /*!
+      忽略文件夹列表中的文件夹将在扫描时被直接忽略，但仍然会去搜寻其子文件夹。
+    */
+    //TODO:实现使用*来防止子文件夹调用
     return ignoreVoiceBankFolders;
 }
 
@@ -248,11 +262,16 @@ void VoiceBankHandler::setIgnoreVoiceBankFolders(const QStringList &value)
 
 QStringList VoiceBankHandler::getOutsideVoiceBankFolders()
 {
+    ///获取外部音源文件夹列表
+    /*!
+      外部音源文件夹列表中的文件夹将在扫描时直接加入音源库列表中，不管其是否在监视文件夹内，不管其运行 VoiceBank::isVoiceBankPath(const QString &path) 的结果是否为真。但是其仍然受忽略文件夹列表的限制。
+    */
     return outsideVoiceBankFolders;
 }
 
 void VoiceBankHandler::setOutsideVoiceBankFolders(const QStringList &value)
 {
+    ///设置外部音源文件夹列表。
     outsideVoiceBankFolders = value;
 }
 
@@ -297,11 +316,18 @@ void VoiceBankHandler::findScannedSubFolders()
 
 void VoiceBankHandler::setMonitorFolders(const QStringList &value)
 {
+    ///设定监视文件夹列表。将在 VoiceBankHandler 被析构时保存至 QSettings 。
     monitorFolders = value;
 }
 
 QStringList VoiceBankHandler::getMonitorFolders()
 {
+    ///获取监视文件夹列表
+    /*!
+      监视文件夹列表定义 VoiceBankHandler 去哪里寻找 VoiceBank 所在的文件夹。监视文件夹应是 VoiceBank 的父文件夹。
+      根据扫描文件夹策略设定的不同，VoiceBank 文件夹的确定方式也会有不同。参见 isUseOldFolderScan() 。
+    */
+
     return monitorFolders;
 }
 

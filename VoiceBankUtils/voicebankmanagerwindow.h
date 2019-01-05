@@ -41,17 +41,13 @@ namespace Ui {
 class VoiceBankManagerWindow;
 }
 
+/// 音源管理器组件的主窗口。
 class VoiceBankManagerWindow : public QMainWindow
 {
-    /*!
-    \class VoiceBankManagerWindow
-    \brief 音源管理器组件的主窗口。
-    \l VoiceBankManagerWindow 是音源管理器组件的主窗口和相关动作的主要执行者。
-    */
+
 
     Q_OBJECT
 public:
-    //TODO:加入VoiceBankHandler的构造函数
     explicit VoiceBankManagerWindow(QWidget *parent = nullptr);
     ~VoiceBankManagerWindow() override;
 
