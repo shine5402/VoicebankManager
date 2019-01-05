@@ -6,5 +6,6 @@ var searchData=
   ['characterfilecannotopenerrorstate',['CharacterFileCanNotOpenErrorState',['../class_voice_bank_1_1_character_file_can_not_open_error_state.html',1,'VoiceBank']]],
   ['characterfilenotexistserrorstate',['CharacterFileNotExistsErrorState',['../class_voice_bank_1_1_character_file_not_exists_error_state.html',1,'VoiceBank']]],
   ['characterfiletextcodeccannotdetecterrorstate',['CharacterFileTextCodecCanNotDetectErrorState',['../class_voice_bank_1_1_character_file_text_codec_can_not_detect_error_state.html',1,'VoiceBank']]],
-  ['choiceseditmode',['ChoicesEditMode',['../class_moresampler_config_1_1_choices_edit_mode.html',1,'MoresamplerConfig']]]
+  ['choiceseditmode',['ChoicesEditMode',['../class_moresampler_config_1_1_choices_edit_mode.html',1,'MoresamplerConfig']]],
+  ['count',['count',['../class_voice_bank_handler.html#a1166cedac9f017ad8f9482dbc06951b0',1,'VoiceBankHandler']]]
 ];

@@ -68,10 +68,18 @@ void VoiceBankHandler::saveMonitorFoldersSettings()
 
 QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
 {
+    ///获取 VoiceBankHandler 保存的 VoiceBank * 列表。
     return voiceBanks;
 }
 
 VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
+    ///让 VoiceBankHandler 管理一个路径为 path 的 VoiceBank 。
+    /*!
+      \param[in] path 要添加的 VoiceBank 的路径。\n
+
+      VoiceBankHandler 会自动配置该 VoiceBank 并读取。\n
+      \return 新的 VoiceBank 的指针。注意，返回时该 VoiceBank 可能并没有读取完毕。您应当等待 VoiceBankHandler::aVoiceBankReadDone(VoiceBank* voicebank) 信号或 VoiceBank::readDone(VoiceBank *) 被触发后再使用此指针。
+    */
     auto newVoiceBank = new VoiceBank(path,this);
     connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank *)));
@@ -201,13 +209,14 @@ bool VoiceBankHandler::isUseOldFolderScan()
     /*!
       Leaf Open UTAU Qt 这部分代码的早期版本中，将监视文件夹的子文件夹直接作为 VoiceBank 的路径。这种策略与 UTAU 相同，但是在某些场景下不够实用。所以在较新版本的代码中， VoiceBankHandler 将会递归查找监视文件夹的子文件夹来确定音源库所在的文件夹。 \n
       VoiceBankHandler 使用 VoiceBank::isVoiceBankPath(const QString &path) 来确定一个文件夹是否是一个音源库文件夹。\n
-      如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。
+      \return 如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。
     */
     return useOldFolderScan;
 }
 
 void VoiceBankHandler::setUseOldFolderScan(bool value)
 {
+    ///设置 VoiceBankHandler 是否使用旧式文件夹扫描策略
     useOldFolderScan = value;
     emit useOldFolderScanChanged();
 }
@@ -256,8 +265,9 @@ QStringList VoiceBankHandler::getIgnoreVoiceBankFolders()
     ///获取忽略文件夹列表
     /*!
       忽略文件夹列表中的文件夹将在扫描时被直接忽略，但仍然会去搜寻其子文件夹。
+      \todo 实现使用*来防止子文件夹调用
     */
-    //TODO:实现使用*来防止子文件夹调用
+    //TODO:
     return ignoreVoiceBankFolders;
 }
 
@@ -284,12 +294,20 @@ void VoiceBankHandler::setOutsideVoiceBankFolders(const QStringList &value)
 
 QStringList VoiceBankHandler::getNotVoiceBankPaths() const
 {
+    ///获取扫描过程中被程序认为不是音源文件夹的文件夹列表，仅在进行过扫描后有效。
     return notVoiceBankPaths;
 }
 
 QStringList VoiceBankHandler::getIgnoredVoiceBankFolders() const
 {
+    ///获取扫描过程中已经被忽略的文件夹列表，仅在进行过扫描后有效。
     return ignoredVoiceBankFolders;
+}
+
+QStringList VoiceBankHandler::getScannedSubFolders() const
+{
+    ///获取扫描过程中通过递归查找子文件夹找到的音源文件夹，仅在进行过扫描后有效。
+    return scannedSubFolders;
 }
 
 void VoiceBankHandler::addIgnoreVoiceBankFolder(const QString& path)
@@ -343,10 +361,7 @@ QStringList VoiceBankHandler::getMonitorFolders()
     return monitorFolders;
 }
 
-QStringList VoiceBankHandler::getScannedSubFolders() const
-{
-    return scannedSubFolders;
-}
+
 
 QStringList VoiceBankHandler::getFoldersInMonitorFolders()
 {

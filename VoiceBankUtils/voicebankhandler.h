@@ -54,9 +54,31 @@ public:
     */
     QList<VoiceBank *> getVoiceBanks() const;
 
+    void addVoiceBank(VoiceBank * newVoiceBank){
+        ///将一个 VoiceBank 交给 VoiceBankHandler 管理。
+        /*!
+          更建议使用 addVoiceBank(QString& path) 。
+          \param[in] newVoiceBank 要交给 VoiceBankHandler 的 VoiceBank * 。
+        */
+        voiceBanks.append(newVoiceBank);
+    }
+
     VoiceBank* addVoiceBank(QString& path);
 
     QList<VoiceBank*> addVoiceBanks(QStringList& paths){
+        ///让 VoiceBankHandler 管理路径在 paths 中的 VoiceBank 。
+        /*!
+          为了更方便使用而提供，等同于
+          \code{.cpp}
+        for (auto path : paths)
+        {
+            addVoiceBank(path);
+        }
+        \endcode
+        \param[in] paths 要添加到 VoiceBankHandler 中的多个 VoiceBank 的文件夹所在路径列表。
+        \return 添加到 VoiceBankHandler 的 VoiceBank * 的列表。
+        \see addVoiceBank(QString& path)
+        */
         QList<VoiceBank*> voiceBanks;
         for (auto path : paths)
         {
@@ -65,16 +87,29 @@ public:
         return voiceBanks;
     }
 
-    int count(){
+    int count() const {
+        ///VoiceBankHandler 已被托管的 VoiceBank 的数量
         return voiceBanks.count();
     }
 
     VoiceBank* getVoiceBank(int id) const{
+        ///通过下标获得一个 VoiceBank *
+        /*!
+          \param[in] id 需要的 VoiceBank * 的数组下标 ( 0 <= id < count() )。id 不在有效范围内时，返回一个空指针。
+          \return id 对应的 VoiceBank * 。
+          \see getVoiceBankID(VoiceBank* voiceBank) const
+        */
         return voiceBanks.value(id);
     }
 
     int getVoiceBankID(VoiceBank* voiceBank) const
     {
+        ///通过 VoiceBank * 来获得相应下标
+        /*!
+          \param[in] voiceBank 需要知道下标的 VoiceBank * 。
+          \return VoiceBank * 对应的数组下标。
+          \see getVoiceBank(int id) const
+        */
         return voiceBanks.indexOf(voiceBank);
     }
     QList<int> findIDByName(const QString &text) const;
@@ -126,9 +161,7 @@ private:
     void saveMonitorFoldersSettings();
 
     QList<VoiceBank *> voiceBanks{};
-    void addVoiceBank(VoiceBank * newVoiceBank){
-        voiceBanks.append(newVoiceBank);
-    }
+
     QThreadPool* threadPool = new QThreadPool(this);
     void readThreadPoolMaxThreadCountSettings();
     void saveThreadPoolMaxThreadCountSettings();
