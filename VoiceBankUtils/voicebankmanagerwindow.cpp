@@ -1,7 +1,7 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
-//TODO:使用doxygen重写文档
+
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
@@ -762,7 +762,7 @@ void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
 
 void VoiceBankManagerWindow::dealFilters()
 {
-    auto byName = voiceBankHandler->findIDByName(ui->searchLineEdit->text());
+    auto byName = voiceBankHandler->findIDByNameOrPath(ui->searchLineEdit->text());
     QList<int> byCategory;
     if (currentCategoriesFilter.count() == 1)
         byCategory.append(voiceBankHandler->findIDByCategory(currentCategoriesFilter.at(0)));
