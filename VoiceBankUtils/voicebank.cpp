@@ -2,11 +2,19 @@
 
 VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path),CharacterTextCodec(DefaultCharacterTextCodec),ReadmeTextCodec(DefaultReadmeTextCodec),wavFileNameTextCodec(DefaultWavFileNameTextCodec)
 {
+    /*!
+      VoiceBank 的构造函数。它将设置 VoiceBank 的路径，并将所有文本编码设置置为默认。但它 **不会** 进行读取操作。您应当手动调用 readFromPath() 。
+      \param[in] path 声库的路径
+      \param[in] parent 父对象，是否设置对 VoiceBank 的行为没有影响。默认为 nullptr 。
+    */
 
 }
 
 VoiceBank::~VoiceBank()
 {
+    /*!
+      VoiceBank 的析构函数。它将保存 VoiceBank 的设置到路径下的 leafUTAUQtSettings.json 中。
+    */
     saveSettings();
     for (auto state : errorStates)
     {
@@ -14,42 +22,44 @@ VoiceBank::~VoiceBank()
             delete state;
     }
 }
-QImage VoiceBank::getImage() const
-{
-    return image;
-}
-
-void VoiceBank::setImage(const QImage &value)
-{
-    image = value;
-}
 
 QString VoiceBank::getName() const
 {
+    ///获得音源库的名称。
+    /*!
+      音源库的名称是指在 character.txt 的 name 字段中定义的音源名称。
+      \return 音源库的名称。
+      \see setName(const QString& name)
+    */
     return name;
 }
 
 QString VoiceBank::getReadme() const
 {
+    ///获得 VoiceBank 的 readme 信息。
+    /*!
+      音源库的 readme 信息保存于路径下的 readme.txt 文件中。该信息将在音源详情页面等位置显示。
+    */
     return readme;
 }
 
-void VoiceBank::setReadme(const QString &value)
+QImage VoiceBank::getImage() const
 {
-    readme = value;
+    ///获得该声库的图标。
+    /*!
+      音源库的图标是指在 character.txt 的 image 字段中定义的音源的图标。在 character.txt 中的值为其路径。 VoiceBank 会将其读取到 QImage 实例中。\n
+      建议音源库的图标尺寸为 100*100 ，或至少宽高比为 1:1 。
+      \return 包含音源图标的 QImage 。
+      \see setImage(const QImage& _image, const QString &newImageFileName)
+    */
+    return _image;
 }
+
 
 QString VoiceBank::getPath() const
 {
     return path;
 }
-
-void VoiceBank::setPath(const QString &value)
-{
-    path = value;
-}
-
-
 
 QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *textCodec)
 {
@@ -476,14 +486,22 @@ QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
     return errorStates;
 }
 
-void VoiceBank::rename(const QString &name)
+void VoiceBank::setName(const QString &name)
 {
+    ///重命名一个音源库
+    /*!
+      VoiceBank 会将新名称写入路径下的 character.txt 中，并自动重载。
+      \param[in] name 音源库的新名称
+      \throw FileCanNotOpen
+      \throw FileNotExists
+    */
     this->name = name;
     try
     {
         changeCharacterFile();
     }
     catch(FileNotExists& e){
+        //changeCharacterFile()会处理文件不存在的情况，但新建文件后下需要重载。
         readFromPath();
         throw e;
     }
@@ -493,11 +511,16 @@ void VoiceBank::rename(const QString &name)
     readFromPath();
 }
 
-void VoiceBank::changeImage(const QPixmap &_image,QString newImageFileName)
+void VoiceBank::setImage(const QImage &image, const QString& newImageFileName)
 {
-    if (newImageFileName.isEmpty())
-        newImageFileName = "icon.jpg";
-    image = _image.toImage();
+    ///改变一个音源库的图标
+    /*!
+      \param[in] image 该音源库的新图标。 VoiceBank 会尝试将其缩放为 100*100 。
+      \param[in] newImageFileName 音源库新图标的文件名。 VoiceBank 将自动推断文件格式并保存。在有同名文件存在时， VoiceBank 会尝试备份原有图标。
+      \throw FileCanNotOpen
+      \throw FileNotExists
+    */
+    _image = image;
     if (QFileInfo(path + newImageFileName).exists())
     {
         if (QFileInfo(imagePath + ".bak").exists())
@@ -512,11 +535,11 @@ void VoiceBank::changeImage(const QPixmap &_image,QString newImageFileName)
             return;
         }
     }
-    image = image.scaled(100,100);
-    QImage imageWhiteBackgroud(image.size(),image.format());
+    _image = _image.scaled(100,100);
+    QImage imageWhiteBackgroud(_image.size(),_image.format());
     imageWhiteBackgroud.fill(QColor(Qt::white).rgb());
     QPainter painter(&imageWhiteBackgroud);
-    painter.drawImage(0, 0, image);
+    painter.drawImage(0, 0, _image);
     imageWhiteBackgroud.save(path + newImageFileName);
     imagePathRelative = newImageFileName;
     changeCharacterFile();
@@ -602,21 +625,21 @@ void VoiceBank::readCharacterFile()
                     QFileInfo imageFileInfo(imagePath);
                     if (imageFileInfo.exists()) {
                         try {
-                            image.load(imagePath);
-                            LeafLogger::LogMessage(QString("%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
+                            _image.load(imagePath);
+                            LeafLogger::LogMessage(QString("%1的image成功读取。大小为：%2*%3").arg(path).arg(_image.width()).arg(_image.height()));
 
-                            if (image.height() == 0 ||(!qFuzzyCompare(image.width() / image.height() , 1.0))){
+                            if (_image.height() == 0 ||(!qFuzzyCompare(_image.width() / _image.height() , 1.0))){
                                 errorStates.append(new ImageFileNotFitErrorState(this));
                             }
                         } catch (std::exception &e){
                             LeafLogger::LogMessage(QString("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
                             errorStates.append(new ImageReadExceptionErrorState(this));
-                            image = QImage();
+                            _image = QImage();
                         }
                         catch (...) {
                             LeafLogger::LogMessage("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
                             errorStates.append(new ImageReadExceptionErrorState(this));
-                            image = QImage();
+                            _image = QImage();
                         }
 
                     }
@@ -759,7 +782,7 @@ void VoiceBank::setIsFollowDefault(bool value)
 void VoiceBank::clear()
 {
     name.clear();
-    image = QImage();
+    _image = QImage();
     imagePath.clear();
     imagePathRelative.clear();
     readme.clear();

@@ -131,8 +131,8 @@ public:
     */
     enum class SortableInformationID
     {
-        Name, ///< VoiceBank 的名称。对应 VoiceBank 的 VoiceBank::name 成员。
-        Path, ///< VoiceBank 的路径。对应 VoiceBank 的 VoiceBank::path 成员。
+        Name, ///< VoiceBank 的名称。对应 VoiceBank 的名称。
+        Path, ///< VoiceBank 的路径。对应 VoiceBank 的路径。
     };
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 

@@ -1,11 +1,11 @@
 var indexSectionsWithContent =
 {
-  0: "abcdefgilmnpqrstuv~",
-  1: "acdefilmnpqrstv",
+  0: "abcdefgilmnpqrstuv~å",
+  1: "acdefilmnpqstv",
   2: "abcfgilrsuv~",
   3: "s",
   4: "np",
-  5: "lt"
+  5: "lå"
 };
 
 var indexSectionNames =
@@ -20,11 +20,11 @@ var indexSectionNames =
 
 var indexSectionLabels =
 {
-  0: "All",
-  1: "Classes",
-  2: "Functions",
-  3: "Enumerations",
-  4: "Enumerator",
-  5: "Pages"
+  0: "全部",
+  1: "类",
+  2: "函数",
+  3: "枚举",
+  4: "枚举值",
+  5: "页"
 };
 

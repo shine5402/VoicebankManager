@@ -1,7 +1,7 @@
 var searchData=
 [
   ['valuenotvalidexception',['ValueNotValidException',['../class_moresampler_config_1_1_value_not_valid_exception.html',1,'MoresamplerConfig']]],
-  ['voicebank',['VoiceBank',['../class_voice_bank.html',1,'']]],
+  ['voicebank',['VoiceBank',['../class_voice_bank.html',1,'VoiceBank'],['../class_voice_bank.html#addc83547db8d5ade6a47de0a88209f03',1,'VoiceBank::VoiceBank()']]],
   ['voicebankhandler',['VoiceBankHandler',['../class_voice_bank_handler.html',1,'']]],
   ['voicebankiconcropdialog',['VoiceBankIconCropDialog',['../class_voice_bank_icon_crop_dialog.html',1,'']]],
   ['voicebankmanagerwindow',['VoiceBankManagerWindow',['../class_voice_bank_manager_window.html',1,'VoiceBankManagerWindow'],['../class_voice_bank_manager_window.html#a5e7b3465040017be37c8777e8eb54513',1,'VoiceBankManagerWindow::VoiceBankManagerWindow()']]],

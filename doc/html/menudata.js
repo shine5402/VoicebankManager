@@ -22,14 +22,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 for the JavaScript code in this file
 */
 var menudata={children:[
-{text:"Main Page",url:"index.html"},
-{text:"Related Pages",url:"pages.html"},
-{text:"Classes",url:"annotated.html",children:[
-{text:"Class List",url:"annotated.html"},
-{text:"Class Index",url:"classes.html"},
-{text:"Class Hierarchy",url:"hierarchy.html"},
-{text:"Class Members",url:"functions.html",children:[
-{text:"All",url:"functions.html",children:[
+{text:"首页",url:"index.html"},
+{text:"相关页面",url:"pages.html"},
+{text:"类",url:"annotated.html",children:[
+{text:"类列表",url:"annotated.html"},
+{text:"类索引",url:"classes.html"},
+{text:"类继承关系",url:"hierarchy.html"},
+{text:"类成员",url:"functions.html",children:[
+{text:"全部",url:"functions.html",children:[
 {text:"a",url:"functions.html#index_a"},
 {text:"b",url:"functions.html#index_b"},
 {text:"c",url:"functions.html#index_c"},
@@ -42,7 +42,7 @@ var menudata={children:[
 {text:"u",url:"functions.html#index_u"},
 {text:"v",url:"functions.html#index_v"},
 {text:"~",url:"functions.html#index__7E"}]},
-{text:"Functions",url:"functions_func.html",children:[
+{text:"函数",url:"functions_func.html",children:[
 {text:"a",url:"functions_func.html#index_a"},
 {text:"b",url:"functions_func.html#index_b"},
 {text:"c",url:"functions_func.html#index_c"},
@@ -55,6 +55,6 @@ var menudata={children:[
 {text:"u",url:"functions_func.html#index_u"},
 {text:"v",url:"functions_func.html#index_v"},
 {text:"~",url:"functions_func.html#index__7E"}]},
-{text:"Enumerations",url:"functions_enum.html"}]}]},
-{text:"Files",url:"files.html",children:[
-{text:"File List",url:"files.html"}]}]}
+{text:"枚举",url:"functions_enum.html"}]}]},
+{text:"文件",url:"files.html",children:[
+{text:"文件列表",url:"files.html"}]}]}

@@ -24,16 +24,16 @@ class VoiceBank : public QObject
 public:
     explicit VoiceBank(QString path,QObject *parent = nullptr);
     ~VoiceBank();
-    QImage getImage() const;
-    void setImage(const QImage &value);
 
     QString getName() const;
+    void setName(const QString& name);
+
+    QImage getImage() const;
+    void setImage(const QImage& _image, const QString &newImageFileName = "icon.jpg");
 
     QString getReadme() const;
-    void setReadme(const QString &value);
 
     QString getPath() const;
-    void setPath(const QString &value);
 
     void readFromPath();
 
@@ -77,8 +77,8 @@ public:
     bool isFirstRead() const{
         return ReadCount == 1 || ReadCount == 0;
     }
-    void rename(const QString& name);
-    void changeImage(const QPixmap& _image, QString newImageFileName = "icon.jpg");
+
+
     void clear();
 
     QString getSample() const;
@@ -134,7 +134,7 @@ public:
 
     static bool isVoiceBankPath(const QString &path);
 private:
-    QImage image;
+    QImage _image;
     QString imagePath;
     QString imagePathRelative;
     QString name;

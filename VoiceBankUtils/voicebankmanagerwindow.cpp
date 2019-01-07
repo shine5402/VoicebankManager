@@ -943,9 +943,11 @@ void VoiceBankManagerWindow::modifyNameActionSlot()
         auto name = QInputDialog::getText(this,tr("为音源指定一个新名称"),tr("为路径为%1的音源指定一个新名称（程序会自动转换编码）：").arg(voiceBank->getPath()),QLineEdit::Normal,voiceBank->getName(),&ok);
         if (ok)
         {
-            try{voiceBank->rename(name);
+            try{
+                voiceBank->setName(name);
                 ui->statusbar->showMessage(tr("已将路径为%1的音源的名称设置为%2。").arg(voiceBank->getPath()).arg(voiceBank->getName()));
-                setVoiceBankInfomation(voiceBank);}
+                setVoiceBankInfomation(voiceBank);
+            }
             catch(VoiceBank::FileCanNotOpen& e){
                 QMessageBox::critical(this,tr("文件无法被打开"),tr("有一个文件无法被打开。Qt提供的错误字符串为%1").arg(e.QFileError()));
             }
