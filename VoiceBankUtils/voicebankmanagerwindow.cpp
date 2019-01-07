@@ -1078,7 +1078,7 @@ void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State stat
 void VoiceBankManagerWindow::changeEvent(QEvent *e)
 {
     /*!
-      继承自QWidget的changeEvent(QEvent *e)。
+      继承自 QWidget 的 QWidget::changeEvent(QEvent *e) 。\n
       此函数用于处理语言变化后的相关操作。
     */
     QWidget::changeEvent(e);
