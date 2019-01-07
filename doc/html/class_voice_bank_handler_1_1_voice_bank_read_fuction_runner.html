@@ -72,6 +72,11 @@ $(function() {
 <div class="title">VoiceBankHandler::VoiceBankReadFuctionRunner Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="class_voice_bank.html">VoiceBank</a> 读取线程的执行者  
+ <a href="class_voice_bank_handler_1_1_voice_bank_read_fuction_runner.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="voicebankhandler_8h_source.html">voicebankhandler.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for VoiceBankHandler::VoiceBankReadFuctionRunner:</div>
 <div class="dyncontent">
@@ -84,10 +89,40 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac22862b97edff572e5e73889c4ef676e"><td class="memItemLeft" align="right" valign="top"><a id="ac22862b97edff572e5e73889c4ef676e"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>VoiceBankReadFuctionRunner</b> (<a class="el" href="class_voice_bank.html">VoiceBank</a> *voicebank)</td></tr>
 <tr class="separator:ac22862b97edff572e5e73889c4ef676e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3668d2abd8b06a3ce52d9e48b8f12ed7"><td class="memItemLeft" align="right" valign="top"><a id="a3668d2abd8b06a3ce52d9e48b8f12ed7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> () override</td></tr>
+<tr class="memitem:a3668d2abd8b06a3ce52d9e48b8f12ed7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_handler_1_1_voice_bank_read_fuction_runner.html#a3668d2abd8b06a3ce52d9e48b8f12ed7">run</a> () override</td></tr>
 <tr class="separator:a3668d2abd8b06a3ce52d9e48b8f12ed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="class_voice_bank.html">VoiceBank</a> 读取线程的执行者 </p>
+<p>此类继承于 QRunnable ，用于以多线程读取VoiceBank。<br />
+一般来说您不需要使用此类，而是直接使用 <a class="el" href="class_voice_bank_handler.html#a5533ea16d8c802a296dbf65bb4d02a6b">addVoiceBank(QString&amp; path)</a> 。 </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3668d2abd8b06a3ce52d9e48b8f12ed7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3668d2abd8b06a3ce52d9e48b8f12ed7">&#9670;&nbsp;</a></span>run()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VoiceBankHandler::VoiceBankReadFuctionRunner::run </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>运行给定 <a class="el" href="class_voice_bank.html">VoiceBank</a> 的读取函数。 </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>VoiceBankUtils/<a class="el" href="voicebankhandler_8h_source.html">voicebankhandler.h</a></li>
 <li>VoiceBankUtils/voicebankhandler.cpp</li>

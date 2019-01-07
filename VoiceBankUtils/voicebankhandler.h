@@ -112,7 +112,7 @@ public:
         */
         return voiceBanks.indexOf(voiceBank);
     }
-    QList<int> findIDByName(const QString &text) const;
+    QList<int> findIDByNameOrPath(const QString &text) const;
     QList<int> findIDByCategory(const QString &category) const;
     QList<int> findIDByLabel(const QString &label) const;
 
@@ -120,12 +120,27 @@ public:
 
     void setThreadPoolMaxThreadCount(int maxCount);
     int getThreadPoolMaxThreadCount() const{
+        ///获得读取 VoiceBank 所需信息时所用的最大线程数
         return threadPool->maxThreadCount();
     }
 
-    enum class SortableInformationID{Name,Path};
+    /// 可供排序的信息列列表
+    /*!
+      该枚举定义了 sort(SortableInformationID sortWhat, Qt::SortOrder order) 函数中可以用于排序的信息。
+      \see sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder)
+    */
+    enum class SortableInformationID
+    {
+        Name, ///< VoiceBank 的名称。对应 VoiceBank 的 VoiceBank::name 成员。
+        Path, ///< VoiceBank 的路径。对应 VoiceBank 的 VoiceBank::path 成员。
+    };
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 
+    ///VoiceBank 读取线程的执行者
+    /*!
+      此类继承于 QRunnable ，用于以多线程读取VoiceBank。\n
+      一般来说您不需要使用此类，而是直接使用 addVoiceBank(QString& path) 。
+    */
     class VoiceBankReadFuctionRunner : public QRunnable
     {
     public:
@@ -134,7 +149,47 @@ public:
     private:
         VoiceBank* voicebank;
     };
-
+signals:
+    void aVoiceBankReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 读取完毕。
+    /*!<
+      \param voicebank 读取完毕的 VoiceBank * 。
+      \see VoiceBank::readDone(VoiceBank * voicebank)
+    */
+    void backupImageFileBecauseExists(VoiceBank * voicebank);///< 修改 VoiceBank 的 image 时由于原本已经存在一个 image 所以实施了备份
+    /*!<
+      \param voicebank 备份了 image 的 VoiceBank * 。
+      \see VoiceBank::backupImageFileBecauseExists(VoiceBank * voicebank)
+    */
+    void cannotBackupImageFile(VoiceBank * voicebank); ///< 一个 VoiceBank 备份 image 时发生了错误
+    /*!<
+      \param voicebank 备份 image 时出错的 VoiceBank * 。
+      \see VoiceBank::cannotBackupImageFile(VoiceBank * voicebank)
+    */
+    void categoriesChanged(); ///< 管理的 VoiceBank 的分类发生了改变
+    /*!<
+      VoiceBankHandler 管理的任何一个 VoiceBank 的分类改变时该信号都会被触发。
+      \see VoiceBank::categoryChanged()
+    */
+    void labelsChanged();///< 管理的 VoiceBank 的标签发生了改变
+    /*!<
+      VoiceBankHandler 管理的任何一个 VoiceBank 的标签改变时该信号都会被触发。
+      \see VoiceBank::labelsChanged()
+    */
+    void categroiesAndLabelsChanged();///< 管理的 VoiceBank 的目录或标签发生了改变
+    /*!<
+      VoiceBankHandler 管理的任何一个 VoiceBank 的目录或标签改变时该信号都会被触发。
+      \see categoriesChanged()
+      \see labelsChanged()
+    */
+    void useOldFolderScanChanged();///< “是否使用文件夹扫描策略”发生了改变
+    /*!<
+      \see isUseOldFolderScan()
+    */
+    void voiceBanksReadDone();///< 所有 VoiceBank 都已经读取完毕
+    /*!<
+      所有提交给 VoiceBankHandler 读取的 VoiceBank 都已经读取完毕。建议在此信号触发之后再使用 VoiceBankHandler 管理的 VoiceBank * 。
+      \see aVoiceBankReadDone(VoiceBank* voicebank)
+    */
 private:
     explicit VoiceBankHandler(QObject *parent = nullptr);
     VoiceBankHandler(const VoiceBankHandler&) = delete;
@@ -177,15 +232,7 @@ private:
     friend DestroyHelper;
 private slots:
     void voiceBankReadDoneSlot(VoiceBank *voiceBank);
-signals:
-    void aVoiceBankReadDone(VoiceBank* voicebank);
-    void backupImageFileBecauseExists(VoiceBank *);
-    void cannotBackupImageFile(VoiceBank *);
-    void categoriesChanged();
-    void labelsChanged();
-    void categroiesAndLabelsChanged();
-    void useOldFolderScanChanged();
-    void voiceBanksReadDone();
+
 public slots:
 };
 

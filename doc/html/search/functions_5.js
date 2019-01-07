@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['readvoicebanksfrommonitorfolders',['readVoiceBanksFromMonitorFolders',['../class_voice_bank_handler.html#a256ecd28588492543c58c81e5de9cc7a',1,'VoiceBankHandler']]]
+  ['isuseoldfolderscan',['isUseOldFolderScan',['../class_voice_bank_handler.html#a3331895211e1c7195863d7e7f666b8d1',1,'VoiceBankHandler']]]
 ];

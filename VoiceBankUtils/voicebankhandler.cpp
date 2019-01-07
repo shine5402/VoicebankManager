@@ -96,6 +96,10 @@ VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
 
 void VoiceBankHandler::clear()
 {
+    ///清除 VoiceBankHandler 中的 VoiceBank * 列表。
+    /*!
+      VoiceBankHandler 会自动 delete 所有 VoiceBank * 。
+    */
     for (auto item : voiceBanks){
         item->deleteLater();
     }
@@ -108,11 +112,23 @@ void VoiceBankHandler::clear()
 
 void VoiceBankHandler::setThreadPoolMaxThreadCount(int maxCount)
 {
+    ///设置读取 VoiceBank 所需信息时所用的最大线程数
+    /*!
+      VoiceBankHandler 使用多个线程来读取 VoiceBank 。这能节省时间并更好的利用现代处理器的性能。\n
+      您可以通过本函数来修改 VoiceBankHandler 内部的线程池的最大线程数来优化性能。但请务必在明白您在做什么的时候使用。
+      \param[in] maxCount 新的最大线程数
+    */
     threadPool->setMaxThreadCount(maxCount);
 }
 
 void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt::SortOrder order)
 {
+    ///对 VoiceBankHandler 内的列表进行排序
+    /*!
+      \param[in] sortWhat 对哪项信息进行排序
+      \param[in] order 以何种顺序进行排序
+      \see enum class SortableInformationID
+    */
     if (sortWhat == SortableInformationID::Name)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank *value1,VoiceBank *value2)->bool{
             if (order == Qt::AscendingOrder)
@@ -129,8 +145,15 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
         });
 }
 
-QList<int> VoiceBankHandler::findIDByName(const QString &text) const
+QList<int> VoiceBankHandler::findIDByNameOrPath(const QString &text) const
 {
+    ///在 VoiceBankHandler 管理的 VoiceBank 中按名字或路径查找
+    /*!
+      \param[in] text 要查找的 VoiceBank 的名称或路径。该函数采用部分匹配方式，即二者中有一个含有 text 即可。
+      \return 查找到的 VoiceBank * 的列表。
+      \see findIDByCategory(const QString &category) const
+      \see findIDByLabel(const QString& label) const
+    */
     QList<int> result{};
     if (text.trimmed().isEmpty())
     {
@@ -150,6 +173,13 @@ QList<int> VoiceBankHandler::findIDByName(const QString &text) const
 
 QList<int> VoiceBankHandler::findIDByCategory(const QString &category) const
 {
+    ///在 VoiceBankHandler 管理的 VoiceBank 中按目录查找
+    /*!
+      \param[in] category 要查找的 VoiceBank 的目录。
+      \return 查找到的 VoiceBank * 的列表。
+      \see findIDByNameOrPath(const QString &text) const
+      \see findIDByLabel(const QString& label) const
+    */
     QList<int> result{};
     if (category.trimmed().isEmpty())
     {
@@ -178,6 +208,13 @@ QList<int> VoiceBankHandler::findIDByCategory(const QString &category) const
 
 QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
 {
+    ///在 VoiceBankHandler 管理的 VoiceBank 中按标签查找
+    /*!
+      \param[in] label 要查找的 VoiceBank 的标签。
+      \return 查找到的 VoiceBank * 的列表。
+      \see findIDByCategory(const QString &category) const
+      \see findIDByLabel(const QString& label) const
+    */
     QList<int> result{};
     if (label.trimmed().isEmpty())
     {
@@ -402,6 +439,7 @@ VoiceBankHandler::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBa
 
 void VoiceBankHandler::VoiceBankReadFuctionRunner::run()
 {
+    ///运行给定 VoiceBank 的读取函数。
     voicebank->readFromPath();
 }
 

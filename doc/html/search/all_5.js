@@ -1,13 +1,10 @@
 var searchData=
 [
-  ['getignoredvoicebankfolders',['getIgnoredVoiceBankFolders',['../class_voice_bank_handler.html#a9089baabda67b5bdff0b7341d9446720',1,'VoiceBankHandler']]],
-  ['getignorevoicebankfolders',['getIgnoreVoiceBankFolders',['../class_voice_bank_handler.html#a0d024fc6eb5ff21c5780434d3361d393',1,'VoiceBankHandler']]],
-  ['getmonitorfolders',['getMonitorFolders',['../class_voice_bank_handler.html#af4c8113b0035231fe91ac947ff3f516e',1,'VoiceBankHandler']]],
-  ['getnotvoicebankpaths',['getNotVoiceBankPaths',['../class_voice_bank_handler.html#a992b72728aa87cfc35eaf91290b03e8b',1,'VoiceBankHandler']]],
-  ['getoutsidevoicebankfolders',['getOutsideVoiceBankFolders',['../class_voice_bank_handler.html#a0d4d6bfff7f76537d359893338eec1a8',1,'VoiceBankHandler']]],
-  ['getscannedsubfolders',['getScannedSubFolders',['../class_voice_bank_handler.html#ae968da025ea5b5b2db605e2ac063de50',1,'VoiceBankHandler']]],
-  ['getvoicebank',['getVoiceBank',['../class_voice_bank_handler.html#abfaa532d3ce279cf17e15177a697897a',1,'VoiceBankHandler']]],
-  ['getvoicebankhandler',['getVoiceBankHandler',['../class_voice_bank_handler.html#aad2a199b2020bec00409b47ec0a0e7c5',1,'VoiceBankHandler']]],
-  ['getvoicebankid',['getVoiceBankID',['../class_voice_bank_handler.html#af7ca79ae9ef3674e0be3275373dd801d',1,'VoiceBankHandler']]],
-  ['getvoicebanks',['getVoiceBanks',['../class_voice_bank_handler.html#ae9ceb834a99c19975e7b8d578709d4cf',1,'VoiceBankHandler']]]
+  ['filecannotopen',['FileCanNotOpen',['../class_voice_bank_1_1_file_can_not_open.html',1,'VoiceBank']]],
+  ['filenotexists',['FileNotExists',['../class_voice_bank_1_1_file_not_exists.html',1,'VoiceBank']]],
+  ['findidbycategory',['findIDByCategory',['../class_voice_bank_handler.html#afefc02d1ae6614bd953ec588736de376',1,'VoiceBankHandler']]],
+  ['findidbylabel',['findIDByLabel',['../class_voice_bank_handler.html#a050d503d1b13d3e08b64d6f6ccf358b9',1,'VoiceBankHandler']]],
+  ['findidbynameorpath',['findIDByNameOrPath',['../class_voice_bank_handler.html#a4ac62074207cf8e9cfd3767f3c8d2c3c',1,'VoiceBankHandler']]],
+  ['foldersadddialog',['FoldersAddDialog',['../class_folders_add_dialog.html',1,'']]],
+  ['folderssettingdialog',['FoldersSettingDialog',['../class_folders_setting_dialog.html',1,'']]]
 ];
