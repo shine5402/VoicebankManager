@@ -12,8 +12,8 @@
   VoiceBankHandler 是用于管理 VoiceBank 的类。\n
   VoiceBankHandler 采用单件模式，您不能直接创建，而是通过 getVoiceBankHandler() 来获取其实例。\n
   一般来说，您不需要手动添加 VoiceBank ，而是使用 readVoiceBanksFromMonitorFolders() 来从用户指定的监视文件夹中读取音源库，并自动转化为 VoiceBank 的实例。\n
-  它允许在它管理的 VoiceBank 中通过名称、分类、标签等条件查找音源库，详见 findIDByName(const QString &text)、 findIDByCategory(const QString &category)、 findIDByLabel(const QString &label) 。\n
-  它也允许对内部的 VoiceBank 列表进行排序，详见 sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder) 。
+  它允许在它管理的 VoiceBank 中通过名称、分类、标签等条件查找音源库，详见 findIDByNameOrPath(const QString &text) const 、 findIDByCategory(const QString &category) const 、 findIDByLabel(const QString &label) const  。\n
+  它也允许对内部的 VoiceBank 列表进行排序，详见 sort(SortableInformationID sortWhat, Qt::SortOrder order) 。
 */
 class VoiceBankHandler : public QObject
 {

@@ -194,8 +194,8 @@ Static Public Member Functions</h2></td></tr>
 <p><a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 是用于管理 <a class="el" href="class_voice_bank.html">VoiceBank</a> 的类。<br />
 <a class="el" href="class_voice_bank_handler.html" title="用于管理一系列VoiceBank。">VoiceBankHandler</a> 采用单件模式，您不能直接创建，而是通过 <a class="el" href="class_voice_bank_handler.html#aad2a199b2020bec00409b47ec0a0e7c5">getVoiceBankHandler()</a> 来获取其实例。<br />
 一般来说，您不需要手动添加 <a class="el" href="class_voice_bank.html">VoiceBank</a> ，而是使用 <a class="el" href="class_voice_bank_handler.html#a256ecd28588492543c58c81e5de9cc7a">readVoiceBanksFromMonitorFolders()</a> 来从用户指定的监视文件夹中读取音源库，并自动转化为 <a class="el" href="class_voice_bank.html">VoiceBank</a> 的实例。<br />
-它允许在它管理的 <a class="el" href="class_voice_bank.html">VoiceBank</a> 中通过名称、分类、标签等条件查找音源库，详见 findIDByName(const QString &amp;text)、 findIDByCategory(const QString &amp;category)、 findIDByLabel(const QString &amp;label) 。<br />
-它也允许对内部的 <a class="el" href="class_voice_bank.html">VoiceBank</a> 列表进行排序，详见 sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder) 。 </p>
+它允许在它管理的 <a class="el" href="class_voice_bank.html">VoiceBank</a> 中通过名称、分类、标签等条件查找音源库，详见 <a class="el" href="class_voice_bank_handler.html#a4ac62074207cf8e9cfd3767f3c8d2c3c">findIDByNameOrPath(const QString &amp;text) const </a>、 <a class="el" href="class_voice_bank_handler.html#afefc02d1ae6614bd953ec588736de376">findIDByCategory(const QString &amp;category) const </a>、 <a class="el" href="class_voice_bank_handler.html#a050d503d1b13d3e08b64d6f6ccf358b9">findIDByLabel(const QString &amp;label) const </a> 。<br />
+它也允许对内部的 <a class="el" href="class_voice_bank.html">VoiceBank</a> 列表进行排序，详见 <a class="el" href="class_voice_bank_handler.html#af2df9b8d0f22ba390ae98bfc7e30fd53">sort(SortableInformationID sortWhat, Qt::SortOrder order)</a> 。 </p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="ab5d3b76a0d5e81eceac3221cfc9115f5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab5d3b76a0d5e81eceac3221cfc9115f5">&#9670;&nbsp;</a></span>SortableInformationID</h2>
