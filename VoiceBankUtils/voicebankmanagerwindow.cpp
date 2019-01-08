@@ -645,10 +645,10 @@ void VoiceBankManagerWindow::setCodecForVoiceBankActionSlot(){
         auto dialog = new TextCodecSettingDialog(this,voiceBank);
         auto dialogCode = dialog->exec();
         if (dialogCode == 1){
-            voiceBank->setIsFollowDefault(dialog->getIsFollowDefaultCodec());
+            voiceBank->setTextCodecFollowDefault(dialog->getIsFollowDefaultCodec());
             voiceBank->setCharacterTextCodec(dialog->getCharacterTextCodec());
             voiceBank->setReadmeTextCodec(dialog->getReadmeTextCodec());
-            voiceBank->setIsTextCodecAutoDetect(dialog->getIsAutoDetect());
+            voiceBank->setTextCodecAutoDetect(dialog->getIsAutoDetect());
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
         }
@@ -668,7 +668,7 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
         auto isDone = TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
         if (isDone)
         {
-            voiceBank->setIsFollowDefault(false);
+            voiceBank->setTextCodecFollowDefault(false);
             voiceBank->setCharacterTextCodec(targetCodec);
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
@@ -689,7 +689,7 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
         auto isDone = TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
         if (isDone)
         {
-            voiceBank->setIsFollowDefault(false);
+            voiceBank->setTextCodecFollowDefault(false);
             voiceBank->setReadmeTextCodec(targetCodec);
             voiceBank->saveSettings();
             reloadVoiceBankActionSlot();
@@ -738,7 +738,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
     if (dialogCode == QDialog::Accepted){
         VoiceBank::setDefaultCharacterTextCodec(dialog->getCharacterTextCodec());
         VoiceBank::setDefaultReadmeTextCodec(dialog->getReadmeTextCodec());
-        VoiceBank::setDefalutIsTextCodecAutoDetect(dialog->getIsAutoDetect());
+        VoiceBank::setDefalutTextCodecAutoDetect(dialog->getIsAutoDetect());
         auto clickedButton = QMessageBox::information(this,tr("默认文本读取编码被更改"),tr("您更改了默认的读取用文本编码，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksAndTable();

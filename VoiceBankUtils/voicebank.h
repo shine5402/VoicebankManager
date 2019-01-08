@@ -17,7 +17,10 @@
 #include <QPainter>
 #include "./TextCodecUtils/qchardet.h"
 #include <QJsonArray>
-
+///用于表示一个音源库
+/*!
+    VoiceBank 类代表了一个 UTAU 式音源库。可以通过它获取音源库的相关信息，并可作出修改。
+*/
 class VoiceBank : public QObject
 {
     Q_OBJECT
@@ -29,6 +32,7 @@ public:
     void setName(const QString& name);
 
     QImage getImage() const;
+    QString getImagePath() const;
     void setImage(const QImage& _image, const QString &newImageFileName = "icon.jpg");
 
     QString getReadme() const;
@@ -37,34 +41,36 @@ public:
 
     void readFromPath();
 
-    QString getPixmapPath() const;
-
     QTextCodec *getCharacterTextCodec() const;
     void setCharacterTextCodec(QTextCodec *value);
 
     QTextCodec *getReadmeTextCodec() const;
     void setReadmeTextCodec(QTextCodec *value);
 
-    static void setDefaultCharacterTextCodec(QTextCodec *value);
-    static void setDefaultReadmeTextCodec(QTextCodec *value);
+    QTextCodec *getWavFileNameTextCodec() const;
+    void setWavFileNameTextCodec(QTextCodec *value);
 
     static QTextCodec *getDefaultCharacterTextCodec();
+    static void setDefaultCharacterTextCodec(QTextCodec *value);
 
     static QTextCodec *getDefaultReadmeTextCodec();
-    static void readStaticSettings();
-
-    bool getIsFollowDefault() const;
-    void setIsFollowDefault(bool value);
-    void saveSettings();
-    bool getIsWavFileNameReaded() const;
+    static void setDefaultReadmeTextCodec(QTextCodec *value);
 
     static QTextCodec *getDefaultWavFileNameTextCodec();
     static void setDefaultWavFileNameTextCodec(QTextCodec *value);
 
-    void readWavFileName();
+    bool isTextCodecFollowDefault() const;
+    void setTextCodecFollowDefault(bool value);
 
-    QTextCodec *getWavFileNameTextCodec() const;
-    void setWavFileNameTextCodec(QTextCodec *value);
+    bool isTextCodecAutoDetect() const;
+    void setTextCodecAutoDetect(bool value);
+
+    static bool isDefalutTextCodecAutoDetect();
+    static void setDefalutTextCodecAutoDetect(bool value);
+
+    void saveSettings();
+
+    void readWavFileName();
 
     QStringList getWavFileName() const;
 
@@ -78,16 +84,11 @@ public:
         return ReadCount == 1 || ReadCount == 0;
     }
 
-
-    void clear();
-
     QString getSample() const;
 
-    static bool getDefalutIsTextCodecAutoDetect();
-    static void setDefalutIsTextCodecAutoDetect(bool value);
 
-    bool getIsTextCodecAutoDetect() const;
-    void setIsTextCodecAutoDetect(bool value);
+
+
 
     float getCharacterFileAutoDetectConfidence() const;
 
@@ -98,12 +99,9 @@ public:
     //错误标识类
     class ErrorState{
     public:
-        explicit ErrorState(VoiceBank* voiceBank){
-            if (voiceBank)
-                this->voiceBank = voiceBank;
-        }
+        explicit ErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() = 0;
-        virtual ~ErrorState(){}
+        virtual ~ErrorState();
     protected:
         VoiceBank* voiceBank = nullptr;
     };
@@ -121,12 +119,12 @@ public:
 
     class FileNotExists : public std::runtime_error{
     public:
-        FileNotExists():std::runtime_error("File not exists."){}
+        FileNotExists();
     };
     class FileCanNotOpen : public std::runtime_error{
     public:
-        FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
-        const QString& QFileError() const{return _QFileError;}
+        FileCanNotOpen(const QString QFileError);
+        const QString& QFileError() const;
     private:
         QString _QFileError;
     };
@@ -141,12 +139,11 @@ private:
     QString readme;
     QString path;
     QString sample;
-    //QString calculateInformation;
     QTextCodec *CharacterTextCodec;
     QTextCodec *ReadmeTextCodec;
     QTextCodec *wavFileNameTextCodec;
-    bool isTextCodecFollowDefault = true;
-    bool isTextCodecAutoDetect = true;
+    bool textCodecFollowDefault = true;
+    bool textCodecAutoDetect = true;
     bool hasTextCodecAutoDetected = false;
     float characterFileAutoDetectConfidence = 0.0f;
     float readmeFileAutoDetectConfidence = 0.0f;
@@ -242,6 +239,9 @@ private:
         explicit ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() override;
     };
+
+    void clear();
+    static void readStaticSettings();
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);

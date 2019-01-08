@@ -2,7 +2,6 @@
 
 VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 {
-    VoiceBank::readStaticSettings();
     readThreadPoolMaxThreadCountSettings();
     connect(this,SIGNAL(categoriesChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
     connect(this,SIGNAL(labelsChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
