@@ -3,6 +3,7 @@ var searchData=
   ['getcharactertextcodec',['getCharacterTextCodec',['../class_voice_bank.html#abe4c4710cbcb993d79c48ecec56cb47c',1,'VoiceBank']]],
   ['getdefaultcharactertextcodec',['getDefaultCharacterTextCodec',['../class_voice_bank.html#abb562c8f72e32610bc8cc98561b0427e',1,'VoiceBank']]],
   ['getdefaultreadmetextcodec',['getDefaultReadmeTextCodec',['../class_voice_bank.html#a431c26fa61a8079bf7a69bbe70acec5b',1,'VoiceBank']]],
+  ['getdefaultwavfilenametextcodec',['getDefaultWavFileNameTextCodec',['../class_voice_bank.html#a845f1dd729f2f1045e2969a9d5671c1c',1,'VoiceBank']]],
   ['getignoredvoicebankfolders',['getIgnoredVoiceBankFolders',['../class_voice_bank_handler.html#a9089baabda67b5bdff0b7341d9446720',1,'VoiceBankHandler']]],
   ['getignorevoicebankfolders',['getIgnoreVoiceBankFolders',['../class_voice_bank_handler.html#a0d024fc6eb5ff21c5780434d3361d393',1,'VoiceBankHandler']]],
   ['getimage',['getImage',['../class_voice_bank.html#ada1b98fcc34a3b04c875ba4c28245326',1,'VoiceBank']]],
@@ -19,5 +20,6 @@ var searchData=
   ['getvoicebank',['getVoiceBank',['../class_voice_bank_handler.html#abfaa532d3ce279cf17e15177a697897a',1,'VoiceBankHandler']]],
   ['getvoicebankhandler',['getVoiceBankHandler',['../class_voice_bank_handler.html#aad2a199b2020bec00409b47ec0a0e7c5',1,'VoiceBankHandler']]],
   ['getvoicebankid',['getVoiceBankID',['../class_voice_bank_handler.html#af7ca79ae9ef3674e0be3275373dd801d',1,'VoiceBankHandler']]],
-  ['getvoicebanks',['getVoiceBanks',['../class_voice_bank_handler.html#ae9ceb834a99c19975e7b8d578709d4cf',1,'VoiceBankHandler']]]
+  ['getvoicebanks',['getVoiceBanks',['../class_voice_bank_handler.html#ae9ceb834a99c19975e7b8d578709d4cf',1,'VoiceBankHandler']]],
+  ['getwavfilenametextcodec',['getWavFileNameTextCodec',['../class_voice_bank.html#a03d574b222cf2fd768bab7f04fa0e443',1,'VoiceBank']]]
 ];
