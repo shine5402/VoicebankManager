@@ -86,10 +86,6 @@ public:
 
     QString getSample() const;
 
-
-
-
-
     float getCharacterFileAutoDetectConfidence() const;
 
     float getReadmeFileAutoDetectConfidence() const;

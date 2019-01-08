@@ -128,6 +128,10 @@ bool VoiceBank::isTextCodecAutoDetect() const
 void VoiceBank::setTextCodecAutoDetect(bool value)
 {
     ///设置该音源库的文本编码是否要由程序自动推断
+    /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
+      \see isTextCodecAutoDetect() const
+    */
     textCodecAutoDetect = value;
 }
 
@@ -284,7 +288,6 @@ QTextCodec *VoiceBank::getWavFileNameTextCodec() const
 {
     ///返回 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码。
     /*!
-      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
       \return VoiceBank 读取该音源库的 wav 文件的文件名时使用的 QTextCodec *
       \see setWavFileNameTextCodec(QTextCodec *value)
     */
@@ -295,6 +298,7 @@ void VoiceBank::setWavFileNameTextCodec(QTextCodec *value)
 {
     ///更改 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码。
     /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
       \param value 要使用的文本编码。为 nullptr 时将设置为默认编码。
       \see getWavFileNameTextCodec() const
     */
@@ -847,6 +851,7 @@ void VoiceBank::setTextCodecFollowDefault(bool value)
 {
     ///设置该音源库的文本编码是否跟随默认编码
     /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
       \param value 该音源库的文本编码是否跟随默认编码？
       \see isTextCodecFollowDefault() const
     */
@@ -931,7 +936,6 @@ QTextCodec *VoiceBank::getReadmeTextCodec() const
 {
     ///返回 VoiceBank 读取该音源库的 readme.txt 时使用的文本编码。
     /*!
-      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
       \return VoiceBank 读取该音源库的 readme.txt 时使用的 QTextCodec *
       \see setReadmeTextCodec(QTextCodec *value)
       \see getCharacterTextCodec() const
@@ -943,6 +947,7 @@ void VoiceBank::setReadmeTextCodec(QTextCodec *value)
 {
     ///更改 VoiceBank 读取该音源库的 readme.txt 时使用的文本编码。
     /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
       \param value 要使用的文本编码。为 nullptr 时将设置为默认编码。
       \see getReadmeTextCodec() const
     */
