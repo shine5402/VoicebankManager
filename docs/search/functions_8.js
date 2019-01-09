@@ -1,6 +1,8 @@
 var searchData=
 [
+  ['savesettings',['saveSettings',['../class_voice_bank.html#afc5cee0ef816215298342829fcaae0a8',1,'VoiceBank']]],
   ['setcharactertextcodec',['setCharacterTextCodec',['../class_voice_bank.html#acc55a69bf807741f134b543108b44129',1,'VoiceBank']]],
+  ['setdefaluttextcodecautodetect',['setDefalutTextCodecAutoDetect',['../class_voice_bank.html#acc34b7f5572a068f40e4782159f330ef',1,'VoiceBank']]],
   ['setdefaultcharactertextcodec',['setDefaultCharacterTextCodec',['../class_voice_bank.html#a3c2fb72f64da9e0f83fd347517bef946',1,'VoiceBank']]],
   ['setdefaultreadmetextcodec',['setDefaultReadmeTextCodec',['../class_voice_bank.html#a661eaeeee942b293868f2d5da988d47e',1,'VoiceBank']]],
   ['setdefaultwavfilenametextcodec',['setDefaultWavFileNameTextCodec',['../class_voice_bank.html#a2e77a755d7b923a6000e7e6fba12a056',1,'VoiceBank']]],

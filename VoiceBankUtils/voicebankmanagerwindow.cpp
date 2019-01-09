@@ -699,10 +699,13 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
 
 void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
-    voiceBank->readWavFileName();
+    //voiceBank->readWavFileName();
     if (voiceBank){
         auto sourceCodec = voiceBank->getWavFileNameTextCodec();
         auto targetCodec = QTextCodec::codecForLocale();
+        auto a = voiceBank->getWavFileNameRaw();
+        auto b = voiceBank->getWavFilePath();
+        auto c = tr("%1的WAV文件名").arg(voiceBank->getName());
         if (TextConvertHelper::processFileNameConvert(voiceBank->getWavFileNameRaw(),voiceBank->getWavFilePath(),tr("%1的WAV文件名").arg(voiceBank->getName()),sourceCodec,targetCodec,this))
         {
             voiceBank->clearWavFileReadStage();
@@ -1020,7 +1023,7 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
         auto sample = voiceBank->getSample();
         if (sample.isEmpty())
         {
-            voiceBank->readWavFileName();
+            //voiceBank->readWavFileName();
             auto wavfileList = voiceBank->getWavFilePath();
             if (wavfileList.isEmpty())
             {

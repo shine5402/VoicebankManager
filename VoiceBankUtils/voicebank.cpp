@@ -104,11 +104,23 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
 
 bool VoiceBank::isDefalutTextCodecAutoDetect()
 {
+    ///返回默认情况下 VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+    /*!
+      \return 默认情况下 VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+      \see setDefalutTextCodecAutoDetect(bool value)
+      \see isTextCodecAutoDetect() const
+    */
     return DefalutIsTextCodecAutoDetect;
 }
 
 void VoiceBank::setDefalutTextCodecAutoDetect(bool value)
 {
+    ///设置默认情况下 VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+    /*!
+      该项设置保存于 QSettings 中。
+      \param value VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+      \see isDefalutTextCodecAutoDetect()
+    */
     DefalutIsTextCodecAutoDetect = value;
     QSettings settings;
     settings.setValue("DefaultTextCodec/AutoDetect",DefalutIsTextCodecAutoDetect);
@@ -242,19 +254,6 @@ void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
     LeafLogger::LogMessage(QString("DefaultWavFileNameNameTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
 }
 
-void VoiceBank::decodeWavFileName()
-{
-    if (!wavFileName.isEmpty())
-    {
-        QTextEncoder encoder(QTextCodec::codecForLocale());
-        for (auto name : wavFileName)
-        {
-            auto raw = encoder.fromUnicode(name);
-            wavFileNameRaw.append(raw);
-        }
-    }
-}
-
 void VoiceBank::readWavFileName()
 {
     if (!isWavFileNameReaded){
@@ -280,7 +279,7 @@ void VoiceBank::readWavFileName()
                 }
             }
         }
-        decodeWavFileName();
+        //decodeWavFileName();
     }
 }
 
@@ -492,8 +491,14 @@ void VoiceBank::readSettings(){
 }
 
 void VoiceBank::saveSettings(){
+    ///让 VoiceBank 将声库的特定设置保存到 leafUTAUQtSettings.json 中
+    /*!
+      VoiceBank 使用声库文件夹下的 leafUTAUQtSettings.json 保存一系列与 UTAU 本体不兼容的额外设定。
+      该函数默认会由 VoiceBank 的析构函数调用，您也可以在需要时调用本函数（如改变设置后的重载前）。
+    */
     LeafLogger::LogMessage(QString("开始保存%1的声库单独设置。").arg(path));
     QJsonObject json;
+    //保存文本编码设置：
     if (textCodecFollowDefault)
         json.insert("TextCodec/FollowDefault",true);
     else
@@ -504,8 +509,10 @@ void VoiceBank::saveSettings(){
         json.insert("TextCodec/ReadmeFile",QString::fromUtf8(ReadmeTextCodec->name()));
         json.insert("TextCodec/WavFileName",QString::fromUtf8(wavFileNameTextCodec->name()));
     }
+    //保存分类：
     if (!category.isEmpty())
         json.insert("Category",category);
+    //保存标签：
     if (!labels.isEmpty()){
         QJsonArray array;
         for (auto i : labels)
@@ -514,6 +521,7 @@ void VoiceBank::saveSettings(){
         }
         json.insert("Labels",array);
     }
+    //写入json：
     QJsonDocument json_doc(json);
     auto json_file = new QFile(path + "leafUTAUQtSettings.json");
     json_file->open(QIODevice::WriteOnly | QIODevice::Text);
@@ -524,10 +532,7 @@ void VoiceBank::saveSettings(){
     json_file->deleteLater();
 }
 
-QStringList VoiceBank::getWavFilePath() const
-{
-    return wavFilePath;
-}
+
 
 QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
 {
@@ -594,23 +599,72 @@ void VoiceBank::setImage(const QImage &image, const QString& newImageFileName)
 }
 
 
-QByteArrayList VoiceBank::getWavFileNameRaw() const
-{
-    return wavFileNameRaw;
-}
 
 void VoiceBank::clearWavFileReadStage()
 {
     wavFileName.clear();
-    wavFileNameRaw.clear();
     wavFilePath.clear();
     isWavFileNameReaded = false;
 }
 
+void VoiceBank::lazyLoadWavFileName()
+{
+    if (!isWavFileNameReaded)
+        readWavFileName();
+}
 
 QStringList VoiceBank::getWavFileName() const
 {
+    ///获取音源库的 .wav 文件名列表。
+    /*!
+      这些文件名为操作系统返回的 UTF-8 字符串。\n
+    一般说来，非日文区域将会返回一系列乱码，因为 UTAU 本体需要文件名以 Shift-JIS 编码。Leaf Open UTAU 兼容此项限制。\n
+    如果您需要以特定编码读取这些字符串以获得正确解码结果，请使用 getWavFileNameRaw() const ，或者手动将其使用 QTextEncoder 编码至本地编码（或其他需要的编码）。\n
+    该函数会包含子文件夹中的文件名，但不会包含其子文件夹名称。如果您需要包含子文件夹的文件路径，请使用 getWavFilePath() const 。
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \return 操作系统返回的 UTF-8 文件名列表
+    \see getWavFileNameRaw() const
+    \see getWavFilePath() const
+    */
+    const_cast<VoiceBank *>(this)->lazyLoadWavFileName();
     return wavFileName;
+}
+
+QByteArrayList VoiceBank::getWavFileNameRaw() const
+{
+    ///获取以本地编码重编码过的文件名列表
+    /*!
+      这些文件名为以本地编码重解码的 ByteArray。\n
+      为方便使用而设。相当于使用 QTextEncoder 以本地编码编码 getWavFileName() const 的返回结果。\n
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \see getWavFileName() const
+    \see getWavFilePath() const
+*/
+    const_cast<VoiceBank *>(this)->lazyLoadWavFileName();
+    QByteArrayList wavFileNameRaw;
+    if (!wavFileName.isEmpty())
+    {
+        QTextEncoder encoder(QTextCodec::codecForLocale());
+        for (auto name : wavFileName)
+        {
+            auto raw = encoder.fromUnicode(name);
+            wavFileNameRaw.append(raw);
+        }
+    }
+    return wavFileNameRaw;
+}
+
+QStringList VoiceBank::getWavFilePath() const
+{
+    ///获取音源库下的 .wav 文件路径
+    /*!
+      您可以使用这些路径去访问这些 .wav 文件。这些文件的名称与 getWavFileName() const 一致。\n
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \see getWavFileName() const
+    \see getWavFileNameRaw() const
+*/
+    const_cast<VoiceBank *>(this)->lazyLoadWavFileName();
+    return wavFilePath;
 }
 
 QTextCodec *VoiceBank::getDefaultReadmeTextCodec()
@@ -1127,3 +1181,5 @@ VoiceBank::FileNotExists::FileNotExists():std::runtime_error("File not exists.")
 VoiceBank::FileCanNotOpen::FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
 
 const QString &VoiceBank::FileCanNotOpen::QFileError() const{return _QFileError;}
+
+VoiceBank::WavFileNameNotLoad::WavFileNameNotLoad():std::runtime_error("The name of .wav files not load."){}

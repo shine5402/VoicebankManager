@@ -21,5 +21,8 @@ var searchData=
   ['getvoicebankhandler',['getVoiceBankHandler',['../class_voice_bank_handler.html#aad2a199b2020bec00409b47ec0a0e7c5',1,'VoiceBankHandler']]],
   ['getvoicebankid',['getVoiceBankID',['../class_voice_bank_handler.html#af7ca79ae9ef3674e0be3275373dd801d',1,'VoiceBankHandler']]],
   ['getvoicebanks',['getVoiceBanks',['../class_voice_bank_handler.html#ae9ceb834a99c19975e7b8d578709d4cf',1,'VoiceBankHandler']]],
-  ['getwavfilenametextcodec',['getWavFileNameTextCodec',['../class_voice_bank.html#a03d574b222cf2fd768bab7f04fa0e443',1,'VoiceBank']]]
+  ['getwavfilename',['getWavFileName',['../class_voice_bank.html#a3762c1d518087316a9649131dfe5c81a',1,'VoiceBank']]],
+  ['getwavfilenameraw',['getWavFileNameRaw',['../class_voice_bank.html#afffe7292d9dbc89b9546e4494447f3ee',1,'VoiceBank']]],
+  ['getwavfilenametextcodec',['getWavFileNameTextCodec',['../class_voice_bank.html#a03d574b222cf2fd768bab7f04fa0e443',1,'VoiceBank']]],
+  ['getwavfilepath',['getWavFilePath',['../class_voice_bank.html#ac0c6e710f74854c97052f9303386a966',1,'VoiceBank']]]
 ];

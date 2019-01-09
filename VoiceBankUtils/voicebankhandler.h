@@ -27,6 +27,7 @@ public:
 
     /*
       监视文件夹相关函数。具体使用参见函数内的文档。
+      TODO:使用独立类处理
     */
 
     QStringList getMonitorFolders();
