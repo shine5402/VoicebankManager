@@ -493,7 +493,7 @@ void VoiceBank::readSettings(){
 void VoiceBank::saveSettings(){
     ///让 VoiceBank 将声库的特定设置保存到 leafUTAUQtSettings.json 中
     /*!
-      VoiceBank 使用声库文件夹下的 leafUTAUQtSettings.json 保存一系列与 UTAU 本体不兼容的额外设定。
+      VoiceBank 使用声库文件夹下的 leafUTAUQtSettings.json 保存一系列与 UTAU 本体不兼容的额外设定。\n
       该函数默认会由 VoiceBank 的析构函数调用，您也可以在需要时调用本函数（如改变设置后的重载前）。
     */
     LeafLogger::LogMessage(QString("开始保存%1的声库单独设置。").arg(path));

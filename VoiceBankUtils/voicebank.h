@@ -76,9 +76,6 @@ public:
     QStringList getWavFilePath() const;
     void clearWavFileReadStage();
 
-
-
-
     bool isFirstRead() const{
         return ReadCount == 1 || ReadCount == 0;
     }
@@ -161,7 +158,6 @@ private:
     void readSettings();
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
-    QByteArrayList wavFileNameRaw{};
     QStringList wavFilePath{};
     //bool firstRead = true;
     int ReadCount = 0;
@@ -244,7 +240,6 @@ private:
     static void readStaticSettings();
     void readWavFileName();
     void lazyLoadWavFileName();
-        void decodeWavFileName();
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);
