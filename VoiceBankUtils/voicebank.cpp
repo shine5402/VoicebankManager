@@ -618,7 +618,7 @@ QStringList VoiceBank::getWavFileName() const
     ///获取音源库的 .wav 文件名列表。
     /*!
       这些文件名为操作系统返回的 UTF-8 字符串。\n
-    一般说来，非日文区域将会返回一系列乱码，因为 UTAU 本体需要文件名以 Shift-JIS 编码。Leaf Open UTAU 兼容此项限制。\n
+    一般说来，非日文区域将会返回一系列乱码，因为 UTAU 本体需要文件名以 Shift-JIS 编码。Leaf Open UTAU Qt 兼容此项限制。\n
     如果您需要以特定编码读取这些字符串以获得正确解码结果，请使用 getWavFileNameRaw() const ，或者手动将其使用 QTextEncoder 编码至本地编码（或其他需要的编码）。\n
     该函数会包含子文件夹中的文件名，但不会包含其子文件夹名称。如果您需要包含子文件夹的文件路径，请使用 getWavFilePath() const 。
     \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
