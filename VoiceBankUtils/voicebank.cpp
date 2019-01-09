@@ -626,7 +626,7 @@ QStringList VoiceBank::getWavFileName() const
     \see getWavFileNameRaw() const
     \see getWavFilePath() const
     */
-    const_cast<VoiceBank *>(this)->lazyLoadWavFileName();
+    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
     return wavFileName;
 }
 
@@ -640,7 +640,7 @@ QByteArrayList VoiceBank::getWavFileNameRaw() const
     \see getWavFileName() const
     \see getWavFilePath() const
 */
-    const_cast<VoiceBank *>(this)->lazyLoadWavFileName();
+    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
     QByteArrayList wavFileNameRaw;
     if (!wavFileName.isEmpty())
     {
@@ -663,7 +663,7 @@ QStringList VoiceBank::getWavFilePath() const
     \see getWavFileName() const
     \see getWavFileNameRaw() const
 */
-    const_cast<VoiceBank *>(this)->lazyLoadWavFileName();
+    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
     return wavFilePath;
 }
 
@@ -1012,7 +1012,7 @@ void VoiceBank::setReadmeTextCodec(QTextCodec *value)
         ReadmeTextCodec = DefaultReadmeTextCodec;
 }
 
-VoiceBank::CharacterFileNotExistsErrorState::CharacterFileNotExistsErrorState(VoiceBank *voiceBank) :ErrorState(voiceBank)
+VoiceBank::CharacterFileNotExistsErrorState::CharacterFileNotExistsErrorState(VoiceBank* voiceBank) :ErrorState(voiceBank)
 {
 
 }
@@ -1026,7 +1026,7 @@ QString VoiceBank::CharacterFileNotExistsErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::NameNotSetErrorState::NameNotSetErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::NameNotSetErrorState::NameNotSetErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1040,7 +1040,7 @@ QString VoiceBank::NameNotSetErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageFileNotSetErrorState::ImageFileNotSetErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageFileNotSetErrorState::ImageFileNotSetErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1054,7 +1054,7 @@ QString VoiceBank::ImageFileNotSetErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1068,7 +1068,7 @@ QString VoiceBank::ImageFileNotExistsErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageFileNotFitErrorState::ImageFileNotFitErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageFileNotFitErrorState::ImageFileNotFitErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1085,7 +1085,7 @@ QString VoiceBank::ImageFileNotFitErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ReadmeFileNotExistsErrorState::ReadmeFileNotExistsErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ReadmeFileNotExistsErrorState::ReadmeFileNotExistsErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1099,7 +1099,7 @@ QString VoiceBank::ReadmeFileNotExistsErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageReadExceptionErrorState::ImageReadExceptionErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageReadExceptionErrorState::ImageReadExceptionErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1113,7 +1113,7 @@ QString VoiceBank::ImageReadExceptionErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ReadmeFileCanNotOpenErrorState::ReadmeFileCanNotOpenErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ReadmeFileCanNotOpenErrorState::ReadmeFileCanNotOpenErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1127,7 +1127,7 @@ QString VoiceBank::ReadmeFileCanNotOpenErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::CharacterFileCanNotOpenErrorState::CharacterFileCanNotOpenErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::CharacterFileCanNotOpenErrorState::CharacterFileCanNotOpenErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -1141,7 +1141,7 @@ QString VoiceBank::CharacterFileCanNotOpenErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::CharacterFileTextCodecCanNotDetectErrorState(VoiceBank *voiceBank) : ErrorState (voiceBank)
+VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::CharacterFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank) : ErrorState (voiceBank)
 {
 
 }
@@ -1155,7 +1155,7 @@ QString VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::getErrorHTMLStr
         return QString();
 }
 
-VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank *voiceBank) : ErrorState (voiceBank)
+VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank) : ErrorState (voiceBank)
 {
 
 }
@@ -1169,7 +1169,7 @@ QString VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::getErrorHTMLString
         return QString();
 }
 
-VoiceBank::ErrorState::ErrorState(VoiceBank *voiceBank){
+VoiceBank::ErrorState::ErrorState(VoiceBank* voiceBank){
     if (voiceBank)
         this->voiceBank = voiceBank;
 }

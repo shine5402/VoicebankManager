@@ -221,16 +221,16 @@ private:
     QThreadPool* threadPool = new QThreadPool(this);
     void readThreadPoolMaxThreadCountSettings();
     void saveThreadPoolMaxThreadCountSettings();
-    class DestroyHelper {
+    class Garbo {
     public:
-        ~DestroyHelper(){
+        ~Garbo(){
             if (VoiceBankHandler::s_voiceBankHanlder)
                 delete VoiceBankHandler::s_voiceBankHanlder;
         }
     };
 
-    static DestroyHelper destoryHelper;
-    friend DestroyHelper;
+    static Garbo garbo;
+    friend Garbo;
 private slots:
     void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 

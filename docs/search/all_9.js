@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['monitorfoldersscanner',['MonitorFoldersScanner',['../class_monitor_folders_scanner.html',1,'']]],
   ['moresamplerconfig',['MoresamplerConfig',['../class_moresampler_config.html',1,'']]],
   ['moresamplerconfigaddnewdialog',['MoresamplerConfigAddNewDialog',['../class_moresampler_config_add_new_dialog.html',1,'']]],
   ['moresamplerconfigreader',['MoresamplerConfigReader',['../class_moresampler_config_reader.html',1,'']]],

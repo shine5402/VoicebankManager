@@ -65,23 +65,23 @@ void VoiceBankHandler::saveMonitorFoldersSettings()
     settings.setValue("ignoreVoiceBankFolders",ignoreVoiceBankFolders);
 }
 
-QList<VoiceBank *> VoiceBankHandler::getVoiceBanks() const
+QList<VoiceBank* > VoiceBankHandler::getVoiceBanks() const
 {
-    ///获取 VoiceBankHandler 保存的 VoiceBank * 列表。
+    ///获取 VoiceBankHandler 保存的 VoiceBank* 列表。
     return voiceBanks;
 }
 
-VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
+VoiceBank* VoiceBankHandler::addVoiceBank(QString &path){
     ///让 VoiceBankHandler 管理一个路径为 path 的 VoiceBank 。
     /*!
       \param[in] path 要添加的 VoiceBank 的路径。\n
 
       VoiceBankHandler 会自动配置该 VoiceBank 并读取。\n
-      \return 新的 VoiceBank 的指针。注意，返回时该 VoiceBank 可能并没有读取完毕。您应当等待 VoiceBankHandler::aVoiceBankReadDone(VoiceBank* voicebank) 信号或 VoiceBank::readDone(VoiceBank *) 被触发后再使用此指针。
+      \return 新的 VoiceBank 的指针。注意，返回时该 VoiceBank 可能并没有读取完毕。您应当等待 VoiceBankHandler::aVoiceBankReadDone(VoiceBank* voicebank) 信号或 VoiceBank::readDone(VoiceBank* ) 被触发后再使用此指针。
     */
     auto newVoiceBank = new VoiceBank(path,this);
     connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
-    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank *)));
+    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank* )));
     connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SIGNAL(backupImageFileBecauseExists(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(categoryChanged()),this,SIGNAL(categoriesChanged()));
@@ -95,9 +95,9 @@ VoiceBank *VoiceBankHandler::addVoiceBank(QString &path){
 
 void VoiceBankHandler::clear()
 {
-    ///清除 VoiceBankHandler 中的 VoiceBank * 列表。
+    ///清除 VoiceBankHandler 中的 VoiceBank* 列表。
     /*!
-      VoiceBankHandler 会自动 delete 所有 VoiceBank * 。
+      VoiceBankHandler 会自动 delete 所有 VoiceBank* 。
     */
     for (auto item : voiceBanks){
         item->deleteLater();
@@ -129,14 +129,14 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
       \see enum class SortableInformationID
     */
     if (sortWhat == SortableInformationID::Name)
-        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank *value1,VoiceBank *value2)->bool{
+        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank* value1,VoiceBank* value2)->bool{
             if (order == Qt::AscendingOrder)
                 return value1->getName() < value2->getName();
             else
                 return value1->getName() > value2->getName();
         });
     else if (sortWhat == SortableInformationID::Path)
-        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const VoiceBank *value1,const VoiceBank *value2)->bool{
+        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const VoiceBank* value1,const VoiceBank* value2)->bool{
             if (order == Qt::AscendingOrder)
                 return value1->getPath() < value2->getPath();
             else
@@ -149,7 +149,7 @@ QList<int> VoiceBankHandler::findIDByNameOrPath(const QString &text) const
     ///在 VoiceBankHandler 管理的 VoiceBank 中按名字或路径查找
     /*!
       \param[in] text 要查找的 VoiceBank 的名称或路径。该函数采用部分匹配方式，即二者中有一个含有 text 即可。
-      \return 查找到的 VoiceBank * 的列表。
+      \return 查找到的 VoiceBank* 的列表。
       \see findIDByCategory(const QString &category) const
       \see findIDByLabel(const QString& label) const
     */
@@ -175,7 +175,7 @@ QList<int> VoiceBankHandler::findIDByCategory(const QString &category) const
     ///在 VoiceBankHandler 管理的 VoiceBank 中按目录查找
     /*!
       \param[in] category 要查找的 VoiceBank 的目录。
-      \return 查找到的 VoiceBank * 的列表。
+      \return 查找到的 VoiceBank* 的列表。
       \see findIDByNameOrPath(const QString &text) const
       \see findIDByLabel(const QString& label) const
     */
@@ -210,7 +210,7 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
     ///在 VoiceBankHandler 管理的 VoiceBank 中按标签查找
     /*!
       \param[in] label 要查找的 VoiceBank 的标签。
-      \return 查找到的 VoiceBank * 的列表。
+      \return 查找到的 VoiceBank* 的列表。
       \see findIDByCategory(const QString &category) const
       \see findIDByLabel(const QString& label) const
     */
@@ -422,7 +422,7 @@ void VoiceBankHandler::saveThreadPoolMaxThreadCountSettings()
     settings.setValue("VoiceBankHandler/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
 }
 
-void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank *voiceBank)
+void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank* voiceBank)
 {
     if (voiceBank->isFirstRead())
         if (++voiceBankReadDoneCount == voiceBanks.count()){
@@ -432,7 +432,7 @@ void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank *voiceBank)
 }
 
 
-VoiceBankHandler::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank *voicebank):QRunnable(),voicebank(voicebank)
+VoiceBankHandler::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voicebank):QRunnable(),voicebank(voicebank)
 {
 }
 
@@ -443,5 +443,5 @@ void VoiceBankHandler::VoiceBankReadFuctionRunner::run()
 }
 
 VoiceBankHandler* VoiceBankHandler::s_voiceBankHanlder = nullptr;
-VoiceBankHandler::DestroyHelper VoiceBankHandler::destoryHelper{};
+VoiceBankHandler::Garbo VoiceBankHandler::garbo{};
 

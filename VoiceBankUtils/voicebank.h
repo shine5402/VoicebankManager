@@ -41,22 +41,22 @@ public:
 
     void readFromPath();
 
-    QTextCodec *getCharacterTextCodec() const;
+    QTextCodec* getCharacterTextCodec() const;
     void setCharacterTextCodec(QTextCodec *value);
 
-    QTextCodec *getReadmeTextCodec() const;
+    QTextCodec* getReadmeTextCodec() const;
     void setReadmeTextCodec(QTextCodec *value);
 
-    QTextCodec *getWavFileNameTextCodec() const;
+    QTextCodec* getWavFileNameTextCodec() const;
     void setWavFileNameTextCodec(QTextCodec *value);
 
-    static QTextCodec *getDefaultCharacterTextCodec();
+    static QTextCodec* getDefaultCharacterTextCodec();
     static void setDefaultCharacterTextCodec(QTextCodec *value);
 
-    static QTextCodec *getDefaultReadmeTextCodec();
+    static QTextCodec* getDefaultReadmeTextCodec();
     static void setDefaultReadmeTextCodec(QTextCodec *value);
 
-    static QTextCodec *getDefaultWavFileNameTextCodec();
+    static QTextCodec* getDefaultWavFileNameTextCodec();
     static void setDefaultWavFileNameTextCodec(QTextCodec *value);
 
     bool isTextCodecFollowDefault() const;
@@ -98,7 +98,7 @@ public:
         VoiceBank* voiceBank = nullptr;
     };
 
-    QList<ErrorState *> getErrorStates() const;
+    QList<ErrorState*> getErrorStates() const;
     QString getCategory() const;
 
     void setCategory(const QString &value);
@@ -136,23 +136,23 @@ private:
     QString readme;
     QString path;
     QString sample;
-    QTextCodec *CharacterTextCodec;
-    QTextCodec *ReadmeTextCodec;
-    QTextCodec *wavFileNameTextCodec;
+    QTextCodec* CharacterTextCodec;
+    QTextCodec* ReadmeTextCodec;
+    QTextCodec* wavFileNameTextCodec;
     bool textCodecFollowDefault = true;
     bool textCodecAutoDetect = true;
     bool hasTextCodecAutoDetected = false;
     float characterFileAutoDetectConfidence = 0.0f;
     float readmeFileAutoDetectConfidence = 0.0f;
-    QList<ErrorState *> errorStates;
+    QList<ErrorState*> errorStates;
     void readCharacterFile();
     void readReadme();
     void changeCharacterFile();
     void autoDetectTextFileCodecs();
     QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
-    static inline QTextCodec *DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
-    static inline QTextCodec *DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
-    static inline QTextCodec *DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);
+    static inline QTextCodec* DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
+    static inline QTextCodec* DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
+    static inline QTextCodec* DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline bool isReadStaticSettings = false;
     static inline bool DefalutIsTextCodecAutoDetect = false;
     void readSettings();

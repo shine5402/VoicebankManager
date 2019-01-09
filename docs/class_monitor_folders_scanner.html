@@ -1,0 +1,452 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.15"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Leaf Open UTAU Qt: MonitorFoldersScanner类 参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Leaf Open UTAU Qt
+   </div>
+   <div id="projectbrief">UTAU的简单开源实现之一</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.8.15 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'搜索');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','搜索');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">类</a> &#124;
+<a href="#signals">信号</a> &#124;
+<a href="#pub-methods">Public 成员函数</a> &#124;
+<a href="#pub-static-methods">静态 Public 成员函数</a> &#124;
+<a href="class_monitor_folders_scanner-members.html">所有成员列表</a>  </div>
+  <div class="headertitle">
+<div class="title">MonitorFoldersScanner类 参考</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>获取监视文件夹内的音源文件夹路径列表  
+ <a href="class_monitor_folders_scanner.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="monitorfoldersscanner_8h_source.html">monitorfoldersscanner.h</a>&gt;</code></p>
+<div class="dynheader">
+类 MonitorFoldersScanner 继承关系图:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_monitor_folders_scanner.png" alt=""/>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+类</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner_1_1_not_scanned.html">NotScanned</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">在 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 还没有扫描过监视文件夹时调用扫描详情相关函数，将抛出该异常类  <a href="class_monitor_folders_scanner_1_1_not_scanned.html#details">更多...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
+信号</h2></td></tr>
+<tr class="memitem:a98ce5de1c92ab40267825c67d4dd1126"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a98ce5de1c92ab40267825c67d4dd1126">useOldFolderScanChanged</a> ()</td></tr>
+<tr class="memdesc:a98ce5de1c92ab40267825c67d4dd1126"><td class="mdescLeft">&#160;</td><td class="mdescRight">“是否使用文件夹扫描策略”发生了改变  <a href="#a98ce5de1c92ab40267825c67d4dd1126">更多...</a><br /></td></tr>
+<tr class="separator:a98ce5de1c92ab40267825c67d4dd1126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public 成员函数</h2></td></tr>
+<tr class="memitem:a949167c313c7156f89bd8ad6a920a59c"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a949167c313c7156f89bd8ad6a920a59c">getFoldersInMonitorFolders</a> ()</td></tr>
+<tr class="separator:a949167c313c7156f89bd8ad6a920a59c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a141342e2025f6bed6a9a80d50742afbc"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a141342e2025f6bed6a9a80d50742afbc">getMonitorFolders</a> () const</td></tr>
+<tr class="separator:a141342e2025f6bed6a9a80d50742afbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ffc91c7befba997926b2ebfd3c1071d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a6ffc91c7befba997926b2ebfd3c1071d">setMonitorFolders</a> (const QStringList &amp;value)</td></tr>
+<tr class="separator:a6ffc91c7befba997926b2ebfd3c1071d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd90b7cae4fa7f708170e23719651cd4"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#abd90b7cae4fa7f708170e23719651cd4">getOutsideVoiceBankFolders</a> () const</td></tr>
+<tr class="separator:abd90b7cae4fa7f708170e23719651cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9058057950b9c9392760cb5c304add4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#ad9058057950b9c9392760cb5c304add4">setOutsideVoiceBankFolders</a> (const QStringList &amp;value)</td></tr>
+<tr class="separator:ad9058057950b9c9392760cb5c304add4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41c4b3cf7a162a0c12dbbe2e0004cd95"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a41c4b3cf7a162a0c12dbbe2e0004cd95">getIgnoreVoiceBankFolders</a> () const</td></tr>
+<tr class="separator:a41c4b3cf7a162a0c12dbbe2e0004cd95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a171a7eb131584239ab84f4fc82c3ef4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a171a7eb131584239ab84f4fc82c3ef4d">setIgnoreVoiceBankFolders</a> (const QStringList &amp;value)</td></tr>
+<tr class="separator:a171a7eb131584239ab84f4fc82c3ef4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac592eb3cd8432643f47a303692093cee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#ac592eb3cd8432643f47a303692093cee">addIgnoreVoiceBankFolder</a> (const QString &amp;path)</td></tr>
+<tr class="separator:ac592eb3cd8432643f47a303692093cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858c6ec4b51002b97d9dbde03980636f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a858c6ec4b51002b97d9dbde03980636f">isUseOldFolderScan</a> () const</td></tr>
+<tr class="separator:a858c6ec4b51002b97d9dbde03980636f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7755b54b3bf5a98787bd055e1499b2dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a7755b54b3bf5a98787bd055e1499b2dc">setUseOldFolderScan</a> (bool value)</td></tr>
+<tr class="separator:a7755b54b3bf5a98787bd055e1499b2dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28ee73303b50f0e9c2f1454b92e2701f"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a28ee73303b50f0e9c2f1454b92e2701f">getIgnoredVoiceBankFolders</a> () const</td></tr>
+<tr class="separator:a28ee73303b50f0e9c2f1454b92e2701f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34bb8d07e7ed282fc366f062e47b4254"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a34bb8d07e7ed282fc366f062e47b4254">getNotVoiceBankPaths</a> () const</td></tr>
+<tr class="separator:a34bb8d07e7ed282fc366f062e47b4254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31f22fa25c65352a7d21f35b2876c289"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_monitor_folders_scanner.html#a31f22fa25c65352a7d21f35b2876c289">getScannedSubFolders</a> () const</td></tr>
+<tr class="separator:a31f22fa25c65352a7d21f35b2876c289"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+静态 Public 成员函数</h2></td></tr>
+<tr class="memitem:af688c7c793981fe90ac645a02705a6eb"><td class="memItemLeft" align="right" valign="top"><a id="af688c7c793981fe90ac645a02705a6eb"></a>
+static <a class="el" href="class_monitor_folders_scanner.html">MonitorFoldersScanner</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getMonitorFoldersScanner</b> ()</td></tr>
+<tr class="separator:af688c7c793981fe90ac645a02705a6eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>获取监视文件夹内的音源文件夹路径列表 </p>
+<p><a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 是用来获取监视文件夹内的音源文件夹路径列表的类。<br />
+您可以使用 <a class="el" href="class_monitor_folders_scanner.html#a949167c313c7156f89bd8ad6a920a59c">getFoldersInMonitorFolders()</a> 来获取监视文件夹下的音源库的路径列表。<br />
+您可以使用其他成员函数来更改扫描行为，获得扫描详情等。<br />
+<a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 采用单件模式，您不能直接创建，而是通过 getMonitorFoldersScanner() 来获取其实例。<br />
+</p>
+</div><h2 class="groupheader">成员函数说明</h2>
+<a id="ac592eb3cd8432643f47a303692093cee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac592eb3cd8432643f47a303692093cee">&#9670;&nbsp;</a></span>addIgnoreVoiceBankFolder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MonitorFoldersScanner::addIgnoreVoiceBankFolder </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>path</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>在忽略文件夹列表中添加一个文件夹</p>
+<p>该函数为添加一个文件夹到忽略文件夹列表提供一个方便的途径。 </p><dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">path</td><td>要添加的文件夹路径。</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a949167c313c7156f89bd8ad6a920a59c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a949167c313c7156f89bd8ad6a920a59c">&#9670;&nbsp;</a></span>getFoldersInMonitorFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getFoldersInMonitorFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获得监视文件夹内的音源文件夹</p>
+<p>您可以使用其他函数来修改 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 的扫描行为。参见其它成员函数。 </p><dl class="section return"><dt>返回</dt><dd>监视文件夹内的音源文件夹列表</dd></dl>
+
+</div>
+</div>
+<a id="a28ee73303b50f0e9c2f1454b92e2701f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28ee73303b50f0e9c2f1454b92e2701f">&#9670;&nbsp;</a></span>getIgnoredVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getIgnoredVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取扫描过程中已经被忽略的文件夹列表，仅在进行过扫描后有效。</p>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="class_monitor_folders_scanner_1_1_not_scanned.html" title="在 MonitorFoldersScanner 还没有扫描过监视文件夹时调用扫描详情相关函数，将抛出该异常类">NotScanned</a></td><td>调用该函数之前没有进行过扫描操作。</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a41c4b3cf7a162a0c12dbbe2e0004cd95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41c4b3cf7a162a0c12dbbe2e0004cd95">&#9670;&nbsp;</a></span>getIgnoreVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getIgnoreVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取忽略文件夹列表</p>
+<p>忽略文件夹列表中的文件夹将在扫描时被直接忽略，但仍然会去搜寻其子文件夹。 </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">待办事项:</a></b></dt><dd>实现使用*来防止子文件夹调用 </dd></dl>
+
+</div>
+</div>
+<a id="a141342e2025f6bed6a9a80d50742afbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a141342e2025f6bed6a9a80d50742afbc">&#9670;&nbsp;</a></span>getMonitorFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getMonitorFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取监视文件夹列表</p>
+<p>监视文件夹列表定义 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 去哪里寻找 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 所在的文件夹。监视文件夹应是 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 的父文件夹。 根据扫描文件夹策略设定的不同，VoiceBank 文件夹的确定方式也会有不同。参见 <a class="el" href="class_monitor_folders_scanner.html#a858c6ec4b51002b97d9dbde03980636f">isUseOldFolderScan()</a> 。</p>
+
+</div>
+</div>
+<a id="a34bb8d07e7ed282fc366f062e47b4254"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34bb8d07e7ed282fc366f062e47b4254">&#9670;&nbsp;</a></span>getNotVoiceBankPaths()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getNotVoiceBankPaths </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取扫描过程中被程序认为不是音源文件夹的文件夹列表，仅在进行过扫描后有效。</p>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="class_monitor_folders_scanner_1_1_not_scanned.html" title="在 MonitorFoldersScanner 还没有扫描过监视文件夹时调用扫描详情相关函数，将抛出该异常类">NotScanned</a></td><td>调用该函数之前没有进行过扫描操作。</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abd90b7cae4fa7f708170e23719651cd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd90b7cae4fa7f708170e23719651cd4">&#9670;&nbsp;</a></span>getOutsideVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getOutsideVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取外部音源文件夹列表</p>
+<p>外部音源文件夹列表中的文件夹将在扫描时直接加入音源库列表中，不管其是否在监视文件夹内，不管其运行 VoiceBank::isVoiceBankPath(const QString &amp;path) 的结果是否为真。但是其仍然受忽略文件夹列表的限制。</p>
+
+</div>
+</div>
+<a id="a31f22fa25c65352a7d21f35b2876c289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31f22fa25c65352a7d21f35b2876c289">&#9670;&nbsp;</a></span>getScannedSubFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList MonitorFoldersScanner::getScannedSubFolders </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获取扫描过程中通过递归查找子文件夹找到的音源文件夹，仅在进行过扫描后有效。</p>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="class_monitor_folders_scanner_1_1_not_scanned.html" title="在 MonitorFoldersScanner 还没有扫描过监视文件夹时调用扫描详情相关函数，将抛出该异常类">NotScanned</a></td><td>调用该函数之前没有进行过扫描操作。</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a858c6ec4b51002b97d9dbde03980636f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a858c6ec4b51002b97d9dbde03980636f">&#9670;&nbsp;</a></span>isUseOldFolderScan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool MonitorFoldersScanner::isUseOldFolderScan </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>返回 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 是否使用旧式文件夹扫描策略</p>
+<p>Leaf Open UTAU Qt 这部分代码的早期版本中，将监视文件夹的子文件夹直接作为 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 的路径。这种策略与 UTAU 相同，但是在某些场景下不够实用。所以在较新版本的代码中， <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 将会递归查找监视文件夹的子文件夹来确定音源库所在的文件夹。 <br />
+<a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 使用 VoiceBank::isVoiceBankPath(const QString &amp;path) 来确定一个文件夹是否是一个音源库文件夹。<br />
+</p><dl class="section return"><dt>返回</dt><dd>如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。</dd></dl>
+
+</div>
+</div>
+<a id="a171a7eb131584239ab84f4fc82c3ef4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a171a7eb131584239ab84f4fc82c3ef4d">&#9670;&nbsp;</a></span>setIgnoreVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MonitorFoldersScanner::setIgnoreVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>设置忽略文件夹列表 </p>
+
+</div>
+</div>
+<a id="a6ffc91c7befba997926b2ebfd3c1071d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ffc91c7befba997926b2ebfd3c1071d">&#9670;&nbsp;</a></span>setMonitorFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MonitorFoldersScanner::setMonitorFolders </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>设定监视文件夹列表。将在 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 被析构时保存至 QSettings 。 </p>
+
+</div>
+</div>
+<a id="ad9058057950b9c9392760cb5c304add4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9058057950b9c9392760cb5c304add4">&#9670;&nbsp;</a></span>setOutsideVoiceBankFolders()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MonitorFoldersScanner::setOutsideVoiceBankFolders </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>设置外部音源文件夹列表。 </p>
+
+</div>
+</div>
+<a id="a7755b54b3bf5a98787bd055e1499b2dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7755b54b3bf5a98787bd055e1499b2dc">&#9670;&nbsp;</a></span>setUseOldFolderScan()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MonitorFoldersScanner::setUseOldFolderScan </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>设置 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 是否使用旧式文件夹扫描策略 </p>
+
+</div>
+</div>
+<a id="a98ce5de1c92ab40267825c67d4dd1126"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98ce5de1c92ab40267825c67d4dd1126">&#9670;&nbsp;</a></span>useOldFolderScanChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MonitorFoldersScanner::useOldFolderScanChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>“是否使用文件夹扫描策略”发生了改变 </p>
+<dl class="section see"><dt>参见</dt><dd><a class="el" href="class_monitor_folders_scanner.html#a858c6ec4b51002b97d9dbde03980636f">isUseOldFolderScan()</a> </dd></dl>
+
+</div>
+</div>
+<hr/>该类的文档由以下文件生成:<ul>
+<li>VoiceBankUtils/<a class="el" href="monitorfoldersscanner_8h_source.html">monitorfoldersscanner.h</a></li>
+<li>VoiceBankUtils/monitorfoldersscanner.cpp</li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者 &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.15
+</small></address>
+</body>
+</html>

@@ -48,7 +48,8 @@ SOURCES += \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
     CommonUtils/showhtmldialog.cpp \
-    TextCodecUtils/textconverthelper.cpp
+    TextCodecUtils/textconverthelper.cpp \
+    VoiceBankUtils/monitorfoldersscanner.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -76,7 +77,8 @@ HEADERS += \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
     CommonUtils/showhtmldialog.h \
-    TextCodecUtils/textconverthelper.h
+    TextCodecUtils/textconverthelper.h \
+    VoiceBankUtils/monitorfoldersscanner.h
 
 FORMS += \
         editorwindow.ui \
