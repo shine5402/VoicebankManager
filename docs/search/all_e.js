@@ -1,24 +1,6 @@
 var searchData=
 [
-  ['savesettings',['saveSettings',['../class_voice_bank.html#afc5cee0ef816215298342829fcaae0a8',1,'VoiceBank']]],
-  ['setcharactertextcodec',['setCharacterTextCodec',['../class_voice_bank.html#acc55a69bf807741f134b543108b44129',1,'VoiceBank']]],
-  ['setdefaluttextcodecautodetect',['setDefalutTextCodecAutoDetect',['../class_voice_bank.html#acc34b7f5572a068f40e4782159f330ef',1,'VoiceBank']]],
-  ['setdefaultcharactertextcodec',['setDefaultCharacterTextCodec',['../class_voice_bank.html#a3c2fb72f64da9e0f83fd347517bef946',1,'VoiceBank']]],
-  ['setdefaultreadmetextcodec',['setDefaultReadmeTextCodec',['../class_voice_bank.html#a661eaeeee942b293868f2d5da988d47e',1,'VoiceBank']]],
-  ['setdefaultwavfilenametextcodec',['setDefaultWavFileNameTextCodec',['../class_voice_bank.html#a2e77a755d7b923a6000e7e6fba12a056',1,'VoiceBank']]],
-  ['setignorevoicebankfolders',['setIgnoreVoiceBankFolders',['../class_monitor_folders_scanner.html#a171a7eb131584239ab84f4fc82c3ef4d',1,'MonitorFoldersScanner::setIgnoreVoiceBankFolders()'],['../class_voice_bank_handler.html#a6e94fa8c8ebe579e3b09e58745b4f47a',1,'VoiceBankHandler::setIgnoreVoiceBankFolders()']]],
-  ['setimage',['setImage',['../class_voice_bank.html#ad957f5611223986a1d77c0eca737d485',1,'VoiceBank']]],
-  ['setmonitorfolders',['setMonitorFolders',['../class_monitor_folders_scanner.html#a6ffc91c7befba997926b2ebfd3c1071d',1,'MonitorFoldersScanner::setMonitorFolders()'],['../class_voice_bank_handler.html#abe98721a16906dae0e4cc2b171b8a97b',1,'VoiceBankHandler::setMonitorFolders()']]],
-  ['setname',['setName',['../class_voice_bank.html#a91658c448e7ba9b58ab294ec4a9fc942',1,'VoiceBank']]],
-  ['setoutsidevoicebankfolders',['setOutsideVoiceBankFolders',['../class_monitor_folders_scanner.html#ad9058057950b9c9392760cb5c304add4',1,'MonitorFoldersScanner::setOutsideVoiceBankFolders()'],['../class_voice_bank_handler.html#a83c27c3593a9219ec1bb93427ac64838',1,'VoiceBankHandler::setOutsideVoiceBankFolders()']]],
-  ['setreadmetextcodec',['setReadmeTextCodec',['../class_voice_bank.html#a0dd48e30f571ef5c62bf26410b953ab9',1,'VoiceBank']]],
-  ['settextcodecautodetect',['setTextCodecAutoDetect',['../class_voice_bank.html#a570aa31b56907e83f504430efa19d133',1,'VoiceBank']]],
-  ['settextcodecfollowdefault',['setTextCodecFollowDefault',['../class_voice_bank.html#a3fa1d1ee6e3255a5debd2a65b891e911',1,'VoiceBank']]],
-  ['setthreadpoolmaxthreadcount',['setThreadPoolMaxThreadCount',['../class_voice_bank_handler.html#a2859d9e483309cc8144d50493f93586c',1,'VoiceBankHandler']]],
-  ['setuseoldfolderscan',['setUseOldFolderScan',['../class_monitor_folders_scanner.html#a7755b54b3bf5a98787bd055e1499b2dc',1,'MonitorFoldersScanner::setUseOldFolderScan()'],['../class_voice_bank_handler.html#ac6ba96b7b6e9b9f0edc46e51bec5d73f',1,'VoiceBankHandler::setUseOldFolderScan()']]],
-  ['setwavfilenametextcodec',['setWavFileNameTextCodec',['../class_voice_bank.html#a05dbd7280834b492c42cb101e9a2d39b',1,'VoiceBank']]],
-  ['showhtmldialog',['ShowHTMLDialog',['../class_show_h_t_m_l_dialog.html',1,'']]],
-  ['sort',['sort',['../class_voice_bank_handler.html#af2df9b8d0f22ba390ae98bfc7e30fd53',1,'VoiceBankHandler']]],
-  ['sortableinformationid',['SortableInformationID',['../class_voice_bank_handler.html#ab5d3b76a0d5e81eceac3221cfc9115f5',1,'VoiceBankHandler']]],
-  ['stringeditmode',['StringEditMode',['../class_moresampler_config_1_1_string_edit_mode.html',1,'MoresamplerConfig']]]
+  ['readfrompath',['readFromPath',['../class_voice_bank.html#aef013fee6923e73ed1468db4e9ca3fc3',1,'VoiceBank']]],
+  ['readvoicebanksfrommonitorfolders',['readVoiceBanksFromMonitorFolders',['../class_voice_bank_handler.html#a256ecd28588492543c58c81e5de9cc7a',1,'VoiceBankHandler']]],
+  ['run',['run',['../class_voice_bank_handler_1_1_voice_bank_read_fuction_runner.html#a3668d2abd8b06a3ce52d9e48b8f12ed7',1,'VoiceBankHandler::VoiceBankReadFuctionRunner']]]
 ];

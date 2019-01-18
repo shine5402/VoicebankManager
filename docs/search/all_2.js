@@ -8,5 +8,6 @@ var searchData=
   ['changeevent',['changeEvent',['../class_voice_bank_manager_window.html#aa6614e672e3cb410fa1c34188766a24b',1,'VoiceBankManagerWindow']]],
   ['choiceseditmode',['ChoicesEditMode',['../class_moresampler_config_1_1_choices_edit_mode.html',1,'MoresamplerConfig']]],
   ['clear',['clear',['../class_voice_bank_handler.html#a4a1eb83fdfb84afd6bc9585534103618',1,'VoiceBankHandler']]],
+  ['clearwavfilereadstage',['clearWavFileReadStage',['../class_voice_bank.html#a4383d39be988e244bf77463652984e01',1,'VoiceBank']]],
   ['count',['count',['../class_voice_bank_handler.html#a1166cedac9f017ad8f9482dbc06951b0',1,'VoiceBankHandler']]]
 ];

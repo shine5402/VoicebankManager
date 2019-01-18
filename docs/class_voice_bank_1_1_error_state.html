@@ -74,22 +74,91 @@ $(function() {
 <div class="title">VoiceBank::ErrorState类 参考<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>描述 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 从文件夹中读取信息时发现的错误  
+ <a href="class_voice_bank_1_1_error_state.html#details">更多...</a></p>
+
+<p><code>#include &lt;<a class="el" href="voicebank_8h_source.html">voicebank.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public 成员函数</h2></td></tr>
-<tr class="memitem:a24e6f2905647cf88e7e60a49c9184e26"><td class="memItemLeft" align="right" valign="top"><a id="a24e6f2905647cf88e7e60a49c9184e26"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ErrorState</b> (<a class="el" href="class_voice_bank.html">VoiceBank</a> *voiceBank)</td></tr>
+<tr class="memitem:a24e6f2905647cf88e7e60a49c9184e26"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_1_1_error_state.html#a24e6f2905647cf88e7e60a49c9184e26">ErrorState</a> (<a class="el" href="class_voice_bank.html">VoiceBank</a> *<a class="el" href="class_voice_bank_1_1_error_state.html#aee218f0348128189c77c51e451cb1222">voiceBank</a>)</td></tr>
 <tr class="separator:a24e6f2905647cf88e7e60a49c9184e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a4274805d5a6737df8be20274fc0a2d"><td class="memItemLeft" align="right" valign="top"><a id="a6a4274805d5a6737df8be20274fc0a2d"></a>
-virtual QString&#160;</td><td class="memItemRight" valign="bottom"><b>getErrorHTMLString</b> ()=0</td></tr>
+<tr class="memitem:a6a4274805d5a6737df8be20274fc0a2d"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_1_1_error_state.html#a6a4274805d5a6737df8be20274fc0a2d">getErrorHTMLString</a> ()=0</td></tr>
 <tr class="separator:a6a4274805d5a6737df8be20274fc0a2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected 属性</h2></td></tr>
 <tr class="memitem:aee218f0348128189c77c51e451cb1222"><td class="memItemLeft" align="right" valign="top"><a id="aee218f0348128189c77c51e451cb1222"></a>
-<a class="el" href="class_voice_bank.html">VoiceBank</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>voiceBank</b> = nullptr</td></tr>
+<a class="el" href="class_voice_bank.html">VoiceBank</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_1_1_error_state.html#aee218f0348128189c77c51e451cb1222">voiceBank</a> = nullptr</td></tr>
+<tr class="memdesc:aee218f0348128189c77c51e451cb1222"><td class="mdescLeft">&#160;</td><td class="mdescRight">构造时提供的 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 指针。 <a class="el" href="class_voice_bank_1_1_error_state.html" title="描述 VoiceBank 从文件夹中读取信息时发现的错误">ErrorState</a> 可能使用它来获取信息。 <br /></td></tr>
 <tr class="separator:aee218f0348128189c77c51e451cb1222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>描述 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 从文件夹中读取信息时发现的错误 </p>
+<p>此类是抽象类，具体错误描述由子类提供。<br />
+使用 <a class="el" href="class_voice_bank_1_1_error_state.html#a6a4274805d5a6737df8be20274fc0a2d">getErrorHTMLString()</a> 来获得对于遇到的错误的描述。 </p>
+</div><h2 class="groupheader">构造及析构函数说明</h2>
+<a id="a24e6f2905647cf88e7e60a49c9184e26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24e6f2905647cf88e7e60a49c9184e26">&#9670;&nbsp;</a></span>ErrorState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">VoiceBank::ErrorState::ErrorState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_voice_bank.html">VoiceBank</a> *&#160;</td>
+          <td class="paramname"><em>voiceBank</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>构造一个 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 读取错误信息</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">voiceBank</td><td>产生错误的 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 。 <a class="el" href="class_voice_bank_1_1_error_state.html" title="描述 VoiceBank 从文件夹中读取信息时发现的错误">ErrorState</a> 可能使用该指针获取一些需要展现的信息。</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">成员函数说明</h2>
+<a id="a6a4274805d5a6737df8be20274fc0a2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a4274805d5a6737df8be20274fc0a2d">&#9670;&nbsp;</a></span>getErrorHTMLString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual QString VoiceBank::ErrorState::getErrorHTMLString </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>遇到的错误的具体描述。将会返回一个 HTML 片段，包含了展现错误时的相关样式（如字体颜色、前缀等）。 </p>
+
+</div>
+</div>
 <hr/>该类的文档由以下文件生成:<ul>
 <li>VoiceBankUtils/<a class="el" href="voicebank_8h_source.html">voicebank.h</a></li>
 <li>VoiceBankUtils/voicebank.cpp</li>

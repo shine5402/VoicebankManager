@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['name',['Name',['../class_voice_bank_handler.html#ab5d3b76a0d5e81eceac3221cfc9115f5a49ee3087348e8d44e1feda1917443987',1,'VoiceBankHandler']]],
-  ['notchoicesexception',['NotChoicesException',['../class_moresampler_config_1_1_edit_mode_1_1_not_choices_exception.html',1,'MoresamplerConfig::EditMode']]],
-  ['notscanned',['NotScanned',['../class_monitor_folders_scanner_1_1_not_scanned.html',1,'MonitorFoldersScanner']]]
+  ['monitorfoldersscanner',['MonitorFoldersScanner',['../class_monitor_folders_scanner.html',1,'']]],
+  ['moresamplerconfig',['MoresamplerConfig',['../class_moresampler_config.html',1,'']]],
+  ['moresamplerconfigaddnewdialog',['MoresamplerConfigAddNewDialog',['../class_moresampler_config_add_new_dialog.html',1,'']]],
+  ['moresamplerconfigreader',['MoresamplerConfigReader',['../class_moresampler_config_reader.html',1,'']]],
+  ['moresamplerconfigsaddnewmodel',['MoresamplerConfigsAddNewModel',['../class_moresampler_configs_add_new_model.html',1,'']]],
+  ['moresamplerconfigsdelegate',['MoresamplerConfigsDelegate',['../class_moresampler_configs_delegate.html',1,'']]],
+  ['moresamplerconfigsdialog',['MoresamplerConfigsDialog',['../class_moresampler_configs_dialog.html',1,'']]],
+  ['moresamplerconfigsmodel',['MoresamplerConfigsModel',['../class_moresampler_configs_model.html',1,'']]]
 ];

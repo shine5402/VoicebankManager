@@ -85,18 +85,19 @@ public:
     QString getSampleFileName() const;
 
     //错误标识类
+    ///描述 VoiceBank 从文件夹中读取信息时发现的错误
+    /*!
+      此类是抽象类，具体错误描述由子类提供。\n
+      使用 getErrorHTMLString() 来获得对于遇到的错误的描述。
+    */
     class ErrorState{
-        ///描述 VoiceBank 从文件夹中读取信息时发现的错误
-        /*!
-          此类是抽象类，具体错误描述由子类提供。\n
-          使用 getErrorHTMLString() 来获得对于遇到的错误的描述。
-        */
+
     public:
         explicit ErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() = 0;/*!< 遇到的错误的具体描述。将会返回一个 HTML 片段，包含了展现错误时的相关样式（如字体颜色、前缀等）。*/
         virtual ~ErrorState();
     protected:
-        VoiceBank* voiceBank = nullptr;
+        VoiceBank* voiceBank = nullptr;///<构造时提供的 VoiceBank 指针。 ErrorState 可能使用它来获取信息。
     };
 
     QList<ErrorState*> getErrorStates() const;

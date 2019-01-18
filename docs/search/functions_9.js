@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['useoldfolderscanchanged',['useOldFolderScanChanged',['../class_monitor_folders_scanner.html#a98ce5de1c92ab40267825c67d4dd1126',1,'MonitorFoldersScanner::useOldFolderScanChanged()'],['../class_voice_bank_handler.html#af201cba426bff64f22cf61aa405f5ad0',1,'VoiceBankHandler::useOldFolderScanChanged()']]]
+  ['readfrompath',['readFromPath',['../class_voice_bank.html#aef013fee6923e73ed1468db4e9ca3fc3',1,'VoiceBank']]],
+  ['readvoicebanksfrommonitorfolders',['readVoiceBanksFromMonitorFolders',['../class_voice_bank_handler.html#a256ecd28588492543c58c81e5de9cc7a',1,'VoiceBankHandler']]],
+  ['run',['run',['../class_voice_bank_handler_1_1_voice_bank_read_fuction_runner.html#a3668d2abd8b06a3ce52d9e48b8f12ed7',1,'VoiceBankHandler::VoiceBankReadFuctionRunner']]]
 ];

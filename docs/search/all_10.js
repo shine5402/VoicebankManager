@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['useoldfolderscanchanged',['useOldFolderScanChanged',['../class_monitor_folders_scanner.html#a98ce5de1c92ab40267825c67d4dd1126',1,'MonitorFoldersScanner::useOldFolderScanChanged()'],['../class_voice_bank_handler.html#af201cba426bff64f22cf61aa405f5ad0',1,'VoiceBankHandler::useOldFolderScanChanged()']]]
+  ['tablecolumns',['TableColumns',['../struct_voice_bank_table_model_1_1_table_columns.html',1,'VoiceBankTableModel']]],
+  ['tablecolumnsglobal',['TableColumnsGlobal',['../struct_moresampler_configs_model_1_1_table_columns_global.html',1,'MoresamplerConfigsModel']]],
+  ['tablecolumnsvoicebank',['TableColumnsVoicebank',['../struct_moresampler_configs_model_1_1_table_columns_voicebank.html',1,'MoresamplerConfigsModel']]],
+  ['textcodecconvertdialog',['TextCodecConvertDialog',['../class_text_codec_convert_dialog.html',1,'']]],
+  ['textcodecsettingdialog',['TextCodecSettingDialog',['../class_text_codec_setting_dialog.html',1,'']]],
+  ['textconverthelper',['TextConvertHelper',['../class_text_convert_helper.html',1,'']]]
 ];

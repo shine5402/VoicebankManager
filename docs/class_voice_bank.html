@@ -87,6 +87,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 类</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_1_1_error_state.html">ErrorState</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">描述 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 从文件夹中读取信息时发现的错误  <a href="class_voice_bank_1_1_error_state.html#details">更多...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank_1_1_file_can_not_open.html">FileCanNotOpen</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,6 +159,12 @@ Public 成员函数</h2></td></tr>
 <tr class="separator:a18ba1f0f100fde54ff86a21b4ea79aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a570aa31b56907e83f504430efa19d133"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#a570aa31b56907e83f504430efa19d133">setTextCodecAutoDetect</a> (bool value)</td></tr>
 <tr class="separator:a570aa31b56907e83f504430efa19d133"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76ad54345bdb5eb13618f5be74f8e07d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#a76ad54345bdb5eb13618f5be74f8e07d">hasTextCodecAutoDetected</a> () const</td></tr>
+<tr class="separator:a76ad54345bdb5eb13618f5be74f8e07d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a314bcf3b87ab4f05e9f07aae9b9296c1"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#a314bcf3b87ab4f05e9f07aae9b9296c1">getCharacterFileAutoDetectConfidence</a> () const</td></tr>
+<tr class="separator:a314bcf3b87ab4f05e9f07aae9b9296c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a452e6ad14cfbe958c7ffb259472d634a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#a452e6ad14cfbe958c7ffb259472d634a">getReadmeFileAutoDetectConfidence</a> () const</td></tr>
+<tr class="separator:a452e6ad14cfbe958c7ffb259472d634a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc5cee0ef816215298342829fcaae0a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#afc5cee0ef816215298342829fcaae0a8">saveSettings</a> ()</td></tr>
 <tr class="separator:afc5cee0ef816215298342829fcaae0a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3762c1d518087316a9649131dfe5c81a"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#a3762c1d518087316a9649131dfe5c81a">getWavFileName</a> () const</td></tr>
@@ -166,24 +173,12 @@ Public 成员函数</h2></td></tr>
 <tr class="separator:afffe7292d9dbc89b9546e4494447f3ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0c6e710f74854c97052f9303386a966"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#ac0c6e710f74854c97052f9303386a966">getWavFilePath</a> () const</td></tr>
 <tr class="separator:ac0c6e710f74854c97052f9303386a966"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4383d39be988e244bf77463652984e01"><td class="memItemLeft" align="right" valign="top"><a id="a4383d39be988e244bf77463652984e01"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clearWavFileReadStage</b> ()</td></tr>
+<tr class="memitem:a4383d39be988e244bf77463652984e01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#a4383d39be988e244bf77463652984e01">clearWavFileReadStage</a> ()</td></tr>
 <tr class="separator:a4383d39be988e244bf77463652984e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8e1782503fe09a3d6e17cd47cfdae14"><td class="memItemLeft" align="right" valign="top"><a id="ae8e1782503fe09a3d6e17cd47cfdae14"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFirstRead</b> () const</td></tr>
+<tr class="memitem:ae8e1782503fe09a3d6e17cd47cfdae14"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#ae8e1782503fe09a3d6e17cd47cfdae14">isFirstRead</a> () const</td></tr>
 <tr class="separator:ae8e1782503fe09a3d6e17cd47cfdae14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b51d1d89ff91b76ca3948bf13058c99"><td class="memItemLeft" align="right" valign="top"><a id="a9b51d1d89ff91b76ca3948bf13058c99"></a>
-QString&#160;</td><td class="memItemRight" valign="bottom"><b>getSample</b> () const</td></tr>
-<tr class="separator:a9b51d1d89ff91b76ca3948bf13058c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a314bcf3b87ab4f05e9f07aae9b9296c1"><td class="memItemLeft" align="right" valign="top"><a id="a314bcf3b87ab4f05e9f07aae9b9296c1"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getCharacterFileAutoDetectConfidence</b> () const</td></tr>
-<tr class="separator:a314bcf3b87ab4f05e9f07aae9b9296c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a452e6ad14cfbe958c7ffb259472d634a"><td class="memItemLeft" align="right" valign="top"><a id="a452e6ad14cfbe958c7ffb259472d634a"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getReadmeFileAutoDetectConfidence</b> () const</td></tr>
-<tr class="separator:a452e6ad14cfbe958c7ffb259472d634a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ab99c340736b5ba210847abaf793554"><td class="memItemLeft" align="right" valign="top"><a id="a5ab99c340736b5ba210847abaf793554"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getHasTextCodecAutoDetected</b> () const</td></tr>
-<tr class="separator:a5ab99c340736b5ba210847abaf793554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd0245125318f2c035c6b79176e116bf"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_voice_bank.html#abd0245125318f2c035c6b79176e116bf">getSampleFileName</a> () const</td></tr>
+<tr class="separator:abd0245125318f2c035c6b79176e116bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba82470c57e080a3ec0ce228c315f09f"><td class="memItemLeft" align="right" valign="top"><a id="aba82470c57e080a3ec0ce228c315f09f"></a>
 QList&lt; <a class="el" href="class_voice_bank_1_1_error_state.html">ErrorState</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getErrorStates</b> () const</td></tr>
 <tr class="separator:aba82470c57e080a3ec0ce228c315f09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -300,6 +295,44 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 </div>
 </div>
 <h2 class="groupheader">成员函数说明</h2>
+<a id="a4383d39be988e244bf77463652984e01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4383d39be988e244bf77463652984e01">&#9670;&nbsp;</a></span>clearWavFileReadStage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VoiceBank::clearWavFileReadStage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>清除音源库的WAV文件名读取信息</p>
+<p>该函数将清除该 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 缓存的 .wav 文件名信息。这样在下次调用相关函数时 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 会重新从文件夹中读取。</p>
+
+</div>
+</div>
+<a id="a314bcf3b87ab4f05e9f07aae9b9296c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a314bcf3b87ab4f05e9f07aae9b9296c1">&#9670;&nbsp;</a></span>getCharacterFileAutoDetectConfidence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float VoiceBank::getCharacterFileAutoDetectConfidence </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获得自动推断文本编码时对 character.txt 的推断的可信程度</p>
+<p>保存了 libchardet 的返回值。具体含义请见 Mozilla 的 <a href="https://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html">文档</a> 。 </p><dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#a452e6ad14cfbe958c7ffb259472d634a">getReadmeFileAutoDetectConfidence() const</a></dd></dl>
+
+</div>
+</div>
 <a id="abe4c4710cbcb993d79c48ecec56cb47c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe4c4710cbcb993d79c48ecec56cb47c">&#9670;&nbsp;</a></span>getCharacterTextCodec()</h2>
 
@@ -509,6 +542,25 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 
 </div>
 </div>
+<a id="a452e6ad14cfbe958c7ffb259472d634a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a452e6ad14cfbe958c7ffb259472d634a">&#9670;&nbsp;</a></span>getReadmeFileAutoDetectConfidence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float VoiceBank::getReadmeFileAutoDetectConfidence </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获得自动推断文本编码时对 readme.txt 的推断的可信程度</p>
+<p>保存了 libchardet 的返回值。具体含义请见 Mozilla 的 <a href="https://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html">文档</a> 。 </p><dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#a314bcf3b87ab4f05e9f07aae9b9296c1">getCharacterFileAutoDetectConfidence() const</a></dd></dl>
+
+</div>
+</div>
 <a id="aaf1125fb9d76d43eb334077b9b7a778c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaf1125fb9d76d43eb334077b9b7a778c">&#9670;&nbsp;</a></span>getReadmeTextCodec()</h2>
 
@@ -531,6 +583,26 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 
 </div>
 </div>
+<a id="abd0245125318f2c035c6b79176e116bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd0245125318f2c035c6b79176e116bf">&#9670;&nbsp;</a></span>getSampleFileName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString VoiceBank::getSampleFileName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>获得该音源库的示例音频文件名</p>
+<p>UTAU 式音源允许音源库作者在 character.txt 的 sample 字段中定义该音源库的示例音频。.wav 可以被忽略。若该字段没有被定义，那么就使用音源文件夹下的 .wav 文件。<br />
+与 UTAU 本体不同，在没有 sample 设定的情况下多次调用本函数并不会在 .wav 文件列表中移动，在这种情况下该函数只会返回第一个找到的 .wav 文件。 </p><dl class="section return"><dt>返回</dt><dd>该音源库的示例音频文件名。找不到时返回空字符串。</dd></dl>
+
+</div>
+</div>
 <a id="a3762c1d518087316a9649131dfe5c81a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3762c1d518087316a9649131dfe5c81a">&#9670;&nbsp;</a></span>getWavFileName()</h2>
 
@@ -549,7 +621,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 <p>这些文件名为操作系统返回的 UTF-8 字符串。<br />
 一般说来，非日文区域将会返回一系列乱码，因为 UTAU 本体需要文件名以 Shift-JIS 编码。Leaf Open UTAU Qt 兼容此项限制。<br />
 如果您需要以特定编码读取这些字符串以获得正确解码结果，请使用 <a class="el" href="class_voice_bank.html#afffe7292d9dbc89b9546e4494447f3ee">getWavFileNameRaw() const </a>，或者手动将其使用 QTextEncoder 编码至本地编码（或其他需要的编码）。<br />
-该函数会包含子文件夹中的文件名，但不会包含其子文件夹名称。如果您需要包含子文件夹的文件路径，请使用 <a class="el" href="class_voice_bank.html#ac0c6e710f74854c97052f9303386a966">getWavFilePath() const </a>。 </p><dl class="section warning"><dt>警告</dt><dd>该函数使用惰性求值（Lazy Evaluation）策略，即 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 本身并没有被 const 限定，否则结果将是未定义的。 </dd></dl>
+该函数会包含子文件夹中的文件名，但不会包含其子文件夹名称。如果您需要包含子文件夹的文件路径，请使用 <a class="el" href="class_voice_bank.html#ac0c6e710f74854c97052f9303386a966">getWavFilePath() const </a>。 </p><dl class="section warning"><dt>警告</dt><dd>该函数使用惰性求值（Lazy Evaluation）策略，即 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 一开始并不会读取文件名，而是在构造或调用 <a class="el" href="class_voice_bank.html#a4383d39be988e244bf77463652984e01">clearWavFileReadStage()</a> 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 本身并没有被 const 限定，否则结果将是未定义的。 </dd></dl>
 <dl class="section return"><dt>返回</dt><dd>操作系统返回的 UTF-8 文件名列表 </dd></dl>
 <dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#afffe7292d9dbc89b9546e4494447f3ee">getWavFileNameRaw() const</a> </dd>
 <dd>
@@ -574,7 +646,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 <p>获取以本地编码重编码过的文件名列表</p>
 <p>这些文件名为以本地编码重解码的 ByteArray。<br />
  为方便使用而设。相当于使用 QTextEncoder 以本地编码编码 <a class="el" href="class_voice_bank.html#a3762c1d518087316a9649131dfe5c81a">getWavFileName() const </a>的返回结果。<br />
-</p><dl class="section warning"><dt>警告</dt><dd>该函数使用惰性求值（Lazy Evaluation）策略，即 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 本身并没有被 const 限定，否则结果将是未定义的。 </dd></dl>
+</p><dl class="section warning"><dt>警告</dt><dd>该函数使用惰性求值（Lazy Evaluation）策略，即 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 一开始并不会读取文件名，而是在构造或调用 <a class="el" href="class_voice_bank.html#a4383d39be988e244bf77463652984e01">clearWavFileReadStage()</a> 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 本身并没有被 const 限定，否则结果将是未定义的。 </dd></dl>
 <dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#a3762c1d518087316a9649131dfe5c81a">getWavFileName() const</a> </dd>
 <dd>
 <a class="el" href="class_voice_bank.html#ac0c6e710f74854c97052f9303386a966">getWavFilePath() const</a></dd></dl>
@@ -617,10 +689,29 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 </div><div class="memdoc">
 <p>获取音源库下的 .wav 文件路径</p>
 <p>您可以使用这些路径去访问这些 .wav 文件。这些文件的名称与 <a class="el" href="class_voice_bank.html#a3762c1d518087316a9649131dfe5c81a">getWavFileName() const </a>一致。<br />
-</p><dl class="section warning"><dt>警告</dt><dd>该函数使用惰性求值（Lazy Evaluation）策略，即 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 本身并没有被 const 限定，否则结果将是未定义的。 </dd></dl>
+</p><dl class="section warning"><dt>警告</dt><dd>该函数使用惰性求值（Lazy Evaluation）策略，即 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 一开始并不会读取文件名，而是在构造或调用 <a class="el" href="class_voice_bank.html#a4383d39be988e244bf77463652984e01">clearWavFileReadStage()</a> 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 本身并没有被 const 限定，否则结果将是未定义的。 </dd></dl>
 <dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#a3762c1d518087316a9649131dfe5c81a">getWavFileName() const</a> </dd>
 <dd>
 <a class="el" href="class_voice_bank.html#afffe7292d9dbc89b9546e4494447f3ee">getWavFileNameRaw() const</a></dd></dl>
+
+</div>
+</div>
+<a id="a76ad54345bdb5eb13618f5be74f8e07d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76ad54345bdb5eb13618f5be74f8e07d">&#9670;&nbsp;</a></span>hasTextCodecAutoDetected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VoiceBank::hasTextCodecAutoDetected </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>返回音源库读取文本时是否进行了文本编码自动推断</p>
+<dl class="section return"><dt>返回</dt><dd>读取 character.txt 和 readme.txt 时，只要有一个成功进行了推断，该值就为 true 。</dd></dl>
 
 </div>
 </div>
@@ -651,6 +742,27 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
 <dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#acc34b7f5572a068f40e4782159f330ef">setDefalutTextCodecAutoDetect(bool value)</a> </dd>
 <dd>
 <a class="el" href="class_voice_bank.html#a18ba1f0f100fde54ff86a21b4ea79aa8">isTextCodecAutoDetect() const</a></dd></dl>
+
+</div>
+</div>
+<a id="ae8e1782503fe09a3d6e17cd47cfdae14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8e1782503fe09a3d6e17cd47cfdae14">&#9670;&nbsp;</a></span>isFirstRead()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool VoiceBank::isFirstRead </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>返回该音源库最近一次的读取是否是第一次读取</p>
+<pre class="fragment">  由于 VoiceBank 允许进行重载操作，所以一个 VoiceBank 可能会被多次要求从文件夹中读取信息。\n
+</pre><p> 本函数用于判断该音源库是否是第一次被要求读取，以用于使调用者调整相关行为。如区分“读取”和“重载”行为。 </p><dl class="section return"><dt>返回</dt><dd>返回该音源库最近一次的读取是否是第一次读取 </dd></dl>
+<dl class="section see"><dt>参见</dt><dd><a class="el" href="class_voice_bank.html#aef013fee6923e73ed1468db4e9ca3fc3">readFromPath()</a></dd></dl>
 
 </div>
 </div>
@@ -708,7 +820,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>isVoiceBankPat
       </table>
 </div><div class="memdoc">
 <p>从路径中读取 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a></p>
-<p>从路径中读取 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 的所需信息。您应当在调用本函数之后再使用 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 。 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 并不对没有读取就进行操作提出警告。 </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">待办事项:</a></b></dt><dd>对没有读取过的 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 执行操作时的检查。 </dd></dl>
+<p>从路径中读取 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 的所需信息。您应当在调用本函数之后再使用 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 。 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 并不对没有读取就进行操作提出警告。</p>
 
 </div>
 </div>

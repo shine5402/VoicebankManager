@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['readfrompath',['readFromPath',['../class_voice_bank.html#aef013fee6923e73ed1468db4e9ca3fc3',1,'VoiceBank']]],
-  ['readvoicebanksfrommonitorfolders',['readVoiceBanksFromMonitorFolders',['../class_voice_bank_handler.html#a256ecd28588492543c58c81e5de9cc7a',1,'VoiceBankHandler']]],
-  ['run',['run',['../class_voice_bank_handler_1_1_voice_bank_read_fuction_runner.html#a3668d2abd8b06a3ce52d9e48b8f12ed7',1,'VoiceBankHandler::VoiceBankReadFuctionRunner']]]
+  ['isdefaluttextcodecautodetect',['isDefalutTextCodecAutoDetect',['../class_voice_bank.html#af4c181645034217f9e91fdfd8b0f83c8',1,'VoiceBank']]],
+  ['isfirstread',['isFirstRead',['../class_voice_bank.html#ae8e1782503fe09a3d6e17cd47cfdae14',1,'VoiceBank']]],
+  ['istextcodecautodetect',['isTextCodecAutoDetect',['../class_voice_bank.html#a18ba1f0f100fde54ff86a21b4ea79aa8',1,'VoiceBank']]],
+  ['istextcodecfollowdefault',['isTextCodecFollowDefault',['../class_voice_bank.html#a148526fcdf6e6c45ae0b074ff6ef465b',1,'VoiceBank']]],
+  ['isuseoldfolderscan',['isUseOldFolderScan',['../class_monitor_folders_scanner.html#a858c6ec4b51002b97d9dbde03980636f',1,'MonitorFoldersScanner']]]
 ];

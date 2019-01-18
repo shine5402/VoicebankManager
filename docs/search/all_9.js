@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['monitorfoldersscanner',['MonitorFoldersScanner',['../class_monitor_folders_scanner.html',1,'']]],
-  ['moresamplerconfig',['MoresamplerConfig',['../class_moresampler_config.html',1,'']]],
-  ['moresamplerconfigaddnewdialog',['MoresamplerConfigAddNewDialog',['../class_moresampler_config_add_new_dialog.html',1,'']]],
-  ['moresamplerconfigreader',['MoresamplerConfigReader',['../class_moresampler_config_reader.html',1,'']]],
-  ['moresamplerconfigsaddnewmodel',['MoresamplerConfigsAddNewModel',['../class_moresampler_configs_add_new_model.html',1,'']]],
-  ['moresamplerconfigsdelegate',['MoresamplerConfigsDelegate',['../class_moresampler_configs_delegate.html',1,'']]],
-  ['moresamplerconfigsdialog',['MoresamplerConfigsDialog',['../class_moresampler_configs_dialog.html',1,'']]],
-  ['moresamplerconfigsmodel',['MoresamplerConfigsModel',['../class_moresampler_configs_model.html',1,'']]]
+  ['labelschanged',['labelsChanged',['../class_voice_bank_handler.html#a3df32590a368ed7b16c93e436e66183d',1,'VoiceBankHandler']]],
+  ['labelsmodel',['LabelsModel',['../class_labels_model.html',1,'']]],
+  ['loadvoicebanksandtable',['loadVoiceBanksAndTable',['../class_voice_bank_manager_window.html#acb96140725ff8ab7bc04dbed1b969cbf',1,'VoiceBankManagerWindow']]],
+  ['leaf_20openutau_20qt',['Leaf OpenUTAU Qt',['../md__r_e_a_d_m_e.html',1,'']]]
 ];
