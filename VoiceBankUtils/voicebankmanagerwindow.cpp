@@ -261,7 +261,7 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
             ui->voicebankReadmeTextBrowser->append(state->getErrorHTMLString());
         }
     }
-    if (voiceBank->getHasTextCodecAutoDetected())
+    if (voiceBank->hasTextCodecAutoDetected())
     {
         ui->voicebankReadmeTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序使用的文本编码：character.txt：%1。readme.txt：%2</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
@@ -1019,37 +1019,7 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank)
     {
-        auto sample = voiceBank->getSample();
-        if (sample.isEmpty())
-        {
-            //voiceBank->readWavFileName();
-            auto wavfileList = voiceBank->getWavFilePath();
-            if (wavfileList.isEmpty())
-            {
-                QMessageBox::critical(this,tr("没有可供播放的样例"),tr("程序无法找到可供播放的样例文件。"));
-                return;
-            }
-            for (auto i : wavfileList)
-            {
-                if (!i.isEmpty())
-                {
-                    if (i.contains("br"))
-                        continue;
-                    sample = i;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            if (QFileInfo(voiceBank->getPath() + sample + ".wav").exists())
-                sample = voiceBank->getPath() + sample + ".wav";
-            else if (QFileInfo(voiceBank->getPath() + sample).exists())
-                sample = voiceBank->getPath() + sample;
-            else{
-                QMessageBox::critical(this,tr("没有可供播放的样例"),tr("程序无法找到可供播放的样例文件。"));
-                return;}
-        }
+        auto sample = voiceBank->getSampleFileName();
         samplePlayer->setAudioRole(QAudio::Role::MusicRole);
         samplePlayer->setMedia(QUrl::fromLocalFile(sample));
         if (samplePlayerProgress)

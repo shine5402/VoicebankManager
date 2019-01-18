@@ -149,32 +149,31 @@ void VoiceBank::setTextCodecAutoDetect(bool value)
 
 float VoiceBank::getCharacterFileAutoDetectConfidence() const
 {
+    ///获得自动推断文本编码时对 character.txt 的推断的可信程度
+    /*!
+     保存了 libchardet 的返回值。具体含义请见 Mozilla 的 [文档](https://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html) 。
+     \see getReadmeFileAutoDetectConfidence() const
+    */
     return characterFileAutoDetectConfidence;
 }
 
 float VoiceBank::getReadmeFileAutoDetectConfidence() const
 {
+    ///获得自动推断文本编码时对 readme.txt 的推断的可信程度
+    /*!
+     保存了 libchardet 的返回值。具体含义请见 Mozilla 的 [文档](https://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html) 。
+     \see getCharacterFileAutoDetectConfidence() const
+    */
     return readmeFileAutoDetectConfidence;
 }
 
-bool VoiceBank::getHasTextCodecAutoDetected() const
+bool VoiceBank::hasTextCodecAutoDetected() const
 {
-    return hasTextCodecAutoDetected;
-}
-
-void VoiceBank::writeTextFileInTextCodec(const QString& content, const QString& path,QTextCodec* textCodec){
-    QFile* file = new QFile(path);
-    if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
-        QTextEncoder *encoder= textCodec->makeEncoder();
-        file->write(encoder->fromUnicode(content));
-        delete encoder;
-        file->close();
-        file->deleteLater();
-    }
-    else
-    {
-        LeafLogger::LogMessage(QString("写入模式打开%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString()));
-    }
+    ///返回音源库读取文本时是否进行了文本编码自动推断
+    /*!
+      \return 读取 character.txt 和 readme.txt 时，只要有一个成功进行了推断，该值就为 true 。
+    */
+    return textCodecAutoDetected;
 }
 
 QStringList VoiceBank::getLabels() const
@@ -788,8 +787,7 @@ void VoiceBank::readCharacterFile()
                 if (list.at(0).compare("sample",Qt::CaseInsensitive) == 0){
                     auto decoder = QTextCodec::codecForLocale()->makeDecoder();
                     auto encoder = CharacterTextCodec->makeEncoder();
-                    sample = decoder->toUnicode(encoder->fromUnicode(list.at(1)));
-                    LeafLogger::LogMessage(QString("%1的sample为%2").arg(path).arg(sample));
+                    character_sample = decoder->toUnicode(encoder->fromUnicode(list.at(1)));
                 }
             }
         }
@@ -860,9 +858,9 @@ void VoiceBank::changeCharacterFile()
         }
         newCharacterString = newCharacterString.trimmed();
         if (!textCodecFollowDefault)
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
+            TextConvertHelper::TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
         else
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
+            TextConvertHelper::TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
 
     }
     catch(FileNotExists& e){
@@ -873,9 +871,9 @@ void VoiceBank::changeCharacterFile()
                     << QString("image=%1").arg(imagePath) << endl;
         newCharacterString = newCharacterString.trimmed();
         if (!textCodecFollowDefault)
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
+            TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
         else
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
+            TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
         throw e;
     }
     catch(FileCanNotOpen& e)
@@ -902,7 +900,7 @@ void VoiceBank::autoDetectTextFileCodecs()
         ++notAvaliableDetectCount;
     }
     if (notAvaliableDetectCount < 2)
-        hasTextCodecAutoDetected = true;
+        textCodecAutoDetected = true;
 }
 
 bool VoiceBank::isTextCodecFollowDefault() const
@@ -934,7 +932,7 @@ void VoiceBank::clear()
     imagePath.clear();
     imagePathRelative.clear();
     readme.clear();
-    sample.clear();
+    character_sample.clear();
     if (!errorStates.isEmpty())
     {
         for (auto state : errorStates)
@@ -942,13 +940,48 @@ void VoiceBank::clear()
     }
     errorStates.clear();
     clearWavFileReadStage();
-    hasTextCodecAutoDetected = false;
+    textCodecAutoDetected = false;
     category.clear();
     labels.clear();
 }
 
-QString VoiceBank::getSample() const
+QString VoiceBank::getSampleFileName() const
 {
+    ///获得该音源库的示例音频文件名
+    /*!
+      UTAU 式音源允许音源库作者在 character.txt 的 sample 字段中定义该音源库的示例音频。.wav 可以被忽略。若该字段没有被定义，那么就使用音源文件夹下的 .wav 文件。\n
+      与 UTAU 本体不同，在没有 sample 设定的情况下多次调用本函数并不会在 .wav 文件列表中移动，在这种情况下该函数只会返回第一个找到的 .wav 文件。
+      \return 该音源库的示例音频文件名。找不到时返回空字符串。
+    */
+    auto sample = this->character_sample;
+    if (sample.isEmpty())
+    {
+        auto wavfileList = getWavFilePath();
+        if (wavfileList.isEmpty())
+        {
+            return QString();
+        }
+        for (auto i : wavfileList)
+        {
+            if (!i.isEmpty())
+            {
+                if (i.contains("br"))
+                    continue;
+                sample = i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        if (QFileInfo(getPath() + sample + ".wav").exists())
+            sample = getPath() + sample + ".wav";
+        else if (QFileInfo(getPath() + sample).exists())
+            sample = getPath() + sample;
+        else{
+
+            return QString();}
+    }
     return sample;
 }
 
@@ -957,8 +990,9 @@ void VoiceBank::readFromPath()
     ///从路径中读取 VoiceBank
     /*!
       从路径中读取 VoiceBank 的所需信息。您应当在调用本函数之后再使用 VoiceBank 。 VoiceBank 并不对没有读取就进行操作提出警告。
-      \todo 对没有读取过的 VoiceBank 执行操作时的检查。
     */
+    //TODO:对没有读取过的 VoiceBank 执行操作时的检查。
+    //TODO:在构造函数中读取
     path = QDir::fromNativeSeparators(path);
     if (!path.endsWith("/")){
         path.append("/");
@@ -967,13 +1001,9 @@ void VoiceBank::readFromPath()
     readSettings();
     readCharacterFile();
     readReadme();
-    //firstRead = false;
     ++ReadCount;
     emit readDone(this);
 }
-
-
-
 
 QTextCodec *VoiceBank::getCharacterTextCodec() const
 {
@@ -1185,6 +1215,10 @@ QString VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::getErrorHTMLString
 }
 
 VoiceBank::ErrorState::ErrorState(VoiceBank* voiceBank){
+    ///构造一个 VoiceBank 读取错误信息
+    /*!
+      \param voiceBank 产生错误的 VoiceBank 。 ErrorState 可能使用该指针获取一些需要展现的信息。
+    */
     if (voiceBank)
         this->voiceBank = voiceBank;
 }

@@ -8,6 +8,8 @@
 #include <public_defines.h>
 #include "monitorfoldersscanner.h"
 
+//TODO:将线程池迁移至VoiceBank的static成员
+
 ///用于管理一系列VoiceBank。
 /*!
   VoiceBankHandler 是用于管理 VoiceBank 的类。\n

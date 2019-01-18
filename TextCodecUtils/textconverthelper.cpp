@@ -120,3 +120,19 @@ bool TextConvertHelper::processFileNameConvert(const QByteArrayList &_fileNameRa
     dialog->deleteLater();
     return false;
 }
+
+void TextConvertHelper::writeTextFileInTextCodec(const QString& content, const QString& path, QTextCodec* textCodec)
+{
+    QFile* file = new QFile(path);
+    if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
+        QTextEncoder *encoder= textCodec->makeEncoder();
+        file->write(encoder->fromUnicode(content));
+        delete encoder;
+        file->close();
+        file->deleteLater();
+    }
+    else
+    {
+        LeafLogger::LogMessage(QString("写入模式打开%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString()));
+    }
+}

@@ -17,6 +17,7 @@
 #include <QPainter>
 #include "./TextCodecUtils/qchardet.h"
 #include <QJsonArray>
+#include "TextCodecUtils/textconverthelper.h"
 ///用于表示一个音源库
 /*!
     VoiceBank 类代表了一个 UTAU 式音源库。可以通过它获取音源库的相关信息，并可作出修改。
@@ -65,6 +66,10 @@ public:
     bool isTextCodecAutoDetect() const;
     void setTextCodecAutoDetect(bool value);
 
+    bool hasTextCodecAutoDetected() const;
+    float getCharacterFileAutoDetectConfidence() const;
+    float getReadmeFileAutoDetectConfidence() const;
+
     static bool isDefalutTextCodecAutoDetect();
     static void setDefalutTextCodecAutoDetect(bool value);
 
@@ -77,19 +82,18 @@ public:
 
     bool isFirstRead() const;
 
-    QString getSample() const;
-
-    float getCharacterFileAutoDetectConfidence() const;
-
-    float getReadmeFileAutoDetectConfidence() const;
-
-    bool getHasTextCodecAutoDetected() const;
+    QString getSampleFileName() const;
 
     //错误标识类
     class ErrorState{
+        ///描述 VoiceBank 从文件夹中读取信息时发现的错误
+        /*!
+          此类是抽象类，具体错误描述由子类提供。
+          使用 getErrorHTMLString() 来获得对于遇到的错误的描述。
+        */
     public:
         explicit ErrorState(VoiceBank* voiceBank);
-        virtual QString getErrorHTMLString() = 0;
+        virtual QString getErrorHTMLString() = 0;/*!< 遇到的错误的具体描述。将会返回一个 HTML 片段，包含了展现错误时的相关样式（如字体颜色、前缀等）。*/
         virtual ~ErrorState();
     protected:
         VoiceBank* voiceBank = nullptr;
@@ -132,13 +136,13 @@ private:
     QString name;
     QString readme;
     QString path;
-    QString sample;
+    QString character_sample;
     QTextCodec* CharacterTextCodec;
     QTextCodec* ReadmeTextCodec;
     QTextCodec* wavFileNameTextCodec;
     bool textCodecFollowDefault = true;
     bool textCodecAutoDetect = true;
-    bool hasTextCodecAutoDetected = false;
+    bool textCodecAutoDetected = false;
     float characterFileAutoDetectConfidence = 0.0f;
     float readmeFileAutoDetectConfidence = 0.0f;
     QList<ErrorState*> errorStates;
@@ -156,9 +160,7 @@ private:
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
     QStringList wavFilePath{};
-    //bool firstRead = true;
     int ReadCount = 0;
-    void writeTextFileInTextCodec(const QString &content, const QString &path, QTextCodec *textCodec);
     QString category;
     QStringList labels;
     bool needRecommmendCategoryAndLabels;
