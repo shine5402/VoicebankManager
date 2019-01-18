@@ -141,7 +141,7 @@ private:
     QTextCodec* ReadmeTextCodec;
     QTextCodec* wavFileNameTextCodec;
     bool textCodecFollowDefault = true;
-    bool textCodecAutoDetect = true;
+    bool textCodecAutoDetect = false;
     bool textCodecAutoDetected = false;
     float characterFileAutoDetectConfidence = 0.0f;
     float readmeFileAutoDetectConfidence = 0.0f;
