@@ -88,7 +88,7 @@ public:
     class ErrorState{
         ///描述 VoiceBank 从文件夹中读取信息时发现的错误
         /*!
-          此类是抽象类，具体错误描述由子类提供。
+          此类是抽象类，具体错误描述由子类提供。\n
           使用 getErrorHTMLString() 来获得对于遇到的错误的描述。
         */
     public:
