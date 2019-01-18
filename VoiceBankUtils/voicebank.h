@@ -71,14 +71,11 @@ public:
     void saveSettings();
 
     QStringList getWavFileName() const;
-    //TODO:测试lazy load改造wavfile相关函数
     QByteArrayList getWavFileNameRaw() const;
     QStringList getWavFilePath() const;
     void clearWavFileReadStage();
 
-    bool isFirstRead() const{
-        return ReadCount == 1 || ReadCount == 0;
-    }
+    bool isFirstRead() const;
 
     QString getSample() const;
 
@@ -240,6 +237,7 @@ private:
     static void readStaticSettings();
     void readWavFileName();
     void lazyLoadWavFileName();
+
 signals:
     void readDone(VoiceBank *);
     void statusOutput(const QString&);

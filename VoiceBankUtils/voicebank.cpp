@@ -602,9 +602,24 @@ void VoiceBank::setImage(const QImage &image, const QString& newImageFileName)
 
 void VoiceBank::clearWavFileReadStage()
 {
+    ///清除音源库的WAV文件名读取信息
+    /*!
+      该函数将清除该 VoiceBank 缓存的 .wav 文件名信息。这样在下次调用相关函数时 VoiceBank 会重新从文件夹中读取。
+    */
     wavFileName.clear();
     wavFilePath.clear();
     isWavFileNameReaded = false;
+}
+
+bool VoiceBank::isFirstRead() const{
+    ///返回该音源库最近一次的读取是否是第一次读取
+    /*!
+          由于 VoiceBank 允许进行重载操作，所以一个 VoiceBank 可能会被多次要求从文件夹中读取信息。\n
+    本函数用于判断该音源库是否是第一次被要求读取，以用于使调用者调整相关行为。如区分“读取”和“重载”行为。
+          \return 返回该音源库最近一次的读取是否是第一次读取
+          \see readFromPath()
+*/
+    return ReadCount == 1 || ReadCount == 0;
 }
 
 void VoiceBank::lazyLoadWavFileName()
@@ -621,7 +636,7 @@ QStringList VoiceBank::getWavFileName() const
     一般说来，非日文区域将会返回一系列乱码，因为 UTAU 本体需要文件名以 Shift-JIS 编码。Leaf Open UTAU Qt 兼容此项限制。\n
     如果您需要以特定编码读取这些字符串以获得正确解码结果，请使用 getWavFileNameRaw() const ，或者手动将其使用 QTextEncoder 编码至本地编码（或其他需要的编码）。\n
     该函数会包含子文件夹中的文件名，但不会包含其子文件夹名称。如果您需要包含子文件夹的文件路径，请使用 getWavFilePath() const 。
-    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
     \return 操作系统返回的 UTF-8 文件名列表
     \see getWavFileNameRaw() const
     \see getWavFilePath() const
@@ -636,7 +651,7 @@ QByteArrayList VoiceBank::getWavFileNameRaw() const
     /*!
       这些文件名为以本地编码重解码的 ByteArray。\n
       为方便使用而设。相当于使用 QTextEncoder 以本地编码编码 getWavFileName() const 的返回结果。\n
-    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
     \see getWavFileName() const
     \see getWavFilePath() const
 */
@@ -659,7 +674,7 @@ QStringList VoiceBank::getWavFilePath() const
     ///获取音源库下的 .wav 文件路径
     /*!
       您可以使用这些路径去访问这些 .wav 文件。这些文件的名称与 getWavFileName() const 一致。\n
-    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
     \see getWavFileName() const
     \see getWavFileNameRaw() const
 */

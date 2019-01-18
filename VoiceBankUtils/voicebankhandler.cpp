@@ -5,7 +5,6 @@ VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
     readThreadPoolMaxThreadCountSettings();
     connect(this,SIGNAL(categoriesChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
     connect(this,SIGNAL(labelsChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
-    loadMonitorFoldersSettings();
 }
 
 VoiceBankHandler::~VoiceBankHandler()
@@ -16,7 +15,6 @@ VoiceBankHandler::~VoiceBankHandler()
     */
 
     saveThreadPoolMaxThreadCountSettings();
-    saveMonitorFoldersSettings();
 }
 
 VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
@@ -36,7 +34,7 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
     /*!
       在确定待读取文件夹列表时，程序会考虑是否递归查找、忽略文件夹列表、外部文件夹列表等。参见这些设置相关的函数以获取详情。
     */
-    auto voiceBankPaths = getFoldersInMonitorFolders();
+    auto voiceBankPaths = MonitorFoldersScanner::getMonitorFoldersScanner()->getFoldersInMonitorFolders();
     LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(voiceBankPaths.count()));
     if (voiceBankPaths.count() == 0)
         emit voiceBanksReadDone();
@@ -45,25 +43,6 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
     }
 }
 
-void VoiceBankHandler::loadMonitorFoldersSettings()
-{
-    QSettings settings;
-    monitorFolders = settings.value("MonitorFolders",{"./voice"}).toStringList();
-    setUseOldFolderScan(settings.value("useOldFolderScan",false).toBool());
-    //ui->actionuse_old_watched_folder_scan_strategy->setChecked(useOldFolderScan);
-    outsideVoiceBankFolders = settings.value("OutsideVoiceBankFolders").toStringList();
-    ignoreVoiceBankFolders = settings.value("ignoreVoiceBankFolders").toStringList();
-
-}
-
-void VoiceBankHandler::saveMonitorFoldersSettings()
-{
-    QSettings settings;
-    settings.setValue("MonitorFolders",monitorFolders);
-    settings.setValue("useOldFolderScan",useOldFolderScan);
-    settings.setValue("OutsideVoiceBankFolders",outsideVoiceBankFolders);
-    settings.setValue("ignoreVoiceBankFolders",ignoreVoiceBankFolders);
-}
 
 QList<VoiceBank* > VoiceBankHandler::getVoiceBanks() const
 {
@@ -104,9 +83,6 @@ void VoiceBankHandler::clear()
     }
     voiceBanks.clear();
     voiceBankReadDoneCount = 0;
-    ignoredVoiceBankFolders.clear();
-    notVoiceBankPaths.clear();
-    scannedSubFolders.clear();
 }
 
 void VoiceBankHandler::setThreadPoolMaxThreadCount(int maxCount)
@@ -239,175 +215,6 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
     return result;
 }
 
-bool VoiceBankHandler::isUseOldFolderScan()
-{
-    ///返回 VoiceBankHandler 是否使用旧式文件夹扫描策略
-    /*!
-      Leaf Open UTAU Qt 这部分代码的早期版本中，将监视文件夹的子文件夹直接作为 VoiceBank 的路径。这种策略与 UTAU 相同，但是在某些场景下不够实用。所以在较新版本的代码中， VoiceBankHandler 将会递归查找监视文件夹的子文件夹来确定音源库所在的文件夹。 \n
-      VoiceBankHandler 使用 VoiceBank::isVoiceBankPath(const QString &path) 来确定一个文件夹是否是一个音源库文件夹。\n
-      \return 如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。
-    */
-    return useOldFolderScan;
-}
-
-void VoiceBankHandler::setUseOldFolderScan(bool value)
-{
-    ///设置 VoiceBankHandler 是否使用旧式文件夹扫描策略
-    useOldFolderScan = value;
-    emit useOldFolderScanChanged();
-}
-
-QStringList VoiceBankHandler::getVoiceBankFoldersInFolder(const QString &dir)
-{
-    QStringList folderList{};
-    QDir pDir(dir);
-    auto entrys = pDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (auto entry : entrys){
-        auto path = pDir.absolutePath() + "/" + entry;
-        auto isIgnore = false;
-        for (auto i : ignoreVoiceBankFolders)
-        {
-            if (QDir(i).path() == QDir(path).path())
-            {
-                ignoredVoiceBankFolders.append(i);
-                isIgnore = true;
-                break;
-            }
-        }
-        if (isIgnore){
-            folderList.append(getVoiceBankFoldersInFolder(path));
-            continue;
-        }
-        if (!useOldFolderScan){
-            if (VoiceBank::isVoiceBankPath(path))
-                folderList.append(path);
-            else
-            {
-                notVoiceBankPaths.append(path);
-                LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
-                folderList.append(getVoiceBankFoldersInFolder(path));
-            }
-        }
-        else
-        {
-            folderList.append(path);
-        }
-    }
-    return folderList;
-}
-
-QStringList VoiceBankHandler::getIgnoreVoiceBankFolders()
-{
-    ///获取忽略文件夹列表
-    /*!
-      忽略文件夹列表中的文件夹将在扫描时被直接忽略，但仍然会去搜寻其子文件夹。
-      \todo 实现使用*来防止子文件夹调用
-    */
-    //TODO:
-    return ignoreVoiceBankFolders;
-}
-
-void VoiceBankHandler::setIgnoreVoiceBankFolders(const QStringList &value)
-{
-    ///设置忽略文件夹列表
-    ignoreVoiceBankFolders = value;
-}
-
-QStringList VoiceBankHandler::getOutsideVoiceBankFolders()
-{
-    ///获取外部音源文件夹列表
-    /*!
-      外部音源文件夹列表中的文件夹将在扫描时直接加入音源库列表中，不管其是否在监视文件夹内，不管其运行 VoiceBank::isVoiceBankPath(const QString &path) 的结果是否为真。但是其仍然受忽略文件夹列表的限制。
-    */
-    return outsideVoiceBankFolders;
-}
-
-void VoiceBankHandler::setOutsideVoiceBankFolders(const QStringList &value)
-{
-    ///设置外部音源文件夹列表。
-    outsideVoiceBankFolders = value;
-}
-
-QStringList VoiceBankHandler::getNotVoiceBankPaths() const
-{
-    ///获取扫描过程中被程序认为不是音源文件夹的文件夹列表，仅在进行过扫描后有效。
-    return notVoiceBankPaths;
-}
-
-QStringList VoiceBankHandler::getIgnoredVoiceBankFolders() const
-{
-    ///获取扫描过程中已经被忽略的文件夹列表，仅在进行过扫描后有效。
-    return ignoredVoiceBankFolders;
-}
-
-QStringList VoiceBankHandler::getScannedSubFolders() const
-{
-    ///获取扫描过程中通过递归查找子文件夹找到的音源文件夹，仅在进行过扫描后有效。
-    return scannedSubFolders;
-}
-
-void VoiceBankHandler::addIgnoreVoiceBankFolder(const QString& path)
-{
-    ///在忽略文件夹列表中添加一个文件夹
-    /*!
-      该函数为添加一个文件夹到忽略文件夹列表提供一个方便的途径。
-    \param[in] path 要添加的文件夹路径。
-    */
-    ignoreVoiceBankFolders.append(path);
-}
-
-void VoiceBankHandler::findScannedSubFolders()
-{
-    QStringList firstSubFolders;
-    for (auto i : monitorFolders)
-    {
-        QDir iDir(i);
-        for (auto j : iDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
-        {
-            firstSubFolders.append(iDir.absoluteFilePath(j));
-        }
-    }
-    auto outsideFolders = this->outsideVoiceBankFolders;
-    for (auto i : outsideFolders)
-    {
-        if (i.endsWith("/") || i.endsWith("\\"))
-            i.remove(i.count() - 1,1);
-    }
-    for (auto i : voiceBanks)
-    {
-        if (!(firstSubFolders.contains(i->getPath()) || outsideFolders.contains(i->getPath())))
-            scannedSubFolders.append(i->getPath());
-    }
-}
-
-void VoiceBankHandler::setMonitorFolders(const QStringList &value)
-{
-    ///设定监视文件夹列表。将在 VoiceBankHandler 被析构时保存至 QSettings 。
-    monitorFolders = value;
-}
-
-QStringList VoiceBankHandler::getMonitorFolders()
-{
-    ///获取监视文件夹列表
-    /*!
-      监视文件夹列表定义 VoiceBankHandler 去哪里寻找 VoiceBank 所在的文件夹。监视文件夹应是 VoiceBank 的父文件夹。
-      根据扫描文件夹策略设定的不同，VoiceBank 文件夹的确定方式也会有不同。参见 isUseOldFolderScan() 。
-    */
-
-    return monitorFolders;
-}
-
-
-
-QStringList VoiceBankHandler::getFoldersInMonitorFolders()
-{
-    QStringList folderList{};
-    for (auto monitorFolder : monitorFolders){
-        folderList.append(getVoiceBankFoldersInFolder(monitorFolder));
-    }
-    folderList.append(outsideVoiceBankFolders);
-    return folderList;
-}
 
 void VoiceBankHandler::readThreadPoolMaxThreadCountSettings()
 {
@@ -426,7 +233,6 @@ void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank* voiceBank)
 {
     if (voiceBank->isFirstRead())
         if (++voiceBankReadDoneCount == voiceBanks.count()){
-            findScannedSubFolders();
             emit voiceBanksReadDone();
         }
 }

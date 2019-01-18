@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QDir>
 #include "voicebank.h"
-//TODO:改变调用点
+
 ///获取监视文件夹内的音源文件夹路径列表
 /*!
   MonitorFoldersScanner 是用来获取监视文件夹内的音源文件夹路径列表的类。\n

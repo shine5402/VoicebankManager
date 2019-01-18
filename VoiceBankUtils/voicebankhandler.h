@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QThreadPool>
 #include <public_defines.h>
+#include "monitorfoldersscanner.h"
 
 ///用于管理一系列VoiceBank。
 /*!
@@ -24,31 +25,6 @@ public:
     ~VoiceBankHandler();
 
     void readVoiceBanksFromMonitorFolders();
-
-    /*
-      监视文件夹相关函数。具体使用参见函数内的文档。
-      TODO:使用独立类处理
-    */
-
-    QStringList getMonitorFolders();
-    void setMonitorFolders(const QStringList &value);
-
-    QStringList getOutsideVoiceBankFolders();
-    void setOutsideVoiceBankFolders(const QStringList &value);
-
-    QStringList getIgnoreVoiceBankFolders();
-    void setIgnoreVoiceBankFolders(const QStringList &value);
-    void addIgnoreVoiceBankFolder(const QString &path);
-
-    bool isUseOldFolderScan();
-    void setUseOldFolderScan(bool value);
-
-    /*
-      以下三个函数在调用过readVoiceBanksFromMonitorFolders()之后才有意义。
-    */
-    QStringList getIgnoredVoiceBankFolders() const;
-    QStringList getNotVoiceBankPaths() const;
-    QStringList getScannedSubFolders() const;
 
     /*
       作为VoiceBank保存者的相关函数
@@ -195,26 +171,9 @@ private:
     explicit VoiceBankHandler(QObject *parent = nullptr);
     VoiceBankHandler(const VoiceBankHandler&) = delete;
     VoiceBankHandler& operator= (const VoiceBankHandler&) = delete;
-
-
     static VoiceBankHandler *s_voiceBankHanlder;
 
     int voiceBankReadDoneCount = 0;
-
-    QStringList getVoiceBankFoldersInFolder(const QString &dir);
-    bool useOldFolderScan = false;
-    QStringList outsideVoiceBankFolders;
-    QStringList ignoreVoiceBankFolders;
-    QStringList ignoredVoiceBankFolders;
-    QStringList notVoiceBankPaths;
-    void findScannedSubFolders();
-    QStringList scannedSubFolders;
-
-    QStringList monitorFolders = {"./voice"};
-
-    QStringList getFoldersInMonitorFolders();
-    void loadMonitorFoldersSettings();
-    void saveMonitorFoldersSettings();
 
     QList<VoiceBank *> voiceBanks{};
 
