@@ -284,7 +284,7 @@ static <a class="el" href="class_monitor_folders_scanner.html">MonitorFoldersSca
       </table>
 </div><div class="memdoc">
 <p>获取外部音源文件夹列表</p>
-<p>外部音源文件夹列表中的文件夹将在扫描时直接加入音源库列表中，不管其是否在监视文件夹内，不管其运行 VoiceBank::isVoiceBankPath(const QString &amp;path) 的结果是否为真。但是其仍然受忽略文件夹列表的限制。</p>
+<p>外部音源文件夹列表中的文件夹将在扫描时直接加入音源库列表中，不管其是否在监视文件夹内，不管其运行 <a class="el" href="class_voice_bank.html#a387b8864cfcf83c410e13dfa042114eb">VoiceBank::isVoiceBankPath(const QString &amp;path)</a> 的结果是否为真。但是其仍然受忽略文件夹列表的限制。</p>
 
 </div>
 </div>
@@ -328,7 +328,7 @@ static <a class="el" href="class_monitor_folders_scanner.html">MonitorFoldersSca
 </div><div class="memdoc">
 <p>返回 <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 是否使用旧式文件夹扫描策略</p>
 <p>Leaf Open UTAU Qt 这部分代码的早期版本中，将监视文件夹的子文件夹直接作为 <a class="el" href="class_voice_bank.html" title="用于表示一个音源库">VoiceBank</a> 的路径。这种策略与 UTAU 相同，但是在某些场景下不够实用。所以在较新版本的代码中， <a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 将会递归查找监视文件夹的子文件夹来确定音源库所在的文件夹。 <br />
-<a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 使用 VoiceBank::isVoiceBankPath(const QString &amp;path) 来确定一个文件夹是否是一个音源库文件夹。<br />
+<a class="el" href="class_monitor_folders_scanner.html" title="获取监视文件夹内的音源文件夹路径列表">MonitorFoldersScanner</a> 使用 <a class="el" href="class_voice_bank.html#a387b8864cfcf83c410e13dfa042114eb">VoiceBank::isVoiceBankPath(const QString &amp;path)</a> 来确定一个文件夹是否是一个音源库文件夹。<br />
 </p><dl class="section return"><dt>返回</dt><dd>如果使用旧式扫描策略，该函数返回 true ，否则返回 false 。</dd></dl>
 
 </div>

@@ -178,17 +178,46 @@ bool VoiceBank::hasTextCodecAutoDetected() const
 
 QStringList VoiceBank::getLabels() const
 {
+    ///获得音源库的标签列表
+    /*!
+      每个音源可以拥有多个标签。\n
+      该值为空时代表着该音库没有标签（即无标签）。\n
+      该项设置保存于 leafUTAUQtSettings.json 中。
+      \see setLabels(const QStringList &value)
+    */
     return labels;
 }
 
 void VoiceBank::setLabels(const QStringList &value)
 {
+    ///设定音源库的音源列表
+    /*!
+      调用时会触发 labelsChanged() 。\n
+      您也可以使用其他函数对标签列表进行修改。
+      \see getLabels() const
+      \see appendLabel(const QString &label)
+      \see appendLabels(const QStringList &label)
+      \see toggleLabelStatus(const QString &label)
+      \see removeLabel(const QString &label)
+      \param[in] value 该音源库的新标签列表
+    */
     labels = value;
     emit labelsChanged();
 }
 
 void VoiceBank::appendLabel(const QString &label)
 {
+    ///在该音源库的标签列表中添加一个标签
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabels(const QStringList &label)
+      \see toggleLabelStatus(const QString &label)
+      \see removeLabel(const QString &label)
+      \param[in] label 要添加的标签
+    */
     if (!labels.contains(label))
         labels.append(label);
     emit labelsChanged();
@@ -196,12 +225,34 @@ void VoiceBank::appendLabel(const QString &label)
 
 void VoiceBank::appendLabels(const QStringList &label)
 {
+    ///在该音源库的标签列表中添加一系列标签
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabel(const QString &label)
+      \see toggleLabelStatus(const QString &label)
+      \see removeLabel(const QString &label)
+      \param[in] label 要添加的标签列表
+    */
     for (auto i : label)
         appendLabel(i);
 }
 
 void VoiceBank::toggleLabelStatus(const QString &label)
 {
+    ///反转一个标签的状态
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabel(const QString &label)
+      \see appendLabels(const QStringList &label)
+      \see removeLabel(const QString &label)
+      \param[in] label 要反转的标签。音源库有该标签时删除该标签，没有该标签时添加该标签
+    */
     if (labels.contains(label))
         removeLabel(label);
     else
@@ -210,22 +261,50 @@ void VoiceBank::toggleLabelStatus(const QString &label)
 
 void VoiceBank::removeLabel(const QString &label)
 {
+    ///删除一个标签
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabel(const QString &label)
+      \see appendLabels(const QStringList &label)
+      \see toggleLabelStatus(const QString &label)
+      \param[in] label 要删除的标签
+    */
     labels.removeOne(label);
     emit labelsChanged();
 }
 
 bool VoiceBank::isVoiceBankPath(const QString &path)
 {
+    ///判断一个路径是否为音源库的路径
+    /*!
+      \param[in] 要判断的文件夹路径。 VoiceBank 会检查该路径下是否有character.txt或prefix.map或oto.ini，如果有就返回真。
+    */
     return (QFileInfo(path + "/character.txt").exists() || QFileInfo(path + "/prefix.map").exists() || QFileInfo(path + "/oto.ini").exists());
 }
 void VoiceBank::setCategory(const QString &value)
 {
+    ///设定该音源库所属的分类。
+    /*!
+      调用时会触发 categoryChanged() 。
+      \see getCategory() const
+      \param[in] value 该音源库的新分类
+    */
     category = value;
     emit categoryChanged();
 }
 
 QString VoiceBank::getCategory() const
 {
+    ///获得该音源库所属的分类
+    /*!
+      每个音源都可以归属于至多一个分类。\n
+      该值为空时代表着该音库没有分类（即未分类）。
+      该项设置保存于 leafUTAUQtSettings.json 中。
+      \see setCategory(const QString &value)
+    */
     return category;
 }
 QTextCodec *VoiceBank::getDefaultWavFileNameTextCodec()
@@ -535,6 +614,10 @@ void VoiceBank::saveSettings(){
 
 QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
 {
+    ///返回该VoiceBank读取过程中遇到的错误对应的 ErrorState 列表
+    /*!
+      \see ErrorState
+    */
     return errorStates;
 }
 

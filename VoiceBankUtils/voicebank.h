@@ -110,11 +110,22 @@ public:
     void appendLabel(const QString& label);
     void appendLabels(const QStringList& label);
     void toggleLabelStatus(const QString& label);
+    void removeLabel(const QString &label);
 
+    ///VoiceBank在处理一个不存在的文件时可能会抛出该异常
+    /*!
+      许多情况下 VoiceBank 会自动处理文件不存在的问题，但某些函数可能依旧会抛出该异常以要求干预。
+    */
+    //TODO:变成内部异常
     class FileNotExists : public std::runtime_error{
     public:
         FileNotExists();
     };
+
+    ///VoiceBank在文件无法打开时会抛出该异常
+    /*!
+    许多情况下 VoiceBank 会自动处理文件无法打开的问题，但某些函数可能依旧会抛出该异常以要求干预。
+  */
     class FileCanNotOpen : public std::runtime_error{
     public:
         FileCanNotOpen(const QString QFileError);
@@ -122,11 +133,14 @@ public:
     private:
         QString _QFileError;
     };
+    ///VoiceBank在无法加载WAV文件名时会抛出该异常
+    /*!
+    许多情况下 VoiceBank 会自动处理无法加载WAV文件名的问题，但某些函数可能依旧会抛出该异常以要求干预。
+  */
     class WavFileNameNotLoad : public std::runtime_error{
     public:
         WavFileNameNotLoad();
     };
-    void removeLabel(const QString &label);
 
     static bool isVoiceBankPath(const QString &path);
 

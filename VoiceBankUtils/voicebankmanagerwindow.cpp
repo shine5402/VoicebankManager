@@ -268,19 +268,6 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
     ui->voicebankReadmeTextBrowser->append(QString("<p><pre style=\"color:black\">%1</pre></p>").arg(voiceBank->getReadme()));
     ui->voicebankReadmeTextBrowser->moveCursor(QTextCursor::Start);
 }
-//void VoiceBankManagerWindow::readVoiceBanks(){
-//    /*
-//      从需要读取的文件夹中读取音源库。
-//    */
-//    voiceBankPaths = getFoldersInMonitorFolders();
-//    LeafLogger::LogMessage(QString("准备读取音源库。共有%1个文件夹待读取。").arg(voiceBankPaths.count()));
-//    if (voiceBankPaths.count() == 0)
-//        setUIAfterVoiceBanksReadDone();
-//    else{
-//        voiceBankHandler->addVoiceBanks(voiceBankPaths);
-//    }
-
-//}
 
 void VoiceBankManagerWindow::updateVoiceBankCountLabel()
 {

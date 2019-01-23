@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['_7evoicebank',['~VoiceBank',['../class_voice_bank.html#a320eb1034f9d459467b55e907f588da3',1,'VoiceBank']]],
-  ['_7evoicebankhandler',['~VoiceBankHandler',['../class_voice_bank_handler.html#a6dc9cfe8df30dbdf34470a2fd0a21f3c',1,'VoiceBankHandler']]],
-  ['_7evoicebankmanagerwindow',['~VoiceBankManagerWindow',['../class_voice_bank_manager_window.html#ad76b5ed3528478581e56b82cab1c8134',1,'VoiceBankManagerWindow']]]
+  ['voicebank',['VoiceBank',['../class_voice_bank.html#addc83547db8d5ade6a47de0a88209f03',1,'VoiceBank']]],
+  ['voicebankmanagerwindow',['VoiceBankManagerWindow',['../class_voice_bank_manager_window.html#a5e7b3465040017be37c8777e8eb54513',1,'VoiceBankManagerWindow']]],
+  ['voicebanksreaddone',['voiceBanksReadDone',['../class_voice_bank_handler.html#a695058e6e01941261beb305d8e633e97',1,'VoiceBankHandler']]]
 ];
