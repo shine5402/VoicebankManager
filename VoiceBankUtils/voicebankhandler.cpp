@@ -204,18 +204,6 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
 }
 
 
-void VoiceBankHandler::readThreadPoolMaxThreadCountSettings()
-{
-    QSettings settings;
-    if (settings.contains("VoiceBankHandler/ThreadPoolMaxThreadCount"))
-        threadPool->setMaxThreadCount(settings.value("VoiceBankHandler/ThreadPoolMaxThreadCount",50).toInt());
-}
-
-void VoiceBankHandler::saveThreadPoolMaxThreadCountSettings()
-{
-    QSettings settings;
-    settings.setValue("VoiceBankHandler/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
-}
 
 void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank* voiceBank)
 {

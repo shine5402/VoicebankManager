@@ -12,11 +12,11 @@ else:unix: LIBS += -L$$PWD/../ImageCropper-release/ -lImageCropper
 INCLUDEPATH += $$PWD/../ImageCropper/include
 DEPENDPATH += $$PWD/../ImageCropper/include
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../LeafPublicQtClasses/LeafLogger-release/ -lLeafLogger
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../LeafPublicQtClasses/LeafLogger-release/ -lLeafLoggerd
-else:unix: LIBS += -L$$PWD/../LeafPublicQtClasses/LeafLogger-release/ -lLeafLogger
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../LeafLogger-release/ -lLeafLogger
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../LeafLogger-release/ -lLeafLoggerd
+else:unix: LIBS += -L$$PWD/../LeafLogger-release/ -lLeafLogger
 
-INCLUDEPATH += $$PWD/../LeafPublicQtClasses/LeafLogger/include
-DEPENDPATH += $$PWD/../LeafPublicQtClasses/LeafLogger/include
+INCLUDEPATH += $$PWD/../LeafLogger/include
+DEPENDPATH += $$PWD/../LeafLogger/include
 
-INCLUDEPATH += $$PWD/../LeafPublicQtClasses/SetOperations/include
+INCLUDEPATH += $$PWD/../SetOperations/include
