@@ -822,9 +822,9 @@ void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
 void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
 {
     bool ok = false;
-    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),voiceBankHandler->getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
+    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),VoiceBank::getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
     if (ok){
-        voiceBankHandler->setThreadPoolMaxThreadCount(count);
+        VoiceBank::setThreadPoolMaxThreadCount(count);
         ui->statusbar->showMessage(tr("线程池大小已经被设置为%1").arg(count));
     }
 }
