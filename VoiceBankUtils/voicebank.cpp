@@ -76,6 +76,19 @@ QString VoiceBank::getPath() const
     return path;
 }
 
+void VoiceBank::readFromPath()
+{
+    ///从路径中读取 VoiceBank
+    /*!
+      从路径中读取 VoiceBank 的所需信息。您应当在调用本函数之后再使用 VoiceBank 。\n
+ \warning VoiceBank 并不对没有读取就进行操作提出警告。\n
+ VoiceBank 将会启动一个新线程进行读取，所以此函数会立即返回。您应当检查 readDone(VoiceBank *) 信号来得知 VoiceBank 何时读取完毕。
+    */
+    auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this);
+    threadPool->start(newVoiceBankReadFunctionRunner);
+    LeafLogger::LogMessage(QString("%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
+}
+
 QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *textCodec)
 {
     QFile* file = new QFile(path);
@@ -283,6 +296,17 @@ bool VoiceBank::isVoiceBankPath(const QString &path)
       \param[in] 要判断的文件夹路径。 VoiceBank 会检查该路径下是否有character.txt或prefix.map或oto.ini，如果有就返回真。
     */
     return (QFileInfo(path + "/character.txt").exists() || QFileInfo(path + "/prefix.map").exists() || QFileInfo(path + "/oto.ini").exists());
+}
+
+void VoiceBank::setThreadPoolMaxThreadCount(int maxCount)
+{
+    ///设置读取 VoiceBank 所需信息时所用的最大线程数
+    /*!
+      VoiceBank 使用多线程模式来进行读取。这能节省时间并更好的利用现代处理器的性能。\n
+      您可以通过本函数来修改 VoiceBank 内部的线程池的最大线程数来优化性能。但请务必在明白您在做什么的时候使用。
+      \param[in] maxCount 新的最大线程数
+    */
+    threadPool->setMaxThreadCount(maxCount);
 }
 void VoiceBank::setCategory(const QString &value)
 {
@@ -637,13 +661,13 @@ void VoiceBank::setName(const QString &name)
     }
     catch(FileNotExists& e){
         //changeCharacterFile()会处理文件不存在的情况，但新建文件后下需要重载。
-        readFromPath();
+        readFromPathPrivate();
         throw e;
     }
     catch(FileCanNotOpen& e){
         throw e;
     }
-    readFromPath();
+    readFromPathPrivate();
 }
 
 void VoiceBank::setImage(const QImage &image, const QString& newImageFileName)
@@ -708,6 +732,24 @@ void VoiceBank::lazyLoadWavFileName()
 {
     if (!isWavFileNameReaded)
         readWavFileName();
+}
+
+void VoiceBank::readThreadPoolMaxThreadCountSettings()
+{
+    QSettings settings;
+    //与旧版本兼容
+    if (settings.contains("VoiceBankHandler/ThreadPoolMaxThreadCount")){
+        threadPool->setMaxThreadCount(settings.value("VoiceBankHandler/ThreadPoolMaxThreadCount",50).toInt());
+        settings.remove("VoiceBankHandler/ThreadPoolMaxThreadCount");
+    }
+    if (settings.contains("VoiceBank/ThreadPoolMaxThreadCount"))
+        threadPool->setMaxThreadCount(settings.value("VoiceBank/ThreadPoolMaxThreadCount",50).toInt());
+}
+
+void VoiceBank::saveThreadPoolMaxThreadCountSettings()
+{
+    QSettings settings;
+    settings.setValue("VoiceBank/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
 }
 
 QStringList VoiceBank::getWavFileName() const
@@ -1068,12 +1110,9 @@ QString VoiceBank::getSampleFileName() const
     return sample;
 }
 
-void VoiceBank::readFromPath()
+void VoiceBank::readFromPathPrivate()
 {
-    ///从路径中读取 VoiceBank
-    /*!
-      从路径中读取 VoiceBank 的所需信息。您应当在调用本函数之后再使用 VoiceBank 。 VoiceBank 并不对没有读取就进行操作提出警告。
-    */
+
     //TODO:对没有读取过的 VoiceBank 执行操作时的检查。
     //TODO:在构造函数中读取
     path = QDir::fromNativeSeparators(path);
@@ -1315,3 +1354,18 @@ VoiceBank::FileCanNotOpen::FileCanNotOpen(const QString QFileError):std::runtime
 const QString &VoiceBank::FileCanNotOpen::QFileError() const{return _QFileError;}
 
 VoiceBank::WavFileNameNotLoad::WavFileNameNotLoad():std::runtime_error("The name of .wav files not load."){}
+
+QThreadPool* VoiceBank::threadPool = new QThreadPool();
+
+VoiceBank::Garbo VoiceBank::garbo{};
+
+VoiceBank::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voicebank):QRunnable(),voicebank(voicebank)
+{
+
+}
+
+void VoiceBank::VoiceBankReadFuctionRunner::run()
+{
+    ///运行给定 VoiceBank 的读取函数。
+    voicebank->readFromPathPrivate();
+}

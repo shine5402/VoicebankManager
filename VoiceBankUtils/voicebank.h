@@ -18,6 +18,7 @@
 #include "./TextCodecUtils/qchardet.h"
 #include <QJsonArray>
 #include "TextCodecUtils/textconverthelper.h"
+#include <QThreadPool>
 ///用于表示一个音源库
 /*!
     VoiceBank 类代表了一个 UTAU 式音源库。可以通过它获取音源库的相关信息，并可作出修改。
@@ -144,6 +145,29 @@ public:
 
     static bool isVoiceBankPath(const QString &path);
 
+
+    ///VoiceBank 读取线程的执行者
+    /*!
+      此类继承于 QRunnable ，用于以多线程读取VoiceBank。\n
+      一般来说您不需要使用此类，而是直接使用 addVoiceBank(QString& path) 。
+    */
+    class VoiceBankReadFuctionRunner : public QRunnable
+    {
+    public:
+        VoiceBankReadFuctionRunner(VoiceBank* voicebank);
+        void run() override;
+    private:
+        VoiceBank* voicebank;
+    };
+    friend VoiceBankReadFuctionRunner;
+
+    static int getThreadPoolMaxThreadCount() {
+        ///获得读取 VoiceBank 所需信息时所用的最大线程数
+        return threadPool->maxThreadCount();
+    }
+
+    static void setThreadPoolMaxThreadCount(int maxCount);
+
 private:
     QImage _image;
     QString imagePath;
@@ -254,6 +278,24 @@ private:
     static void readStaticSettings();
     void readWavFileName();
     void lazyLoadWavFileName();
+
+    static QThreadPool* threadPool;
+    static void readThreadPoolMaxThreadCountSettings();
+    static void saveThreadPoolMaxThreadCountSettings();
+
+    class Garbo {
+    public:
+        Garbo(){
+            readThreadPoolMaxThreadCountSettings();}
+
+        ~Garbo(){
+            saveThreadPoolMaxThreadCountSettings();
+        }
+    };
+
+    static Garbo garbo;
+    friend Garbo;
+    void readFromPathPrivate();
 
 signals:
     void readDone(VoiceBank *);

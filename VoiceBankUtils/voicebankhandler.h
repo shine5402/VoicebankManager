@@ -8,8 +8,6 @@
 #include <public_defines.h>
 #include "monitorfoldersscanner.h"
 
-//TODO:将线程池迁移至VoiceBank的static成员
-
 ///用于管理一系列VoiceBank。
 /*!
   VoiceBankHandler 是用于管理 VoiceBank 的类。\n
@@ -97,17 +95,12 @@ public:
 
     void clear();
 
-    void setThreadPoolMaxThreadCount(int maxCount);
-    int getThreadPoolMaxThreadCount() const{
-        ///获得读取 VoiceBank 所需信息时所用的最大线程数
-        return threadPool->maxThreadCount();
-    }
-
     /// 可供排序的信息列列表
     /*!
       该枚举定义了 sort(SortableInformationID sortWhat, Qt::SortOrder order) 函数中可以用于排序的信息。
       \see sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder)
     */
+    //TODO:重构此处
     enum class SortableInformationID
     {
         Name, ///< VoiceBank 的名称。对应 VoiceBank 的名称。
@@ -179,9 +172,6 @@ private:
 
     QList<VoiceBank *> voiceBanks{};
 
-    QThreadPool* threadPool = new QThreadPool(this);
-    void readThreadPoolMaxThreadCountSettings();
-    void saveThreadPoolMaxThreadCountSettings();
     class Garbo {
     public:
         ~Garbo(){

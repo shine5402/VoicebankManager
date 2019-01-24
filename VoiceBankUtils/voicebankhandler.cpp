@@ -2,7 +2,7 @@
 
 VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 {
-    readThreadPoolMaxThreadCountSettings();
+    //readThreadPoolMaxThreadCountSettings();
     connect(this,SIGNAL(categoriesChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
     connect(this,SIGNAL(labelsChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
 }
@@ -14,7 +14,7 @@ VoiceBankHandler::~VoiceBankHandler()
       将由内部的一个辅助类调用以在程序退出时保存相关状态。
     */
 
-    saveThreadPoolMaxThreadCountSettings();
+    //saveThreadPoolMaxThreadCountSettings();
 }
 
 VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
@@ -65,9 +65,7 @@ VoiceBank* VoiceBankHandler::addVoiceBank(QString &path){
     connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(categoryChanged()),this,SIGNAL(categoriesChanged()));
     connect(newVoiceBank,SIGNAL(labelsChanged()),this,SIGNAL(labelsChanged()));
-    auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(newVoiceBank);
-    threadPool->start(newVoiceBankReadFunctionRunner);
-    LeafLogger::LogMessage(QString("%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
+    newVoiceBank->readFromPath();
     addVoiceBank(newVoiceBank);
     return newVoiceBank;
 }
@@ -85,16 +83,6 @@ void VoiceBankHandler::clear()
     voiceBankReadDoneCount = 0;
 }
 
-void VoiceBankHandler::setThreadPoolMaxThreadCount(int maxCount)
-{
-    ///设置读取 VoiceBank 所需信息时所用的最大线程数
-    /*!
-      VoiceBankHandler 使用多个线程来读取 VoiceBank 。这能节省时间并更好的利用现代处理器的性能。\n
-      您可以通过本函数来修改 VoiceBankHandler 内部的线程池的最大线程数来优化性能。但请务必在明白您在做什么的时候使用。
-      \param[in] maxCount 新的最大线程数
-    */
-    threadPool->setMaxThreadCount(maxCount);
-}
 
 void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt::SortOrder order)
 {
