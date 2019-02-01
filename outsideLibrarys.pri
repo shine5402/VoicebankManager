@@ -20,3 +20,10 @@ INCLUDEPATH += $$PWD/../LeafLogger/include
 DEPENDPATH += $$PWD/../LeafLogger/include
 
 INCLUDEPATH += $$PWD/../SetOperations/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../TextCodecUtils-release/ -lTextCodecUtils
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../TextCodecUtils-release/ -lTextCodecUtilsd
+else:unix: LIBS += -L$$PWD/../TextCodecUtils-release/ -lTextCodecUtils
+
+INCLUDEPATH += $$PWD/../TextCodecUtils-release/include
+DEPENDPATH += $$PWD/../TextCodecUtils-release/include

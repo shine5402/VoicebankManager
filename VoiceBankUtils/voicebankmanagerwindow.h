@@ -16,7 +16,7 @@
 #include "textcodecsettingdialog.h"
 #include <QSettings>
 #include <public_defines.h>
-#include "TextCodecUtils/textcodecconvertdialog.h"
+#include <textcodecconvertdialog.h>
 #include <QPair>
 #include <QInputDialog>
 #include "voicebanktablemodel.h"
@@ -30,12 +30,12 @@
 #include <QMediaPlayer>
 #include <QProgressBar>
 #include <QTranslator>
-#include "./TextCodecUtils/qchardet.h"
+#include <qchardet.h>
 #include "categoriesandlabelslistwidget.h"
 #include "CommonUtils/showhtmldialog.h"
 #include <setoperations.h>
 #include <functional>
-#include "TextCodecUtils/textconverthelper.h"
+#include <textconverthelper.h>
 
 namespace Ui {
 class VoiceBankManagerWindow;

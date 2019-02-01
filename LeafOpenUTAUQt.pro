@@ -30,8 +30,6 @@ SOURCES += \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
-    TextCodecUtils/availabletextcodecdialog.cpp \
-    TextCodecUtils/textcodecconvertdialog.cpp \
     VoiceBankUtils/voicebanktablemodel.cpp \
     EngineUtils/moresamplerconfigreader.cpp \
     EngineUtils/moresamplerconfig.cpp \
@@ -41,14 +39,12 @@ SOURCES += \
     EngineUtils/moresamplerconfigaddnewdialog.cpp \
     EngineUtils/moresamplerconfigsaddnewmodel.cpp \
     VoiceBankUtils/voicebankiconcropdialog.cpp \
-    TextCodecUtils/qchardet.cpp \
     VoiceBankUtils/categoriesandlabelslistwidget.cpp \
     VoiceBankUtils/categoriesmodel.cpp \
     VoiceBankUtils/labelsmodel.cpp \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
     CommonUtils/showhtmldialog.cpp \
-    TextCodecUtils/textconverthelper.cpp \
     VoiceBankUtils/monitorfoldersscanner.cpp
 
 HEADERS += \
@@ -58,8 +54,6 @@ HEADERS += \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
     VoiceBankUtils/textcodecsettingdialog.h \
-    TextCodecUtils/availabletextcodecdialog.h \
-    TextCodecUtils/textcodecconvertdialog.h \
     public_defines.h \
     VoiceBankUtils/voicebanktablemodel.h \
     EngineUtils/moresamplerconfigreader.h \
@@ -70,14 +64,12 @@ HEADERS += \
     EngineUtils/moresamplerconfigaddnewdialog.h \
     EngineUtils/moresamplerconfigsaddnewmodel.h \
     VoiceBankUtils/voicebankiconcropdialog.h \
-    TextCodecUtils/qchardet.h \
     VoiceBankUtils/categoriesandlabelslistwidget.h \
     VoiceBankUtils/categoriesmodel.h \
     VoiceBankUtils/labelsmodel.h \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
     CommonUtils/showhtmldialog.h \
-    TextCodecUtils/textconverthelper.h \
     VoiceBankUtils/monitorfoldersscanner.h
 
 FORMS += \
@@ -85,8 +77,6 @@ FORMS += \
     VoiceBankUtils/voicebankmanagerwindow.ui \
     VoiceBankUtils/voicebankreadmeinformationdialog.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
-    TextCodecUtils/availabletextcodecdialog.ui \
-    TextCodecUtils/textcodecconvertdialog.ui \
     EngineUtils/moresamplerconfigsdialog.ui \
     EngineUtils/moresamplerconfigaddnewdialog.ui \
     VoiceBankUtils/voicebankiconcropdialog.ui \

@@ -15,9 +15,9 @@
 #include <QJsonObject>
 #include <public_defines.h>
 #include <QPainter>
-#include "./TextCodecUtils/qchardet.h"
+#include <qchardet.h>
 #include <QJsonArray>
-#include "TextCodecUtils/textconverthelper.h"
+#include <textconverthelper.h>
 #include <QThreadPool>
 ///用于表示一个音源库
 /*!
