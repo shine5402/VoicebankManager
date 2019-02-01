@@ -1,6 +1,7 @@
 # Configure outside librarys' include path here.
-# This project needs libchardet, ImageCropper, LeafLogger(LeafPublicQtClasses), SetOperation(LeafPublicQtClasses).
+# This project needs libchardet, ImageCropper, LeafLogger, SetOperation.
 # Qt Creator's "Add Library" function can help.
+# Don't forget to rename this file to "outsideLibrary.template.pri"
 
 unix|win32: LIBS += -L$$PWD/../../libchardet-1.0.5/lib/ -llibchardet -llibchardet.dll
 
