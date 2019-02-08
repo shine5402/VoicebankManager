@@ -193,7 +193,6 @@ private:
     static inline QTextCodec* DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec* DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec* DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);
-    static inline bool isReadStaticSettings = false;
     static inline bool DefalutIsTextCodecAutoDetect = false;
     void readSettings();
     bool isWavFileNameReaded = false;
@@ -286,7 +285,9 @@ private:
     class Garbo {
     public:
         Garbo(){
-            readThreadPoolMaxThreadCountSettings();}
+            readThreadPoolMaxThreadCountSettings();
+            readStaticSettings();
+        }
 
         ~Garbo(){
             saveThreadPoolMaxThreadCountSettings();

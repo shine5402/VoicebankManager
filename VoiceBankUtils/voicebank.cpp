@@ -7,7 +7,7 @@ VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path)
       \param[in] path 声库的路径
       \param[in] parent 父对象，是否设置对 VoiceBank 的行为没有影响。默认为 nullptr 。
     */
-    readStaticSettings();
+
 }
 
 VoiceBank::~VoiceBank()
@@ -412,7 +412,6 @@ void VoiceBank::setWavFileNameTextCodec(QTextCodec *value)
 
 void VoiceBank::readStaticSettings()
 {
-    if (!isReadStaticSettings){
         QSettings settings{};
         if (settings.contains("DefaultTextCodec/CharacterFile")){
             auto characterCodecName = settings.value("DefaultTextCodec/CharacterFile");
@@ -430,8 +429,6 @@ void VoiceBank::readStaticSettings()
         if (settings.contains("DefaultTextCodec/AutoDetect")){
             DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",false).toBool();
         }
-        isReadStaticSettings = true;
-    }
 }
 
 void VoiceBank::readTextCodec_FollowDefault(QJsonObject json)
