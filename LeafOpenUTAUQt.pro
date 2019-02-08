@@ -26,7 +26,6 @@ SOURCES += \
         main.cpp \
         editorwindow.cpp \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
-    VoiceBankUtils/voicebankreadmeinformationdialog.cpp \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
@@ -50,7 +49,6 @@ SOURCES += \
 HEADERS += \
         editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
-    VoiceBankUtils/voicebankreadmeinformationdialog.h \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
     VoiceBankUtils/textcodecsettingdialog.h \
@@ -75,7 +73,6 @@ HEADERS += \
 FORMS += \
         editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
-    VoiceBankUtils/voicebankreadmeinformationdialog.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
     EngineUtils/moresamplerconfigsdialog.ui \
     EngineUtils/moresamplerconfigaddnewdialog.ui \

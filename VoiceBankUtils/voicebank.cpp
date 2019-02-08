@@ -3,11 +3,13 @@
 VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path),CharacterTextCodec(DefaultCharacterTextCodec),ReadmeTextCodec(DefaultReadmeTextCodec),wavFileNameTextCodec(DefaultWavFileNameTextCodec)
 {
     /*!
-      VoiceBank 的构造函数。它将设置 VoiceBank 的路径，并将所有文本编码设置置为默认。但它 **不会** 进行读取操作。您应当手动调用 readFromPath() 。
+      VoiceBank 的构造函数。它将设置 VoiceBank 的路径，并将所有文本编码设置置为默认。但它会自动从提供的路径中读取所需信息。
       \param[in] path 声库的路径
       \param[in] parent 父对象，是否设置对 VoiceBank 的行为没有影响。默认为 nullptr 。
     */
-
+    readFromPathPrivate();
+    connect(this,SIGNAL(firstReadDone(VoiceBank *)),this,SIGNAL(readDone(VoiceBank *)));
+    connect(this,SIGNAL(reloadDone(VoiceBank *)),this,SIGNAL(readDone(VoiceBank *)));
 }
 
 VoiceBank::~VoiceBank()
@@ -21,6 +23,13 @@ VoiceBank::~VoiceBank()
         if (state)
             delete state;
     }
+}
+
+void VoiceBank::reload()
+{
+    auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this,VoiceBankReadFuctionRunner::Reload);
+    threadPool->start(newVoiceBankReadFunctionRunner);
+    LeafLogger::LogMessage(QString("%1的重载线程被加入线程池并由线程池管理启动。").arg(path));
 }
 
 QString VoiceBank::getName() const
@@ -76,13 +85,12 @@ QString VoiceBank::getPath() const
     return path;
 }
 
-void VoiceBank::readFromPath()
+void VoiceBank::readFromPathPrivate()
 {
-    ///从路径中读取 VoiceBank
-    /*!
+    /*
       从路径中读取 VoiceBank 的所需信息。您应当在调用本函数之后再使用 VoiceBank 。\n
- \warning VoiceBank 并不对没有读取就进行操作提出警告。\n
- VoiceBank 将会启动一个新线程进行读取，所以此函数会立即返回。您应当检查 readDone(VoiceBank *) 信号来得知 VoiceBank 何时读取完毕。
+      \warning VoiceBank 并不对没有读取就进行操作提出警告。\n
+      VoiceBank 将会启动一个新线程进行读取，所以此函数会立即返回。您应当检查 readDone(VoiceBank *) 信号来得知 VoiceBank 何时读取完毕。
     */
     auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this);
     threadPool->start(newVoiceBankReadFunctionRunner);
@@ -658,13 +666,13 @@ void VoiceBank::setName(const QString &name)
     }
     catch(FileNotExists& e){
         //changeCharacterFile()会处理文件不存在的情况，但新建文件后下需要重载。
-        readFromPathPrivate();
+        reload();
         throw e;
     }
     catch(FileCanNotOpen& e){
         throw e;
     }
-    readFromPathPrivate();
+    reload();
 }
 
 void VoiceBank::setImage(const QImage &image, const QString& newImageFileName)
@@ -712,17 +720,6 @@ void VoiceBank::clearWavFileReadStage()
     wavFileName.clear();
     wavFilePath.clear();
     isWavFileNameReaded = false;
-}
-
-bool VoiceBank::isFirstRead() const{
-    ///返回该音源库最近一次的读取是否是第一次读取
-    /*!
-          由于 VoiceBank 允许进行重载操作，所以一个 VoiceBank 可能会被多次要求从文件夹中读取信息。\n
-    本函数用于判断该音源库是否是第一次被要求读取，以用于使调用者调整相关行为。如区分“读取”和“重载”行为。
-          \return 返回该音源库最近一次的读取是否是第一次读取
-          \see readFromPath()
-*/
-    return ReadCount == 1 || ReadCount == 0;
 }
 
 void VoiceBank::lazyLoadWavFileName()
@@ -1107,11 +1104,9 @@ QString VoiceBank::getSampleFileName() const
     return sample;
 }
 
-void VoiceBank::readFromPathPrivate()
+void VoiceBank::doReadFromPath()
 {
-
     //TODO:对没有读取过的 VoiceBank 执行操作时的检查。
-    //TODO:在构造函数中读取
     path = QDir::fromNativeSeparators(path);
     if (!path.endsWith("/")){
         path.append("/");
@@ -1120,8 +1115,6 @@ void VoiceBank::readFromPathPrivate()
     readSettings();
     readCharacterFile();
     readReadme();
-    ++ReadCount;
-    emit readDone(this);
 }
 
 QTextCodec *VoiceBank::getCharacterTextCodec() const
@@ -1356,7 +1349,7 @@ QThreadPool* VoiceBank::threadPool = new QThreadPool();
 
 VoiceBank::Garbo VoiceBank::garbo{};
 
-VoiceBank::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voicebank):QRunnable(),voicebank(voicebank)
+VoiceBank::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voicebank, ReadType readType):QRunnable(),voicebank(voicebank),readType(readType)
 {
 
 }
@@ -1364,5 +1357,9 @@ VoiceBank::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voi
 void VoiceBank::VoiceBankReadFuctionRunner::run()
 {
     ///运行给定 VoiceBank 的读取函数。
-    voicebank->readFromPathPrivate();
+    voicebank->doReadFromPath();
+    if (readType == Reload)
+        emit voicebank->reloadDone(voicebank);
+    else
+        emit voicebank->firstReadDone(voicebank);
 }

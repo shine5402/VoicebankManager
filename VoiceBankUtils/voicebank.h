@@ -30,6 +30,8 @@ public:
     explicit VoiceBank(QString path,QObject *parent = nullptr);
     ~VoiceBank();
 
+    void reload();
+
     QString getName() const;
     void setName(const QString& name);
 
@@ -40,8 +42,6 @@ public:
     QString getReadme() const;
 
     QString getPath() const;
-
-    void readFromPath();
 
     QTextCodec* getCharacterTextCodec() const;
     void setCharacterTextCodec(QTextCodec *value);
@@ -81,7 +81,6 @@ public:
     QStringList getWavFilePath() const;
     void clearWavFileReadStage();
 
-    bool isFirstRead() const;
 
     QString getSampleFileName() const;
 
@@ -154,10 +153,15 @@ public:
     class VoiceBankReadFuctionRunner : public QRunnable
     {
     public:
-        VoiceBankReadFuctionRunner(VoiceBank* voicebank);
+        enum ReadType {
+            FirstRead,
+            Reload
+        };
+        VoiceBankReadFuctionRunner(VoiceBank* voicebank,ReadType readType = FirstRead);
         void run() override;
     private:
         VoiceBank* voicebank;
+        ReadType readType;
     };
     friend VoiceBankReadFuctionRunner;
 
@@ -198,7 +202,6 @@ private:
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
     QStringList wavFilePath{};
-    int ReadCount = 0;
     QString category;
     QStringList labels;
     bool needRecommmendCategoryAndLabels;
@@ -297,8 +300,11 @@ private:
     static Garbo garbo;
     friend Garbo;
     void readFromPathPrivate();
+    void doReadFromPath();
 
 signals:
+    void firstReadDone(VoiceBank *);
+    void reloadDone(VoiceBank *);
     void readDone(VoiceBank *);
     void statusOutput(const QString&);
     void backupImageFileBecauseExists(VoiceBank *);

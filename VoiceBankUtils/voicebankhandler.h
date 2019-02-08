@@ -31,14 +31,7 @@ public:
     */
     QList<VoiceBank *> getVoiceBanks() const;
 
-    void addVoiceBank(VoiceBank * newVoiceBank){
-        ///将一个 VoiceBank 交给 VoiceBankHandler 管理。
-        /*!
-          更建议使用 addVoiceBank(QString& path) 。
-          \param[in] newVoiceBank 要交给 VoiceBankHandler 的 VoiceBank * 。
-        */
-        voiceBanks.append(newVoiceBank);
-    }
+    void addVoiceBank(VoiceBank * newVoiceBank);
 
     VoiceBank* addVoiceBank(QString& path);
 
@@ -108,21 +101,19 @@ public:
     };
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 
-    ///VoiceBank 读取线程的执行者
-    /*!
-      此类继承于 QRunnable ，用于以多线程读取VoiceBank。\n
-      一般来说您不需要使用此类，而是直接使用 addVoiceBank(QString& path) 。
-    */
-    class VoiceBankReadFuctionRunner : public QRunnable
-    {
-    public:
-        VoiceBankReadFuctionRunner(VoiceBank* voicebank);
-        void run() override;
-    private:
-        VoiceBank* voicebank;
-    };
 signals:
+    //TODO:重写信号文档
     void aVoiceBankReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 读取完毕。
+    /*!<
+      \param voicebank 读取完毕的 VoiceBank * 。
+      \see VoiceBank::readDone(VoiceBank * voicebank)
+    */
+    void aVoiceBankFirstReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 初次读取完毕。
+    /*!<
+      \param voicebank 读取完毕的 VoiceBank * 。
+      \see VoiceBank::readDone(VoiceBank * voicebank)
+    */
+    void aVoiceBankReloadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 重载完毕。
     /*!<
       \param voicebank 读取完毕的 VoiceBank * 。
       \see VoiceBank::readDone(VoiceBank * voicebank)
@@ -183,7 +174,7 @@ private:
     static Garbo garbo;
     friend Garbo;
 private slots:
-    void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+    void voiceBankFirstReadDoneSlot(VoiceBank *);
 
 public slots:
 };

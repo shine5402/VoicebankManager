@@ -2,6 +2,23 @@
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
 
+void VoiceBankManagerWindow::connectWithVoiceBankHandler()
+{
+    connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
+    connect(voiceBankHandler,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SLOT(onCannotBackupImageFile(VoiceBank*)));
+    connect(voiceBankHandler,SIGNAL(voiceBanksReadDone()),this,SLOT(setUIAfterVoiceBanksReadDone()));
+    connect(voiceBankHandler,SIGNAL(aVoiceBankReloadDone(VoiceBank *)),this,SLOT(onVoiceBankReloadDone(VoiceBank *)));
+    connect(voiceBankHandler,SIGNAL(useOldFolderScanChanged()),this,SLOT(onUseOldFolderScanChanged()));
+
+    connect(voiceBankHandler,SIGNAL(categoriesChanged()),categoriesAndLabelsListWidget,SLOT(readCategoriesFromVoicebankHandler()));
+    connect(categoriesAndLabelsListWidget,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
+    connect(voiceBankHandler,SIGNAL(labelsChanged()),categoriesAndLabelsListWidget,SLOT(readLabelsFromVoiceBankHandler()));
+    connect(categoriesAndLabelsListWidget,SIGNAL(labelsChanged()),this,SLOT(createVoiceBanksLabelsSubMenu()));
+    connect(categoriesAndLabelsListWidget,SIGNAL(currentCategoriesChanged(QStringList)),this,SLOT(onCurrentCategoriesChanged(const QStringList&)));
+    connect(categoriesAndLabelsListWidget,SIGNAL(currentLabelsChanged(QStringList)),this,SLOT(onCurrentLabelsChanged(const QStringList&)));
+    connect(categoriesAndLabelsListWidget,SIGNAL(labelSelectionStrategyChanged()),this,SLOT(dealFilters()));
+}
+
 VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::VoiceBankManagerWindow)
@@ -30,13 +47,6 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
     ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
     connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &)));
-
-    //连接Handler和主窗口的信号与槽
-    connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
-    connect(voiceBankHandler,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SLOT(onCannotBackupImageFile(VoiceBank*)));
-    //connect(voiceBankHandler,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank*)));
-    connect(voiceBankHandler,SIGNAL(voiceBanksReadDone()),this,SLOT(setUIAfterVoiceBanksReadDone()));
-    connect(voiceBankHandler,SIGNAL(useOldFolderScanChanged()),this,SLOT(onUseOldFolderScanChanged()));
 
     //分组语言菜单的action
     auto languageActionGroup = new QActionGroup(this);
@@ -82,21 +92,11 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     //在分类器里加入分类和标签
     ui->categoryAndLabelsAndListSplitter->insertWidget(0,categoriesAndLabelsListWidget);
-
-    loadWindowStatus();
-
-    //连接分类和标签相关信号与handler
-    connect(voiceBankHandler,SIGNAL(categoriesChanged()),categoriesAndLabelsListWidget,SLOT(readCategoriesFromVoicebankHandler()));
-    connect(categoriesAndLabelsListWidget,SIGNAL(categoriesChanged()),this,SLOT(createVoiceBanksCategoriesSubMenu()));
-    connect(voiceBankHandler,SIGNAL(labelsChanged()),categoriesAndLabelsListWidget,SLOT(readLabelsFromVoiceBankHandler()));
-    connect(categoriesAndLabelsListWidget,SIGNAL(labelsChanged()),this,SLOT(createVoiceBanksLabelsSubMenu()));
-    connect(categoriesAndLabelsListWidget,SIGNAL(currentCategoriesChanged(QStringList)),this,SLOT(onCurrentCategoriesChanged(const QStringList&)));
-    connect(categoriesAndLabelsListWidget,SIGNAL(currentLabelsChanged(QStringList)),this,SLOT(onCurrentLabelsChanged(const QStringList&)));
-    connect(categoriesAndLabelsListWidget,SIGNAL(labelSelectionStrategyChanged()),this,SLOT(dealFilters()));
-
     showMoreInformationInTotalCountLabel = settings.value("VoiceBankManager/showMoreInformationInTotalCountLabel",true).toBool();
     ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
 
+    loadWindowStatus();
+    connectWithVoiceBankHandler();
 }
 
 
@@ -286,7 +286,6 @@ void VoiceBankManagerWindow::updateVoiceBankCountLabel()
 
 void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 {
-    // ui->voiceBanksTableView->setEnabled(true);
     ui->categoryAndLabelsAndListSplitter->setEnabled(true);
     ui->searchLineEdit->setEnabled(true);
     updateVoiceBankCountLabel();
@@ -299,6 +298,12 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
 void VoiceBankManagerWindow::onUseOldFolderScanChanged()
 {
 
+}
+
+void VoiceBankManagerWindow::onVoiceBankReloadDone(VoiceBank *voiceBank)
+{
+    if (voiceBank == getSelectedVoiceBank())
+        setVoiceBankInfomation(voiceBank);
 }
 
 #ifndef NDEBUG
@@ -705,9 +710,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
 void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
-        voiceBank->readFromPath();
-        voiceBankTableModel->dataChangedEmitter(voiceBank);
-        setVoiceBankInfomation(voiceBank);
+        voiceBank->reload();
     }
 }
 

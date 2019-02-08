@@ -50,6 +50,23 @@ QList<VoiceBank* > VoiceBankHandler::getVoiceBanks() const
     return voiceBanks;
 }
 
+void VoiceBankHandler::addVoiceBank(VoiceBank *newVoiceBank){
+    ///将一个 VoiceBank 交给 VoiceBankHandler 管理。
+    /*!
+          更建议使用 addVoiceBank(QString& path) 。
+          \param[in] newVoiceBank 要交给 VoiceBankHandler 的 VoiceBank * 。
+        */
+    voiceBanks.append(newVoiceBank);
+    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(firstReadDone(VoiceBank*)),this,SLOT(voiceBankFirstReadDoneSlot(VoiceBank* )));
+    connect(newVoiceBank,SIGNAL(firstReadDone(VoiceBank*)),this,SIGNAL(aVoiceBankFirstReadDone(VoiceBank* )));
+    connect(newVoiceBank,SIGNAL(reloadDone(VoiceBank*)),this,SIGNAL(aVoiceBankReloadDone(VoiceBank* )));
+    connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SIGNAL(backupImageFileBecauseExists(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(categoryChanged()),this,SIGNAL(categoriesChanged()));
+    connect(newVoiceBank,SIGNAL(labelsChanged()),this,SIGNAL(labelsChanged()));
+}
+
 VoiceBank* VoiceBankHandler::addVoiceBank(QString &path){
     ///让 VoiceBankHandler 管理一个路径为 path 的 VoiceBank 。
     /*!
@@ -59,13 +76,6 @@ VoiceBank* VoiceBankHandler::addVoiceBank(QString &path){
       \return 新的 VoiceBank 的指针。注意，返回时该 VoiceBank 可能并没有读取完毕。您应当等待 VoiceBankHandler::aVoiceBankReadDone(VoiceBank* voicebank) 信号或 VoiceBank::readDone(VoiceBank* ) 被触发后再使用此指针。
     */
     auto newVoiceBank = new VoiceBank(path,this);
-    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
-    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SLOT(voiceBankReadDoneSlot(VoiceBank* )));
-    connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SIGNAL(backupImageFileBecauseExists(VoiceBank*)));
-    connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
-    connect(newVoiceBank,SIGNAL(categoryChanged()),this,SIGNAL(categoriesChanged()));
-    connect(newVoiceBank,SIGNAL(labelsChanged()),this,SIGNAL(labelsChanged()));
-    newVoiceBank->readFromPath();
     addVoiceBank(newVoiceBank);
     return newVoiceBank;
 }
@@ -205,23 +215,11 @@ QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
 
 
 
-void VoiceBankHandler::voiceBankReadDoneSlot(VoiceBank* voiceBank)
+void VoiceBankHandler::voiceBankFirstReadDoneSlot(VoiceBank*)
 {
-    if (voiceBank->isFirstRead())
         if (++voiceBankReadDoneCount == voiceBanks.count()){
             emit voiceBanksReadDone();
         }
-}
-
-
-VoiceBankHandler::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voicebank):QRunnable(),voicebank(voicebank)
-{
-}
-
-void VoiceBankHandler::VoiceBankReadFuctionRunner::run()
-{
-    ///运行给定 VoiceBank 的读取函数。
-    voicebank->readFromPath();
 }
 
 VoiceBankHandler* VoiceBankHandler::s_voiceBankHanlder = nullptr;

@@ -2,14 +2,12 @@
 int VoiceBankTableModel::iconSize = 20;
 VoiceBankTableModel::VoiceBankTableModel(VoiceBankHandler *parent) : QAbstractTableModel (parent),voicebankHandler(parent)
 {
-    connect(parent,SIGNAL(aVoiceBankReadDone(VoiceBank*)),this,SLOT(newDataEmitter(VoiceBank*)));
+    connect(parent,SIGNAL(aVoiceBankFirstReadDone(VoiceBank*)),this,SLOT(newDataEmitter(VoiceBank*)));
+    connect(parent,SIGNAL(aVoiceBankReloadDone(VoiceBank *)),this,SLOT(dataChangedEmitter(VoiceBank*)));
 }
 void VoiceBankTableModel::newDataEmitter(VoiceBank* voiceBank){
-    if (voiceBank->isFirstRead())
-    {
         beginInsertRows(QModelIndex(),voicebankHandler->getVoiceBankID(voiceBank),voicebankHandler->getVoiceBankID(voiceBank));
         endInsertRows();
-    }
 }
 void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
     emit dataChanged(index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Name),index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Path));

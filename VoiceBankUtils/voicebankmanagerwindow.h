@@ -105,6 +105,8 @@ private:
 
     void refreshCategoryAndLabelsActionsChecked();
 
+    void connectWithVoiceBankHandler();
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽
@@ -180,6 +182,8 @@ private slots:
     void setUIAfterVoiceBanksReadDone();
 
     void onUseOldFolderScanChanged();
+
+    void onVoiceBankReloadDone(VoiceBank *voiceBank);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H
