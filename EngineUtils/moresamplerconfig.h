@@ -8,7 +8,7 @@
 #include <QStringList>
 #include <public_defines.h>
 #include <QDebug>
-#include "../LeafPublicQtClasses/leaflogger.h"
+
 class MoresamplerConfig
 {
 public:
@@ -55,7 +55,6 @@ public:
         virtual bool isValidValue(QVariant value) const = 0;
         virtual QVariant toVariantValueFromString(QString valueString) const = 0;
         virtual QString toStringFromVariantValue(QVariant value) const = 0;
-        //virtual QVariant getDefaultValue
     protected:
         QStringList choices;
         ValueType valueType;

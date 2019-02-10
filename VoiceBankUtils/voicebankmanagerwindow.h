@@ -16,7 +16,7 @@
 #include "textcodecsettingdialog.h"
 #include <QSettings>
 #include <public_defines.h>
-#include "TextCodecUtils/textcodecconvertdialog.h"
+#include <textcodecconvertdialog.h>
 #include <QPair>
 #include <QInputDialog>
 #include "voicebanktablemodel.h"
@@ -30,157 +30,160 @@
 #include <QMediaPlayer>
 #include <QProgressBar>
 #include <QTranslator>
-#include "./TextCodecUtils/qchardet.h"
+#include <qchardet.h>
 #include "categoriesandlabelslistwidget.h"
 #include "CommonUtils/showhtmldialog.h"
-#include <quazip.h>
+#include <setoperations.h>
+#include <functional>
+#include <textconverthelper.h>
 
 namespace Ui {
 class VoiceBankManagerWindow;
 }
 
+/// 音源管理器组件的主窗口。
 class VoiceBankManagerWindow : public QMainWindow
 {
-    Q_OBJECT
 
+
+    Q_OBJECT
 public:
     explicit VoiceBankManagerWindow(QWidget *parent = nullptr);
     ~VoiceBankManagerWindow() override;
 
-    QStringList getMonitorFolders() const;
-    void setMonitorFolders(const QStringList &value);
-    void readVoiceBanks();
-    void loadVoiceBanksList();
-public slots:
-#ifndef NDEBUG
-    void debug_voiceBank_readDone_Slot(VoiceBank *);
-#endif
-    void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+    void loadVoiceBanksAndTable();
 
-    void onSamplePlayerPositionChange(qint64 position);
-    void onSamplePlayerStateChanged(QMediaPlayer::State state);
-    void createVoiceBanksCategoriesSubMenu();
+public slots:
 
 protected:
     void changeEvent(QEvent *e) override;
 private:
     Ui::VoiceBankManagerWindow *ui;
 
-    QStringList monitorFolders = {"./voice"};
-    VoiceBankHandler* voiceBankHandler = new VoiceBankHandler(this);
-    VoiceBankTableModel* voiceBankTableModel = nullptr;
-    QStringList getFoldersInMonitorFolders();
-    void setVoiceBankInfomation(VoiceBank *voiceBank);
-    int voiceBankPathsCount{};
-    QStringList voiceBankPaths;
-    int voiceBankReadDoneCount{};
+    VoiceBankHandler* voiceBankHandler = VoiceBankHandler::getVoiceBankHandler();
+
     struct TableColumn
     {
         static constexpr int Name = 0;
         static constexpr int Path = 1;
     };
+    VoiceBankTableModel* voiceBankTableModel = nullptr;
+
+    void showVoiceBanksRows(const QList<int> &voiceBankIDs);
+
+
+    bool showMoreInformationInTotalCountLabel = true;
+    void updateVoiceBankCountLabel();
 
     QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
     QMenu* voiceBankCategoriesSubMenu = nullptr;
     QActionGroup* voiceBankCategoriesActionGroup = new QActionGroup(this);
     QMenu* voiceBankLabelsSubMenu = nullptr;
     QActionGroup* voiceBankLabelsActionGroup = new QActionGroup(this);
-
     void createVoiceBanksTableMenu();
-    void loadMonitorFoldersSettings();
-    void saveMonitorFoldersSettings();
-    void setUIAfterVoiceBanksReadDone();
 
-    QPair<bool, QTextCodec *> processFileTextCodecConvert(const QString &path, QTextCodec *sourceCodec, QTextCodec *targetCodec);
     VoiceBank *getSelectedVoiceBank();
     VoiceBank *getSelectedVoiceBank(const QModelIndex &current);
+
+    void setVoiceBankInfomation(VoiceBank *voiceBank);
+
     QProgressBar* samplePlayerProgress = new QProgressBar();
     QMediaPlayer* samplePlayer = new QMediaPlayer(this);
+
     void autoDetectTranslate();
     QList<QTranslator*> translators;
     void removeAllTranslators();
-    bool processFileNameConvert(QByteArrayList _fileNameRaw, QStringList _filePaths, QString title, QTextCodec *&rawCodec, QTextCodec *&targetCodec);
-    CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
 
+    CategoriesAndLabelsListWidget* categoriesAndLabelsListWidget = new CategoriesAndLabelsListWidget(voiceBankHandler,this);
     QStringList currentCategoriesFilter = {""};
     QStringList currentLabelFilter = {""};
-    void showVoiceBanksRows(const QList<int> &voiceBankIDs);
 
-    template <typename T>
-    QList<T> getIntersection(QList<QList<T> > lists);
     void loadWindowStatus();
     void saveWindowStatus();
-    bool isVoiceBankPath(const QString &path) const;
-    QStringList notVoiceBankPaths;
-    QStringList getVoiceBankFoldersInFolder(const QString &dir);
 
-    bool useOldFolderScan = false;
+    void letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {});
 
-    bool showMoreInformationInTotalCountLabel = true;
+    void refreshCategoryAndLabelsActionsChecked();
 
-    QStringList outsideVoiceBankFolders;
-    QStringList ignoreVoiceBankFolders;
+    void connectWithVoiceBankHandler();
 
-    QStringList ignoredVoiceBankFolders;
-
-    void updateVoiceBankCountLabel();
-
-    void findScannedSubFolders();
-    QStringList scannedSubFolders;
-    template <typename T>
-    QList<T> getUnion(QList<QList<T> > lists);
 private slots:
 #ifndef NDEBUG
+    //Debug菜单项的槽
     void debugFunction();
 #endif
+
+    //void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+
+    void createVoiceBanksCategoriesSubMenu();
+    void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
+    void on_voicebankImage_customContextMenuRequested(const QPoint &);
+    //音源列表右键菜单触发槽
     void openVoiceBankPathInExplorer();
     void openVoiceBankCharacterFileByOS();
     void openVoiceBankReadmeFileByOS();
     void copyVoiceBankPathtoClipboard();
     void copyVoiceBankCharacterFilePathtoClipboard();
     void copyVoiceBankReadmeFilePathtoClipboard();
-    void on_actionMonitor_Folders_triggered();
-    void on_actionRefresh_triggered();
-    void on_actionDefault_TextCodec_triggered();
-    void setCodecForVoiceBankActionSlot();
     void reloadVoiceBankActionSlot();
-    void on_searchLineEdit_textChanged(const QString &);
-    void on_actionExit_triggered();
-    void on_actionAbout_triggered();
-    void on_actionAbout_Qt_triggered();
     void convertCharacterCodecActionSlot();
     void convertReadmeCodecActionSlot();
-    void on_actionSet_Thread_Pool_Max_Count_triggered();
     void convertWavFileNameCodecActionSlot();
-    void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
-    void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
     void moresamplerConfigEditActionSlot();
-    void on_actionEdit_Global_MoresamplerConfig_triggered();
     void modifyNameActionSlot();
     void modifyIconActionSlot();
-    void on_actionchoose_a_voicebank_randomly_triggered();
-    void onBackupImageFileBecauseExists(VoiceBank * voicebank);
-    void onCannotBackupImageFile(VoiceBank* voicebank);
-    void on_playSamplebutton_clicked();
-    void dealLanguageMenuAutoAndDontStates();
-    void dealLanguageMenuLoadFile();
-    void on_actionFor_text_file_triggered();
-    void on_actionFor_File_Name_triggered();
     void addNewCategoryActionSlot();
     void setCategoryActionsSlot(QAction *action);
     void createVoiceBanksLabelsSubMenu();
     void addNewLabelActionSlot();
     void setLabelActionSlot(QAction *action);
-    void on_voicebankImage_customContextMenuRequested(const QPoint &);
-    void onCurrentCategoriesChanged(const QStringList& current);
-    void onCurrentLabelsChanged(const QStringList& current);
-    void on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked);
-    void on_actionshow_more_infomation_in_total_count_label_toggled(bool checked);
+    void ignoreActionSlot();
+    void setCodecForVoiceBankActionSlot();
+
+    //UI菜单点击触发槽
+    void on_actionMonitor_Folders_triggered();
     void on_actionOutside_VoiceBanks_triggered();
     void on_actionIgnored_folders_triggered();
+    void on_actionRefresh_triggered();
+    void on_actionDefault_TextCodec_triggered();
+    void on_actionExit_triggered();
+    void on_actionAbout_triggered();
+    void on_actionAbout_Qt_triggered();
+    void on_actionSet_Thread_Pool_Max_Count_triggered();
+    void on_actionFor_text_file_triggered();
+    void on_actionFor_File_Name_triggered();
+    void on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked);
+    void on_actionshow_more_infomation_in_total_count_label_toggled(bool checked);
     void on_actionView_scan_details_triggered();
-    void ignoreActionSlot();
+    void on_actionEdit_Global_MoresamplerConfig_triggered();
+    void on_actionchoose_a_voicebank_randomly_triggered();
+
+    void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
+
+    void onBackupImageFileBecauseExists(VoiceBank * voicebank);
+    void onCannotBackupImageFile(VoiceBank* voicebank);
+
+    //语言相关槽
+    void dealLanguageMenuAutoAndDontStates();
+    void dealLanguageMenuLoadFile();
+
+    //过滤器相关槽
+    void on_searchLineEdit_textChanged(const QString &);
+    void onCurrentCategoriesChanged(const QStringList& current);
+    void onCurrentLabelsChanged(const QStringList& current);
     void dealFilters();
+
+
+    //播放样例相关槽
+    void on_playSamplebutton_clicked();
+    void onSamplePlayerPositionChange(qint64 position);
+    void onSamplePlayerStateChanged(QMediaPlayer::State state);
+
+    void setUIAfterVoiceBanksReadDone();
+
+    void onUseOldFolderScanChanged();
+
+    void onVoiceBankReloadDone(VoiceBank *voiceBank);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

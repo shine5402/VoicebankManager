@@ -87,10 +87,10 @@ void TextCodecSettingDialog::initUI(){
     if (voiceBank){
         ui->voiceBankLabel->setText(voiceBank->getName());
         setWindowTitle(tr("设定%1的读取用文本编码").arg(voiceBank->getName()));
-        ui->followDefaultTextCodecCheckBox->setChecked(voiceBank->getIsFollowDefault());
-        if (!voiceBank->getIsFollowDefault()){
+        ui->followDefaultTextCodecCheckBox->setChecked(voiceBank->isTextCodecFollowDefault());
+        if (!voiceBank->isTextCodecFollowDefault()){
             setFormInNoDefault();
-            if (voiceBank->getIsTextCodecAutoDetect()){
+            if (voiceBank->isTextCodecAutoDetect()){
                 ui->autoDetectCheckBox->setChecked(true);
                 setFormInAutoDetect();
             }
@@ -109,7 +109,7 @@ void TextCodecSettingDialog::initUI(){
         ui->followDefaultTextCodecCheckBox->setVisible(false);
         ui->characterTxtComboBox->setCurrentText(VoiceBank::getDefaultCharacterTextCodec()->name());
         ui->readmeTxtComboBox->setCurrentText(VoiceBank::getDefaultReadmeTextCodec()->name());
-        ui->autoDetectCheckBox->setChecked(VoiceBank::getDefalutIsTextCodecAutoDetect());
+        ui->autoDetectCheckBox->setChecked(VoiceBank::isDefalutTextCodecAutoDetect());
     }
 }
 

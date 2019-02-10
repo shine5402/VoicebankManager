@@ -25,7 +25,7 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
         else if (index.row() == 1)
             return tr("未分类 (%1)").arg(dataSource->getNoCategoriesCount());
         else if (index.row() == 0)
-            return tr("全部 (%1)").arg(dataSource->handler->getVoiceBankCount());
+            return tr("全部 (%1)").arg(dataSource->handler->count());
     }
     return QVariant();
 }

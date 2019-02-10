@@ -2,13 +2,12 @@
 #include "VoiceBankUtils/voicebankmanagerwindow.h"
 #include <QApplication>
 #include <QTranslator>
-#include <../LeafPublicQtClasses/leaflogger.h>
+#include <leaflogger.h>
 #include <QLibraryInfo>
 #include <QTextCodec>
-#define VOICEBANK_MANAGER
-#ifdef _MSC_VER
-#pragma execution_character_set("utf-8")
-#endif
+#include "public_defines.h"
+//TODO:编写文档
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -21,10 +20,11 @@ int main(int argc, char *argv[])
     EditorWindow w;
     w.show();
 #endif
+
 #ifdef VOICEBANK_MANAGER
     VoiceBankManagerWindow v;
     v.show();
-    v.loadVoiceBanksList();
+    v.loadVoiceBanksAndTable();
 #endif
     return a.exec();
 }

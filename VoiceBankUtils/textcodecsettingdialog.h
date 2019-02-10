@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "voicebank.h"
-#include "./TextCodecUtils/availabletextcodecdialog.h"
+#include <availabletextcodecdialog.h>
 #include <QTextCodec>
 #include <QComboBox>
 #include <public_defines.h>

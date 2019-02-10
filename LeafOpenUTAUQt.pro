@@ -26,13 +26,9 @@ SOURCES += \
         main.cpp \
         editorwindow.cpp \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
-    VoiceBankUtils/voicebankreadmeinformationdialog.cpp \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
     VoiceBankUtils/textcodecsettingdialog.cpp \
-    ../LeafPublicQtClasses/leaflogger.cpp \
-    TextCodecUtils/availabletextcodecdialog.cpp \
-    TextCodecUtils/textcodecconvertdialog.cpp \
     VoiceBankUtils/voicebanktablemodel.cpp \
     EngineUtils/moresamplerconfigreader.cpp \
     EngineUtils/moresamplerconfig.cpp \
@@ -41,28 +37,21 @@ SOURCES += \
     EngineUtils/moresamplerconfigsdelegate.cpp \
     EngineUtils/moresamplerconfigaddnewdialog.cpp \
     EngineUtils/moresamplerconfigsaddnewmodel.cpp \
-    ../ImageCropper/src/imagecropper.cpp \
     VoiceBankUtils/voicebankiconcropdialog.cpp \
-    ../ImageCropper/src/imagecroppercontainer.cpp \
-    TextCodecUtils/qchardet.cpp \
     VoiceBankUtils/categoriesandlabelslistwidget.cpp \
     VoiceBankUtils/categoriesmodel.cpp \
     VoiceBankUtils/labelsmodel.cpp \
-    ../LeafPublicQtClasses/qlistviewwithselectsignal.cpp \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
-    CommonUtils/showhtmldialog.cpp
+    CommonUtils/showhtmldialog.cpp \
+    VoiceBankUtils/monitorfoldersscanner.cpp
 
 HEADERS += \
         editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
-    VoiceBankUtils/voicebankreadmeinformationdialog.h \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
     VoiceBankUtils/textcodecsettingdialog.h \
-    ../LeafPublicQtClasses/leaflogger.h \
-    TextCodecUtils/availabletextcodecdialog.h \
-    TextCodecUtils/textcodecconvertdialog.h \
     public_defines.h \
     VoiceBankUtils/voicebanktablemodel.h \
     EngineUtils/moresamplerconfigreader.h \
@@ -72,27 +61,19 @@ HEADERS += \
     EngineUtils/moresamplerconfigsdelegate.h \
     EngineUtils/moresamplerconfigaddnewdialog.h \
     EngineUtils/moresamplerconfigsaddnewmodel.h \
-    ../ImageCropper/src/imagecropper.h \
-    ../ImageCropper/src/imagecropper_e.h \
-    ../ImageCropper/src/imagecropper_p.h \
     VoiceBankUtils/voicebankiconcropdialog.h \
-    ../ImageCropper/src/imagecroppercontainer.h \
-    TextCodecUtils/qchardet.h \
     VoiceBankUtils/categoriesandlabelslistwidget.h \
     VoiceBankUtils/categoriesmodel.h \
     VoiceBankUtils/labelsmodel.h \
-    ../LeafPublicQtClasses/qlistviewwithselectsignal.h \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
-    CommonUtils/showhtmldialog.h
+    CommonUtils/showhtmldialog.h \
+    VoiceBankUtils/monitorfoldersscanner.h
 
 FORMS += \
         editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
-    VoiceBankUtils/voicebankreadmeinformationdialog.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
-    TextCodecUtils/availabletextcodecdialog.ui \
-    TextCodecUtils/textcodecconvertdialog.ui \
     EngineUtils/moresamplerconfigsdialog.ui \
     EngineUtils/moresamplerconfigaddnewdialog.ui \
     VoiceBankUtils/voicebankiconcropdialog.ui \
@@ -115,15 +96,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES +=
 TRANSLATIONS = LeafOpenUTAUQt_en.ts
-
-unix|win32: LIBS += -L$$PWD/../../libchardet-1.0.5/lib/ -llibchardet -llibchardet.dll
-
-INCLUDEPATH += $$PWD/../../libchardet-1.0.5/include/chardet
-DEPENDPATH += $$PWD/../../libchardet-1.0.5/include/chardet
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../Quazip-MinGW8.1.0-i686/ -lquazip
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../Quazip-MinGW8.1.0-i686/ -lquazipd
-else:unix: LIBS += -L$$PWD/../../Quazip-MinGW8.1.0-i686/ -lquazip
-
-INCLUDEPATH += $$PWD/../../Quazip-MinGW8.1.0-i686/include
-DEPENDPATH += $$PWD/../../Quazip-MinGW8.1.0-i686/include
+!exists($$PWD/outsideLibrarys.pri){
+    error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
+}
+DISTFILES += \
+    outsideLibrarys.pri \
+    module.pri
+include(outsideLibrarys.pri)
+include(module.pri)

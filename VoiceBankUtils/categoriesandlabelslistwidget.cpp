@@ -208,7 +208,6 @@ void CategoriesAndLabelsListWidget::on_labelListView_customContextMenuRequested(
     connect(removeUnusedAction,SIGNAL(triggered(bool)),this,SLOT(removeUnusedLabels()));
     menu->addAction(removeUnusedAction);
 
-    //TODO:
     menu->addSeparator();
 
     auto multiSelectionStrategyActionGroup = new QActionGroup(this);

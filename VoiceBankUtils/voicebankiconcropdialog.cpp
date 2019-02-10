@@ -18,6 +18,6 @@ VoiceBankIconCropDialog::~VoiceBankIconCropDialog()
 
 void VoiceBankIconCropDialog::accept()
 {
-    voicebank->changeImage(ui->imageCropper->cropImage(),ui->targetFileNameLineEdit->text());
+    voicebank->setImage(ui->imageCropper->cropImage().toImage(),ui->targetFileNameLineEdit->text().isEmpty() ? "icon.jpg" : ui->targetFileNameLineEdit->text());
     QDialog::accept();
 }

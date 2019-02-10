@@ -2,11 +2,21 @@
 
 VoiceBank::VoiceBank(QString path, QObject *parent) : QObject(parent),path(path),CharacterTextCodec(DefaultCharacterTextCodec),ReadmeTextCodec(DefaultReadmeTextCodec),wavFileNameTextCodec(DefaultWavFileNameTextCodec)
 {
-
+    /*!
+      VoiceBank 的构造函数。它将设置 VoiceBank 的路径，并将所有文本编码设置置为默认。但它会自动从提供的路径中读取所需信息。
+      \param[in] path 声库的路径
+      \param[in] parent 父对象，是否设置对 VoiceBank 的行为没有影响。默认为 nullptr 。
+    */
+    readFromPathPrivate();
+    connect(this,SIGNAL(firstReadDone(VoiceBank *)),this,SIGNAL(readDone(VoiceBank *)));
+    connect(this,SIGNAL(reloadDone(VoiceBank *)),this,SIGNAL(readDone(VoiceBank *)));
 }
 
 VoiceBank::~VoiceBank()
 {
+    /*!
+      VoiceBank 的析构函数。它将保存 VoiceBank 的设置到路径下的 leafUTAUQtSettings.json 中。
+    */
     saveSettings();
     for (auto state : errorStates)
     {
@@ -14,42 +24,78 @@ VoiceBank::~VoiceBank()
             delete state;
     }
 }
-QImage VoiceBank::getImage() const
-{
-    return image;
-}
 
-void VoiceBank::setImage(const QImage &value)
+void VoiceBank::reload()
 {
-    image = value;
+    auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this,VoiceBankReadFuctionRunner::Reload);
+    threadPool->start(newVoiceBankReadFunctionRunner);
+    LeafLogger::LogMessage(QString("%1的重载线程被加入线程池并由线程池管理启动。").arg(path));
 }
 
 QString VoiceBank::getName() const
 {
+    ///获得音源库的名称。
+    /*!
+      音源库的名称是指在 character.txt 的 name 字段中定义的音源名称。
+      \return 音源库的名称。
+      \see setName(const QString& name)
+    */
     return name;
 }
 
 QString VoiceBank::getReadme() const
 {
+    ///获得 VoiceBank 的 readme 信息。
+    /*!
+      音源库的 readme 信息保存于路径下的 readme.txt 文件中。该信息将在音源详情页面等位置显示。
+    */
     return readme;
 }
 
-void VoiceBank::setReadme(const QString &value)
+QImage VoiceBank::getImage() const
 {
-    readme = value;
+    ///获得该音源库的图标。
+    /*!
+      音源库的图标是指在 character.txt 的 image 字段中定义的音源的图标。在 character.txt 中的值为其路径。 VoiceBank 会将其读取到 QImage 实例中。\n
+      建议音源库的图标尺寸为 100*100 ，或至少宽高比为 1:1 。
+      \return 包含音源图标的 QImage 。
+      \see setImage(const QImage& _image, const QString &newImageFileName)
+    */
+    return _image;
+}
+
+QString VoiceBank::getImagePath() const
+{
+    ///获得该音源库的图标的路径。
+    /*!
+      如果您要使用该图标，建议直接使用 getImage() const 。
+      \return 音源库图标的路径。
+      \see getImage() const
+    */
+    return imagePath;
 }
 
 QString VoiceBank::getPath() const
 {
+    ///获得该音源库的路径
+    /*!
+      音源库的路径是指音源库文件存放的文件夹位置。您应当直接在构造函数中设置，因为在没有路径的情况下，所有 VoiceBank 类的功能都将失效。
+      \return 音源库的路径
+    */
     return path;
 }
 
-void VoiceBank::setPath(const QString &value)
+void VoiceBank::readFromPathPrivate()
 {
-    path = value;
+    /*
+      从路径中读取 VoiceBank 的所需信息。您应当在调用本函数之后再使用 VoiceBank 。\n
+      \warning VoiceBank 并不对没有读取就进行操作提出警告。\n
+      VoiceBank 将会启动一个新线程进行读取，所以此函数会立即返回。您应当检查 readDone(VoiceBank *) 信号来得知 VoiceBank 何时读取完毕。
+    */
+    auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this);
+    threadPool->start(newVoiceBankReadFunctionRunner);
+    LeafLogger::LogMessage(QString("%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
 }
-
-
 
 QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *textCodec)
 {
@@ -77,72 +123,122 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
     return QString();
 }
 
-bool VoiceBank::getDefalutIsTextCodecAutoDetect()
+bool VoiceBank::isDefalutTextCodecAutoDetect()
 {
+    ///返回默认情况下 VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+    /*!
+      \return 默认情况下 VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+      \see setDefalutTextCodecAutoDetect(bool value)
+      \see isTextCodecAutoDetect() const
+    */
     return DefalutIsTextCodecAutoDetect;
 }
 
-void VoiceBank::setDefalutIsTextCodecAutoDetect(bool value)
+void VoiceBank::setDefalutTextCodecAutoDetect(bool value)
 {
+    ///设置默认情况下 VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+    /*!
+      该项设置保存于 QSettings 中。
+      \param value VoiceBank 读取音源库的文本文件时的文本编码是否由程序自动推断
+      \see isDefalutTextCodecAutoDetect()
+    */
     DefalutIsTextCodecAutoDetect = value;
     QSettings settings;
     settings.setValue("DefaultTextCodec/AutoDetect",DefalutIsTextCodecAutoDetect);
     LeafLogger::LogMessage(QString("DefaultTextCodec/AutoDetect被设置为%1").arg(DefalutIsTextCodecAutoDetect));
 }
 
-bool VoiceBank::getIsTextCodecAutoDetect() const
+bool VoiceBank::isTextCodecAutoDetect() const
 {
-    return isTextCodecAutoDetect;
+    ///返回该音源库的文本编码是否要由程序自动推断
+    /*!
+      该项设置仅影响文本编码，并且影响所有文本，不影响文件名编码。
+      \see setTextCodecAutoDetect(bool value)
+    */
+    return textCodecAutoDetect;
 }
 
-void VoiceBank::setIsTextCodecAutoDetect(bool value)
+void VoiceBank::setTextCodecAutoDetect(bool value)
 {
-    isTextCodecAutoDetect = value;
+    ///设置该音源库的文本编码是否要由程序自动推断
+    /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
+      \see isTextCodecAutoDetect() const
+    */
+    textCodecAutoDetect = value;
 }
 
 float VoiceBank::getCharacterFileAutoDetectConfidence() const
 {
+    ///获得自动推断文本编码时对 character.txt 的推断的可信程度
+    /*!
+     保存了 libchardet 的返回值。具体含义请见 Mozilla 的 [文档](https://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html) 。
+     \see getReadmeFileAutoDetectConfidence() const
+    */
     return characterFileAutoDetectConfidence;
 }
 
 float VoiceBank::getReadmeFileAutoDetectConfidence() const
 {
+    ///获得自动推断文本编码时对 readme.txt 的推断的可信程度
+    /*!
+     保存了 libchardet 的返回值。具体含义请见 Mozilla 的 [文档](https://www-archive.mozilla.org/projects/intl/UniversalCharsetDetection.html) 。
+     \see getCharacterFileAutoDetectConfidence() const
+    */
     return readmeFileAutoDetectConfidence;
 }
 
-bool VoiceBank::getHasTextCodecAutoDetected() const
+bool VoiceBank::hasTextCodecAutoDetected() const
 {
-    return hasTextCodecAutoDetected;
-}
-
-void VoiceBank::writeTextFileInTextCodec(const QString& content, const QString& path,QTextCodec* textCodec){
-    QFile* file = new QFile(path);
-    if (file->open(QIODevice::WriteOnly | QIODevice::Text)){
-        QTextEncoder *encoder= textCodec->makeEncoder();
-        file->write(encoder->fromUnicode(content));
-        delete encoder;
-        file->close();
-        file->deleteLater();
-    }
-    else
-    {
-        LeafLogger::LogMessage(QString("写入模式打开%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString()));
-    }
+    ///返回音源库读取文本时是否进行了文本编码自动推断
+    /*!
+      \return 读取 character.txt 和 readme.txt 时，只要有一个成功进行了推断，该值就为 true 。
+    */
+    return textCodecAutoDetected;
 }
 
 QStringList VoiceBank::getLabels() const
 {
+    ///获得音源库的标签列表
+    /*!
+      每个音源可以拥有多个标签。\n
+      该值为空时代表着该音库没有标签（即无标签）。\n
+      该项设置保存于 leafUTAUQtSettings.json 中。
+      \see setLabels(const QStringList &value)
+    */
     return labels;
 }
 
 void VoiceBank::setLabels(const QStringList &value)
 {
+    ///设定音源库的音源列表
+    /*!
+      调用时会触发 labelsChanged() 。\n
+      您也可以使用其他函数对标签列表进行修改。
+      \see getLabels() const
+      \see appendLabel(const QString &label)
+      \see appendLabels(const QStringList &label)
+      \see toggleLabelStatus(const QString &label)
+      \see removeLabel(const QString &label)
+      \param[in] value 该音源库的新标签列表
+    */
     labels = value;
     emit labelsChanged();
 }
 
 void VoiceBank::appendLabel(const QString &label)
 {
+    ///在该音源库的标签列表中添加一个标签
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabels(const QStringList &label)
+      \see toggleLabelStatus(const QString &label)
+      \see removeLabel(const QString &label)
+      \param[in] label 要添加的标签
+    */
     if (!labels.contains(label))
         labels.append(label);
     emit labelsChanged();
@@ -150,12 +246,34 @@ void VoiceBank::appendLabel(const QString &label)
 
 void VoiceBank::appendLabels(const QStringList &label)
 {
+    ///在该音源库的标签列表中添加一系列标签
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabel(const QString &label)
+      \see toggleLabelStatus(const QString &label)
+      \see removeLabel(const QString &label)
+      \param[in] label 要添加的标签列表
+    */
     for (auto i : label)
         appendLabel(i);
 }
 
 void VoiceBank::toggleLabelStatus(const QString &label)
 {
+    ///反转一个标签的状态
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabel(const QString &label)
+      \see appendLabels(const QStringList &label)
+      \see removeLabel(const QString &label)
+      \param[in] label 要反转的标签。音源库有该标签时删除该标签，没有该标签时添加该标签
+    */
     if (labels.contains(label))
         removeLabel(label);
     else
@@ -164,43 +282,86 @@ void VoiceBank::toggleLabelStatus(const QString &label)
 
 void VoiceBank::removeLabel(const QString &label)
 {
+    ///删除一个标签
+    /*!
+      为方便使用而设置的函数。\n
+      调用时会触发 labelsChanged() 。
+      \see getLabels() const
+      \see setLabels(const QStringList &value)
+      \see appendLabel(const QString &label)
+      \see appendLabels(const QStringList &label)
+      \see toggleLabelStatus(const QString &label)
+      \param[in] label 要删除的标签
+    */
     labels.removeOne(label);
     emit labelsChanged();
 }
+
+bool VoiceBank::isVoiceBankPath(const QString &path)
+{
+    ///判断一个路径是否为音源库的路径
+    /*!
+      \param[in] 要判断的文件夹路径。 VoiceBank 会检查该路径下是否有character.txt或prefix.map或oto.ini，如果有就返回真。
+    */
+    return (QFileInfo(path + "/character.txt").exists() || QFileInfo(path + "/prefix.map").exists() || QFileInfo(path + "/oto.ini").exists());
+}
+
+void VoiceBank::setThreadPoolMaxThreadCount(int maxCount)
+{
+    ///设置读取 VoiceBank 所需信息时所用的最大线程数
+    /*!
+      VoiceBank 使用多线程模式来进行读取。这能节省时间并更好的利用现代处理器的性能。\n
+      您可以通过本函数来修改 VoiceBank 内部的线程池的最大线程数来优化性能。但请务必在明白您在做什么的时候使用。
+      \param[in] maxCount 新的最大线程数
+    */
+    threadPool->setMaxThreadCount(maxCount);
+}
 void VoiceBank::setCategory(const QString &value)
 {
+    ///设定该音源库所属的分类。
+    /*!
+      调用时会触发 categoryChanged() 。
+      \see getCategory() const
+      \param[in] value 该音源库的新分类
+    */
     category = value;
     emit categoryChanged();
 }
 
 QString VoiceBank::getCategory() const
 {
+    ///获得该音源库所属的分类
+    /*!
+      每个音源都可以归属于至多一个分类。\n
+      该值为空时代表着该音库没有分类（即未分类）。
+      该项设置保存于 leafUTAUQtSettings.json 中。
+      \see setCategory(const QString &value)
+    */
     return category;
 }
 QTextCodec *VoiceBank::getDefaultWavFileNameTextCodec()
 {
+    ///返回默认情况下 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码。
+    /*!
+      \return 默认情况下 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码
+      \see setDefaultWavFileNameCodec(QTextCodec *value)
+    */
     return DefaultWavFileNameTextCodec;
 }
 
 void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
 {
+    ///更改默认情况下 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码。
+    /*!
+      该项设置保存于 QSettings 中，默认为 Shift-JIS 。
+      \param value 要使用的文本编码。为 nullptr 时的行为是未定义的。
+      \see getDefaultCharacterTextCodec()
+      \see setDefaultReadmeTextCodec(QTextCodec *value)
+    */
     DefaultWavFileNameTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/WavFileName",DefaultReadmeTextCodec->name());
     LeafLogger::LogMessage(QString("DefaultWavFileNameNameTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
-}
-
-void VoiceBank::decodeWavFileName()
-{
-    if (!wavFileName.isEmpty())
-    {
-        QTextEncoder encoder(QTextCodec::codecForLocale());
-        for (auto name : wavFileName)
-        {
-            auto raw = encoder.fromUnicode(name);
-            wavFileNameRaw.append(raw);
-        }
-    }
 }
 
 void VoiceBank::readWavFileName()
@@ -228,17 +389,28 @@ void VoiceBank::readWavFileName()
                 }
             }
         }
-        decodeWavFileName();
+        //decodeWavFileName();
     }
 }
 
 QTextCodec *VoiceBank::getWavFileNameTextCodec() const
 {
+    ///返回 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码。
+    /*!
+      \return VoiceBank 读取该音源库的 wav 文件的文件名时使用的 QTextCodec *
+      \see setWavFileNameTextCodec(QTextCodec *value)
+    */
     return wavFileNameTextCodec;
 }
 
 void VoiceBank::setWavFileNameTextCodec(QTextCodec *value)
 {
+    ///更改 VoiceBank 读取该音源库的 wav 文件的文件名时使用的文本编码。
+    /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
+      \param value 要使用的文本编码。为 nullptr 时将设置为默认编码。
+      \see getWavFileNameTextCodec() const
+    */
     if (value){
         wavFileNameTextCodec = value;
     }
@@ -248,7 +420,6 @@ void VoiceBank::setWavFileNameTextCodec(QTextCodec *value)
 
 void VoiceBank::readStaticSettings()
 {
-    if (!isReadStaticSettings){
         QSettings settings{};
         if (settings.contains("DefaultTextCodec/CharacterFile")){
             auto characterCodecName = settings.value("DefaultTextCodec/CharacterFile");
@@ -266,8 +437,6 @@ void VoiceBank::readStaticSettings()
         if (settings.contains("DefaultTextCodec/AutoDetect")){
             DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",false).toBool();
         }
-        isReadStaticSettings = true;
-    }
 }
 
 void VoiceBank::readTextCodec_FollowDefault(QJsonObject json)
@@ -275,7 +444,7 @@ void VoiceBank::readTextCodec_FollowDefault(QJsonObject json)
     if (json.contains("TextCodec/FollowDefault")){
         auto value = json.value("TextCodec/FollowDefault");
         if (value.isBool()){
-            setIsFollowDefault(value.toBool());
+            setTextCodecFollowDefault(value.toBool());
         }
         else
             LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
@@ -291,7 +460,7 @@ void VoiceBank::readTextCodec_AutoDetect(QJsonObject json)
     if (json.contains("TextCodec/AutoDetect"))
     {
         auto value = json.value("TextCodec/AutoDetect");
-        isTextCodecAutoDetect = value.toBool(true);
+        textCodecAutoDetect = value.toBool(true);
     }
     else
     {
@@ -410,7 +579,7 @@ void VoiceBank::readSettings(){
                 readTextCodec_WavFileName(json);
                 readCategory(json);
                 readLabels(json);
-                if ((!isTextCodecFollowDefault && isTextCodecAutoDetect) || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
+                if ((!textCodecFollowDefault && textCodecAutoDetect) || (textCodecFollowDefault && DefalutIsTextCodecAutoDetect))
                     autoDetectTextFileCodecs();
             }
             else
@@ -429,20 +598,28 @@ void VoiceBank::readSettings(){
 }
 
 void VoiceBank::saveSettings(){
+    ///让 VoiceBank 将声库的特定设置保存到 leafUTAUQtSettings.json 中
+    /*!
+      VoiceBank 使用声库文件夹下的 leafUTAUQtSettings.json 保存一系列与 UTAU 本体不兼容的额外设定。\n
+      该函数默认会由 VoiceBank 的析构函数调用，您也可以在需要时调用本函数（如改变设置后的重载前）。
+    */
     LeafLogger::LogMessage(QString("开始保存%1的声库单独设置。").arg(path));
     QJsonObject json;
-    if (isTextCodecFollowDefault)
+    //保存文本编码设置：
+    if (textCodecFollowDefault)
         json.insert("TextCodec/FollowDefault",true);
     else
     {
         json.insert("TextCodec/FollowDefault",false);
-        json.insert("TextCodec/AutoDetect",isTextCodecAutoDetect);
+        json.insert("TextCodec/AutoDetect",textCodecAutoDetect);
         json.insert("TextCodec/CharacterFile",QString::fromUtf8(CharacterTextCodec->name()));
         json.insert("TextCodec/ReadmeFile",QString::fromUtf8(ReadmeTextCodec->name()));
         json.insert("TextCodec/WavFileName",QString::fromUtf8(wavFileNameTextCodec->name()));
     }
+    //保存分类：
     if (!category.isEmpty())
         json.insert("Category",category);
+    //保存标签：
     if (!labels.isEmpty()){
         QJsonArray array;
         for (auto i : labels)
@@ -451,6 +628,7 @@ void VoiceBank::saveSettings(){
         }
         json.insert("Labels",array);
     }
+    //写入json：
     QJsonDocument json_doc(json);
     auto json_file = new QFile(path + "leafUTAUQtSettings.json");
     json_file->open(QIODevice::WriteOnly | QIODevice::Text);
@@ -461,38 +639,52 @@ void VoiceBank::saveSettings(){
     json_file->deleteLater();
 }
 
-QStringList VoiceBank::getWavFilePath() const
-{
-    return wavFilePath;
-}
+
 
 QList<VoiceBank::ErrorState *> VoiceBank::getErrorStates() const
 {
+    ///返回该VoiceBank读取过程中遇到的错误对应的 ErrorState 列表
+    /*!
+      \see ErrorState
+    */
     return errorStates;
 }
 
-void VoiceBank::rename(const QString &name)
+void VoiceBank::setName(const QString &name)
 {
+    ///重命名一个音源库
+    /*!
+      VoiceBank 会将新名称写入路径下的 character.txt 中，并自动重载。
+      \param[in] name 音源库的新名称
+      \throw FileCanNotOpen
+      \throw FileNotExists
+    */
     this->name = name;
     try
     {
         changeCharacterFile();
     }
     catch(FileNotExists& e){
-        readFromPath();
+        //changeCharacterFile()会处理文件不存在的情况，但新建文件后下需要重载。
+        reload();
         throw e;
     }
     catch(FileCanNotOpen& e){
         throw e;
     }
-    readFromPath();
+    reload();
 }
 
-void VoiceBank::changeImage(const QPixmap &_image,QString newImageFileName)
+void VoiceBank::setImage(const QImage &image, const QString& newImageFileName)
 {
-    if (newImageFileName.isEmpty())
-        newImageFileName = "icon.jpg";
-    image = _image.toImage();
+    ///改变一个音源库的图标
+    /*!
+      \param[in] image 该音源库的新图标。 VoiceBank 会尝试将其缩放为 100*100 。
+      \param[in] newImageFileName 音源库新图标的文件名。 VoiceBank 将自动推断文件格式并保存。在有同名文件存在时， VoiceBank 会尝试备份原有图标。
+      \throw FileCanNotOpen
+      \throw FileNotExists
+    */
+    _image = image;
     if (QFileInfo(path + newImageFileName).exists())
     {
         if (QFileInfo(imagePath + ".bak").exists())
@@ -507,55 +699,138 @@ void VoiceBank::changeImage(const QPixmap &_image,QString newImageFileName)
             return;
         }
     }
-    image = image.scaled(100,100);
-    QImage imageWhiteBackgroud(image.size(),image.format());
+    _image = _image.scaled(100,100);
+    QImage imageWhiteBackgroud(_image.size(),_image.format());
     imageWhiteBackgroud.fill(QColor(Qt::white).rgb());
     QPainter painter(&imageWhiteBackgroud);
-    painter.drawImage(0, 0, image);
+    painter.drawImage(0, 0, _image);
     imageWhiteBackgroud.save(path + newImageFileName);
     imagePathRelative = newImageFileName;
     changeCharacterFile();
 }
 
 
-QByteArrayList VoiceBank::getWavFileNameRaw() const
-{
-    return wavFileNameRaw;
-}
 
 void VoiceBank::clearWavFileReadStage()
 {
+    ///清除音源库的WAV文件名读取信息
+    /*!
+      该函数将清除该 VoiceBank 缓存的 .wav 文件名信息。这样在下次调用相关函数时 VoiceBank 会重新从文件夹中读取。
+    */
     wavFileName.clear();
-    wavFileNameRaw.clear();
     wavFilePath.clear();
     isWavFileNameReaded = false;
 }
 
+void VoiceBank::lazyLoadWavFileName()
+{
+    if (!isWavFileNameReaded)
+        readWavFileName();
+}
+
+void VoiceBank::readThreadPoolMaxThreadCountSettings()
+{
+    QSettings settings;
+    //与旧版本兼容
+    if (settings.contains("VoiceBankHandler/ThreadPoolMaxThreadCount")){
+        threadPool->setMaxThreadCount(settings.value("VoiceBankHandler/ThreadPoolMaxThreadCount",50).toInt());
+        settings.remove("VoiceBankHandler/ThreadPoolMaxThreadCount");
+    }
+    if (settings.contains("VoiceBank/ThreadPoolMaxThreadCount"))
+        threadPool->setMaxThreadCount(settings.value("VoiceBank/ThreadPoolMaxThreadCount",50).toInt());
+}
+
+void VoiceBank::saveThreadPoolMaxThreadCountSettings()
+{
+    QSettings settings;
+    settings.setValue("VoiceBank/ThreadPoolMaxThreadCount",threadPool->maxThreadCount());
+}
 
 QStringList VoiceBank::getWavFileName() const
 {
+    ///获取音源库的 .wav 文件名列表。
+    /*!
+      这些文件名为操作系统返回的 UTF-8 字符串。\n
+    一般说来，非日文区域将会返回一系列乱码，因为 UTAU 本体需要文件名以 Shift-JIS 编码。Leaf Open UTAU Qt 兼容此项限制。\n
+    如果您需要以特定编码读取这些字符串以获得正确解码结果，请使用 getWavFileNameRaw() const ，或者手动将其使用 QTextEncoder 编码至本地编码（或其他需要的编码）。\n
+    该函数会包含子文件夹中的文件名，但不会包含其子文件夹名称。如果您需要包含子文件夹的文件路径，请使用 getWavFilePath() const 。
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \return 操作系统返回的 UTF-8 文件名列表
+    \see getWavFileNameRaw() const
+    \see getWavFilePath() const
+    */
+    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
     return wavFileName;
 }
 
-bool VoiceBank::getIsWavFileNameReaded() const
+QByteArrayList VoiceBank::getWavFileNameRaw() const
 {
-    return isWavFileNameReaded;
+    ///获取以本地编码重编码过的文件名列表
+    /*!
+      这些文件名为以本地编码重解码的 ByteArray。\n
+      为方便使用而设。相当于使用 QTextEncoder 以本地编码编码 getWavFileName() const 的返回结果。\n
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \see getWavFileName() const
+    \see getWavFilePath() const
+*/
+    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
+    QByteArrayList wavFileNameRaw;
+    if (!wavFileName.isEmpty())
+    {
+        QTextEncoder encoder(QTextCodec::codecForLocale());
+        for (auto name : wavFileName)
+        {
+            auto raw = encoder.fromUnicode(name);
+            wavFileNameRaw.append(raw);
+        }
+    }
+    return wavFileNameRaw;
 }
 
-
+QStringList VoiceBank::getWavFilePath() const
+{
+    ///获取音源库下的 .wav 文件路径
+    /*!
+      您可以使用这些路径去访问这些 .wav 文件。这些文件的名称与 getWavFileName() const 一致。\n
+    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
+    \see getWavFileName() const
+    \see getWavFileNameRaw() const
+*/
+    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
+    return wavFilePath;
+}
 
 QTextCodec *VoiceBank::getDefaultReadmeTextCodec()
 {
+    ///返回默认情况下 VoiceBank 读取音源库的 readme.txt 时使用的文本编码。
+    /*!
+      \return 默认情况下 VoiceBank 读取音源库的 readme.txt 时使用的文本编码
+      \see setDefaultReadmeTextCodec(QTextCodec *value)
+      \see getDefaultCharacterTextCodec()
+    */
     return DefaultReadmeTextCodec;
 }
 
 QTextCodec *VoiceBank::getDefaultCharacterTextCodec()
 {
+    ///返回默认情况下 VoiceBank 读取音源库的 character.txt 时使用的文本编码。
+    /*!
+      \return 默认情况下 VoiceBank 读取音源库的 character.txt 时使用的文本编码
+      \see setDefaultCharacterTextCodec(QTextCodec *value)
+      \see getDefaultReadmeTextCodec()
+    */
     return DefaultCharacterTextCodec;
 }
 
 void VoiceBank::setDefaultReadmeTextCodec(QTextCodec *value)
 {
+    ///更改默认情况下 VoiceBank 读取音源库的 readme.txt 时使用的文本编码。
+    /*!
+      该项设置保存于 QSettings 中，默认为 Shift-JIS 。
+      \param value 要使用的文本编码。为 nullptr 时的行为是未定义的。
+      \see getDefaultReadmeTextCodec()
+      \see setDefaultCharacterTextCodec(QTextCodec *value)
+    */
     DefaultReadmeTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/ReadmeFile",DefaultReadmeTextCodec->name());
@@ -564,6 +839,13 @@ void VoiceBank::setDefaultReadmeTextCodec(QTextCodec *value)
 
 void VoiceBank::setDefaultCharacterTextCodec(QTextCodec *value)
 {
+    ///更改默认情况下 VoiceBank 读取音源库的 character.txt 时使用的文本编码。
+    /*!
+      该项设置保存于 QSettings 中，默认为 Shift-JIS 。
+      \param value 要使用的文本编码。为 nullptr 时的行为是未定义的。
+      \see getDefaultCharacterTextCodec()
+      \see setDefaultReadmeTextCodec(QTextCodec *value)
+    */
     DefaultCharacterTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/CharacterFile",DefaultCharacterTextCodec->name());
@@ -575,7 +857,7 @@ void VoiceBank::readCharacterFile()
     try
     {
         QString characterString{};
-        if (!isTextCodecFollowDefault || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
+        if (!textCodecFollowDefault || (textCodecFollowDefault && DefalutIsTextCodecAutoDetect))
             characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
             characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
@@ -597,21 +879,21 @@ void VoiceBank::readCharacterFile()
                     QFileInfo imageFileInfo(imagePath);
                     if (imageFileInfo.exists()) {
                         try {
-                            image.load(imagePath);
-                            LeafLogger::LogMessage(QString("%1的image成功读取。大小为：%2*%3").arg(path).arg(image.width()).arg(image.height()));
+                            _image.load(imagePath);
+                            LeafLogger::LogMessage(QString("%1的image成功读取。大小为：%2*%3").arg(path).arg(_image.width()).arg(_image.height()));
 
-                            if (image.height() == 0 ||(!qFuzzyCompare(image.width() / image.height() , 1.0))){
+                            if (_image.height() == 0 ||(!qFuzzyCompare(_image.width() / _image.height() , 1.0))){
                                 errorStates.append(new ImageFileNotFitErrorState(this));
                             }
                         } catch (std::exception &e){
                             LeafLogger::LogMessage(QString("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
                             errorStates.append(new ImageReadExceptionErrorState(this));
-                            image = QImage();
+                            _image = QImage();
                         }
                         catch (...) {
                             LeafLogger::LogMessage("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
                             errorStates.append(new ImageReadExceptionErrorState(this));
-                            image = QImage();
+                            _image = QImage();
                         }
 
                     }
@@ -624,8 +906,7 @@ void VoiceBank::readCharacterFile()
                 if (list.at(0).compare("sample",Qt::CaseInsensitive) == 0){
                     auto decoder = QTextCodec::codecForLocale()->makeDecoder();
                     auto encoder = CharacterTextCodec->makeEncoder();
-                    sample = decoder->toUnicode(encoder->fromUnicode(list.at(1)));
-                    LeafLogger::LogMessage(QString("%1的sample为%2").arg(path).arg(sample));
+                    character_sample = decoder->toUnicode(encoder->fromUnicode(list.at(1)));
                 }
             }
         }
@@ -651,7 +932,7 @@ void VoiceBank::readCharacterFile()
 void VoiceBank::readReadme()
 {
     try{
-        if (!isTextCodecFollowDefault || (isTextCodecFollowDefault && DefalutIsTextCodecAutoDetect))
+        if (!textCodecFollowDefault || (textCodecFollowDefault && DefalutIsTextCodecAutoDetect))
             readme = readTextFileInTextCodec(path + "readme.txt",ReadmeTextCodec);
         else
             readme = readTextFileInTextCodec(path + "readme.txt",DefaultReadmeTextCodec);
@@ -673,7 +954,7 @@ void VoiceBank::changeCharacterFile()
     try
     {
         QString characterString{};
-        if (!isTextCodecFollowDefault)
+        if (!textCodecFollowDefault)
             characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
             characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
@@ -695,10 +976,10 @@ void VoiceBank::changeCharacterFile()
             writeStream << line << endl;
         }
         newCharacterString = newCharacterString.trimmed();
-        if (!isTextCodecFollowDefault)
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
+        if (!textCodecFollowDefault)
+            TextConvertHelper::TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
         else
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
+            TextConvertHelper::TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
 
     }
     catch(FileNotExists& e){
@@ -708,10 +989,10 @@ void VoiceBank::changeCharacterFile()
         writeStream << QString("name=%1").arg(name) << endl
                     << QString("image=%1").arg(imagePath) << endl;
         newCharacterString = newCharacterString.trimmed();
-        if (!isTextCodecFollowDefault)
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
+        if (!textCodecFollowDefault)
+            TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",CharacterTextCodec);
         else
-            writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
+            TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
         throw e;
     }
     catch(FileCanNotOpen& e)
@@ -738,27 +1019,39 @@ void VoiceBank::autoDetectTextFileCodecs()
         ++notAvaliableDetectCount;
     }
     if (notAvaliableDetectCount < 2)
-        hasTextCodecAutoDetected = true;
+        textCodecAutoDetected = true;
 }
 
-bool VoiceBank::getIsFollowDefault() const
+bool VoiceBank::isTextCodecFollowDefault() const
 {
-    return isTextCodecFollowDefault;
+    ///返回该音源库的文本编码是否跟随默认编码
+    /*!
+      该项设置同时影响所有文本的相关设置。
+      \return 该音源库的文本编码是否跟随默认编码
+      \see setTextCodecFollowDefault(bool value)
+    */
+    return textCodecFollowDefault;
 }
 
-void VoiceBank::setIsFollowDefault(bool value)
+void VoiceBank::setTextCodecFollowDefault(bool value)
 {
-    isTextCodecFollowDefault = value;
+    ///设置该音源库的文本编码是否跟随默认编码
+    /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
+      \param value 该音源库的文本编码是否跟随默认编码？
+      \see isTextCodecFollowDefault() const
+    */
+    textCodecFollowDefault = value;
 }
 
 void VoiceBank::clear()
 {
     name.clear();
-    image = QImage();
+    _image = QImage();
     imagePath.clear();
     imagePathRelative.clear();
     readme.clear();
-    sample.clear();
+    character_sample.clear();
     if (!errorStates.isEmpty())
     {
         for (auto state : errorStates)
@@ -766,18 +1059,54 @@ void VoiceBank::clear()
     }
     errorStates.clear();
     clearWavFileReadStage();
-    hasTextCodecAutoDetected = false;
+    textCodecAutoDetected = false;
     category.clear();
     labels.clear();
 }
 
-QString VoiceBank::getSample() const
+QString VoiceBank::getSampleFileName() const
 {
+    ///获得该音源库的示例音频文件名
+    /*!
+      UTAU 式音源允许音源库作者在 character.txt 的 sample 字段中定义该音源库的示例音频。.wav 可以被忽略。若该字段没有被定义，那么就使用音源文件夹下的 .wav 文件。\n
+      与 UTAU 本体不同，在没有 sample 设定的情况下多次调用本函数并不会在 .wav 文件列表中移动，在这种情况下该函数只会返回第一个找到的 .wav 文件。
+      \return 该音源库的示例音频文件名。找不到时返回空字符串。
+    */
+    auto sample = this->character_sample;
+    if (sample.isEmpty())
+    {
+        auto wavfileList = getWavFilePath();
+        if (wavfileList.isEmpty())
+        {
+            return QString();
+        }
+        for (auto i : wavfileList)
+        {
+            if (!i.isEmpty())
+            {
+                if (i.contains("br"))
+                    continue;
+                sample = i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        if (QFileInfo(getPath() + sample + ".wav").exists())
+            sample = getPath() + sample + ".wav";
+        else if (QFileInfo(getPath() + sample).exists())
+            sample = getPath() + sample;
+        else{
+
+            return QString();}
+    }
     return sample;
 }
 
-void VoiceBank::readFromPath()
+void VoiceBank::doReadFromPath()
 {
+    //TODO:对没有读取过的 VoiceBank 执行操作时的检查。
     path = QDir::fromNativeSeparators(path);
     if (!path.endsWith("/")){
         path.append("/");
@@ -786,24 +1115,27 @@ void VoiceBank::readFromPath()
     readSettings();
     readCharacterFile();
     readReadme();
-    //firstRead = false;
-    ++ReadCount;
-    emit readDone(this);
-}
-
-
-QString VoiceBank::getPixmapPath() const
-{
-    return imagePath;
 }
 
 QTextCodec *VoiceBank::getCharacterTextCodec() const
 {
+    ///返回 VoiceBank 读取该音源库的 character.txt 时使用的文本编码。
+    /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
+      \return VoiceBank 读取该音源库的 character.txt 时使用的 QTextCodec *
+      \see setCharacterTextCodec(QTextCodec *value)
+      \see getReadmeTextCodec() const
+    */
     return CharacterTextCodec;
 }
 
 void VoiceBank::setCharacterTextCodec(QTextCodec *value)
 {
+    ///更改 VoiceBank 读取该音源库的 character.txt 时使用的文本编码。
+    /*!
+      \param value 要使用的文本编码。为 nullptr 时将设置为默认编码。
+      \see getCharacterTextCodec() const
+    */
     if (value){
         CharacterTextCodec = value;
     }
@@ -813,11 +1145,23 @@ void VoiceBank::setCharacterTextCodec(QTextCodec *value)
 
 QTextCodec *VoiceBank::getReadmeTextCodec() const
 {
+    ///返回 VoiceBank 读取该音源库的 readme.txt 时使用的文本编码。
+    /*!
+      \return VoiceBank 读取该音源库的 readme.txt 时使用的 QTextCodec *
+      \see setReadmeTextCodec(QTextCodec *value)
+      \see getCharacterTextCodec() const
+    */
     return ReadmeTextCodec;
 }
 
 void VoiceBank::setReadmeTextCodec(QTextCodec *value)
 {
+    ///更改 VoiceBank 读取该音源库的 readme.txt 时使用的文本编码。
+    /*!
+      该项设置保存于音源库路径下的 leafUTAUQtSettings.json 中。
+      \param value 要使用的文本编码。为 nullptr 时将设置为默认编码。
+      \see getReadmeTextCodec() const
+    */
     if (value){
         ReadmeTextCodec = value;
     }
@@ -825,7 +1169,7 @@ void VoiceBank::setReadmeTextCodec(QTextCodec *value)
         ReadmeTextCodec = DefaultReadmeTextCodec;
 }
 
-VoiceBank::CharacterFileNotExistsErrorState::CharacterFileNotExistsErrorState(VoiceBank *voiceBank) :ErrorState(voiceBank)
+VoiceBank::CharacterFileNotExistsErrorState::CharacterFileNotExistsErrorState(VoiceBank* voiceBank) :ErrorState(voiceBank)
 {
 
 }
@@ -839,7 +1183,7 @@ QString VoiceBank::CharacterFileNotExistsErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::NameNotSetErrorState::NameNotSetErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::NameNotSetErrorState::NameNotSetErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -853,7 +1197,7 @@ QString VoiceBank::NameNotSetErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageFileNotSetErrorState::ImageFileNotSetErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageFileNotSetErrorState::ImageFileNotSetErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -867,7 +1211,7 @@ QString VoiceBank::ImageFileNotSetErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -875,13 +1219,13 @@ VoiceBank::ImageFileNotExistsErrorState::ImageFileNotExistsErrorState(VoiceBank 
 QString VoiceBank::ImageFileNotExistsErrorState::getErrorHTMLString()
 {
     if (voiceBank){
-        return tr("<p style=\"color:red\">错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。</p>").arg(voiceBank->getPixmapPath());
+        return tr("<p style=\"color:red\">错误：找不到character.txt中设定的图片文件（%1）。在音源使用过程中将音源区域将不显示图片。</p>").arg(voiceBank->getImagePath());
     }
     else
         return QString();
 }
 
-VoiceBank::ImageFileNotFitErrorState::ImageFileNotFitErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageFileNotFitErrorState::ImageFileNotFitErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -898,7 +1242,7 @@ QString VoiceBank::ImageFileNotFitErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ReadmeFileNotExistsErrorState::ReadmeFileNotExistsErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ReadmeFileNotExistsErrorState::ReadmeFileNotExistsErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -912,7 +1256,7 @@ QString VoiceBank::ReadmeFileNotExistsErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ImageReadExceptionErrorState::ImageReadExceptionErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ImageReadExceptionErrorState::ImageReadExceptionErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -926,7 +1270,7 @@ QString VoiceBank::ImageReadExceptionErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::ReadmeFileCanNotOpenErrorState::ReadmeFileCanNotOpenErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::ReadmeFileCanNotOpenErrorState::ReadmeFileCanNotOpenErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -940,7 +1284,7 @@ QString VoiceBank::ReadmeFileCanNotOpenErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::CharacterFileCanNotOpenErrorState::CharacterFileCanNotOpenErrorState(VoiceBank *voiceBank) : ErrorState(voiceBank)
+VoiceBank::CharacterFileCanNotOpenErrorState::CharacterFileCanNotOpenErrorState(VoiceBank* voiceBank) : ErrorState(voiceBank)
 {
 
 }
@@ -954,7 +1298,7 @@ QString VoiceBank::CharacterFileCanNotOpenErrorState::getErrorHTMLString()
         return QString();
 }
 
-VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::CharacterFileTextCodecCanNotDetectErrorState(VoiceBank *voiceBank) : ErrorState (voiceBank)
+VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::CharacterFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank) : ErrorState (voiceBank)
 {
 
 }
@@ -968,7 +1312,7 @@ QString VoiceBank::CharacterFileTextCodecCanNotDetectErrorState::getErrorHTMLStr
         return QString();
 }
 
-VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank *voiceBank) : ErrorState (voiceBank)
+VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank) : ErrorState (voiceBank)
 {
 
 }
@@ -980,4 +1324,42 @@ QString VoiceBank::ReadmeFileTextCodecCanNotDetectErrorState::getErrorHTMLString
     }
     else
         return QString();
+}
+
+VoiceBank::ErrorState::ErrorState(VoiceBank* voiceBank){
+    ///构造一个 VoiceBank 读取错误信息
+    /*!
+      \param voiceBank 产生错误的 VoiceBank 。 ErrorState 可能使用该指针获取一些需要展现的信息。
+    */
+    if (voiceBank)
+        this->voiceBank = voiceBank;
+}
+
+VoiceBank::ErrorState::~ErrorState(){}
+
+VoiceBank::FileNotExists::FileNotExists():std::runtime_error("File not exists."){}
+
+VoiceBank::FileCanNotOpen::FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
+
+const QString &VoiceBank::FileCanNotOpen::QFileError() const{return _QFileError;}
+
+VoiceBank::WavFileNameNotLoad::WavFileNameNotLoad():std::runtime_error("The name of .wav files not load."){}
+
+QThreadPool* VoiceBank::threadPool = new QThreadPool();
+
+VoiceBank::Garbo VoiceBank::garbo{};
+
+VoiceBank::VoiceBankReadFuctionRunner::VoiceBankReadFuctionRunner(VoiceBank* voicebank, ReadType readType):QRunnable(),voicebank(voicebank),readType(readType)
+{
+
+}
+
+void VoiceBank::VoiceBankReadFuctionRunner::run()
+{
+    ///运行给定 VoiceBank 的读取函数。
+    voicebank->doReadFromPath();
+    if (readType == Reload)
+        emit voicebank->reloadDone(voicebank);
+    else
+        emit voicebank->firstReadDone(voicebank);
 }

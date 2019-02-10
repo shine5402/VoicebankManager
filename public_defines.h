@@ -1,7 +1,7 @@
 ﻿#ifndef PUBLIC_DEFINES_H
 #define PUBLIC_DEFINES_H
 #include <QTextCodec>
-#include "../LeafPublicQtClasses/leaflogger.h"
+#include <leaflogger.h>
 constexpr const char* defaultTextCodecName = "Shift-JIS";
 constexpr const char* voicebankManagerVersion = "0.13.0";
 #ifdef _MSC_VER
