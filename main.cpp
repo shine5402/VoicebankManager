@@ -6,6 +6,7 @@
 #include <QLibraryInfo>
 #include <QTextCodec>
 #include "public_defines.h"
+//TODO:编写文档
 
 int main(int argc, char *argv[])
 {

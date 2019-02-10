@@ -1,6 +1,13 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
+//TODO:为示例播放提供停止按钮
+//TODO:建立通用信息/警告/错误机制
+/*
+ * TODO:上一条TODO的补充
+ * 在Readme的显示区域加一个错误信息显示选项卡用于放置错误信息
+ * 在主窗口的右下角放置一个可以显示错误窗口的按钮控件。弹出的窗口可不能是modal的……
+ */
 
 void VoiceBankManagerWindow::connectWithVoiceBankHandler()
 {
