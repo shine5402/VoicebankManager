@@ -1,4 +1,4 @@
-#ifndef MESSAGEWIDGET_H
+﻿#ifndef MESSAGEWIDGET_H
 #define MESSAGEWIDGET_H
 
 #include <QWidget>
