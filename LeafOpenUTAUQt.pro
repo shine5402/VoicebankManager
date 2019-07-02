@@ -5,8 +5,23 @@
 #-------------------------------------------------
 
 QT       += core gui widgets multimedia
+!exists($$PWD/outsideLibrarys.pri){
+    error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
+}
+DISTFILES += \
+    outsideLibrarys.pri \
+    module.pri
+
+include(module.pri)
+include(outsideLibrarys.pri)
 
 TARGET = LeafOpenUTAUQt
+if (contains(DEFINES,EDITOR)){
+TARGET = LeafOpenUTAUQt
+}
+if (contains(DEFINES,VOICEBANK_MANAGER)){
+TARGET = VoiceBankManager
+}
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -102,11 +117,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES +=
 TRANSLATIONS = LeafOpenUTAUQt_en.ts
-!exists($$PWD/outsideLibrarys.pri){
-    error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
-}
-DISTFILES += \
-    outsideLibrarys.pri \
-    module.pri
-include(outsideLibrarys.pri)
-include(module.pri)
+
