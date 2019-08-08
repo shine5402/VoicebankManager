@@ -59,8 +59,7 @@ SOURCES += \
     VoiceBankUtils/folderssettingdialog.cpp \
     VoiceBankUtils/foldersadddialog.cpp \
     CommonUtils/showhtmldialog.cpp \
-    VoiceBankUtils/monitorfoldersscanner.cpp \
-    CommonUtils/messagelistwidget.cpp
+    VoiceBankUtils/monitorfoldersscanner.cpp
 
 HEADERS += \
         editorwindow.h \
@@ -84,8 +83,7 @@ HEADERS += \
     VoiceBankUtils/folderssettingdialog.h \
     VoiceBankUtils/foldersadddialog.h \
     CommonUtils/showhtmldialog.h \
-    VoiceBankUtils/monitorfoldersscanner.h \
-    CommonUtils/messagelistwidget.h
+    VoiceBankUtils/monitorfoldersscanner.h
 
 FORMS += \
         editorwindow.ui \
@@ -98,8 +96,7 @@ FORMS += \
     VoiceBankUtils/categoriesandlabelslistwidget.ui \
     VoiceBankUtils/folderssettingdialog.ui \
     VoiceBankUtils/foldersadddialog.ui \
-    CommonUtils/showhtmldialog.ui \
-    CommonUtils/messagelistwidget.ui
+    CommonUtils/showhtmldialog.ui
 win32-msvc{
 QMAKE_CXXFLAGS += /std:c++17
 }
