@@ -22,6 +22,8 @@ VoiceBank::~VoiceBank()
     {
         if (state)
             delete state;
+        if (wavFileNameStruct)
+            delete wavFileNameStruct;
     }
 }
 
@@ -364,16 +366,16 @@ void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
     LeafLogger::LogMessage(QString("DefaultWavFileNameNameTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
 }
 
-void VoiceBank::readWavFileName()
+void VoiceBank::readWavFileName() const
 {
-    if (!isWavFileNameReaded){
-        wavFileName.clear();
-        wavFilePath.clear();
+    if (!wavFileNameStruct->isWavFileNameReaded){
+        wavFileNameStruct->wavFileName.clear();
+        wavFileNameStruct->wavFilePath.clear();
         QDir dir(path);
-        wavFileName.append(dir.entryList({"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
-        for (auto fileName : wavFileName)
+        wavFileNameStruct->wavFileName.append(dir.entryList({"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+        for (auto fileName : wavFileNameStruct->wavFileName)
         {
-            wavFilePath.append(path + fileName);
+            wavFileNameStruct->wavFilePath.append(path + fileName);
         }
         auto subdirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         if (!subdirs.isEmpty())
@@ -381,15 +383,14 @@ void VoiceBank::readWavFileName()
             for (auto subDirPath : subdirs)
             {
                 QDir subdir(path + subDirPath);
-                wavFileName.append(subdir.entryList({"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
+                wavFileNameStruct->wavFileName.append(subdir.entryList({"*.wav"},QDir::Files|QDir::NoDotAndDotDot));
                 auto subWavFileName = subdir.entryList({"*.wav"},QDir::Files|QDir::NoDotAndDotDot);
                 for (auto fileName : subWavFileName)
                 {
-                    wavFilePath.append(path + subDirPath + "/" + fileName);
+                    wavFileNameStruct->wavFilePath.append(path + subDirPath + "/" + fileName);
                 }
             }
         }
-        //decodeWavFileName();
     }
 }
 
@@ -717,14 +718,14 @@ void VoiceBank::clearWavFileReadStage()
     /*!
       该函数将清除该 VoiceBank 缓存的 .wav 文件名信息。这样在下次调用相关函数时 VoiceBank 会重新从文件夹中读取。
     */
-    wavFileName.clear();
-    wavFilePath.clear();
-    isWavFileNameReaded = false;
+    wavFileNameStruct->wavFileName.clear();
+    wavFileNameStruct->wavFilePath.clear();
+    wavFileNameStruct->isWavFileNameReaded = false;
 }
 
-void VoiceBank::lazyLoadWavFileName()
+void VoiceBank::lazyLoadWavFileName() const
 {
-    if (!isWavFileNameReaded)
+    if (!wavFileNameStruct->isWavFileNameReaded)
         readWavFileName();
 }
 
@@ -759,8 +760,8 @@ QStringList VoiceBank::getWavFileName() const
     \see getWavFileNameRaw() const
     \see getWavFilePath() const
     */
-    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
-    return wavFileName;
+    lazyLoadWavFileName();
+    return wavFileNameStruct->wavFileName;
 }
 
 QByteArrayList VoiceBank::getWavFileNameRaw() const
@@ -769,16 +770,15 @@ QByteArrayList VoiceBank::getWavFileNameRaw() const
     /*!
       这些文件名为以本地编码重解码的 ByteArray。\n
       为方便使用而设。相当于使用 QTextEncoder 以本地编码编码 getWavFileName() const 的返回结果。\n
-    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次相关本函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
     \see getWavFileName() const
     \see getWavFilePath() const
 */
-    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
+    lazyLoadWavFileName();
     QByteArrayList wavFileNameRaw;
-    if (!wavFileName.isEmpty())
+    if (!wavFileNameStruct->wavFileName.isEmpty())
     {
         QTextEncoder encoder(QTextCodec::codecForLocale());
-        for (auto name : wavFileName)
+        for (auto name : wavFileNameStruct->wavFileName)
         {
             auto raw = encoder.fromUnicode(name);
             wavFileNameRaw.append(raw);
@@ -792,12 +792,11 @@ QStringList VoiceBank::getWavFilePath() const
     ///获取音源库下的 .wav 文件路径
     /*!
       您可以使用这些路径去访问这些 .wav 文件。这些文件的名称与 getWavFileName() const 一致。\n
-    \warning 该函数使用惰性求值（Lazy Evaluation）策略，即 VoiceBank 一开始并不会读取文件名，而是在构造或调用 clearWavFileReadStage() 后第一次调用 .wav 文件名获取相关函数时读取。所以在第一次调用相关函数时，请确保 VoiceBank 本身并没有被 const 限定，否则结果将是未定义的。
     \see getWavFileName() const
     \see getWavFileNameRaw() const
 */
-    const_cast<VoiceBank* >(this)->lazyLoadWavFileName();
-    return wavFilePath;
+    lazyLoadWavFileName();
+    return wavFileNameStruct->wavFilePath;
 }
 
 QTextCodec *VoiceBank::getDefaultReadmeTextCodec()

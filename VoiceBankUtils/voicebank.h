@@ -199,9 +199,12 @@ private:
     static inline QTextCodec* DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline bool DefalutIsTextCodecAutoDetect = false;
     void readSettings();
+    struct WavFileNameStruct{
     bool isWavFileNameReaded = false;
     QStringList wavFileName{};
     QStringList wavFilePath{};
+    } * wavFileNameStruct = new WavFileNameStruct;
+
     QString category;
     QStringList labels;
     bool needRecommmendCategoryAndLabels;
@@ -278,8 +281,8 @@ private:
 
     void clear();
     static void readStaticSettings();
-    void readWavFileName();
-    void lazyLoadWavFileName();
+    void readWavFileName() const;
+    void lazyLoadWavFileName() const;
 
     static QThreadPool* threadPool;
     static void readThreadPoolMaxThreadCountSettings();
