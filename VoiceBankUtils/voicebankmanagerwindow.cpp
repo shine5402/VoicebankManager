@@ -898,6 +898,7 @@ void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(c
 void VoiceBankManagerWindow::resetSamplePlayer()
 {
     samplePlayer->stop();
+    samplePlayer->setMedia(QMediaContent());
     ui->playSamplebutton->setText(tr("播放样例"));
 }
 
@@ -1055,7 +1056,11 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
         if (voiceBank)
         {
             auto sample = voiceBank->getSampleFileName();
-            samplePlayer->setAudioRole(QAudio::Role::MusicRole);
+            if (auto fileInfo = QFileInfo(sample);!fileInfo.exists())
+            {
+                QMessageBox::critical(this,tr("找不到示例音频"),tr("找不到可用的示例音频文件。"));
+            }
+            samplePlayer->setAudioRole(QAudio::Role::MusicRole);\
             samplePlayer->setMedia(QUrl::fromLocalFile(sample));
             if (samplePlayerProgress)
                 samplePlayerProgress->setMinimum(0);
@@ -1085,7 +1090,7 @@ void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State stat
     if (state == QMediaPlayer::State::StoppedState){
         ui->statusbar->removeWidget(samplePlayerProgress);
         ui->statusbar->clearMessage();
-        samplePlayer->setMedia(QMediaContent());
+        resetSamplePlayer();
     }
 }
 

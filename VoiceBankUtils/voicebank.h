@@ -19,6 +19,8 @@
 #include <QJsonArray>
 #include <textconverthelper.h>
 #include <QThreadPool>
+#include <QRandomGenerator>
+
 ///用于表示一个音源库
 /*!
     VoiceBank 类代表了一个 UTAU 式音源库。可以通过它获取音源库的相关信息，并可作出修改。
@@ -283,6 +285,7 @@ private:
     static void readStaticSettings();
     void readWavFileName() const;
     void lazyLoadWavFileName() const;
+    QString pickAWAVFileName() const;
 
     static QThreadPool* threadPool;
     static void readThreadPoolMaxThreadCountSettings();

@@ -21,10 +21,10 @@ VoiceBank::~VoiceBank()
     for (auto state : errorStates)
     {
         if (state)
-            delete state;
-        if (wavFileNameStruct)
-            delete wavFileNameStruct;
+            delete state; 
     }
+    if (wavFileNameStruct)
+        delete wavFileNameStruct;
 }
 
 void VoiceBank::reload()
@@ -729,6 +729,16 @@ void VoiceBank::lazyLoadWavFileName() const
         readWavFileName();
 }
 
+QString VoiceBank::pickAWAVFileName() const
+{
+    auto wavfileList = getWavFilePath();
+    if (wavfileList.isEmpty())
+    {
+        return QString();
+    }
+    return wavfileList.at(QRandomGenerator::global()->bounded(wavfileList.count()));
+}
+
 void VoiceBank::readThreadPoolMaxThreadCountSettings()
 {
     QSettings settings;
@@ -1074,21 +1084,7 @@ QString VoiceBank::getSampleFileName() const
     auto sample = this->character_sample;
     if (sample.isEmpty())
     {
-        auto wavfileList = getWavFilePath();
-        if (wavfileList.isEmpty())
-        {
-            return QString();
-        }
-        for (auto i : wavfileList)
-        {
-            if (!i.isEmpty())
-            {
-                if (i.contains("br"))
-                    continue;
-                sample = i;
-                break;
-            }
-        }
+        sample = pickAWAVFileName();
     }
     else
     {
@@ -1097,8 +1093,8 @@ QString VoiceBank::getSampleFileName() const
         else if (QFileInfo(getPath() + sample).exists())
             sample = getPath() + sample;
         else{
-
-            return QString();}
+            return pickAWAVFileName();
+        }
     }
     return sample;
 }
