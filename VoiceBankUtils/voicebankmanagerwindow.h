@@ -109,6 +109,8 @@ private:
 
     void setWidgetPattleToSameAsWindow();
 
+    void resetSamplePlayer();
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽

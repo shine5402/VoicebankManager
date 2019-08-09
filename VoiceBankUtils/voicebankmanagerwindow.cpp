@@ -1,7 +1,6 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
-//TODO:为示例播放提供停止按钮
 //TODO:建立通用信息/警告/错误机制
 //TODO:图片文件格式与扩展名不符时的处理
 /*
@@ -896,11 +895,19 @@ void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(c
 }
 
 
+void VoiceBankManagerWindow::resetSamplePlayer()
+{
+    samplePlayer->stop();
+    ui->playSamplebutton->setText(tr("播放样例"));
+}
+
 void VoiceBankManagerWindow::onVoiceBankViewCurrentChanged(const QModelIndex &current, const QModelIndex &)
 {
     auto voiceBank = getSelectedVoiceBank(current);
-    if (voiceBank)
+    if (voiceBank){
         setVoiceBankInfomation(voiceBank);
+        resetSamplePlayer();
+    }
 }
 
 void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
@@ -1042,23 +1049,29 @@ void VoiceBankManagerWindow::onCannotBackupImageFile(VoiceBank *voicebank)
 
 void VoiceBankManagerWindow::on_playSamplebutton_clicked()
 {
-    samplePlayer->stop();
-    auto voiceBank = getSelectedVoiceBank();
-    if (voiceBank)
-    {
-        auto sample = voiceBank->getSampleFileName();
-        samplePlayer->setAudioRole(QAudio::Role::MusicRole);
-        samplePlayer->setMedia(QUrl::fromLocalFile(sample));
-        if (samplePlayerProgress)
-            samplePlayerProgress->setMinimum(0);
-        samplePlayerProgress->setMaximum(INT_MAX);
-        samplePlayerProgress->setTextVisible(false);
-        connect(samplePlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onSamplePlayerPositionChange(qint64)));
-        connect(samplePlayer,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(onSamplePlayerStateChanged(QMediaPlayer::State)));
-        ui->statusbar->addPermanentWidget(samplePlayerProgress);
-        samplePlayerProgress->show();
-        samplePlayer->play();
-        ui->statusbar->showMessage(tr("正在播放%1的声音样例").arg(voiceBank->getName()));
+    if (!(samplePlayer->state() == QMediaPlayer::State::PlayingState)){
+        samplePlayer->stop();
+        auto voiceBank = getSelectedVoiceBank();
+        if (voiceBank)
+        {
+            auto sample = voiceBank->getSampleFileName();
+            samplePlayer->setAudioRole(QAudio::Role::MusicRole);
+            samplePlayer->setMedia(QUrl::fromLocalFile(sample));
+            if (samplePlayerProgress)
+                samplePlayerProgress->setMinimum(0);
+            samplePlayerProgress->setMaximum(INT_MAX);
+            samplePlayerProgress->setTextVisible(false);
+            connect(samplePlayer,SIGNAL(positionChanged(qint64)),this,SLOT(onSamplePlayerPositionChange(qint64)));
+            connect(samplePlayer,SIGNAL(stateChanged(QMediaPlayer::State)),this,SLOT(onSamplePlayerStateChanged(QMediaPlayer::State)));
+            ui->statusbar->addPermanentWidget(samplePlayerProgress);
+            samplePlayerProgress->show();
+            samplePlayer->play();
+            ui->statusbar->showMessage(tr("正在播放%1的声音样例").arg(voiceBank->getName()));
+            ui->playSamplebutton->setText(tr("停止"));
+        }
+    }
+    else {
+        resetSamplePlayer();
     }
 }
 void VoiceBankManagerWindow::onSamplePlayerPositionChange(qint64 position)
