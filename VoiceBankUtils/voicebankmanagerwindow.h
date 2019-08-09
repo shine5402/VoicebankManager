@@ -107,6 +107,8 @@ private:
 
     void connectWithVoiceBankHandler();
 
+    void setWidgetPattleToSameAsWindow();
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽

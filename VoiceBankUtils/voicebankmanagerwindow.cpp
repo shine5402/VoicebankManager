@@ -3,6 +3,7 @@
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
 //TODO:为示例播放提供停止按钮
 //TODO:建立通用信息/警告/错误机制
+//TODO:图片文件格式与扩展名不符时的处理
 /*
  * TODO:上一条TODO的补充
  * 在Readme的显示区域加一个错误信息显示选项卡用于放置错误信息
@@ -44,10 +45,6 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     //设置音源信息显示区域
     ui->voiceBankBriefInfomationWidget->setVisible(false);
-    //确保readmeTextBroswer的背景与父统一
-    auto readmeTextBroswerPattle = ui->voicebankReadmeTextBrowser->palette();
-    readmeTextBroswerPattle.setBrush(QPalette::Base,readmeTextBroswerPattle.window());
-    ui->voicebankReadmeTextBrowser->setPalette(readmeTextBroswerPattle);
 
     //设置TableView
     voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
@@ -116,7 +113,6 @@ void VoiceBankManagerWindow::loadVoiceBanksAndTable()
     */
     voiceBankTableModel->clearEmitter();
     voiceBankHandler->clear();
-    //ui->voiceBanksTableView->setEnabled(false);
     ui->categoryAndLabelsAndListSplitter->setEnabled(false);
     ui->searchLineEdit->setEnabled(false);
     ui->voicebankCountLabel->setText(tr("加载中"));
@@ -226,7 +222,6 @@ void VoiceBankManagerWindow::loadWindowStatus()
     {
         //处理分裂器布局
         //横向
-        //ui->categoryAndLabelsAndListSplitter->insertWidget(0,categoriesAndLabelsListWidget);
         QWidget *hWidget0 = ui->categoryAndLabelsAndListSplitter->widget(0);
         auto sizePolicy0 = hWidget0->sizePolicy();
         sizePolicy0.setHorizontalStretch(1);
@@ -259,21 +254,56 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 {
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
         ui->voiceBankBriefInfomationWidget->setVisible(true);
-    ui->voicebankNameLabel->setText(voiceBank->getName());
-    ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage().scaled(100,100)));
+
+    if(auto name = voiceBank->getName();!name.isEmpty())
+        ui->voicebankNameLabel->setText(voiceBank->getName());
+    else
+        ui->voicebankNameLabel->setText(voiceBank->getPath());
+
+    ui->voicebankImage->clear();
+    if (voiceBank->getImage().isNull())
+    {
+        if (!voiceBank->getImagePath().isEmpty()){
+            QFileInfo info(voiceBank->getImagePath());
+            if (info.exists())
+                ui->voicebankImage->setText(tr("（读取出错）"));
+            else {
+                ui->voicebankImage->setText(tr("（文件不存在）"));
+            }
+        }
+        else {
+            ui->voicebankImage->setText(tr("（字段未设定）"));
+        }
+    }
+    else
+        ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage().scaled(100,100)));
+
     ui->voicebankReadmeTextBrowser->clear();
+    ui->voicebankInformationTextBrowser->clear();
+
     auto errors = voiceBank->getErrorStates();
     if (!errors.isEmpty()){
         for (auto state : errors){
-            ui->voicebankReadmeTextBrowser->append(state->getErrorHTMLString());
+            ui->voicebankInformationTextBrowser->append(state->getErrorHTMLString());
         }
     }
+    else {
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:green\">读取该声库时没有错误。</p>"));
+    }
+
     if (voiceBank->hasTextCodecAutoDetected())
     {
-        ui->voicebankReadmeTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序使用的文本编码：character.txt：%1。readme.txt：%2</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序使用的文本编码：character.txt：%1。readme.txt：%2</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
-    ui->voicebankReadmeTextBrowser->append(QString("<p><pre style=\"color:black\">%1</pre></p>").arg(voiceBank->getReadme()));
+
+    if(!voiceBank->getReadme().isEmpty())
+        ui->voicebankReadmeTextBrowser->append(QString("<p><pre style=\"color:black\">%1</pre></p>").arg(voiceBank->getReadme()));
+    else {
+        ui->voicebankReadmeTextBrowser->append(tr("<p>该声库没有自述文件。</p>"));
+    }
+
     ui->voicebankReadmeTextBrowser->moveCursor(QTextCursor::Start);
+    ui->voicebankInformationTextBrowser->moveCursor(QTextCursor::Start);
 }
 
 void VoiceBankManagerWindow::updateVoiceBankCountLabel()
