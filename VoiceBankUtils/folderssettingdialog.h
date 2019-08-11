@@ -16,12 +16,15 @@ class FoldersSettingDialog : public QDialog
 public:
     explicit FoldersSettingDialog(QWidget *parent = nullptr);
     explicit FoldersSettingDialog(const QStringList &folders,const QString &label,const QString &title
-                                  ,QWidget *parent = nullptr,const QStringList &defaultFolders = QStringList());
+                                  ,QWidget *parent = nullptr,const QStringList &defaultFolders = QStringList(),const QStringList &allowedPrefix = QStringList());
+    //TODO:为可用前缀添加说明
     ~FoldersSettingDialog();
     void setFolders(const QStringList &folders);
     QStringList getFolders() const;
     void setLabel(const QString &label);
     void setDefaultFolders(const QStringList &value);
+
+    void setAllowedPrefix(const QStringList& value);
 
 signals:
     void monitorFoldersModified(QStringList folders);
@@ -39,6 +42,7 @@ private:
     QStringList folders;
     QStringList oldFolders;
     QStringList defaultFolders;
+    QStringList allowedPrefix;
 };
 
 #endif // MONITORFOLDERSSETTINGDIALOG_H

@@ -194,8 +194,14 @@ QStringList MonitorFoldersScanner::getVoiceBankFoldersInFolder(const QString &di
     for (auto entry : entrys){
         auto path = pDir.absolutePath() + "/" + entry;
         auto isIgnore = false;
+        auto isIgnoreSub = false;
         for (auto i : ignoreVoiceBankFolders)
         {
+            if (i.startsWith("*"))
+            {
+                i.remove("*");
+                isIgnoreSub = true;
+            }
             if (QDir(i).path() == QDir(path).path())
             {
                 ignoredVoiceBankFolders.append(i);
@@ -203,6 +209,8 @@ QStringList MonitorFoldersScanner::getVoiceBankFoldersInFolder(const QString &di
                 break;
             }
         }
+        if (isIgnoreSub && isIgnore)
+            continue;
         if (isIgnore){
             folderList.append(getVoiceBankFoldersInFolder(path));
             continue;

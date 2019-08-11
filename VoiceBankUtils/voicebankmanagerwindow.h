@@ -101,7 +101,7 @@ private:
     void loadWindowStatus();
     void saveWindowStatus();
 
-    void letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {});
+    void letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {}, const QStringList &allowedPrefix = {});
 
     void refreshCategoryAndLabelsActionsChecked();
 

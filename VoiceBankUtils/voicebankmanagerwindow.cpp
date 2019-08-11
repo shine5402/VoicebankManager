@@ -116,6 +116,7 @@ void VoiceBankManagerWindow::loadVoiceBanksAndTable()
     ui->searchLineEdit->setEnabled(false);
     ui->voicebankCountLabel->setText(tr("加载中"));
     voiceBankHandler->readVoiceBanksFromMonitorFolders();
+    ui->searchLineEdit->clear();
 }
 
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
@@ -1180,9 +1181,9 @@ void VoiceBankManagerWindow::on_actionshow_more_infomation_in_total_count_label_
     updateVoiceBankCountLabel();
 }
 
-void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc,std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc,const QString& name,const QStringList& defaultList)
+void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QStringList& allowedPrefix)
 {
-    auto dialog = new FoldersSettingDialog(getFunc(MonitorFoldersScanner::getMonitorFoldersScanner()),tr("设定%1：").arg(name),tr("%1设定").arg(name),this,defaultList);
+    auto dialog = new FoldersSettingDialog(getFunc(MonitorFoldersScanner::getMonitorFoldersScanner()),tr("设定%1：").arg(name),tr("%1设定").arg(name),this,defaultList,allowedPrefix);
     auto dialogCode = dialog->exec();
     if (dialogCode == 1 && getFunc(MonitorFoldersScanner::getMonitorFoldersScanner()) != dialog->getFolders()){
         setFunc(MonitorFoldersScanner::getMonitorFoldersScanner(),dialog->getFolders());
@@ -1200,7 +1201,7 @@ void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
 
 void VoiceBankManagerWindow::on_actionIgnored_folders_triggered()
 {
-    letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"));
+    letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"),QStringList(),{"*"});
 }
 
 void VoiceBankManagerWindow::on_actionView_scan_details_triggered()

@@ -9,12 +9,13 @@ FoldersSettingDialog::FoldersSettingDialog(QWidget *parent) :
 
 }
 
-FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QString &label, const QString &title, QWidget *parent,const QStringList &defaultFolders) : FoldersSettingDialog(parent)
+FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QString &label, const QString &title, QWidget *parent, const QStringList &defaultFolders, const QStringList& allowedPrefix) : FoldersSettingDialog(parent)
 {
     setFolders(folders);
     setWindowTitle(title);
     setLabel(label);
     setDefaultFolders(defaultFolders);
+    setAllowedPrefix(allowedPrefix);
 }
 
 FoldersSettingDialog::~FoldersSettingDialog()
@@ -58,9 +59,15 @@ void FoldersSettingDialog::on_addButton_clicked()
     {
         auto newPath = dialog->getNewPath();
         if (!newPath.isEmpty()){
+            QString newPath2 = newPath;
+            for (auto prefix : allowedPrefix){
+            if (newPath.startsWith(prefix)){
+                newPath.remove(prefix);
+            }
+            }
             if (QDir(newPath).exists()){
-                ui->foldersListWidget->addItem(newPath);
-                folders.append(newPath);
+                ui->foldersListWidget->addItem(newPath2);
+                folders.append(newPath2);
             }
             else
                 QMessageBox::warning(this,tr("路径不存在"),tr("您输入的路径不存在。文件夹列表将不做更改。"));
@@ -91,6 +98,11 @@ void FoldersSettingDialog::on_buttonBox_clicked(QAbstractButton *button)
     default:
         break;
     }
+}
+
+void FoldersSettingDialog::setAllowedPrefix(const QStringList& value)
+{
+    allowedPrefix = value;
 }
 
 void FoldersSettingDialog::setDefaultFolders(const QStringList &value)
