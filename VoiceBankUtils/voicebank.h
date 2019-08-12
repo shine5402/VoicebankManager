@@ -20,6 +20,8 @@
 #include <textconverthelper.h>
 #include <QThreadPool>
 #include <QRandomGenerator>
+#include <QMimeDatabase>
+#include <QImageReader>
 
 ///用于表示一个音源库
 /*!

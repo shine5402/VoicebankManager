@@ -890,6 +890,15 @@ void VoiceBank::readCharacterFile()
                         try {
                             _image.load(imagePath);
                             LeafLogger::LogMessage(QString("%1的image成功读取。大小为：%2*%3").arg(path).arg(_image.width()).arg(_image.height()));
+                            if (_image.height() == 0)
+                            {
+                                auto imageReader = QImageReader();
+                                imageReader.setFileName(imagePath);
+                                imageReader.setDecideFormatFromContent(true);
+                                _image = imageReader.read();
+                                auto a = imageReader.errorString();
+                                //TODO:给用户提示该错误发生
+                           }
 
                             if (_image.height() == 0 ||(!qFuzzyCompare(_image.width() / _image.height() , 1.0))){
                                 errorStates.append(new ImageFileNotFitErrorState(this));

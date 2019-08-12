@@ -65,9 +65,7 @@ QStringList MonitorFoldersScanner::getIgnoreVoiceBankFolders() const
     ///获取忽略文件夹列表
     /*!
       忽略文件夹列表中的文件夹将在扫描时被直接忽略，但仍然会去搜寻其子文件夹。
-      \todo 实现使用*来防止子文件夹调用
     */
-    //TODO:实现使用*来防止子文件夹调用
     return ignoreVoiceBankFolders;
 }
 

@@ -2,7 +2,7 @@
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
 //TODO:建立通用信息/警告/错误机制
-//TODO:图片文件格式与扩展名不符时的处理
+
 /*
  * TODO:上一条TODO的补充
  * 在Readme的显示区域加一个错误信息显示选项卡用于放置错误信息
