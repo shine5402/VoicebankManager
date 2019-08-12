@@ -14,21 +14,17 @@
    <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1">
-    <widget class="QPushButton" name="addButton">
-     <property name="text">
-      <string>添加</string>
+   <item row="4" column="0" colspan="4">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults|QDialogButtonBox::Save</set>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="deleteButton">
-     <property name="text">
-      <string>删除</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -41,23 +37,41 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="QListWidget" name="foldersListWidget"/>
-   </item>
-   <item row="0" column="0" colspan="4">
-    <widget class="QLabel" name="label">
+   <item row="2" column="0" colspan="2">
+    <widget class="QLabel" name="allowedPrefixDescriptionLabel">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="4">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="0" column="0" colspan="4">
+    <widget class="QLabel" name="descriptionLabel">
+     <property name="text">
+      <string/>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults|QDialogButtonBox::Save</set>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="allowedPrefixDescriptionButton">
+     <property name="text">
+      <string>可用后缀具体说明</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="4">
+    <widget class="QListWidget" name="foldersListWidget"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="deleteButton">
+     <property name="text">
+      <string>删除</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="addButton">
+     <property name="text">
+      <string>添加</string>
      </property>
     </widget>
    </item>

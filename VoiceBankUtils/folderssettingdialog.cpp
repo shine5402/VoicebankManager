@@ -6,16 +6,32 @@ FoldersSettingDialog::FoldersSettingDialog(QWidget *parent) :
     ui(new Ui::FoldersSettingDialog)
 {
     ui->setupUi(this);
-
+    ui->allowedPrefixDescriptionLabel->hide();
+    ui->allowedPrefixDescriptionButton->hide();
 }
 
-FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QString &label, const QString &title, QWidget *parent, const QStringList &defaultFolders, const QStringList& allowedPrefix) : FoldersSettingDialog(parent)
+FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QString &label, const QString &title, QWidget *parent, const QStringList &defaultFolders, const QList<AllowedPrefix>& allowedPrefix) : FoldersSettingDialog(parent)
 {
     setFolders(folders);
     setWindowTitle(title);
     setLabel(label);
     setDefaultFolders(defaultFolders);
     setAllowedPrefix(allowedPrefix);
+
+    if (!allowedPrefix.isEmpty()){
+        auto text = tr("可用前缀：");
+        ui->allowedPrefixDescriptionLabel->show();
+        ui->allowedPrefixDescriptionButton->show();
+        for (auto i : allowedPrefix)
+        {
+            text.append(i.prefix);
+            if (!i.briefDescription.isEmpty())
+                text.append(tr("（%1）").arg(i.briefDescription));
+            text.append(tr("，"));
+        }
+        text.remove(text.count() - 1,1);
+        ui->allowedPrefixDescriptionLabel->setText(text);
+    }
 }
 
 FoldersSettingDialog::~FoldersSettingDialog()
@@ -38,7 +54,7 @@ QStringList FoldersSettingDialog::getFolders() const
 
 void FoldersSettingDialog::setLabel(const QString &label)
 {
-    ui->label->setText(label);
+    ui->descriptionLabel->setText(label);
 }
 
 void FoldersSettingDialog::on_deleteButton_clicked()
@@ -61,9 +77,9 @@ void FoldersSettingDialog::on_addButton_clicked()
         if (!newPath.isEmpty()){
             QString newPath2 = newPath;
             for (auto prefix : allowedPrefix){
-            if (newPath.startsWith(prefix)){
-                newPath.remove(prefix);
-            }
+                if (newPath.startsWith(prefix.prefix)){
+                    newPath.remove(prefix.prefix);
+                }
             }
             if (QDir(newPath).exists()){
                 ui->foldersListWidget->addItem(newPath2);
@@ -100,7 +116,7 @@ void FoldersSettingDialog::on_buttonBox_clicked(QAbstractButton *button)
     }
 }
 
-void FoldersSettingDialog::setAllowedPrefix(const QStringList& value)
+void FoldersSettingDialog::setAllowedPrefix(const QList<AllowedPrefix>& value)
 {
     allowedPrefix = value;
 }
@@ -108,4 +124,15 @@ void FoldersSettingDialog::setAllowedPrefix(const QStringList& value)
 void FoldersSettingDialog::setDefaultFolders(const QStringList &value)
 {
     defaultFolders = value;
+}
+
+void FoldersSettingDialog::on_allowedPrefixDescriptionButton_clicked()
+{
+    QString text;
+    for (auto i : allowedPrefix)
+    {
+        text.append(tr("<p><b>后缀</b>：%1<br/><b>描述</b>：%2</p>").arg(i.prefix).arg(i.description));
+    }
+    auto htmlDialog = ShowHTMLDialog(text,tr("允许使用的后缀列表"),this);
+    htmlDialog.exec();
 }

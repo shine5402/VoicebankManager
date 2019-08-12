@@ -1181,7 +1181,7 @@ void VoiceBankManagerWindow::on_actionshow_more_infomation_in_total_count_label_
     updateVoiceBankCountLabel();
 }
 
-void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QStringList& allowedPrefix)
+void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QList<FoldersSettingDialog::AllowedPrefix>& allowedPrefix)
 {
     auto dialog = new FoldersSettingDialog(getFunc(MonitorFoldersScanner::getMonitorFoldersScanner()),tr("设定%1：").arg(name),tr("%1设定").arg(name),this,defaultList,allowedPrefix);
     auto dialogCode = dialog->exec();
@@ -1201,7 +1201,7 @@ void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
 
 void VoiceBankManagerWindow::on_actionIgnored_folders_triggered()
 {
-    letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"),QStringList(),{"*"});
+    letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"),QStringList(),{{"*",tr("子文件夹不包括"),tr("在路径前使用“*”前缀会使VoiceBankManager在扫描时同时忽略其子文件夹。")}});
 }
 
 void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
