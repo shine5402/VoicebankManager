@@ -176,6 +176,8 @@ public:
 
     static void setThreadPoolMaxThreadCount(int maxCount);
 
+    QString getAuthor() const;
+
 private:
     QImage _image;
     QString imagePath;
@@ -184,6 +186,7 @@ private:
     QString readme;
     QString path;
     QString character_sample;
+    QString author;
     QTextCodec* CharacterTextCodec;
     QTextCodec* ReadmeTextCodec;
     QTextCodec* wavFileNameTextCodec;

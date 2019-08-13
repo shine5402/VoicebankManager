@@ -318,6 +318,11 @@ void VoiceBank::setThreadPoolMaxThreadCount(int maxCount)
     */
     threadPool->setMaxThreadCount(maxCount);
 }
+
+QString VoiceBank::getAuthor() const
+{
+    return author;
+}
 void VoiceBank::setCategory(const QString &value)
 {
     ///设定该音源库所属的分类。
@@ -880,6 +885,10 @@ void VoiceBank::readCharacterFile()
                 if (list.at(0).compare("name",Qt::CaseInsensitive) == 0){
                     name = list.at(1);
                     LeafLogger::LogMessage(QString("%1的name为%2").arg(path).arg(name));
+                }
+                if (list.at(0).compare("author",Qt::CaseInsensitive) == 0)
+                {
+                    author = list.at(1);
                 }
                 if (list.at(0).compare("image",Qt::CaseInsensitive) == 0)
                 {
