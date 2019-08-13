@@ -32,7 +32,7 @@ QVariant VoiceBankTableModel::data(const QModelIndex &index, int role) const
         if (voiceBank)
         {
             if (index.column() == TableColumns::Name)
-                return voiceBank->getName();
+                return voiceBank->getName().isEmpty()?tr("（%1）").arg(QFileInfo(voiceBank->getPath()).dir().dirName()):voiceBank->getName();
             else if (index.column() == TableColumns::Path)
                 return voiceBank->getPath();
             else

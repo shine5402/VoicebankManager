@@ -247,6 +247,11 @@ private:
         explicit ImageFileNotExistsErrorState(VoiceBank* voiceBank);
         virtual QString getErrorHTMLString() override;
     };
+    class ImageFileSuffixNotFitFileError : public ErrorState{
+    public:
+        explicit ImageFileSuffixNotFitFileError(VoiceBank* voiceBank);
+        virtual QString getErrorHTMLString() override;
+    };
     class ImageFileNotFitErrorState : public ErrorState{
     public:
         explicit ImageFileNotFitErrorState(VoiceBank* voiceBank);

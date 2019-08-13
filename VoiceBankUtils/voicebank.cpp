@@ -21,7 +21,7 @@ VoiceBank::~VoiceBank()
     for (auto state : errorStates)
     {
         if (state)
-            delete state; 
+            delete state;
     }
     if (wavFileNameStruct)
         delete wavFileNameStruct;
@@ -421,23 +421,23 @@ void VoiceBank::setWavFileNameTextCodec(QTextCodec *value)
 
 void VoiceBank::readStaticSettings()
 {
-        QSettings settings{};
-        if (settings.contains("DefaultTextCodec/CharacterFile")){
-            auto characterCodecName = settings.value("DefaultTextCodec/CharacterFile");
-            DefaultCharacterTextCodec = QTextCodec::codecForName(characterCodecName.toByteArray());
-        }
+    QSettings settings{};
+    if (settings.contains("DefaultTextCodec/CharacterFile")){
+        auto characterCodecName = settings.value("DefaultTextCodec/CharacterFile");
+        DefaultCharacterTextCodec = QTextCodec::codecForName(characterCodecName.toByteArray());
+    }
 
-        if (settings.contains("DefaultTextCodec/ReadmeFile")){
-            auto readmeCodecName = settings.value("DefaultTextCodec/ReadmeFile");
-            DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
-        }
-        if (settings.contains("DefaultTextCodec/WavFileName")){
-            auto readmeCodecName = settings.value("DefaultTextCodec/WavFileName");
-            DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
-        }
-        if (settings.contains("DefaultTextCodec/AutoDetect")){
-            DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",false).toBool();
-        }
+    if (settings.contains("DefaultTextCodec/ReadmeFile")){
+        auto readmeCodecName = settings.value("DefaultTextCodec/ReadmeFile");
+        DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
+    }
+    if (settings.contains("DefaultTextCodec/WavFileName")){
+        auto readmeCodecName = settings.value("DefaultTextCodec/WavFileName");
+        DefaultReadmeTextCodec = QTextCodec::codecForName(readmeCodecName.toByteArray());
+    }
+    if (settings.contains("DefaultTextCodec/AutoDetect")){
+        DefalutIsTextCodecAutoDetect = settings.value("DefaultTextCodec/AutoDetect",false).toBool();
+    }
 }
 
 void VoiceBank::readTextCodec_FollowDefault(QJsonObject json)
@@ -897,8 +897,8 @@ void VoiceBank::readCharacterFile()
                                 imageReader.setDecideFormatFromContent(true);
                                 _image = imageReader.read();
                                 auto a = imageReader.errorString();
-                                //TODO:给用户提示该错误发生
-                           }
+                                errorStates.append(new ImageFileSuffixNotFitFileError(this));
+                            }
 
                             if (_image.height() == 0 ||(!qFuzzyCompare(_image.width() / _image.height() , 1.0))){
                                 errorStates.append(new ImageFileNotFitErrorState(this));
@@ -1366,4 +1366,18 @@ void VoiceBank::VoiceBankReadFuctionRunner::run()
         emit voicebank->reloadDone(voicebank);
     else
         emit voicebank->firstReadDone(voicebank);
+}
+
+VoiceBank::ImageFileSuffixNotFitFileError::ImageFileSuffixNotFitFileError(VoiceBank* voiceBank):ErrorState (voiceBank)
+{
+
+}
+
+QString VoiceBank::ImageFileSuffixNotFitFileError::getErrorHTMLString()
+{
+    if (voiceBank){
+        return tr("<p style=\"color:orange\">警告：程序在读取时发现设定的程序图标文件的内容格式和后缀名不相符。</p>");
+    }
+    else
+        return QString();
 }

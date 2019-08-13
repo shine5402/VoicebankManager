@@ -30,11 +30,10 @@ public:
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
     Qt::ItemFlags flags(const QModelIndex &) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-    void dataChangedEmitter(VoiceBank *voiceBank);
     void clearEmitter();
 public slots:
     void newDataEmitter(VoiceBank *voiceBank);
+    void dataChangedEmitter(VoiceBank *voiceBank);
 private:
     static int iconSize;
     VoiceBankHandler* voicebankHandler = nullptr;
