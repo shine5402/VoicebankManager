@@ -9,6 +9,7 @@
  * 在主窗口的右下角放置一个可以显示错误窗口的按钮控件。弹出的窗口可不能是modal的……
  */
 //BUG:搜索时排序出错
+//TODO:无名称时用文件夹名字排序
 void VoiceBankManagerWindow::connectWithVoiceBankHandler()
 {
     connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
@@ -854,7 +855,8 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                            "<p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>"
                                            "<p>本程序使用了以下开源项目：</p>"
                                            "<ul>"
-                                           "<li>LeafPublicQtClasses by shine_5402 (Apache License Version 2.0)</li>"
+                                           "<li>LeafLogger by shine_5402 (Apache License Version 2.0)</li>"
+                                           "<li>TextCodecUtils by shine_5402 (Apache License Version 2.0)</li>"
                                            "<li>ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)</li>"
                                            "<li>libchardet by JoungKyun.Kim (MPL 1.1 or LGPL 2.1)</li>"
                                            "</ul>").arg(voicebankManagerVersion));
