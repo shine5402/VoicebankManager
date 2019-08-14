@@ -98,16 +98,23 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
 {
     ///对 VoiceBankHandler 内的列表进行排序
     /*!
+      当声库的名称字段为空时，VoiceBankHandler将使用其文件夹名称。
       \param[in] sortWhat 对哪项信息进行排序
       \param[in] order 以何种顺序进行排序
       \see enum class SortableInformationID
     */
     if (sortWhat == SortableInformationID::Name)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank* value1,VoiceBank* value2)->bool{
+            auto name1 = value1->getName();
+            auto name2 = value2->getName();
+            auto folder1 = QFileInfo(value1->getPath()).dir().dirName();
+            auto folder2 = QFileInfo(value2->getPath()).dir().dirName();
+            auto sortString1 = name1.isEmpty()?folder1:name1;
+            auto sortString2 = name2.isEmpty()?folder2:name2;
             if (order == Qt::AscendingOrder)
-                return value1->getName() < value2->getName();
+                return sortString1 < sortString2;
             else
-                return value1->getName() > value2->getName();
+                return sortString1 > sortString2;
         });
     else if (sortWhat == SortableInformationID::Path)
         std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const VoiceBank* value1,const VoiceBank* value2)->bool{

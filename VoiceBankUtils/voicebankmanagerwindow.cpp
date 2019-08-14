@@ -8,7 +8,6 @@
  * 在Readme的显示区域加一个错误信息显示选项卡用于放置错误信息
  * 在主窗口的右下角放置一个可以显示错误窗口的按钮控件。弹出的窗口可不能是modal的……
  */
-//BUG:搜索时排序出错
 //TODO:无名称时用文件夹名字排序
 void VoiceBankManagerWindow::connectWithVoiceBankHandler()
 {
@@ -298,10 +297,10 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
     ui->voicebankInformationTextBrowser->append(tr("<h4 style=\"color:blue\">文件编码：</h4>"));
     if (voiceBank->hasTextCodecAutoDetected())
     {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序读取时使用的文本编码：character.txt：%1。readme.txt：%2</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
     else {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">程序读取时使用的文本编码：character.txt：%1。readme.txt：%2</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
 
     if(!voiceBank->getReadme().isEmpty())
