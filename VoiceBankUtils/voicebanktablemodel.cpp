@@ -58,10 +58,12 @@ void VoiceBankTableModel::sort(int column, Qt::SortOrder order)
     case TableColumns::Name:
         voicebankHandler->sort(VoiceBankHandler::SortableInformationID::Name,order);
         emit dataChanged(index(0,0),index(rowCount(),columnCount()));
+        emit sortDone();
         break;
     case TableColumns::Path:
         voicebankHandler->sort(VoiceBankHandler::SortableInformationID::Path,order);
         emit dataChanged(index(0,0),index(rowCount(),columnCount()));
+        emit sortDone();
         break;
     default:
         break;

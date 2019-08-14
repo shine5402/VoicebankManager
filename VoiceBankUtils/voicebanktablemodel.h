@@ -31,6 +31,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex &) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     void clearEmitter();
+signals:
+    void sortDone();
 public slots:
     void newDataEmitter(VoiceBank *voiceBank);
     void dataChangedEmitter(VoiceBank *voiceBank);

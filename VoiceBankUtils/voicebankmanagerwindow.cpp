@@ -51,6 +51,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
     ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
     connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &)));
+    connect(voiceBankTableModel,&VoiceBankTableModel::sortDone,this,&VoiceBankManagerWindow::dealFilters);
 
     //分组语言菜单的action
     auto languageActionGroup = new QActionGroup(this);
