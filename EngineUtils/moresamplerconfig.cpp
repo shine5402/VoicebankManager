@@ -40,6 +40,8 @@ void MoresamplerConfig::processString()
         type = ConfigType::Blank;
         nameString = QCoreApplication::translate("MoresamplerConfig", "（空行）");
         valueString = QCoreApplication::translate("MoresamplerConfig", "（空行）");
+        editMode = getEditMode(QString());
+        value = QVariant();
         return;
     }
     if (configString.at(0) == "#")
@@ -130,6 +132,8 @@ QString MoresamplerConfig::toString() const
 
 bool MoresamplerConfig::isValidValue() const
 {
+    if (!editMode)
+        return false;
     LeafLogger::LogMessage(QString("Moresampler配置项%1的值为%2，有效性为%3").arg(nameString).arg(value.toString()).arg(editMode->isValidValue(value)));
     return editMode->isValidValue(value);
 }
@@ -170,6 +174,8 @@ MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &confi
         return new ChoicesEditMode({"on","off"});
     else if (configName == "analysis-suppress-subharmonics")
         return new ChoicesEditMode({"on","off"});
+    else if (configName.isEmpty())
+        return new BlankEditMode();
     else
         return new StringEditMode();
 }
@@ -398,4 +404,24 @@ QString MoresamplerConfig::ChoicesEditMode::toStringFromVariantValue(QVariant va
 MoresamplerConfig::ValueNotValidException::ValueNotValidException() : std::runtime_error("The given value is not valid for this config.")
 {
 
+}
+
+MoresamplerConfig::BlankEditMode::BlankEditMode():EditMode (ValueType::String)
+{
+
+}
+
+bool MoresamplerConfig::BlankEditMode::isValidValue(QVariant) const
+{
+    return true;
+}
+
+QVariant MoresamplerConfig::BlankEditMode::toVariantValueFromString(QString) const
+{
+    return QVariant();
+}
+
+QString MoresamplerConfig::BlankEditMode::toStringFromVariantValue(QVariant) const
+{
+    return QString();
 }
