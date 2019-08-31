@@ -5,10 +5,8 @@
 
 /*
  * TODO:上一条TODO的补充
- * 在Readme的显示区域加一个错误信息显示选项卡用于放置错误信息
  * 在主窗口的右下角放置一个可以显示错误窗口的按钮控件。弹出的窗口可不能是modal的……
  */
-//TODO:无名称时用文件夹名字排序
 void VoiceBankManagerWindow::connectWithVoiceBankHandler()
 {
     connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
@@ -251,6 +249,42 @@ void VoiceBankManagerWindow::saveWindowStatus()
     settings.setValue("VoiceBankManager/informationAndListSplitterState",ui->informationAndListSplitter->saveState());
 }
 
+void VoiceBankManagerWindow::fillVoicebankInformationTextBrower(VoiceBank* voiceBank)
+{
+    if (!voiceBank)
+        return;
+    ui->voicebankInformationTextBrowser->clear();
+    if (voiceBank->askFileInfo())
+    {
+        ui->voicebankInformationTextBrowser->append(generateFileInfoString(voiceBank->getfileInfoStruct()));
+    }
+    else {
+        ui->voicebankInformationTextBrowser->append(tr("<p>文件信息统计中……</p>"));
+        connect(voiceBank,&VoiceBank::fileInfoReadComplete,this,&VoiceBankManagerWindow::handleFileInfoReadComplete,static_cast<Qt::ConnectionType>(Qt::ConnectionType::AutoConnection | Qt::ConnectionType::DirectConnection));
+    }
+    if (!voiceBank->getAuthor().isEmpty())
+        ui->voicebankInformationTextBrowser->append(tr("<p>作者：%1</p>").arg(voiceBank->getAuthor()));
+    auto errors = voiceBank->getErrorStates();
+    ui->voicebankInformationTextBrowser->append(tr("<h4><span style=\"color:red\">错误</span>与<span style=\"color:orange\">警告</span>：</h4>"));
+    if (!errors.isEmpty()){
+        for (auto state : errors){
+            ui->voicebankInformationTextBrowser->append(state->getErrorHTMLString());
+        }
+    }
+    else {
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:green\">读取该声库时没有错误。</p>"));
+    }
+
+    ui->voicebankInformationTextBrowser->append(tr("<h4 style=\"color:blue\">文件编码：</h4>"));
+    if (voiceBank->hasTextCodecAutoDetected())
+    {
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+    }
+    else {
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+    }
+}
+
 void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 {
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
@@ -279,30 +313,10 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
     else
         ui->voicebankImage->setPixmap(QPixmap::fromImage(voiceBank->getImage().scaled(100,100)));
 
+
+    fillVoicebankInformationTextBrower(voiceBank);
+
     ui->voicebankReadmeTextBrowser->clear();
-    ui->voicebankInformationTextBrowser->clear();
-    if (!voiceBank->getAuthor().isEmpty())
-        ui->voicebankInformationTextBrowser->append(tr("<p>作者：%1</p>").arg(voiceBank->getAuthor()));
-    auto errors = voiceBank->getErrorStates();
-    ui->voicebankInformationTextBrowser->append(tr("<h4><span style=\"color:red\">错误</span>与<span style=\"color:orange\">警告</span>：</h4>"));
-    if (!errors.isEmpty()){
-        for (auto state : errors){
-            ui->voicebankInformationTextBrowser->append(state->getErrorHTMLString());
-        }
-    }
-    else {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:green\">读取该声库时没有错误。</p>"));
-    }
-
-    ui->voicebankInformationTextBrowser->append(tr("<h4 style=\"color:blue\">文件编码：</h4>"));
-    if (voiceBank->hasTextCodecAutoDetected())
-    {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
-    }
-    else {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
-    }
-
     if(!voiceBank->getReadme().isEmpty())
         ui->voicebankReadmeTextBrowser->append(QString("<p><pre style=\"color:black\">%1</pre></p>").arg(voiceBank->getReadme()));
     else {
@@ -311,6 +325,11 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
 
     ui->voicebankReadmeTextBrowser->moveCursor(QTextCursor::Start);
     ui->voicebankInformationTextBrowser->moveCursor(QTextCursor::Start);
+}
+
+QString VoiceBankManagerWindow::generateFileInfoString(const VoiceBank::FileInfoStruct& fileInfoStruct) const
+{
+    return tr("<h4>文件信息</h4><p>文件总数：%1 个（其中有 %2 个文件夹）<br/>文件总大小：%3 字节</p>").arg(fileInfoStruct.fileCount).arg(fileInfoStruct.dirCount).arg(fileInfoStruct.fileTotalSize);
 }
 
 void VoiceBankManagerWindow::updateVoiceBankCountLabel()
@@ -354,6 +373,12 @@ void VoiceBankManagerWindow::onVoiceBankReloadDone(VoiceBank *voiceBank)
 void VoiceBankManagerWindow::debugFunction()
 {
 
+}
+
+void VoiceBankManagerWindow::handleFileInfoReadComplete(VoiceBank* voiceBank)
+{
+    if (voiceBank == getSelectedVoiceBank())
+        fillVoicebankInformationTextBrower(voiceBank);
 }
 
 
@@ -755,6 +780,7 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBank = getSelectedVoiceBank();
     if (voiceBank){
         voiceBank->reload();
+        setVoiceBankInfomation(voiceBank);
     }
 }
 

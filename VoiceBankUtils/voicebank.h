@@ -178,6 +178,19 @@ public:
 
     QString getAuthor() const;
 
+    bool askFileInfo();
+    class FileInfoStruct{
+        friend VoiceBank;
+        FileInfoStruct(bool isValid,uint fileCount,uint dirCount,uint64_t fileTotalSize);
+    public:
+        const bool isValid;
+        const uint fileCount;
+        const uint dirCount;
+        const uint64_t fileTotalSize;
+    };
+    const FileInfoStruct getfileInfoStruct(){
+        return FileInfoStruct(fileInfoStruct->isFileInfoReaded,fileInfoStruct->fileCount,fileInfoStruct->dirCount,fileInfoStruct->fileTotalSize);
+    }
 private:
     QImage _image;
     QString imagePath;
@@ -207,10 +220,18 @@ private:
     static inline bool DefalutIsTextCodecAutoDetect = false;
     void readSettings();
     struct WavFileNameStruct{
-    bool isWavFileNameReaded = false;
-    QStringList wavFileName{};
-    QStringList wavFilePath{};
+        bool isWavFileNameReaded = false;
+        QStringList wavFileName{};
+        QStringList wavFilePath{};
     } * wavFileNameStruct = new WavFileNameStruct;
+
+    struct FileInfoStructPrivate{
+        bool isFileInfoReaded = false;
+        uint fileCount = 0;
+        uint dirCount = 0;
+        uint64_t fileTotalSize = 0;
+        QMutex mutex;
+    } * fileInfoStruct = new FileInfoStructPrivate;
 
     QString category;
     QStringList labels;
@@ -318,6 +339,8 @@ private:
     void readFromPathPrivate();
     void doReadFromPath();
 
+private slots:
+    void fileInfoReadCompleteEmitter();
 signals:
     void firstReadDone(VoiceBank *);
     void reloadDone(VoiceBank *);
@@ -327,6 +350,7 @@ signals:
     void cannotBackupImageFile(VoiceBank *);
     void categoryChanged();
     void labelsChanged();
+    void fileInfoReadComplete(VoiceBank *);
 };
 
 

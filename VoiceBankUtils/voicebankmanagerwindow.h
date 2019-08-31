@@ -86,6 +86,7 @@ private:
     VoiceBank *getSelectedVoiceBank(const QModelIndex &current);
 
     void setVoiceBankInfomation(VoiceBank *voiceBank);
+    QString generateFileInfoString(const VoiceBank::FileInfoStruct& fileInfoStruct) const;
 
     QProgressBar* samplePlayerProgress = new QProgressBar();
     QMediaPlayer* samplePlayer = new QMediaPlayer(this);
@@ -111,6 +112,8 @@ private:
 
     void resetSamplePlayer();
 
+    void fillVoicebankInformationTextBrower(VoiceBank* voiceBank);
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽
@@ -118,6 +121,8 @@ private slots:
 #endif
 
     //void voiceBankReadDoneSlot(VoiceBank *voiceBank);
+
+    void handleFileInfoReadComplete(VoiceBank *voiceBank);
 
     void createVoiceBanksCategoriesSubMenu();
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);

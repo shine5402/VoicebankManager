@@ -31,7 +31,6 @@ void VoiceBank::reload()
 {
     auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this,VoiceBankReadFuctionRunner::Reload);
     threadPool->start(newVoiceBankReadFunctionRunner);
-    LeafLogger::LogMessage(QString("%1的重载线程被加入线程池并由线程池管理启动。").arg(path));
 }
 
 QString VoiceBank::getName() const
@@ -96,14 +95,12 @@ void VoiceBank::readFromPathPrivate()
     */
     auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this);
     threadPool->start(newVoiceBankReadFunctionRunner);
-    LeafLogger::LogMessage(QString("%1的读取线程被加入线程池并由线程池管理启动。").arg(path));
 }
 
 QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *textCodec)
 {
     QFile* file = new QFile(path);
     if (!file->exists()){
-        LeafLogger::LogMessage(QString("%1不存在。").arg(file->fileName()));
         file->deleteLater();
         throw FileNotExists();}
     else
@@ -119,7 +116,7 @@ QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *text
         }
         else
         {
-            LeafLogger::LogMessage(QString("读取%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString()));
+            qCritical() << tr("读取%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString());
         }
     }
     return QString();
@@ -147,7 +144,6 @@ void VoiceBank::setDefalutTextCodecAutoDetect(bool value)
     DefalutIsTextCodecAutoDetect = value;
     QSettings settings;
     settings.setValue("DefaultTextCodec/AutoDetect",DefalutIsTextCodecAutoDetect);
-    LeafLogger::LogMessage(QString("DefaultTextCodec/AutoDetect被设置为%1").arg(DefalutIsTextCodecAutoDetect));
 }
 
 bool VoiceBank::isTextCodecAutoDetect() const
@@ -323,6 +319,44 @@ QString VoiceBank::getAuthor() const
 {
     return author;
 }
+
+bool VoiceBank::askFileInfo()
+{
+    if (fileInfoStruct->isFileInfoReaded)
+        return true;
+    auto thread = QThread::create([&]{
+        QMutexLocker(&fileInfoStruct->mutex);
+        auto dir = QFileInfo(path).dir();
+        dir.setFilter(QDir::Filter::NoDotAndDotDot | QDir::Files | QDir::Dirs);
+        auto infoList = dir.entryInfoList();
+        auto subDirInfoList = QList<QFileInfo>{};
+        auto f = [&] (QList<QFileInfo> infoList) {
+            for (auto info : infoList)
+            {
+                if (info.isDir()){
+                    ++fileInfoStruct->dirCount;
+                    subDirInfoList.append(info);
+                }
+                if (info.isFile())
+                {
+                    ++fileInfoStruct->fileCount;
+                    fileInfoStruct->fileTotalSize += static_cast<uint64_t>(info.size());
+                }
+            }
+        };
+        f(infoList);
+        for (auto dirInfo : subDirInfoList){
+            auto dir = QDir(dirInfo.filePath());
+            dir.setFilter(QDir::Filter::NoDotAndDotDot | QDir::Files | QDir::Dirs);
+            f(dir.entryInfoList());
+        }
+        fileInfoStruct->isFileInfoReaded = true;
+    });
+    connect(thread,&QThread::finished,this,&VoiceBank::fileInfoReadCompleteEmitter);
+    connect(thread,&QThread::finished,thread,&QObject::deleteLater);
+    thread->start();
+    return false;
+}
 void VoiceBank::setCategory(const QString &value)
 {
     ///设定该音源库所属的分类。
@@ -368,7 +402,6 @@ void VoiceBank::setDefaultWavFileNameTextCodec(QTextCodec *value)
     DefaultWavFileNameTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/WavFileName",DefaultReadmeTextCodec->name());
-    LeafLogger::LogMessage(QString("DefaultWavFileNameNameTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
 }
 
 void VoiceBank::readWavFileName() const
@@ -1089,6 +1122,10 @@ void VoiceBank::clear()
     textCodecAutoDetected = false;
     category.clear();
     labels.clear();
+    delete wavFileNameStruct;
+    wavFileNameStruct = new WavFileNameStruct;
+    delete fileInfoStruct;
+    fileInfoStruct = new FileInfoStructPrivate;
 }
 
 QString VoiceBank::getSampleFileName() const
@@ -1128,6 +1165,11 @@ void VoiceBank::doReadFromPath()
     readSettings();
     readCharacterFile();
     readReadme();
+}
+
+void VoiceBank::fileInfoReadCompleteEmitter()
+{
+    emit fileInfoReadComplete(this);
 }
 
 QTextCodec *VoiceBank::getCharacterTextCodec() const
@@ -1389,4 +1431,9 @@ QString VoiceBank::ImageFileSuffixNotFitFileError::getErrorHTMLString()
     }
     else
         return QString();
+}
+
+VoiceBank::FileInfoStruct::FileInfoStruct(bool isValid, uint fileCount, uint dirCount, uint64_t fileTotalSize):isValid(isValid),fileCount(fileCount),dirCount(dirCount),fileTotalSize(fileTotalSize)
+{
+
 }
