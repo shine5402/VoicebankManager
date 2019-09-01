@@ -87,7 +87,7 @@ background-color:white
 background-color:white
 }</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
           <property name="leftMargin">
            <number>0</number>
           </property>

@@ -93,7 +93,6 @@ public:
       该枚举定义了 sort(SortableInformationID sortWhat, Qt::SortOrder order) 函数中可以用于排序的信息。
       \see sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder)
     */
-    //TODO:重构此处
     enum class SortableInformationID
     {
         Name, ///< VoiceBank 的名称。对应 VoiceBank 的名称。

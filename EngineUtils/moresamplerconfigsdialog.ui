@@ -14,30 +14,7 @@
    <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="2">
-    <widget class="QPushButton" name="deleteButton">
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮来删除当前选中的行。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>删除</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="3" column="1" colspan="3">
+   <item row="7" column="1" colspan="4">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -47,17 +24,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="addButton">
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮在文件的最后一行新建一个配置项。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
+   <item row="0" column="0" colspan="5">
+    <widget class="QLabel" name="whatIsEditingLabel">
      <property name="text">
-      <string>添加</string>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4">
+   <item row="1" column="0" colspan="5">
     <widget class="QTableView" name="configTableView">
      <property name="whatsThis">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;这里显示配置文件中的配置项。&lt;/p&gt;&lt;p&gt;您可以双击“值”一列来编辑配置项的值。如果您编辑的是全局配置，您可以双击“是否覆盖声库配置”来选择是否覆盖各个声库中定义的配置。&lt;/p&gt;&lt;p&gt;若要添加和删除配置项，使用左下角的“添加”和“删除”按钮。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -79,12 +53,56 @@
      </attribute>
     </widget>
    </item>
-   <item row="0" column="0" colspan="4">
-    <widget class="QLabel" name="whatIsEditingLabel">
+   <item row="2" column="1">
+    <widget class="QPushButton" name="addButton">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮在文件的最后一行新建一个配置项。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
-      <string/>
+      <string>添加</string>
      </property>
     </widget>
+   </item>
+   <item row="2" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="deleteButton">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;您可以通过该按钮来删除当前选中的行。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>删除</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="4">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QCheckBox" name="deleteLLSMCheckBox">
+       <property name="text">
+        <string>保存配置后删除 .llsm 文件</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="deleteDESCMRQCheckBox">
+       <property name="text">
+        <string>保存配置后删除 desc.mrq 文件</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
