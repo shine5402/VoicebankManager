@@ -1,4 +1,6 @@
 <RCC>
-    <qresource prefix="/translations"/>
-    <qresource prefix="/"/>
+    <qresource prefix="/license">
+        <file alias="apachev2">LICENSE/ApacheV2.txt</file>
+        <file alias="gplv3">LICENSE/GPLv3.txt</file>
+    </qresource>
 </RCC>

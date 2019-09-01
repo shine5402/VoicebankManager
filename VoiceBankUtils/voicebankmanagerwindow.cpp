@@ -873,21 +873,58 @@ void VoiceBankManagerWindow::on_actionExit_triggered()
 
 void VoiceBankManagerWindow::on_actionAbout_triggered()
 {
-    QMessageBox::about(this,tr("关于本程序"),tr("<h3>音源管理器</h3>"
-                                           "<p>版本：%1 作者：shine_5402</p>"
-                                           "<p>本程序以 Apache License Version 2.0 分发。</p>"
-                                           "<p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p>"
-                                           "<p>本程序是 <a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a> 的一部分</p>"
-                                           "<p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>"
-                                           "<p>本程序直接使用了以下开源项目：</p>"
-                                           "<ul>"
-                                           "<li>LeafLogger by shine_5402 (Apache License Version 2.0)</li>"
-                                           "<li>TextCodecUtils by shine_5402 (Apache License Version 2.0)</li>"
-                                           "<li>ImageCropper by dimkanovikov, modified by shine_5402 (GNU LGPL v3)</li>"
-                                           "<li>libchardet by JoungKyun.Kim (MPL 1.1 or LGPL 2.1)</li>"
-                                           "<p>本程序参考了以下开源项目的源代码：</p>"
-                                           "<li>qBittorrent (GNU GPL v2)</li>"
-                                           "</ul>").arg(voicebankManagerVersion));
+    auto dialog = new AboutDialog(tr("音源管理器"),QImage(),
+                                  //关于
+                                  tr("<p>为管理适用于UTAU歌声合成应用程序的声音资料库写的一个辅助工具。</p>"
+                                     "<p>版权所有 2018-2019 shine_5402</p>"
+                                     "<p>本程序是 Leaf Open UTAU Project 的一部分。</p>"
+                                     "<p>Github项目页：<a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a></p>"),
+                                  //作者
+                                  tr("<h4>主要维护者</h4>"
+                                     "<p>shine_5402</p>"
+                                     "<h4>联系方式</h4>"
+                                     "<p>邮箱：shine_5402@126.com/shine_5402@live.cn/shine5402@gmail.com/shine_5402@qq.com</p>"
+                                     "<p>QQ：1952784042</p>"
+                                     "<p>微博/Twitter @shine_5402</p>"
+                                     "<p>Github @shine5402</p>"
+                                     "<b>如果需要反馈程序的BUG，或者想要提出对新特性的请求，请直接在Github项目页提交issue。</b>"),
+                                  //致谢
+                                  tr("<p>首先先是感谢在UTAU坑里遇到的所有朋友，特别是哈鲁鲁的UTAU群里第一时间使用的大家，没有你们我不可能坚持写出这个工具。名单太长，这里就不列举了。</p>"
+                                     "<p>然后是感谢译者（当然也是亲友）隋卞帮忙做英文翻译，我的英语真的很烂……</p>"
+                                     "<p>接着要感谢在第三方代码那页里提到的所有第三方作者，没有他们我肯定要花上更多功夫，甚至无法完成。</p>"
+                                     "<p>当然最后，还有使用这个软件的你。感谢您的使用！</p>"),
+                                  //译者
+                                  tr("<h4>本程序译者</h4>"
+                                     "<ul>"
+                                     "<li>English（英文）：隋卞</li>"
+                                     "</ul>"
+                                     "<p>如果你想要（当然，有能力最好）为本程序增加你的语言版本，请联系我！</p>"),
+                                  //许可
+                                  tr("<h4>简述</h4>"
+                                     "<p>本程序大体上是以<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>分发的，除了某些文件因其代码来源的原因使用了<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。<br/>"
+                                     "你可以直接通过上述链接查看这些许可，也可继续向下翻阅。<br/>"
+                                     "你可以通过源文件中的说明来辨别文件使用的许可。</p>"
+                                     "<h4>Apache License, Version 2.0</h4>"
+                                     "<pre>%1</pre>"
+                                     "<h4>GNU General Public License Version 3</h4>"
+                                     "<pre>%2</pre>")
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/apachev2");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/gplv3");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }()
+                                       ),
+                                  //TODO:使用资源文件加入许可
+                                  tr("<h4>本程序使用了以下第三方程序库：</h4>")
+                                  //TODO：完善程序库借用
+                                  ,this
+                                  );
+    dialog->exec();
 }
 
 void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
