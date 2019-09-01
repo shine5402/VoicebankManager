@@ -88,6 +88,7 @@ HEADERS += \
     VoiceBankUtils/monitorfoldersscanner.h
 
 FORMS += \
+    CommonUtils/aboutdialog.ui \
         editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
