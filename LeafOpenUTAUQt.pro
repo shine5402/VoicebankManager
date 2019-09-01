@@ -38,6 +38,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
+    CommonUtils/fitcontentlistview.cpp \
         main.cpp \
         editorwindow.cpp \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
@@ -62,6 +63,7 @@ SOURCES += \
     VoiceBankUtils/monitorfoldersscanner.cpp
 
 HEADERS += \
+    CommonUtils/fitcontentlistview.h \
         editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
     VoiceBankUtils/voicebank.h \

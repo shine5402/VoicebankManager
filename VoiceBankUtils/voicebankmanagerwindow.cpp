@@ -879,12 +879,14 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                            "<p>“音源管理器”是为UTAU程序所用音源设计的本地信息管理器。</p>"
                                            "<p>本程序是 <a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a> 的一部分</p>"
                                            "<p>UTAU是一款由饴屋/菖蒲（あめや・あやめ）氏开发的免费的歌声合成软件。</p>"
-                                           "<p>本程序使用了以下开源项目：</p>"
+                                           "<p>本程序直接使用了以下开源项目：</p>"
                                            "<ul>"
                                            "<li>LeafLogger by shine_5402 (Apache License Version 2.0)</li>"
                                            "<li>TextCodecUtils by shine_5402 (Apache License Version 2.0)</li>"
-                                           "<li>ImageCropper by dimkanovikov and shine_5402 (GNU LGPL v3)</li>"
+                                           "<li>ImageCropper by dimkanovikov, modified by shine_5402 (GNU LGPL v3)</li>"
                                            "<li>libchardet by JoungKyun.Kim (MPL 1.1 or LGPL 2.1)</li>"
+                                           "<p>本程序参考了以下开源项目的源代码：</p>"
+                                           "<li>qBittorrent (GNU GPL v2)</li>"
                                            "</ul>").arg(voicebankManagerVersion));
 }
 
