@@ -30,6 +30,7 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+
 void CategoriesModel::onCategoriesChanged()
 {
     beginResetModel();

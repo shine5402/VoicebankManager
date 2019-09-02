@@ -39,6 +39,8 @@ public:
 
     LabelSelectionStrategy getSelectionStrategy() const;
 
+    void resetCurrentAndSelection();
+
 protected:
     void changeEvent(QEvent *e) override;
 public slots:
@@ -74,11 +76,10 @@ private:
     CategoriesModel* categoriesModel = new CategoriesModel(this);
     LabelsModel* labelsModel = new LabelsModel(this);
     LabelSelectionStrategy selectionStrategy = Intersection;
+
 signals:
     void categoriesChanged();
     void labelsChanged();
-//    void currentCategoryChanged(QString category);
-//    void currentLabelChanged(QString label);
     void currentCategoriesChanged(QStringList categories);
     void currentLabelsChanged(QStringList labels);
     void labelSelectionStrategyChanged();

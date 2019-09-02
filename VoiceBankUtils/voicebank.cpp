@@ -933,7 +933,6 @@ void VoiceBank::readCharacterFile()
                                 imageReader.setFileName(imagePath);
                                 imageReader.setDecideFormatFromContent(true);
                                 _image = imageReader.read();
-                                auto a = imageReader.errorString();
                                 errorStates.append(new ImageFileSuffixNotFitFileError(this));
                             }
 

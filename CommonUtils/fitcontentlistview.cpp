@@ -3,7 +3,6 @@
 FitContentListView::FitContentListView(QWidget* parent):QListView (parent)
 {
     connect(model(), &QAbstractItemModel::modelReset, this, &FitContentListView::callUpdateGeometry);
-
 }
 
 QSize FitContentListView::sizeHint() const
@@ -15,7 +14,7 @@ QSize FitContentListView::sizeHint() const
         // Width should be exactly the width of the content
         sizeHintForColumn(0),
                 // Height should be exactly the height of the content
-                static_cast<int>(sizeHintForRow(0) * (model()->rowCount() + 0.5)),
+                static_cast<int>(sizeHintForRow(0) * (model()->rowCount())),
     };
 }
 

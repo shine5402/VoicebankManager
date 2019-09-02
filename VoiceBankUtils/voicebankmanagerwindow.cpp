@@ -353,7 +353,7 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
     ui->voiceBankBriefInfomationWidget->setVisible(false);
     categoriesAndLabelsListWidget->readCategoriesFromVoicebankHandler();
     categoriesAndLabelsListWidget->readLabelsFromVoiceBankHandler();
-
+    categoriesAndLabelsListWidget->resetCurrentAndSelection();
 }
 
 void VoiceBankManagerWindow::onUseOldFolderScanChanged()
@@ -762,9 +762,6 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     if (voiceBank){
         auto sourceCodec = voiceBank->getWavFileNameTextCodec();
         auto targetCodec = QTextCodec::codecForLocale();
-        auto a = voiceBank->getWavFileNameRaw();
-        auto b = voiceBank->getWavFilePath();
-        auto c = tr("%1的WAV文件名").arg(voiceBank->getName());
         if (TextConvertHelper::processFileNameConvert(voiceBank->getWavFileNameRaw(),voiceBank->getWavFilePath(),tr("%1的WAV文件名").arg(voiceBank->getName()),sourceCodec,targetCodec,this))
         {
             voiceBank->clearWavFileReadStage();

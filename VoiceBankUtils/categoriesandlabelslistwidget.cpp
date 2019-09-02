@@ -3,6 +3,13 @@
 //TODO:标签分类 标签排序
 //TODO:标签过多时调整大小
 
+void CategoriesAndLabelsListWidget::resetCurrentAndSelection()
+{
+    ui->categoriesListView->setCurrentIndex(categoriesModel->index(0,0));
+    ui->labelListView->setCurrentIndex(labelsModel->index(0,0));
+    ui->categoriesListView->selectionModel()->select(categoriesModel->index(0,0),QItemSelectionModel::SelectCurrent);
+    ui->labelListView->selectionModel()->select(labelsModel->index(0,0),QItemSelectionModel::SelectCurrent);
+}
 
 CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoiceBankHandler *handler, QWidget *parent) :
     QWidget(parent),ui(new Ui::CategoriesAndLabelsListWidget),handler(handler)
@@ -19,6 +26,7 @@ CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoiceBankHandler *h
     selectionStrategy = static_cast<LabelSelectionStrategy>(settings.value("VoiceBankManager/LabelsFilterSelectionStrategy").toInt());
     connect(ui->categoriesListView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onCategoriesListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &)));
     connect(ui->labelListView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onLabelListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &)));
+    resetCurrentAndSelection();
 }
 
 CategoriesAndLabelsListWidget::~CategoriesAndLabelsListWidget()
@@ -90,7 +98,6 @@ int CategoriesAndLabelsListWidget::getNoCategoriesCount() const
 
 void CategoriesAndLabelsListWidget::readCategoriesFromVoicebankHandler()
 {
-    //categoriesUsedCount.clear();
     for (auto it = categoriesUsedCount.begin();it != categoriesUsedCount.end();++it)
     {
         it.value() = 0;
@@ -111,7 +118,6 @@ void CategoriesAndLabelsListWidget::readCategoriesFromVoicebankHandler()
 
 void CategoriesAndLabelsListWidget::readLabelsFromVoiceBankHandler()
 {
-    //labelsUsedCount.clear();
     for (auto it = labelsUsedCount.begin();it != labelsUsedCount.end();++it)
     {
         it.value() = 0;
@@ -263,7 +269,7 @@ void CategoriesAndLabelsListWidget::onCategoriesListViewSelectionChangedSignal(c
 {
     QStringList currentCategories;
     auto indexes = ui->categoriesListView->selectionModel()->selection().indexes();
-    for (auto index : indexes)
+    for (auto index : indexes){
         if (index.isValid())
         {
             if (index.row() == 0)
@@ -276,7 +282,7 @@ void CategoriesAndLabelsListWidget::onCategoriesListViewSelectionChangedSignal(c
             }
             else
                 currentCategories.append(categories.at(index.row() - 2));
-        }
+        }}
     emit currentCategoriesChanged(currentCategories);
 }
 
