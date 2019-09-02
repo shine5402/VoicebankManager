@@ -486,11 +486,11 @@ void VoiceBank::readTextCodec_FollowDefault(QJsonObject json)
             setTextCodecFollowDefault(value.toBool());
         }
         else
-            LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不是Bool。").arg(path));
+            qWarning() << tr("声库%1的TextCodec/FollowDefault不是Bool。").arg(path);
     }
     else
     {
-        LeafLogger::LogMessage(QString("声库%1的TextCodec/FollowDefault不存在。").arg(path));
+        qInfo() << tr("声库%1的TextCodec/FollowDefault不存在。").arg(path);
     }
 }
 
@@ -503,7 +503,7 @@ void VoiceBank::readTextCodec_AutoDetect(QJsonObject json)
     }
     else
     {
-        LeafLogger::LogMessage(QString("声库%1的TextCodec/AutoDetect不存在。").arg(path));
+        qInfo() << tr("声库%1的TextCodec/AutoDetect不存在。").arg(path);
     }
 }
 
@@ -519,11 +519,11 @@ void VoiceBank::readTextCodec_ChracterFile(QJsonObject json)
         }
         else
         {
-            LeafLogger::LogMessage(QString("声库%1的TextCodec/CharacterFile不是String。").arg(path));
+            qWarning() << tr("声库%1的TextCodec/CharacterFile不是String。").arg(path);
         }
     }
     else
-        LeafLogger::LogMessage(QString("声库%1的TextCodec/CharacterFile不存在。").arg(path));
+        qInfo() << tr("声库%1的TextCodec/CharacterFile不存在。").arg(path);
 }
 
 void VoiceBank::readTextCodec_ReadmeFile(QJsonObject json)
@@ -537,11 +537,11 @@ void VoiceBank::readTextCodec_ReadmeFile(QJsonObject json)
         }
         else
         {
-            LeafLogger::LogMessage(QString("声库%1的TextCodec/ReadmeFile不是String。").arg(path));
+            qWarning() << tr("声库%1的TextCodec/ReadmeFile不是String。").arg(path);
         }
     }
     else
-        LeafLogger::LogMessage(QString("声库%1的TextCodec/ReadmeFile不存在。").arg(path));
+        qInfo() << tr("声库%1的TextCodec/ReadmeFile不存在。").arg(path);
 }
 
 void VoiceBank::readTextCodec_WavFileName(QJsonObject json)
@@ -555,11 +555,11 @@ void VoiceBank::readTextCodec_WavFileName(QJsonObject json)
         }
         else
         {
-            LeafLogger::LogMessage(QString("声库%1的TextCodec/WavFileName不是String。").arg(path));
+            qWarning() << tr("声库%1的TextCodec/WavFileName不是String。").arg(path);
         }
     }
     else
-        LeafLogger::LogMessage(QString("声库%1的TextCodec/WavFileName不存在。").arg(path));
+        qInfo() << tr("声库%1的TextCodec/WavFileName不存在。").arg(path);
 }
 
 void VoiceBank::readCategory(QJsonObject json)
@@ -572,11 +572,11 @@ void VoiceBank::readCategory(QJsonObject json)
         }
         else
         {
-            LeafLogger::LogMessage(QString("声库%1的Category不是String。").arg(path));
+            qWarning() << tr("声库%1的Category不是String。").arg(path);
         }
     }
     else
-        LeafLogger::LogMessage(QString("声库%1的Category不存在。").arg(path));
+        qInfo() << tr("声库%1的Category不存在。").arg(path);
 }
 
 void VoiceBank::readLabels(QJsonObject json)
@@ -595,15 +595,14 @@ void VoiceBank::readLabels(QJsonObject json)
         }
         else
         {
-            LeafLogger::LogMessage(QString("声库%1的Labels不是Array。").arg(path));
+            qWarning() << tr("声库%1的Labels不是Array。").arg(path);
         }
     }
     else
-        LeafLogger::LogMessage(QString("声库%1的Labels不存在。").arg(path));
+        qInfo() << tr("声库%1的Labels不存在。").arg(path);
 }
 
 void VoiceBank::readSettings(){
-    LeafLogger::LogMessage(QString("开始读取%1的声库单独设置。").arg(path));
     try{
         auto text = readTextFileInTextCodec(path + "leafUTAUQtSettings.json",QTextCodec::codecForName("UTF-8"));
         QJsonParseError json_error;
@@ -623,16 +622,16 @@ void VoiceBank::readSettings(){
             }
             else
             {
-                LeafLogger::LogMessage(QString("声库%1的设置json读取后的Object为空。").arg(path));
+                qWarning() << tr("声库%1的设置json读取后的Object为空。").arg(path);
             }
         }
         else
         {
-            LeafLogger::LogMessage(QString("声库%1的设置json读取出现问题。QJsonParseError的输出为%2。").arg(path).arg(json_error.errorString()));
+            qCritical() <<tr("声库%1的设置json读取出现问题。QJsonParseError的输出为%2。").arg(path).arg(json_error.errorString());
         }
     }
     catch(FileNotExists&){
-        LeafLogger::LogMessage(QString("声库%1的设置json不存在。").arg(path));
+        qInfo() << tr("声库%1的设置json不存在。").arg(path);
     }
 }
 
@@ -642,7 +641,6 @@ void VoiceBank::saveSettings(){
       VoiceBank 使用声库文件夹下的 leafUTAUQtSettings.json 保存一系列与 UTAU 本体不兼容的额外设定。\n
       该函数默认会由 VoiceBank 的析构函数调用，您也可以在需要时调用本函数（如改变设置后的重载前）。
     */
-    LeafLogger::LogMessage(QString("开始保存%1的声库单独设置。").arg(path));
     QJsonObject json;
     //保存文本编码设置：
     if (textCodecFollowDefault)
@@ -881,7 +879,7 @@ void VoiceBank::setDefaultReadmeTextCodec(QTextCodec *value)
     DefaultReadmeTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/ReadmeFile",DefaultReadmeTextCodec->name());
-    LeafLogger::LogMessage(QString("DefaultReadmeTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name())));
+    qDebug() << tr("DefaultReadmeTextCodec被设置为%1").arg(QString::fromUtf8(DefaultReadmeTextCodec->name()));
 }
 
 void VoiceBank::setDefaultCharacterTextCodec(QTextCodec *value)
@@ -896,7 +894,7 @@ void VoiceBank::setDefaultCharacterTextCodec(QTextCodec *value)
     DefaultCharacterTextCodec = value;
     QSettings settings{};
     settings.setValue("DefaultTextCodec/CharacterFile",DefaultCharacterTextCodec->name());
-    LeafLogger::LogMessage(QString("DefaultCharacterTextCodec被设置为%1").arg(QString::fromUtf8(DefaultCharacterTextCodec->name())));
+    qDebug() << tr("DefaultCharacterTextCodec被设置为%1").arg(QString::fromUtf8(DefaultCharacterTextCodec->name()));
 }
 
 void VoiceBank::readCharacterFile()
@@ -908,7 +906,6 @@ void VoiceBank::readCharacterFile()
             characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
             characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
-        LeafLogger::LogMessage(QString("%1的character.txt被成功读取至characterString。").arg(path));
         auto characterList = characterString.split("\n",QString::SplitBehavior::SkipEmptyParts);
         for (auto i : characterList){
             i = i.trimmed();
@@ -917,7 +914,6 @@ void VoiceBank::readCharacterFile()
             {
                 if (list.at(0).compare("name",Qt::CaseInsensitive) == 0){
                     name = list.at(1);
-                    LeafLogger::LogMessage(QString("%1的name为%2").arg(path).arg(name));
                 }
                 if (list.at(0).compare("author",Qt::CaseInsensitive) == 0)
                 {
@@ -931,7 +927,6 @@ void VoiceBank::readCharacterFile()
                     if (imageFileInfo.exists()) {
                         try {
                             _image.load(imagePath);
-                            LeafLogger::LogMessage(QString("%1的image成功读取。大小为：%2*%3").arg(path).arg(_image.width()).arg(_image.height()));
                             if (_image.height() == 0)
                             {
                                 auto imageReader = QImageReader();
@@ -946,12 +941,12 @@ void VoiceBank::readCharacterFile()
                                 errorStates.append(new ImageFileNotFitErrorState(this));
                             }
                         } catch (std::exception &e){
-                            LeafLogger::LogMessage(QString("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what()));
+                            qDebug() << tr("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个异常。异常说明为%1").arg(e.what());
                             errorStates.append(new ImageReadExceptionErrorState(this));
                             _image = QImage();
                         }
                         catch (...) {
-                            LeafLogger::LogMessage("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
+                            qDebug() << tr("程序运行过程中在VoiceBank::readCharacterFile中读取image时发生了一个由通用捕捉器捕捉的异常。");
                             errorStates.append(new ImageReadExceptionErrorState(this));
                             _image = QImage();
                         }
@@ -960,7 +955,7 @@ void VoiceBank::readCharacterFile()
                     else
                     {
                         errorStates.append(new ImageFileNotExistsErrorState(this));
-                        LeafLogger::LogMessage(QString("%1的音源图片文件不存在。").arg(path));
+                        qInfo() << tr("%1的音源图片文件不存在。").arg(path);
                     }
                 }
                 if (list.at(0).compare("sample",Qt::CaseInsensitive) == 0){
@@ -972,20 +967,20 @@ void VoiceBank::readCharacterFile()
         }
         if (name.isEmpty()){
             errorStates.append(new NameNotSetErrorState(this));
-            LeafLogger::LogMessage(QString("%1的音源的name字段不存在。").arg(path));
+            qInfo() << tr("%1的音源的name字段不存在。").arg(path);
         }
         if (imagePath.isEmpty()){
             errorStates.append(new ImageFileNotSetErrorState(this));
-            LeafLogger::LogMessage(QString("%1的音源的image字段不存在。").arg(path));}
+            qInfo() << tr("%1的音源的image字段不存在。").arg(path);}
     }
     catch(FileNotExists&){
         errorStates.append(new CharacterFileNotExistsErrorState(this));
-        LeafLogger::LogMessage(QString("%1的音源的character.txt不存在。").arg(path));
+        qInfo() << tr("%1的音源的character.txt不存在。").arg(path);
     }
     catch(FileCanNotOpen&)
     {
         errorStates.append(new CharacterFileCanNotOpenErrorState(this));
-        LeafLogger::LogMessage(QString("%1的音源的character.txt无法打开。").arg(path));
+        qInfo() << tr("%1的音源的character.txt无法打开。").arg(path);
     }
 
 }
@@ -996,16 +991,15 @@ void VoiceBank::readReadme()
             readme = readTextFileInTextCodec(path + "readme.txt",ReadmeTextCodec);
         else
             readme = readTextFileInTextCodec(path + "readme.txt",DefaultReadmeTextCodec);
-        LeafLogger::LogMessage(QString("%1的readme.txt被成功读取至readmeString。").arg(path));
     }
     catch(FileNotExists&){
         errorStates.append(new ReadmeFileNotExistsErrorState(this));
-        LeafLogger::LogMessage(QString("%1的音源的readme.txt不存在。").arg(path));
+        qInfo() << tr("%1的音源的readme.txt不存在。").arg(path);
     }
     catch(FileCanNotOpen&)
     {
         errorStates.append(new ReadmeFileCanNotOpenErrorState(this));
-        LeafLogger::LogMessage(QString("%1的音源的readme.txt无法打开。").arg(path));
+        qInfo() << tr("%1的音源的readme.txt无法打开。").arg(path);
     }
 }
 
@@ -1018,7 +1012,6 @@ void VoiceBank::changeCharacterFile()
             characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
             characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
-        LeafLogger::LogMessage(QString("%1的character.txt被成功读取至characterString。").arg(path));
         QString newCharacterString{};
         QTextStream readStream(&characterString);
         QTextStream writeStream(&newCharacterString);
@@ -1043,7 +1036,7 @@ void VoiceBank::changeCharacterFile()
 
     }
     catch(FileNotExists& e){
-        LeafLogger::LogMessage(QString("%1的音源的character.txt不存在。").arg(path));
+        qInfo() << QString("%1的音源的character.txt不存在。").arg(path);
         QString newCharacterString{};
         QTextStream writeStream(&newCharacterString);
         writeStream << QString("name=%1").arg(name) << endl
@@ -1057,7 +1050,7 @@ void VoiceBank::changeCharacterFile()
     }
     catch(FileCanNotOpen& e)
     {
-        LeafLogger::LogMessage(QString("%1的音源的character.txt无法打开。").arg(path));
+        qCritical() << QString("%1的音源的character.txt无法打开。").arg(path);
         throw e;
     }
 }

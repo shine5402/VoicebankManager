@@ -219,7 +219,6 @@ QStringList MonitorFoldersScanner::getVoiceBankFoldersInFolder(const QString &di
             else
             {
                 notVoiceBankPaths.append(path);
-                LeafLogger::LogMessage(QString("%1不是音源文件夹。").arg(path));
                 folderList.append(getVoiceBankFoldersInFolder(path));
             }
         }

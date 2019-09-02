@@ -168,7 +168,6 @@ void VoiceBankManagerWindow::autoDetectTranslate(){
     removeAllTranslators();
     auto translator = new QTranslator(this);
     auto success = translator->load(QLocale(),"LeafOpenUTAUQt",".","./translations",".qm");
-    LeafLogger::LogMessage(QString("QLocale detected:%1").arg(QLocale::system().name()));
     if ((!success) && QLocale::system().name() != QLocale(QLocale::Chinese).name())
     {
         translator->load("./translations/LeafOpenUTAUQt_en.qm");
@@ -181,7 +180,6 @@ void VoiceBankManagerWindow::autoDetectTranslate(){
     settings.setValue("Translation/isLoadOwnTranslationFile",false);
 }
 void VoiceBankManagerWindow::removeAllTranslators(){
-    LeafLogger::LogMessage("删除所有翻译。");
     for (auto translator : translators)
     {
         qApp->removeTranslator(translator);

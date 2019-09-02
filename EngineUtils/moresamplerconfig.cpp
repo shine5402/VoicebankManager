@@ -134,8 +134,7 @@ bool MoresamplerConfig::isValidValue() const
 {
     if (!editMode)
         return false;
-    LeafLogger::LogMessage(QString("Moresampler配置项%1的值为%2，有效性为%3").arg(nameString).arg(value.toString()).arg(editMode->isValidValue(value)));
-    return editMode->isValidValue(value);
+        return editMode->isValidValue(value);
 }
 
 MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &configName)
