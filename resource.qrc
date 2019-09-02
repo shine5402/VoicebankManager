@@ -2,5 +2,10 @@
     <qresource prefix="/license">
         <file alias="apachev2">LICENSE/ApacheV2.txt</file>
         <file alias="gplv3">LICENSE/GPLv3.txt</file>
+        <file alias="lgplv3">LICENSE/LGPLv3.txt</file>
+        <file alias="mplv1.1">LICENSE/MPLv1.1.txt</file>
+        <file alias="gplv2">LICENSE/GPLv2.txt</file>
+        <file alias="qse">LICENSE/qBittorrentSpecialException.txt</file>
+        <file alias="lgplv2.1">LICENSE/LGPLv2.1.txt</file>
     </qresource>
 </RCC>

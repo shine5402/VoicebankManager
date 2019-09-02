@@ -902,11 +902,11 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                   //许可
                                   tr("<h4>简述</h4>"
                                      "<p>本程序大体上是以<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>分发的，除了某些文件因其代码来源的原因使用了<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。<br/>"
-                                     "你可以直接通过上述链接查看这些许可，也可继续向下翻阅。<br/>"
+                                     "你可以直接通过上述链接（需要Internet）查看这些许可，也可继续向下翻阅。<br/>"
                                      "你可以通过源文件中的说明来辨别文件使用的许可。</p>"
                                      "<h4>Apache License, Version 2.0</h4>"
                                      "<pre>%1</pre>"
-                                     "<h4>GNU General Public License Version 3</h4>"
+                                     "<h4>GNU General Public License, Version 3</h4>"
                                      "<pre>%2</pre>")
                                   .arg([] () -> QString {
                                            QFile file(":/license/apachev2");
@@ -919,9 +919,69 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                            return QString::fromUtf8(file.readAll());
                                        }()
                                        ),
-                                  //TODO:使用资源文件加入许可
-                                  tr("<h4>本程序使用了以下第三方程序库：</h4>")
-                                  //TODO：完善程序库借用
+                                  tr("<i>你可以直接通过库后所附许可的链接查看每个库的对应许可（需要Internet），也可继续向下翻阅。</i>"
+                                     "<h4>本程序使用了以下第三方程序库：</h4>"
+                                     "<ul>"
+                                     "<li>Qt，版本 %1，作者：The Qt Company Ltd.(<a href=\"http://www.gnu.org/licenses/lgpl-3.0.html\">GNU LGPL v3</a>)</li>"
+                                     "<li>LeafLogger，作者：shine_5402 (<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>)</li>"
+                                     "<li>TextCodecUtils，作者：shine_5402 (<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>)</li>"
+                                     "<li>ImageCropper，作者：dimkanovikov 与 shine_5402 (<a href=\"http://www.gnu.org/licenses/lgpl-3.0.html\">GNU LGPL v3</a>)</li>"
+                                     "<li>libchardet，版本 %2，作者：JoungKyun.Kim (<a href=\"https://www.mozilla.org/en-US/MPL/1.1/\">MPL 1.1</a> or <a href=\"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\">LGPL 2.1</a>)</li>"
+                                     "</ul>"
+                                     "<h4>本程序参考、借用了以下项目的部分源代码</h4>"
+                                     "<ul>"
+                                     "<li>qBittorrent，作者：qBittorrent Project (<a href=\"http://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GNU GPL v2</a> with some special exception)"
+                                     "</ul>"
+                                     "<h4>Apache License, Version 2.0</h4>"
+                                     "<pre>%3</pre>"
+                                     "<h4>GNU General Public License, Version 3</h4>"
+                                     "<pre>%4</pre>"
+                                     "<h4>GNU Lesser General Public License, Version 3</h4>"
+                                     "<pre>%5</pre>"
+                                     "<h4>MOZILLA PUBLIC LICENSE, Version 1.1</h4>"
+                                     "<pre>%6</pre>"
+                                     "<h4>GNU Lesser General Public License, Version 2.1</h4>"
+                                     "<pre>%7</pre>"
+                                     "<h4>GNU General Public License, Version 2</h4>"
+                                     "<pre>%8</pre>"
+                                     "<h4>qBittorrent special exception</h4>"
+                                     "<pre>%9</pre>").arg(QT_VERSION_STR).arg(QChardet::libchardetVersion())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/apachev2");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/gplv3");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }()
+                                       )
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/lgplv3");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/mplv1.1");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/lgplv2.1");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/gplv2");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
+                                  .arg([] () -> QString {
+                                           QFile file(":/license/qse");
+                                           file.open(QFile::ReadOnly);
+                                           return QString::fromUtf8(file.readAll());
+                                       }())
                                   ,this
                                   );
     dialog->exec();
