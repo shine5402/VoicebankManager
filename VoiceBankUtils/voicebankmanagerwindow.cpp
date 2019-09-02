@@ -871,7 +871,7 @@ void VoiceBankManagerWindow::on_actionExit_triggered()
 
 void VoiceBankManagerWindow::on_actionAbout_triggered()
 {
-    auto dialog = new AboutDialog(tr("音源管理器"),QImage(),
+    auto dialog = new AboutDialog(tr("音源管理器 v%1").arg(voicebankManagerVersion),QImage(),
                                   //关于
                                   tr("<p>为管理适用于UTAU歌声合成应用程序的声音资料库写的一个辅助工具。</p>"
                                      "<p>版权所有 2018-2019 shine_5402</p>"
