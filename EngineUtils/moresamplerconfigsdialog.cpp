@@ -19,8 +19,10 @@ MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const Mo
         else
             setWindowTitle(tr("编辑名称未知的音源的Moresampler配置"));
     }
-    else
+    else{
         setWindowTitle(tr("编辑全局Moresampler配置"));
+        ui->deleteFilesCheckBoxs->hide();
+    }
     ui->whatIsEditingLabel->setText(tr("当前正在编辑：%1").arg(path));
 
 }
@@ -82,6 +84,31 @@ void MoresamplerConfigsDialog::accept()
         return;
     }
     reader->saveConfigs();
+    if (ui->deleteLLSMCheckBox->isChecked())
+    {
+        auto dir = QFileInfo(path).dir();
+        auto llsmInfoList = dir.entryInfoList({"*.llsm"},QDir::Files | QDir::NoDotAndDotDot);
+        QList<QPair<QString,QString>> errorFiles;
+        for (auto i : llsmInfoList)
+        {
+            QFile file(i.canonicalFilePath());
+            if (!file.remove())
+            {
+                qCritical() << tr("删除文件%1时出现错误%2。").arg(file.fileName()).arg(file.errorString());
+                errorFiles.append(qMakePair(file.fileName(),file.errorString()));
+            }
+        }
+        if (!errorFiles.isEmpty())
+        {
+            QString errorString{tr("<h3>以下文件无法删除。</h3><ul>")};
+            for (auto i : errorFiles)
+            {
+                errorString.append(tr("<li>%1（%2）</li>"));
+            }
+            errorString.append(tr("</ul>"));
+            QMessageBox::critical(this,tr("删除某些文件时出错"),errorString);
+        }
+    }
     QDialog::accept();
 }
 
