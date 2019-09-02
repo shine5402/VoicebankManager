@@ -84,10 +84,9 @@ void MoresamplerConfigsDialog::accept()
         return;
     }
     reader->saveConfigs();
-    if (ui->deleteLLSMCheckBox->isChecked())
-    {
+    auto deleteFile = [&](const QString& path, const QStringList& filter){
         auto dir = QFileInfo(path).dir();
-        auto llsmInfoList = dir.entryInfoList({"*.llsm"},QDir::Files | QDir::NoDotAndDotDot);
+        auto llsmInfoList = dir.entryInfoList(filter,QDir::Files | QDir::NoDotAndDotDot);
         QList<QPair<QString,QString>> errorFiles;
         for (auto i : llsmInfoList)
         {
@@ -108,6 +107,14 @@ void MoresamplerConfigsDialog::accept()
             errorString.append(tr("</ul>"));
             QMessageBox::critical(this,tr("删除某些文件时出错"),errorString);
         }
+    };
+    if (ui->deleteLLSMCheckBox->isChecked())
+    {
+        deleteFile(path,{"*.llsm"});
+    }
+    if (ui->deleteDESCMRQCheckBox->isChecked())
+    {
+        deleteFile(path,{"desc.mrq"});
     }
     QDialog::accept();
 }
