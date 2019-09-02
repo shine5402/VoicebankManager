@@ -372,7 +372,7 @@ void VoiceBankManagerWindow::debugFunction()
 {
 
 }
-
+#endif
 void VoiceBankManagerWindow::handleFileInfoReadComplete(VoiceBank* voiceBank)
 {
     if (voiceBank == getSelectedVoiceBank())
@@ -380,7 +380,7 @@ void VoiceBankManagerWindow::handleFileInfoReadComplete(VoiceBank* voiceBank)
 }
 
 
-#endif
+
 
 void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 {

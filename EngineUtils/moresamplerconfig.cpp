@@ -134,7 +134,8 @@ bool MoresamplerConfig::isValidValue() const
 {
     if (!editMode)
         return false;
-        return editMode->isValidValue(value);
+
+    return editMode->isValidValue(value);
 }
 
 MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &configName)

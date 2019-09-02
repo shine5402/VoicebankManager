@@ -142,14 +142,20 @@ QStringList CategoriesAndLabelsListWidget::getLabels() const
 void CategoriesAndLabelsListWidget::addCategory(const QString &category)
 {
     if (!categories.contains(category))
+    {
         categories.append(category);
+        ui->categoriesListView->updateGeometry();
+    }
     emit categoriesChanged();
 }
 
 void CategoriesAndLabelsListWidget::addLabel(const QString &label)
 {
     if (!labels.contains(label))
+    {
         labels.append(label);
+        ui->labelListView->updateGeometry();
+    }
     emit labelsChanged();
 }
 
@@ -172,6 +178,7 @@ void CategoriesAndLabelsListWidget::removeUnusedCategories()
     }
     for (auto i : toBeRemoved)
         categoriesUsedCount.remove(i);
+    ui->categoriesListView->updateGeometry();
     emit categoriesChanged();
 }
 
@@ -189,6 +196,7 @@ void CategoriesAndLabelsListWidget::removeUnusedLabels()
     }
     for (auto i : toBeRemoved)
         labelsUsedCount.remove(i);
+    ui->labelListView->updateGeometry();
     emit labelsChanged();
 }
 
