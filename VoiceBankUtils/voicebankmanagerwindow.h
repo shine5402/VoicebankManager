@@ -76,15 +76,18 @@ private:
     bool showMoreInformationInTotalCountLabel = true;
     void updateVoiceBankCountLabel();
 
-    QMenu* voiceBanksTableWidgetMenu = new QMenu(this);
+    QMenu* singleVoiceBankTableWidgetMenu = new QMenu(this);
+    //TODO:↓
+    QMenu* multipleVoiceBankTableWidgetMenu = new QMenu(this);
     QMenu* voiceBankCategoriesSubMenu = nullptr;
     QActionGroup* voiceBankCategoriesActionGroup = new QActionGroup(this);
     QMenu* voiceBankLabelsSubMenu = nullptr;
     QActionGroup* voiceBankLabelsActionGroup = new QActionGroup(this);
     void createVoiceBanksTableMenu();
 
-    VoiceBank *getSelectedVoiceBank();
-    VoiceBank *getSelectedVoiceBank(const QModelIndex &current);
+    VoiceBank *getCurrentVoiceBank();
+    QList<VoiceBank*> getSelectedVoiceBanks();
+    VoiceBank *getCurrentVoiceBank(const QModelIndex &current);
 
     void setVoiceBankInfomation(VoiceBank *voiceBank);
     QString generateFileInfoString(const VoiceBank::FileInfoStruct& fileInfoStruct) const;
@@ -114,6 +117,9 @@ private:
     void resetSamplePlayer();
 
     void fillVoicebankInformationTextBrower(VoiceBank* voiceBank);
+
+
+    void modifyVoiceBankName(VoiceBank* voiceBank);
 
 private slots:
 #ifndef NDEBUG

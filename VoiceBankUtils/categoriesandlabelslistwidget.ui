@@ -148,9 +148,6 @@ background-color:white
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
             </property>
-            <property name="selectionRectVisible">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
           <item>
@@ -197,9 +194,6 @@ background-color:white
             </property>
             <property name="selectionBehavior">
              <enum>QAbstractItemView::SelectRows</enum>
-            </property>
-            <property name="selectionRectVisible">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
