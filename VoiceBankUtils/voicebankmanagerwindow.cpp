@@ -501,6 +501,8 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     multipleVoiceBankTableWidgetMenu->addMenu(copySubMenu);
     multipleVoiceBankTableWidgetMenu->addMenu(codecSubMenu);
     multipleVoiceBankTableWidgetMenu->addSeparator();
+    multipleVoiceBankTableWidgetMenu->addMenu(voiceBankCategoriesSubMenu);
+    multipleVoiceBankTableWidgetMenu->addMenu(voiceBankLabelsSubMenu);
     multipleVoiceBankTableWidgetMenu->addAction(ignoreAction);
     multipleVoiceBankTableWidgetMenu->addAction(reloadAction);
 
