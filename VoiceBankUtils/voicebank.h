@@ -22,6 +22,7 @@
 #include <QRandomGenerator>
 #include <QMimeDatabase>
 #include <QImageReader>
+#include <fileiowithcodechelper.h>
 
 ///用于表示一个音源库
 /*!
@@ -116,15 +117,6 @@ public:
     void toggleLabelStatus(const QString& label);
     void removeLabel(const QString &label);
 
-    ///VoiceBank在处理一个不存在的文件时可能会抛出该异常
-    /*!
-      许多情况下 VoiceBank 会自动处理文件不存在的问题，但某些函数可能依旧会抛出该异常以要求干预。
-    */
-    //TODO:变成内部异常
-    class FileNotExists : public std::runtime_error{
-    public:
-        FileNotExists();
-    };
 
     ///VoiceBank在文件无法打开时会抛出该异常
     /*!
@@ -213,7 +205,6 @@ private:
     void readReadme();
     void changeCharacterFile();
     void autoDetectTextFileCodecs();
-    QString readTextFileInTextCodec(const QString &path,QTextCodec* textCodec);
     static inline QTextCodec* DefaultCharacterTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec* DefaultReadmeTextCodec = QTextCodec::codecForName(defaultTextCodecName);
     static inline QTextCodec* DefaultWavFileNameTextCodec = QTextCodec::codecForName(defaultTextCodecName);

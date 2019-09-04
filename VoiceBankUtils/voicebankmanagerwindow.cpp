@@ -1171,8 +1171,9 @@ void VoiceBankManagerWindow::modifyVoiceBankName(VoiceBank * voiceBank)
             catch(VoiceBank::FileCanNotOpen& e){
                 QMessageBox::critical(this,tr("文件无法被打开"),tr("有一个文件无法被打开。Qt提供的错误字符串为%1").arg(e.QFileError()));
             }
-            catch(VoiceBank::FileNotExists&){
+            catch(FileIOWithCodecHelper::FileNotExists&){
                 setVoiceBankInfomation(voiceBank);
+                auto a = voiceBank->getName();
                 ui->statusbar->showMessage(tr("路径为%1的音源的character.txt不存在。程序已经自动创建并将名称设置为%1。").arg(voiceBank->getName()));
             }
         }

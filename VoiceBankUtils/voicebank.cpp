@@ -97,30 +97,6 @@ void VoiceBank::readFromPathPrivate()
     threadPool->start(newVoiceBankReadFunctionRunner);
 }
 
-QString VoiceBank::readTextFileInTextCodec(const QString& path, QTextCodec *textCodec)
-{
-    QFile* file = new QFile(path);
-    if (!file->exists()){
-        file->deleteLater();
-        throw FileNotExists();}
-    else
-    {
-        if (file->open(QIODevice::ReadOnly | QIODevice::Text)){
-            auto RawData = file->readAll();
-            file->close();
-            file->deleteLater();
-            QTextDecoder *decoder = textCodec->makeDecoder();
-            auto String = decoder->toUnicode(RawData);
-            delete decoder;
-            return String;
-        }
-        else
-        {
-            qCritical() << tr("读取%1时发生错误。错误描述为：%2").arg(path).arg(file->errorString());
-        }
-    }
-    return QString();
-}
 
 bool VoiceBank::isDefalutTextCodecAutoDetect()
 {
@@ -604,7 +580,7 @@ void VoiceBank::readLabels(QJsonObject json)
 
 void VoiceBank::readSettings(){
     try{
-        auto text = readTextFileInTextCodec(path + "leafUTAUQtSettings.json",QTextCodec::codecForName("UTF-8"));
+        auto text = FileIOWithCodecHelper::readTextFileInTextCodec(path + "leafUTAUQtSettings.json",QTextCodec::codecForName("UTF-8"));
         QJsonParseError json_error;
         auto json_doc = QJsonDocument::fromJson(text.toUtf8(),&json_error);
         if (!json_doc.isNull()){
@@ -630,7 +606,7 @@ void VoiceBank::readSettings(){
             qCritical() <<tr("声库%1的设置json读取出现问题。QJsonParseError的输出为%2。").arg(path).arg(json_error.errorString());
         }
     }
-    catch(FileNotExists&){
+    catch(FileIOWithCodecHelper::FileNotExists&){
         qInfo() << tr("声库%1的设置json不存在。").arg(path);
     }
 }
@@ -701,7 +677,7 @@ void VoiceBank::setName(const QString &name)
     {
         changeCharacterFile();
     }
-    catch(FileNotExists& e){
+    catch(FileIOWithCodecHelper::FileNotExists& e){
         //changeCharacterFile()会处理文件不存在的情况，但新建文件后下需要重载。
         reload();
         throw e;
@@ -903,9 +879,9 @@ void VoiceBank::readCharacterFile()
     {
         QString characterString{};
         if (!textCodecFollowDefault || (textCodecFollowDefault && DefalutIsTextCodecAutoDetect))
-            characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
+            characterString = FileIOWithCodecHelper::readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
-            characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
+            characterString = FileIOWithCodecHelper::readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
         auto characterList = characterString.split("\n",QString::SplitBehavior::SkipEmptyParts);
         for (auto i : characterList){
             i = i.trimmed();
@@ -972,7 +948,7 @@ void VoiceBank::readCharacterFile()
             errorStates.append(new ImageFileNotSetErrorState(this));
             qInfo() << tr("%1的音源的image字段不存在。").arg(path);}
     }
-    catch(FileNotExists&){
+    catch(FileIOWithCodecHelper::FileNotExists&){
         errorStates.append(new CharacterFileNotExistsErrorState(this));
         qInfo() << tr("%1的音源的character.txt不存在。").arg(path);
     }
@@ -987,11 +963,11 @@ void VoiceBank::readReadme()
 {
     try{
         if (!textCodecFollowDefault || (textCodecFollowDefault && DefalutIsTextCodecAutoDetect))
-            readme = readTextFileInTextCodec(path + "readme.txt",ReadmeTextCodec);
+            readme = FileIOWithCodecHelper::readTextFileInTextCodec(path + "readme.txt",ReadmeTextCodec);
         else
-            readme = readTextFileInTextCodec(path + "readme.txt",DefaultReadmeTextCodec);
+            readme = FileIOWithCodecHelper::readTextFileInTextCodec(path + "readme.txt",DefaultReadmeTextCodec);
     }
-    catch(FileNotExists&){
+    catch(FileIOWithCodecHelper::FileNotExists&){
         errorStates.append(new ReadmeFileNotExistsErrorState(this));
         qInfo() << tr("%1的音源的readme.txt不存在。").arg(path);
     }
@@ -1008,9 +984,9 @@ void VoiceBank::changeCharacterFile()
     {
         QString characterString{};
         if (!textCodecFollowDefault)
-            characterString = readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
+            characterString = FileIOWithCodecHelper::readTextFileInTextCodec(path + "character.txt",CharacterTextCodec);
         else
-            characterString = readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
+            characterString = FileIOWithCodecHelper::readTextFileInTextCodec(path + "character.txt",DefaultCharacterTextCodec);
         QString newCharacterString{};
         QTextStream readStream(&characterString);
         QTextStream writeStream(&newCharacterString);
@@ -1034,7 +1010,7 @@ void VoiceBank::changeCharacterFile()
             TextConvertHelper::TextConvertHelper::writeTextFileInTextCodec(newCharacterString,path + "character.txt",DefaultCharacterTextCodec);
 
     }
-    catch(FileNotExists& e){
+    catch(FileIOWithCodecHelper::FileNotExists& e){
         qInfo() << QString("%1的音源的character.txt不存在。").arg(path);
         QString newCharacterString{};
         QTextStream writeStream(&newCharacterString);
@@ -1384,7 +1360,6 @@ VoiceBank::ErrorState::ErrorState(VoiceBank* voiceBank){
 
 VoiceBank::ErrorState::~ErrorState(){}
 
-VoiceBank::FileNotExists::FileNotExists():std::runtime_error("File not exists."){}
 
 VoiceBank::FileCanNotOpen::FileCanNotOpen(const QString QFileError):std::runtime_error("File can not open."),_QFileError(QFileError){}
 
