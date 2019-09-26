@@ -47,7 +47,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
     ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
-    connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(currentRowChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &)));
+    connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)));
     connect(voiceBankTableModel,&VoiceBankTableModel::sortDone,this,&VoiceBankManagerWindow::dealFilters);
 
     //分组语言菜单的action
@@ -1086,12 +1086,21 @@ void VoiceBankManagerWindow::resetSamplePlayer()
     ui->playSamplebutton->setText(tr("播放样例"));
 }
 
-void VoiceBankManagerWindow::onVoiceBankViewCurrentChanged(const QModelIndex &current, const QModelIndex &)
+void VoiceBankManagerWindow::onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)
 {
-    auto voiceBank = getCurrentVoiceBank(current);
+    auto voiceBanks = getSelectedVoiceBanks();
+    VoiceBank* voiceBank = nullptr;
+    if (voiceBanks.count() == 0)
+        voiceBank = getCurrentVoiceBank();
+    else if (voiceBanks.count() == 1)
+        voiceBank = voiceBanks.at(0);
+    else {
+        ui->voiceBankBriefInfomationWidget->setVisible(false);
+    }
     if (voiceBank){
         setVoiceBankInfomation(voiceBank);
         resetSamplePlayer();
+
     }
 }
 

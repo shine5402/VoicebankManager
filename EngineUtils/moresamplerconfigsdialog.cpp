@@ -1,6 +1,6 @@
 ﻿#include "moresamplerconfigsdialog.h"
 #include "ui_moresamplerconfigsdialog.h"
-//TODO:删除llsm
+
 MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const MoresamplerConfigReader::ConfigFileType configFileType,QWidget *parent,QString voiceBankName) :
     QDialog(parent),
     ui(new Ui::MoresamplerConfigsDialog),path(path)

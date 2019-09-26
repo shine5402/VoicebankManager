@@ -174,7 +174,7 @@ private slots:
     void on_actionEdit_Global_MoresamplerConfig_triggered();
     void on_actionchoose_a_voicebank_randomly_triggered();
 
-    void onVoiceBankViewCurrentChanged(const QModelIndex &, const QModelIndex &);
+    void onVoiceBankViewSelectionChanged(const QItemSelection&, const QItemSelection&);
 
     void onBackupImageFileBecauseExists(VoiceBank * voicebank);
     void onCannotBackupImageFile(VoiceBank* voicebank);
