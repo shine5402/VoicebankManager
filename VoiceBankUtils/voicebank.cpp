@@ -321,10 +321,15 @@ bool VoiceBank::askFileInfo()
             }
         };
         f(infoList);
-        for (auto dirInfo : subDirInfoList){
+
+        long subDirInfoAccessCurrent = 0;
+        while(subDirInfoAccessCurrent < subDirInfoList.count())
+        {
+            auto dirInfo = subDirInfoList.at(subDirInfoAccessCurrent);
             auto dir = QDir(dirInfo.filePath());
             dir.setFilter(QDir::Filter::NoDotAndDotDot | QDir::Files | QDir::Dirs);
             f(dir.entryInfoList());
+            ++subDirInfoAccessCurrent;
         }
         fileInfoStruct->isFileInfoReaded = true;
     });

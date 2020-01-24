@@ -1,7 +1,6 @@
 ﻿#include "categoriesandlabelslistwidget.h"
 #include "ui_categoriesandlabelslistwidget.h"
 //TODO:标签分类 标签排序
-//TODO:标签过多时调整大小
 
 void CategoriesAndLabelsListWidget::resetCurrentAndSelection()
 {
