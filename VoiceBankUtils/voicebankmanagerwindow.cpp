@@ -553,45 +553,21 @@ void VoiceBankManagerWindow::createVoiceBanksLabelsSubMenu(){
 
 void VoiceBankManagerWindow::refreshCategoryAndLabelsActionsChecked()
 {
-    auto voiceBanks = getSelectedVoiceBanks();
-    if (voiceBanks.count() == 1){
-        auto voiceBank = voiceBanks.at(0);
-        if (voiceBank)
-        {
-            for (auto i : voiceBankCategoriesActionGroup->actions())
-            {
-                i->setChecked(i->text() == voiceBank->getCategory());
-                if (voiceBank->getCategory().isEmpty() && i->text() == tr("未分类"))
-                {
-                    i->setChecked(true);
-                }
-            }
-            for (auto i : voiceBankLabelsActionGroup->actions())
-            {
-                i->setChecked(voiceBank->getLabels().contains(i->text()));
-            }
-        }
-    }
-    else if (voiceBanks.count() > 1) {
+    auto voiceBank = getCurrentVoiceBank();
+    if (voiceBank)
+    {
         for (auto i : voiceBankCategoriesActionGroup->actions())
         {
-            i->setChecked(false);
-        }
-        auto labels = voiceBanks.at(0)->getLabels();
-        for (auto voiceBank : voiceBanks)
-        {
-            if (voiceBank)
+            i->setChecked(i->text() == voiceBank->getCategory());
+            if (voiceBank->getCategory().isEmpty() && i->text() == tr("未分类"))
             {
-                labels = SetOperations::getUnion<QString>({labels, voiceBank->getLabels()});
+                i->setChecked(true);
             }
         }
         for (auto i : voiceBankLabelsActionGroup->actions())
         {
-            i->setChecked(labels.contains(i->text()));
+            i->setChecked(voiceBank->getLabels().contains(i->text()));
         }
-    }
-    else {
-        return;
     }
 }
 
