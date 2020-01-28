@@ -39,18 +39,18 @@
 #include "CommonUtils/aboutdialog.h"
 
 namespace Ui {
-class VoiceBankManagerWindow;
+class VoicebankManagerWindow;
 }
 
 /// 音源管理器组件的主窗口。
-class VoiceBankManagerWindow : public QMainWindow
+class VoicebankManagerWindow : public QMainWindow
 {
 
 
     Q_OBJECT
 public:
-    explicit VoiceBankManagerWindow(QWidget *parent = nullptr);
-    ~VoiceBankManagerWindow() override;
+    explicit VoicebankManagerWindow(QWidget *parent = nullptr);
+    ~VoicebankManagerWindow() override;
 
     void loadVoiceBanksAndTable();
 
@@ -59,16 +59,16 @@ public slots:
 protected:
     void changeEvent(QEvent *e) override;
 private:
-    Ui::VoiceBankManagerWindow *ui;
+    Ui::VoicebankManagerWindow *ui;
 
-    VoiceBankHandler* voiceBankHandler = VoiceBankHandler::getVoiceBankHandler();
+    VoicebankHandler* voiceBankHandler = VoicebankHandler::getVoiceBankHandler();
 
     struct TableColumn
     {
         static constexpr int Name = 0;
         static constexpr int Path = 1;
     };
-    VoiceBankTableModel* voiceBankTableModel = nullptr;
+    VoicebankTableModel* voiceBankTableModel = nullptr;
 
     void showVoiceBanksRows(const QList<int> &voiceBankIDs);
 
@@ -85,12 +85,12 @@ private:
     QActionGroup* voiceBankLabelsActionGroup = new QActionGroup(this);
     void createVoiceBanksTableMenu();
 
-    VoiceBank *getCurrentVoiceBank();
-    QList<VoiceBank*> getSelectedVoiceBanks();
-    VoiceBank *getCurrentVoiceBank(const QModelIndex &current);
+    Voicebank *getCurrentVoiceBank();
+    QList<Voicebank*> getSelectedVoiceBanks();
+    Voicebank *getCurrentVoiceBank(const QModelIndex &current);
 
-    void setVoiceBankInfomation(VoiceBank *voiceBank);
-    QString generateFileInfoString(const VoiceBank::FileInfoStruct& fileInfoStruct) const;
+    void setVoiceBankInfomation(Voicebank *voiceBank);
+    QString generateFileInfoString(const Voicebank::FileInfoStruct& fileInfoStruct) const;
 
     QProgressBar* samplePlayerProgress = new QProgressBar();
     QMediaPlayer* samplePlayer = new QMediaPlayer(this);
@@ -116,10 +116,10 @@ private:
 
     void resetSamplePlayer();
 
-    void fillVoicebankInformationTextBrower(VoiceBank* voiceBank);
+    void fillVoicebankInformationTextBrower(Voicebank* voiceBank);
 
 
-    void modifyVoiceBankName(VoiceBank* voiceBank);
+    void modifyVoiceBankName(Voicebank* voiceBank);
 
 private slots:
 #ifndef NDEBUG
@@ -129,7 +129,7 @@ private slots:
 
     //void voiceBankReadDoneSlot(VoiceBank *voiceBank);
 
-    void handleFileInfoReadComplete(VoiceBank *voiceBank);
+    void handleFileInfoReadComplete(Voicebank *voiceBank);
 
     void createVoiceBanksCategoriesSubMenu();
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
@@ -176,8 +176,8 @@ private slots:
 
     void onVoiceBankViewSelectionChanged(const QItemSelection&, const QItemSelection&);
 
-    void onBackupImageFileBecauseExists(VoiceBank * voicebank);
-    void onCannotBackupImageFile(VoiceBank* voicebank);
+    void onBackupImageFileBecauseExists(Voicebank * voicebank);
+    void onCannotBackupImageFile(Voicebank* voicebank);
 
     //语言相关槽
     void dealLanguageMenuAutoAndDontStates();
@@ -199,7 +199,7 @@ private slots:
 
     void onUseOldFolderScanChanged();
 
-    void onVoiceBankReloadDone(VoiceBank *voiceBank);
+    void onVoiceBankReloadDone(Voicebank *voiceBank);
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

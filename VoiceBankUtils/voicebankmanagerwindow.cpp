@@ -1,18 +1,13 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
-//TODO:建立通用信息/警告/错误机制
 
-/*
- * TODO:上一条TODO的补充
- * 在主窗口的右下角放置一个可以显示错误窗口的按钮控件。弹出的窗口可不能是modal的……
- */
-void VoiceBankManagerWindow::connectWithVoiceBankHandler()
+void VoicebankManagerWindow::connectWithVoiceBankHandler()
 {
-    connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
-    connect(voiceBankHandler,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SLOT(onCannotBackupImageFile(VoiceBank*)));
+    connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(Voicebank*)),this,SLOT(onBackupImageFileBecauseExists(Voicebank *)));
+    connect(voiceBankHandler,SIGNAL(cannotBackupImageFile(Voicebank*)),this,SLOT(onCannotBackupImageFile(Voicebank*)));
     connect(voiceBankHandler,SIGNAL(voiceBanksReadDone()),this,SLOT(setUIAfterVoiceBanksReadDone()));
-    connect(voiceBankHandler,SIGNAL(aVoiceBankReloadDone(VoiceBank *)),this,SLOT(onVoiceBankReloadDone(VoiceBank *)));
+    connect(voiceBankHandler,SIGNAL(aVoiceBankReloadDone(Voicebank *)),this,SLOT(onVoiceBankReloadDone(Voicebank *)));
     connect(voiceBankHandler,SIGNAL(useOldFolderScanChanged()),this,SLOT(onUseOldFolderScanChanged()));
 
     connect(voiceBankHandler,SIGNAL(categoriesChanged()),categoriesAndLabelsListWidget,SLOT(readCategoriesFromVoicebankHandler()));
@@ -24,9 +19,9 @@ void VoiceBankManagerWindow::connectWithVoiceBankHandler()
     connect(categoriesAndLabelsListWidget,SIGNAL(labelSelectionStrategyChanged()),this,SLOT(dealFilters()));
 }
 
-VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
+VoicebankManagerWindow::VoicebankManagerWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::VoiceBankManagerWindow)
+    ui(new Ui::VoicebankManagerWindow)
 {
     /*!
       VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。因为那是 VoiceBankHandler 的工作。 \n
@@ -44,11 +39,11 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     ui->voiceBankBriefInfomationWidget->setVisible(false);
 
     //设置TableView
-    voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
+    voiceBankTableModel = new VoicebankTableModel(voiceBankHandler);
     ui->voiceBanksTableView->setModel(voiceBankTableModel);
-    ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
+    ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoicebankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
     connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)));
-    connect(voiceBankTableModel,&VoiceBankTableModel::sortDone,this,&VoiceBankManagerWindow::dealFilters);
+    connect(voiceBankTableModel,&VoicebankTableModel::sortDone,this,&VoicebankManagerWindow::dealFilters);
 
     //分组语言菜单的action
     auto languageActionGroup = new QActionGroup(this);
@@ -102,7 +97,7 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 }
 
 
-void VoiceBankManagerWindow::loadVoiceBanksAndTable()
+void VoicebankManagerWindow::loadVoiceBanksAndTable()
 {
     /*!
       加载音源库列表，并填充窗口中的表格。\n
@@ -118,7 +113,7 @@ void VoiceBankManagerWindow::loadVoiceBanksAndTable()
     ui->searchLineEdit->clear();
 }
 
-void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
+void VoicebankManagerWindow::dealLanguageMenuAutoAndDontStates(){
     if (ui->actionAuto_detect->isChecked())
     {
         autoDetectTranslate();
@@ -128,7 +123,7 @@ void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
         removeAllTranslators();
     }
 }
-void VoiceBankManagerWindow::dealLanguageMenuLoadFile(){
+void VoicebankManagerWindow::dealLanguageMenuLoadFile(){
     if (ui->actionLoad_a_translation_file->isChecked()){
         auto fileName = QFileDialog::getOpenFileName(this,tr("载入一个翻译文件（Load a translation file...）"),QString(),"Qt 语言文件 (*.qm)");
         if (!fileName.isEmpty()){
@@ -164,7 +159,7 @@ void VoiceBankManagerWindow::dealLanguageMenuLoadFile(){
         }
     }
 }
-void VoiceBankManagerWindow::autoDetectTranslate(){
+void VoicebankManagerWindow::autoDetectTranslate(){
     removeAllTranslators();
     auto translator = new QTranslator(this);
     auto success = translator->load(QLocale(),"LeafOpenUTAUQt",".","./translations",".qm");
@@ -179,7 +174,7 @@ void VoiceBankManagerWindow::autoDetectTranslate(){
     settings.setValue("Translation/NoTranslation",false);
     settings.setValue("Translation/isLoadOwnTranslationFile",false);
 }
-void VoiceBankManagerWindow::removeAllTranslators(){
+void VoicebankManagerWindow::removeAllTranslators(){
     for (auto translator : translators)
     {
         qApp->removeTranslator(translator);
@@ -193,7 +188,7 @@ void VoiceBankManagerWindow::removeAllTranslators(){
 }
 
 
-VoiceBankManagerWindow::~VoiceBankManagerWindow()
+VoicebankManagerWindow::~VoicebankManagerWindow()
 {
     /*!
        VoiceBankManagerWindow 的析构函数。它将自动保存窗口状态，监视文件夹等设置。
@@ -205,7 +200,7 @@ VoiceBankManagerWindow::~VoiceBankManagerWindow()
     settings.setValue("VoiceBankManager/showMoreInformationInTotalCountLabel",showMoreInformationInTotalCountLabel);
 }
 
-void VoiceBankManagerWindow::loadWindowStatus()
+void VoicebankManagerWindow::loadWindowStatus()
 {
     QSettings settings;
     if (settings.contains("VoiceBankManager/WindowGeometry"))
@@ -239,7 +234,7 @@ void VoiceBankManagerWindow::loadWindowStatus()
     }
 }
 
-void VoiceBankManagerWindow::saveWindowStatus()
+void VoicebankManagerWindow::saveWindowStatus()
 {
     QSettings settings;
     settings.setValue("VoiceBankManager/WindowGeometry",saveGeometry());
@@ -247,7 +242,7 @@ void VoiceBankManagerWindow::saveWindowStatus()
     settings.setValue("VoiceBankManager/informationAndListSplitterState",ui->informationAndListSplitter->saveState());
 }
 
-void VoiceBankManagerWindow::fillVoicebankInformationTextBrower(VoiceBank* voiceBank)
+void VoicebankManagerWindow::fillVoicebankInformationTextBrower(Voicebank* voiceBank)
 {
     if (!voiceBank)
         return;
@@ -258,7 +253,7 @@ void VoiceBankManagerWindow::fillVoicebankInformationTextBrower(VoiceBank* voice
     }
     else {
         ui->voicebankInformationTextBrowser->append(tr("<p>文件信息统计中……</p>"));
-        connect(voiceBank,&VoiceBank::fileInfoReadComplete,this,&VoiceBankManagerWindow::handleFileInfoReadComplete,static_cast<Qt::ConnectionType>(Qt::ConnectionType::AutoConnection | Qt::ConnectionType::DirectConnection));
+        connect(voiceBank,&Voicebank::fileInfoReadComplete,this,&VoicebankManagerWindow::handleFileInfoReadComplete,static_cast<Qt::ConnectionType>(Qt::ConnectionType::AutoConnection | Qt::ConnectionType::DirectConnection));
     }
     if (!voiceBank->getAuthor().isEmpty())
         ui->voicebankInformationTextBrowser->append(tr("<p>作者：%1</p>").arg(voiceBank->getAuthor()));
@@ -283,7 +278,7 @@ void VoiceBankManagerWindow::fillVoicebankInformationTextBrower(VoiceBank* voice
     }
 }
 
-void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
+void VoicebankManagerWindow::setVoiceBankInfomation(Voicebank *voiceBank)
 {
     if (!ui->voiceBankBriefInfomationWidget->isVisible())
         ui->voiceBankBriefInfomationWidget->setVisible(true);
@@ -325,12 +320,12 @@ void VoiceBankManagerWindow::setVoiceBankInfomation(VoiceBank *voiceBank)
     ui->voicebankInformationTextBrowser->moveCursor(QTextCursor::Start);
 }
 
-QString VoiceBankManagerWindow::generateFileInfoString(const VoiceBank::FileInfoStruct& fileInfoStruct) const
+QString VoicebankManagerWindow::generateFileInfoString(const Voicebank::FileInfoStruct& fileInfoStruct) const
 {
     return tr("<h4>文件信息</h4><p>文件总数：%1 个（其中有 %2 个文件夹）<br/>文件总大小：%3 字节</p>").arg(fileInfoStruct.fileCount).arg(fileInfoStruct.dirCount).arg(fileInfoStruct.fileTotalSize);
 }
 
-void VoiceBankManagerWindow::updateVoiceBankCountLabel()
+void VoicebankManagerWindow::updateVoiceBankCountLabel()
 {
 
     if (voiceBankHandler->count() != 0){
@@ -340,12 +335,12 @@ void VoiceBankManagerWindow::updateVoiceBankCountLabel()
             ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个，不是音源文件夹的 %3 个，子文件夹递归得到 %4 个）").arg(voiceBankHandler->count()).arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getIgnoredVoiceBankFolders().count()).arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getNotVoiceBankPaths().count()).arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getScannedSubFolders().count()));
         else
             ui->voicebankCountLabel->setText(tr("共 %1 个（忽略 %2 个）").arg(voiceBankHandler->count()).arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getIgnoredVoiceBankFolders().count()));
-        voiceBankTableModel->sort(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);}
+        voiceBankTableModel->sort(VoicebankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);}
     else
         ui->voicebankCountLabel->setText(tr("没有音源。"));
 }
 
-void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
+void VoicebankManagerWindow::setUIAfterVoiceBanksReadDone()
 {
     ui->categoryAndLabelsAndListSplitter->setEnabled(true);
     ui->searchLineEdit->setEnabled(true);
@@ -356,24 +351,24 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
     categoriesAndLabelsListWidget->resetCurrentAndSelection();
 }
 
-void VoiceBankManagerWindow::onUseOldFolderScanChanged()
+void VoicebankManagerWindow::onUseOldFolderScanChanged()
 {
 
 }
 
-void VoiceBankManagerWindow::onVoiceBankReloadDone(VoiceBank *voiceBank)
+void VoicebankManagerWindow::onVoiceBankReloadDone(Voicebank *voiceBank)
 {
     if (voiceBank == getCurrentVoiceBank())
         setVoiceBankInfomation(voiceBank);
 }
 
 #ifndef NDEBUG
-void VoiceBankManagerWindow::debugFunction()
+void VoicebankManagerWindow::debugFunction()
 {
 
 }
 #endif
-void VoiceBankManagerWindow::handleFileInfoReadComplete(VoiceBank* voiceBank)
+void VoicebankManagerWindow::handleFileInfoReadComplete(Voicebank* voiceBank)
 {
     if (voiceBank == getCurrentVoiceBank())
         fillVoicebankInformationTextBrower(voiceBank);
@@ -382,7 +377,7 @@ void VoiceBankManagerWindow::handleFileInfoReadComplete(VoiceBank* voiceBank)
 
 
 
-void VoiceBankManagerWindow::createVoiceBanksTableMenu()
+void VoicebankManagerWindow::createVoiceBanksTableMenu()
 {
     //生成单选菜单
     voiceBankCategoriesSubMenu = new QMenu(tr("分类"),this);
@@ -508,7 +503,7 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
 
 }
 
-void VoiceBankManagerWindow::createVoiceBanksCategoriesSubMenu(){
+void VoicebankManagerWindow::createVoiceBanksCategoriesSubMenu(){
     voiceBankCategoriesSubMenu->clear();
     voiceBankCategoriesActionGroup->deleteLater();
     voiceBankCategoriesActionGroup = new QActionGroup(this);
@@ -529,7 +524,7 @@ void VoiceBankManagerWindow::createVoiceBanksCategoriesSubMenu(){
     voiceBankCategoriesSubMenu->addActions(voiceBankCategoriesActionGroup->actions());
 }
 
-void VoiceBankManagerWindow::createVoiceBanksLabelsSubMenu(){
+void VoicebankManagerWindow::createVoiceBanksLabelsSubMenu(){
     voiceBankLabelsSubMenu->clear();
     voiceBankLabelsActionGroup->deleteLater();
     voiceBankLabelsActionGroup = new QActionGroup(this);
@@ -551,7 +546,7 @@ void VoiceBankManagerWindow::createVoiceBanksLabelsSubMenu(){
 
 }
 
-void VoiceBankManagerWindow::refreshCategoryAndLabelsActionsChecked()
+void VoicebankManagerWindow::refreshCategoryAndLabelsActionsChecked()
 {
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
@@ -571,7 +566,7 @@ void VoiceBankManagerWindow::refreshCategoryAndLabelsActionsChecked()
     }
 }
 
-void VoiceBankManagerWindow::ignoreActionSlot(){
+void VoicebankManagerWindow::ignoreActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
     {
@@ -584,7 +579,7 @@ void VoiceBankManagerWindow::ignoreActionSlot(){
     }
 }
 
-void VoiceBankManagerWindow::addNewLabelActionSlot(){
+void VoicebankManagerWindow::addNewLabelActionSlot(){
     auto newLabel = QInputDialog::getText(this,tr("输入新标签的名称"),tr("输入新标签的名称："));
     newLabel = newLabel.trimmed();
     if (!newLabel.isEmpty())
@@ -599,14 +594,14 @@ void VoiceBankManagerWindow::addNewLabelActionSlot(){
         voiceBank->appendLabel(newLabel);
     }
 }
-void VoiceBankManagerWindow::setLabelActionSlot(QAction* action){
+void VoicebankManagerWindow::setLabelActionSlot(QAction* action){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
     {
         voiceBank->toggleLabelStatus(action->text());
     }
 }
-void VoiceBankManagerWindow::setCategoryActionsSlot(QAction* action){
+void VoicebankManagerWindow::setCategoryActionsSlot(QAction* action){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
     {
@@ -616,7 +611,7 @@ void VoiceBankManagerWindow::setCategoryActionsSlot(QAction* action){
             voiceBank->setCategory("");
     }
 }
-void VoiceBankManagerWindow::addNewCategoryActionSlot(){
+void VoicebankManagerWindow::addNewCategoryActionSlot(){
     auto newCategory = QInputDialog::getText(this,tr("输入新分类的名称"),tr("输入新分类的名称："));
     newCategory = newCategory.trimmed();
     if (!newCategory.isEmpty())
@@ -632,15 +627,15 @@ void VoiceBankManagerWindow::addNewCategoryActionSlot(){
     }
 }
 
-VoiceBank* VoiceBankManagerWindow::getCurrentVoiceBank()
+Voicebank* VoicebankManagerWindow::getCurrentVoiceBank()
 {
     return getCurrentVoiceBank(ui->voiceBanksTableView->currentIndex());
 }
 
-QList<VoiceBank *> VoiceBankManagerWindow::getSelectedVoiceBanks()
+QList<Voicebank *> VoicebankManagerWindow::getSelectedVoiceBanks()
 {
     auto selections = ui->voiceBanksTableView->selectionModel()->selectedRows();
-    QList<VoiceBank *> result;
+    QList<Voicebank *> result;
     for (auto selection : selections)
     {
         result.append(getCurrentVoiceBank(selection));
@@ -648,12 +643,12 @@ QList<VoiceBank *> VoiceBankManagerWindow::getSelectedVoiceBanks()
     return result;
 }
 
-VoiceBank *VoiceBankManagerWindow::getCurrentVoiceBank(const QModelIndex &current)
+Voicebank *VoicebankManagerWindow::getCurrentVoiceBank(const QModelIndex &current)
 {
     return voiceBankHandler->getVoiceBank(current.row());
 }
 
-void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
+void VoicebankManagerWindow::openVoiceBankPathInExplorer()
 {
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
@@ -661,7 +656,7 @@ void VoiceBankManagerWindow::openVoiceBankPathInExplorer()
         QDesktopServices::openUrl(url);}
 
 }
-void VoiceBankManagerWindow::openVoiceBankCharacterFileByOS(){
+void VoicebankManagerWindow::openVoiceBankCharacterFileByOS(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         auto url = QUrl("file:" + voiceBank->getPath() + "character.txt");
@@ -679,7 +674,7 @@ void VoiceBankManagerWindow::openVoiceBankCharacterFileByOS(){
             QMessageBox::warning(this,tr("打开失败"),tr("无法打开%1。").arg(url.url()));
         };}
 }
-void VoiceBankManagerWindow::openVoiceBankReadmeFileByOS(){
+void VoicebankManagerWindow::openVoiceBankReadmeFileByOS(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         auto url = QUrl("file:" + voiceBank->getPath() + "readme.txt");
@@ -700,7 +695,7 @@ void VoiceBankManagerWindow::openVoiceBankReadmeFileByOS(){
         };
     }
 }
-void VoiceBankManagerWindow::copyVoiceBankPathtoClipboard()
+void VoicebankManagerWindow::copyVoiceBankPathtoClipboard()
 {
     auto voiceBanks = getSelectedVoiceBanks();
     QStringList pathList{};
@@ -711,7 +706,7 @@ void VoiceBankManagerWindow::copyVoiceBankPathtoClipboard()
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(pathList.join("\n"));
 }
-void VoiceBankManagerWindow::copyVoiceBankCharacterFilePathtoClipboard(){
+void VoicebankManagerWindow::copyVoiceBankCharacterFilePathtoClipboard(){
     auto voiceBanks = getSelectedVoiceBanks();
     for (auto voiceBank : voiceBanks){
         if (voiceBank)
@@ -736,7 +731,7 @@ void VoiceBankManagerWindow::copyVoiceBankCharacterFilePathtoClipboard(){
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(pathList.join("\n"));
 }
-void VoiceBankManagerWindow::copyVoiceBankReadmeFilePathtoClipboard(){
+void VoicebankManagerWindow::copyVoiceBankReadmeFilePathtoClipboard(){
     auto voiceBanks = getSelectedVoiceBanks();
     for (auto voiceBank : voiceBanks){
         if (voiceBank)
@@ -763,7 +758,7 @@ void VoiceBankManagerWindow::copyVoiceBankReadmeFilePathtoClipboard(){
     QClipboard* clipboard = QApplication::clipboard();
     clipboard->setText(pathList.join("\n"));
 }
-void VoiceBankManagerWindow::setCodecForVoiceBankActionSlot(){
+void VoicebankManagerWindow::setCodecForVoiceBankActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         auto dialog = new TextCodecSettingDialog(this,voiceBank);
@@ -778,7 +773,7 @@ void VoiceBankManagerWindow::setCodecForVoiceBankActionSlot(){
         }
     }
 }
-void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
+void VoicebankManagerWindow::convertCharacterCodecActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         auto path = voiceBank->getPath() + "character.txt";
@@ -788,7 +783,7 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
             return;
         }
         auto sourceCodec = voiceBank->getCharacterTextCodec();
-        auto targetCodec = VoiceBank::getDefaultCharacterTextCodec();
+        auto targetCodec = Voicebank::getDefaultCharacterTextCodec();
         auto isDone = TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
         if (isDone)
         {
@@ -799,7 +794,7 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
         }
     }
 }
-void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
+void VoicebankManagerWindow::convertReadmeCodecActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         auto path = voiceBank->getPath() + "readme.txt";
@@ -809,7 +804,7 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
             return;
         }
         auto sourceCodec = voiceBank->getReadmeTextCodec();
-        auto targetCodec = VoiceBank::getDefaultReadmeTextCodec();
+        auto targetCodec = Voicebank::getDefaultReadmeTextCodec();
         auto isDone = TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
         if (isDone)
         {
@@ -821,7 +816,7 @@ void VoiceBankManagerWindow::convertReadmeCodecActionSlot(){
     }
 }
 
-void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
+void VoicebankManagerWindow::convertWavFileNameCodecActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     //voiceBank->readWavFileName();
     if (voiceBank){
@@ -836,7 +831,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
     }
 }
 
-void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
+void VoicebankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         voiceBank->reload();
@@ -844,24 +839,24 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     }
 }
 
-void VoiceBankManagerWindow::on_actionMonitor_Folders_triggered()
+void VoicebankManagerWindow::on_actionMonitor_Folders_triggered()
 {
     letUserModifyFolder(&MonitorFoldersScanner::getMonitorFolders,&MonitorFoldersScanner::setMonitorFolders,tr("监视文件夹列表"),{"./voice"});
 }
 
-void VoiceBankManagerWindow::on_actionRefresh_triggered()
+void VoicebankManagerWindow::on_actionRefresh_triggered()
 {
     loadVoiceBanksAndTable();
 }
 
-void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
+void VoicebankManagerWindow::on_actionDefault_TextCodec_triggered()
 {
     auto dialog = new TextCodecSettingDialog(this);
     auto dialogCode = dialog->exec();
     if (dialogCode == QDialog::Accepted){
-        VoiceBank::setDefaultCharacterTextCodec(dialog->getCharacterTextCodec());
-        VoiceBank::setDefaultReadmeTextCodec(dialog->getReadmeTextCodec());
-        VoiceBank::setDefalutTextCodecAutoDetect(dialog->getIsAutoDetect());
+        Voicebank::setDefaultCharacterTextCodec(dialog->getCharacterTextCodec());
+        Voicebank::setDefaultReadmeTextCodec(dialog->getReadmeTextCodec());
+        Voicebank::setDefalutTextCodecAutoDetect(dialog->getIsAutoDetect());
         auto clickedButton = QMessageBox::information(this,tr("默认文本读取编码被更改"),tr("您更改了默认的读取用文本编码，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
             loadVoiceBanksAndTable();
@@ -869,7 +864,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
     dialog->deleteLater();
 }
 
-void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
+void VoicebankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
 {
     int rowCount = voiceBankHandler->count();//获得行号
     for (int i = 0; i < rowCount; i++)
@@ -883,7 +878,7 @@ void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
     }
 }
 
-void VoiceBankManagerWindow::dealFilters()
+void VoicebankManagerWindow::dealFilters()
 {
     auto byName = voiceBankHandler->findIDByNameOrPath(ui->searchLineEdit->text());
     QList<int> byCategory;
@@ -921,17 +916,17 @@ void VoiceBankManagerWindow::dealFilters()
     showVoiceBanksRows(result);
 }
 
-void VoiceBankManagerWindow::on_searchLineEdit_textChanged(const QString &)
+void VoicebankManagerWindow::on_searchLineEdit_textChanged(const QString &)
 {
     dealFilters();
 }
 
-void VoiceBankManagerWindow::on_actionExit_triggered()
+void VoicebankManagerWindow::on_actionExit_triggered()
 {
     qApp->exit();
 }
 
-void VoiceBankManagerWindow::on_actionAbout_triggered()
+void VoicebankManagerWindow::on_actionAbout_triggered()
 {
     auto dialog = new AboutDialog(tr("音源管理器 v%1").arg(voicebankManagerVersion),QImage(),
                                   //关于
@@ -1047,24 +1042,24 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
     dialog->exec();
 }
 
-void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
+void VoicebankManagerWindow::on_actionAbout_Qt_triggered()
 {
     QMessageBox::aboutQt(this,tr("关于 Qt"));
 }
 
-void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
+void VoicebankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
 {
     bool ok = false;
-    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),VoiceBank::getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
+    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),Voicebank::getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
     if (ok){
-        VoiceBank::setThreadPoolMaxThreadCount(count);
+        Voicebank::setThreadPoolMaxThreadCount(count);
         ui->statusbar->showMessage(tr("线程池大小已经被设置为%1").arg(count));
     }
 }
 
 
 
-void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(const QPoint &)
+void VoicebankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(const QPoint &)
 {
     refreshCategoryAndLabelsActionsChecked();
     auto voicebanks = getSelectedVoiceBanks();
@@ -1079,17 +1074,17 @@ void VoiceBankManagerWindow::on_voiceBanksTableView_customContextMenuRequested(c
 }
 
 
-void VoiceBankManagerWindow::resetSamplePlayer()
+void VoicebankManagerWindow::resetSamplePlayer()
 {
     samplePlayer->stop();
     samplePlayer->setMedia(QMediaContent());
     ui->playSamplebutton->setText(tr("播放样例"));
 }
 
-void VoiceBankManagerWindow::onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)
+void VoicebankManagerWindow::onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)
 {
     auto voiceBanks = getSelectedVoiceBanks();
-    VoiceBank* voiceBank = nullptr;
+    Voicebank* voiceBank = nullptr;
     if (voiceBanks.count() == 0)
         voiceBank = getCurrentVoiceBank();
     else if (voiceBanks.count() == 1)
@@ -1104,7 +1099,7 @@ void VoiceBankManagerWindow::onVoiceBankViewSelectionChanged(const QItemSelectio
     }
 }
 
-void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
+void VoicebankManagerWindow::moresamplerConfigEditActionSlot()
 {
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
@@ -1129,7 +1124,7 @@ void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
     }
 }
 
-void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
+void VoicebankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
 {
     QStringList configFilePaths;
     for (auto path : MonitorFoldersScanner::getMonitorFoldersScanner()->getMonitorFolders())
@@ -1164,7 +1159,7 @@ void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
     };
 }
 
-void VoiceBankManagerWindow::modifyVoiceBankName(VoiceBank * voiceBank)
+void VoicebankManagerWindow::modifyVoiceBankName(Voicebank * voiceBank)
 {
     if (voiceBank)
     {
@@ -1177,7 +1172,7 @@ void VoiceBankManagerWindow::modifyVoiceBankName(VoiceBank * voiceBank)
                 ui->statusbar->showMessage(tr("已将路径为%1的音源的名称设置为%2。").arg(voiceBank->getPath()).arg(voiceBank->getName()));
                 setVoiceBankInfomation(voiceBank);
             }
-            catch(VoiceBank::FileCanNotOpen& e){
+            catch(Voicebank::FileCanNotOpen& e){
                 QMessageBox::critical(this,tr("文件无法被打开"),tr("有一个文件无法被打开。Qt提供的错误字符串为%1").arg(e.QFileError()));
             }
             catch(FileIOWithCodecHelper::FileNotExists&){
@@ -1189,13 +1184,13 @@ void VoiceBankManagerWindow::modifyVoiceBankName(VoiceBank * voiceBank)
     }
 }
 
-void VoiceBankManagerWindow::modifyNameActionSlot()
+void VoicebankManagerWindow::modifyNameActionSlot()
 {
     auto voiceBank = getCurrentVoiceBank();
     modifyVoiceBankName(voiceBank);
 }
 
-void VoiceBankManagerWindow::modifyIconActionSlot()
+void VoicebankManagerWindow::modifyIconActionSlot()
 {
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
@@ -1210,7 +1205,7 @@ void VoiceBankManagerWindow::modifyIconActionSlot()
         auto rawImageFilePath = QFileDialog::getOpenFileName(this,tr("选择要设定为图标的新图片"),voiceBank->getPath(),supportedFilterString);
         if (!rawImageFilePath.isEmpty())
         {
-            auto dialog = new VoiceBankIconCropDialog(voiceBank,rawImageFilePath,this);
+            auto dialog = new VoicebankIconCropDialog(voiceBank,rawImageFilePath,this);
             auto id = dialog->exec();
             if (id == QDialog::Accepted)
             {
@@ -1220,7 +1215,7 @@ void VoiceBankManagerWindow::modifyIconActionSlot()
     }
 }
 
-void VoiceBankManagerWindow::on_actionchoose_a_voicebank_randomly_triggered()
+void VoicebankManagerWindow::on_actionchoose_a_voicebank_randomly_triggered()
 {
     if (voiceBankHandler->count() == 0)
     {
@@ -1237,17 +1232,17 @@ void VoiceBankManagerWindow::on_actionchoose_a_voicebank_randomly_triggered()
     ui->voiceBanksTableView->setCurrentIndex(voiceBankTableModel->index(unHidden.at(random),0));
 }
 
-void VoiceBankManagerWindow::onBackupImageFileBecauseExists(VoiceBank *voicebank)
+void VoicebankManagerWindow::onBackupImageFileBecauseExists(Voicebank *voicebank)
 {
     ui->statusbar->showMessage(tr("备份了%1原先的图标，因为目标文件名已存在。").arg(voicebank->getName()));
 }
 
-void VoiceBankManagerWindow::onCannotBackupImageFile(VoiceBank *voicebank)
+void VoicebankManagerWindow::onCannotBackupImageFile(Voicebank *voicebank)
 {
     QMessageBox::critical(this,tr("无法备份"),tr("因为重名，程序尝试备份%1原先的图标，但是遇到错误无法完成，操作终止。").arg(voicebank->getName()));
 }
 
-void VoiceBankManagerWindow::on_playSamplebutton_clicked()
+void VoicebankManagerWindow::on_playSamplebutton_clicked()
 {
     if (!(samplePlayer->state() == QMediaPlayer::State::PlayingState)){
         samplePlayer->stop();
@@ -1278,13 +1273,13 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
         resetSamplePlayer();
     }
 }
-void VoiceBankManagerWindow::onSamplePlayerPositionChange(qint64 position)
+void VoicebankManagerWindow::onSamplePlayerPositionChange(qint64 position)
 {
     auto sampleDuration = samplePlayer->duration();
     qreal positionRate = static_cast<double>(position) / ((sampleDuration == 0)?INT_MAX:sampleDuration);
     samplePlayerProgress->setValue(static_cast<int>(INT_MAX * positionRate));
 }
-void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State state)
+void VoicebankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State state)
 {
     if (state == QMediaPlayer::State::StoppedState){
         ui->statusbar->removeWidget(samplePlayerProgress);
@@ -1293,7 +1288,7 @@ void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State stat
     }
 }
 
-void VoiceBankManagerWindow::changeEvent(QEvent *e)
+void VoicebankManagerWindow::changeEvent(QEvent *e)
 {
     /*!
       继承自 QWidget 的 QWidget::changeEvent(QEvent *e) 。\n
@@ -1310,7 +1305,7 @@ void VoiceBankManagerWindow::changeEvent(QEvent *e)
     }
 }
 
-void VoiceBankManagerWindow::on_actionFor_text_file_triggered()
+void VoicebankManagerWindow::on_actionFor_text_file_triggered()
 {
     auto path = QFileDialog::getOpenFileName(this,tr("打开一个文本文件"));
     if (path.isEmpty())
@@ -1320,7 +1315,7 @@ void VoiceBankManagerWindow::on_actionFor_text_file_triggered()
     TextConvertHelper::processFileTextCodecConvert(path,sourceCodec,targetCodec,this);
 }
 
-void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
+void VoicebankManagerWindow::on_actionFor_File_Name_triggered()
 {
     auto path = QFileDialog::getExistingDirectory(this,tr("打开一个文件夹"));
     if (path.isEmpty())
@@ -1346,7 +1341,7 @@ void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
         QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的从%2到%3的转换成功完成。").arg(path).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
 }
 
-void VoiceBankManagerWindow::on_voicebankImage_customContextMenuRequested(const QPoint &)
+void VoicebankManagerWindow::on_voicebankImage_customContextMenuRequested(const QPoint &)
 {
     auto menu = new QMenu(this);
     auto modifyIconAction = new QAction(tr("修改音源的图标..."),menu);
@@ -1356,30 +1351,30 @@ void VoiceBankManagerWindow::on_voicebankImage_customContextMenuRequested(const 
     menu->popup(QCursor::pos());
 }
 
-void VoiceBankManagerWindow::onCurrentCategoriesChanged(const QStringList &current)
+void VoicebankManagerWindow::onCurrentCategoriesChanged(const QStringList &current)
 {
     currentCategoriesFilter = current;
     dealFilters();
 }
 
-void VoiceBankManagerWindow::onCurrentLabelsChanged(const QStringList &current)
+void VoicebankManagerWindow::onCurrentLabelsChanged(const QStringList &current)
 {
     currentLabelFilter = current;
     dealFilters();
 }
 
-void VoiceBankManagerWindow::on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked)
+void VoicebankManagerWindow::on_actionuse_old_watched_folder_scan_strategy_toggled(bool checked)
 {
     MonitorFoldersScanner::getMonitorFoldersScanner()->setUseOldFolderScan(checked);
 }
 
-void VoiceBankManagerWindow::on_actionshow_more_infomation_in_total_count_label_toggled(bool checked)
+void VoicebankManagerWindow::on_actionshow_more_infomation_in_total_count_label_toggled(bool checked)
 {
     showMoreInformationInTotalCountLabel = checked;
     updateVoiceBankCountLabel();
 }
 
-void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QList<FoldersSettingDialog::AllowedPrefix>& allowedPrefix)
+void VoicebankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QList<FoldersSettingDialog::AllowedPrefix>& allowedPrefix)
 {
     auto dialog = new FoldersSettingDialog(getFunc(MonitorFoldersScanner::getMonitorFoldersScanner()),tr("设定%1：").arg(name),tr("%1设定").arg(name),this,defaultList,allowedPrefix);
     auto dialogCode = dialog->exec();
@@ -1392,17 +1387,17 @@ void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(Monit
     dialog->deleteLater();
 }
 
-void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
+void VoicebankManagerWindow::on_actionOutside_VoiceBanks_triggered()
 {
     letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getOutsideVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setOutsideVoiceBankFolders),tr("外部音源文件夹列表"));
 }
 
-void VoiceBankManagerWindow::on_actionIgnored_folders_triggered()
+void VoicebankManagerWindow::on_actionIgnored_folders_triggered()
 {
     letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"),QStringList(),{{"*",tr("子文件夹不包括"),tr("在路径前使用“*”前缀会使VoiceBankManager在扫描时同时忽略其子文件夹。")}});
 }
 
-void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
+void VoicebankManagerWindow::on_actionView_scan_details_triggered()
 {
     auto html = tr("<h4>已忽略的文件夹</h4>"
                    "<pre>%1</pre>"
