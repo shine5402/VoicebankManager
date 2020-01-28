@@ -112,8 +112,8 @@ public:
 
     QStringList getLabels() const;
     void setLabels(const QStringList &value);
-    void appendLabel(const QString& label);
-    void appendLabels(const QStringList& label);
+    void addLabel(const QString& label);
+    void addLabels(const QStringList& label);
     void toggleLabelStatus(const QString& label);
     void removeLabel(const QString &label);
 

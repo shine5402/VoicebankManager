@@ -200,7 +200,7 @@ void Voicebank::setLabels(const QStringList &value)
     emit labelsChanged();
 }
 
-void Voicebank::appendLabel(const QString &label)
+void Voicebank::addLabel(const QString &label)
 {
     ///在该音源库的标签列表中添加一个标签
     /*!
@@ -218,7 +218,7 @@ void Voicebank::appendLabel(const QString &label)
     emit labelsChanged();
 }
 
-void Voicebank::appendLabels(const QStringList &label)
+void Voicebank::addLabels(const QStringList &label)
 {
     ///在该音源库的标签列表中添加一系列标签
     /*!
@@ -232,7 +232,7 @@ void Voicebank::appendLabels(const QStringList &label)
       \param[in] label 要添加的标签列表
     */
     for (auto i : label)
-        appendLabel(i);
+        addLabel(i);
 }
 
 void Voicebank::toggleLabelStatus(const QString &label)
@@ -251,7 +251,7 @@ void Voicebank::toggleLabelStatus(const QString &label)
     if (labels.contains(label))
         removeLabel(label);
     else
-        appendLabel(label);
+        addLabel(label);
 }
 
 void Voicebank::removeLabel(const QString &label)

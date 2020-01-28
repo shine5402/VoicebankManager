@@ -591,7 +591,7 @@ void VoicebankManagerWindow::addNewLabelActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank)
     {
-        voiceBank->appendLabel(newLabel);
+        voiceBank->addLabel(newLabel);
     }
 }
 void VoicebankManagerWindow::setLabelActionSlot(QAction* action){
