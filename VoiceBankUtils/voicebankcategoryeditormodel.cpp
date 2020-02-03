@@ -18,12 +18,16 @@ QVariant VoicebankCategoryEditorModel::data(const QModelIndex &index, int role) 
     if (!index.isValid())
         return QVariant();
 
-    if (role == TextRole){
+    if (role == Qt::ItemDataRole::DisplayRole){
         return totalDataWidget->getCategories().at(index.row());
     }
-    if (role == CheckedRole)
+    if (role == Qt::CheckStateRole)
     {
-        return data(index, TextRole).toString() == voicebank->getCategory();
+        if (data(index, Qt::DisplayRole).toString() == voicebank->getCategory())
+            return Qt::Checked;
+        else {
+            return Qt::Unchecked;
+        }
     }
     return QVariant();
 }
@@ -37,7 +41,7 @@ void VoicebankCategoryEditorModel::onCategoriesChanged()
 bool VoicebankCategoryEditorModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
-        if (role == CheckedRole)
+        if (role == Qt::CheckStateRole)
         {
             if (value.toInt() == Qt::Checked)
                 voicebank->setCategory(totalDataWidget->getCategories().at(index.row()));
@@ -54,12 +58,4 @@ Qt::ItemFlags VoicebankCategoryEditorModel::flags(const QModelIndex &index) cons
         return Qt::NoItemFlags;
 
     return Qt::ItemIsEditable | Qt::ItemIsEnabled;
-}
-
-QHash<int, QByteArray> VoicebankCategoryEditorModel::roleNames() const
-{
-    auto roleNames = QAbstractItemModel::roleNames();
-    roleNames.insert(TextRole,"text");
-    roleNames.insert(CheckedRole,"checked");
-    return roleNames;
 }

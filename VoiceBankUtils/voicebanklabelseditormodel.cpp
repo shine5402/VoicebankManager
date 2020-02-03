@@ -21,13 +21,13 @@ QVariant VoicebankLabelsEditorModel::data(const QModelIndex &index, int role) co
     if (!index.isValid())
         return QVariant();
 
-    if (role == TextRole)
+    if (role == Qt::ItemDataRole::DisplayRole)
     {
         return totalDataWidget->getLabels().at(index.row());
     }
-    if (role == CheckStateRole)
+    if (role == Qt::ItemDataRole::CheckStateRole)
     {
-        if (voicebank->getLabels().contains(data(index, TextRole).toString()))
+        if (voicebank->getLabels().contains(data(index, Qt::DisplayRole).toString()))
             return Qt::Checked;
         else {
             return Qt::Unchecked;
@@ -47,11 +47,11 @@ bool VoicebankLabelsEditorModel::setData(const QModelIndex &index, const QVarian
     if (data(index, role) != value) {
         if (value.toInt() == Qt::Checked)
         {
-            voicebank->addLabel(data(index, TextRole).toString());
+            voicebank->addLabel(data(index, Qt::DisplayRole).toString());
         }
         if (value.toInt() == Qt::Unchecked)
         {
-            voicebank->removeLabel(data(index, TextRole).toString());
+            voicebank->removeLabel(data(index, Qt::DisplayRole).toString());
         }
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
@@ -65,12 +65,4 @@ Qt::ItemFlags VoicebankLabelsEditorModel::flags(const QModelIndex &index) const
         return Qt::NoItemFlags;
 
     return Qt::ItemIsEditable | Qt::ItemIsEnabled;
-}
-
-QHash<int, QByteArray> VoicebankLabelsEditorModel::roleNames() const
-{
-    auto roleNames = QAbstractItemModel::roleNames();
-    roleNames.insert(TextRole,"text");
-    roleNames.insert(CheckStateRole,"checkState");
-    return roleNames;
 }

@@ -1,14 +1,11 @@
 #include "voicebankcategorylabeleditdialog.h"
 #include "ui_voicebankcategorylabeleditdialog.h"
-#include <QQmlEngine>
-#include <QQmlContext>
 
-VoicebankCategoryLabelEditDialog::VoicebankCategoryLabelEditDialog(VoicebankCategoryEditorModel* model, QWidget *parent) :
+VoicebankCategoryLabelEditDialog::VoicebankCategoryLabelEditDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::VoicebankCategoryLabelEditDialog), model(model)
+    ui(new Ui::VoicebankCategoryLabelEditDialog)
 {
     ui->setupUi(this);
-    ui->quickWidget->engine()->rootContext()->setContextProperty("dataModel",model);
 }
 
 VoicebankCategoryLabelEditDialog::~VoicebankCategoryLabelEditDialog()

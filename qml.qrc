@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/qml">
-        <file>VoicebankCategoryEditorView.qml</file>
-    </qresource>
-</RCC>

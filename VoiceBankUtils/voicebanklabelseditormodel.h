@@ -22,11 +22,6 @@ public:
                  int role = Qt::EditRole) override;
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-    enum customRoles{
-        TextRole = Qt::UserRole + 1,
-        CheckStateRole
-    };
-    QHash<int, QByteArray> roleNames() const override;
 public slots:
     void onLabelsChanged();
 private:
