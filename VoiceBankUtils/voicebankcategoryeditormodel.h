@@ -23,6 +23,12 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
+    enum customRoles{
+        TextRole = Qt::UserRole + 1,
+        CheckedRole
+    };
+    QHash<int, QByteArray> roleNames() const override;
+
 public slots:
     void onCategoriesChanged();
 private:

@@ -2,6 +2,17 @@
 #include "ui_voicebankmanagerwindow.h"
 //TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
 
+#ifndef NDEBUG
+#include "voicebankcategoryeditormodel.h"
+#include "voicebankcategorylabeleditdialog.h"
+void VoicebankManagerWindow::debugFunction()
+{
+    auto model = new VoicebankCategoryEditorModel(getCurrentVoiceBank(), categoriesAndLabelsListWidget, this);
+    auto dialog = new VoicebankCategoryLabelEditDialog(model,this);
+    dialog->exec();
+}
+#endif
+
 void VoicebankManagerWindow::connectWithVoiceBankHandler()
 {
     connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(Voicebank*)),this,SLOT(onBackupImageFileBecauseExists(Voicebank *)));
@@ -362,12 +373,7 @@ void VoicebankManagerWindow::onVoiceBankReloadDone(Voicebank *voiceBank)
         setVoiceBankInfomation(voiceBank);
 }
 
-#ifndef NDEBUG
-void VoicebankManagerWindow::debugFunction()
-{
 
-}
-#endif
 void VoicebankManagerWindow::handleFileInfoReadComplete(Voicebank* voiceBank)
 {
     if (voiceBank == getCurrentVoiceBank())

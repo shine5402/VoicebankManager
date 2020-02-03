@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets multimedia
+QT       += core gui widgets multimedia quickwidgets qml quickcontrols2 quick
 !exists($$PWD/outsideLibrarys.pri){
     error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
 }
@@ -122,6 +122,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
+    qml.qrc \
     resource.qrc
 TRANSLATIONS = LeafOpenUTAUQt_en.ts
 

@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef VOICEBANK_MANAGER
-    VoiceBankManagerWindow v;
+    VoicebankManagerWindow v;
     v.show();
     v.loadVoiceBanksAndTable();
 #endif
