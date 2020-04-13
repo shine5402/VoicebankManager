@@ -16,26 +16,26 @@
   它允许在它管理的 VoiceBank 中通过名称、分类、标签等条件查找音源库，详见 findIDByNameOrPath(const QString &text) const 、 findIDByCategory(const QString &category) const 、 findIDByLabel(const QString &label) const  。\n
   它也允许对内部的 VoiceBank 列表进行排序，详见 sort(SortableInformationID sortWhat, Qt::SortOrder order) 。
 */
-class VoiceBankHandler : public QObject
+class VoicebankHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    static VoiceBankHandler * getVoiceBankHandler();
-    ~VoiceBankHandler();
+    static VoicebankHandler * getVoiceBankHandler();
+    ~VoicebankHandler();
 
     void readVoiceBanksFromMonitorFolders();
 
     /*
       作为VoiceBank保存者的相关函数
     */
-    QList<VoiceBank *> getVoiceBanks() const;
+    QList<Voicebank *> getVoiceBanks() const;
 
-    void addVoiceBank(VoiceBank * newVoiceBank);
+    void addVoiceBank(Voicebank * newVoiceBank);
 
-    VoiceBank* addVoiceBank(QString& path);
+    Voicebank* addVoiceBank(QString& path);
 
-    QList<VoiceBank*> addVoiceBanks(QStringList& paths){
+    QList<Voicebank*> addVoiceBanks(QStringList& paths){
         ///让 VoiceBankHandler 管理路径在 paths 中的 VoiceBank 。
         /*!
           为了更方便使用而提供，等同于
@@ -49,7 +49,7 @@ public:
         \return 添加到 VoiceBankHandler 的 VoiceBank * 的列表。
         \see addVoiceBank(QString& path)
         */
-        QList<VoiceBank*> voiceBanks;
+        QList<Voicebank*> voiceBanks;
         for (auto path : paths)
         {
             addVoiceBank(path);
@@ -62,7 +62,7 @@ public:
         return voiceBanks.count();
     }
 
-    VoiceBank* getVoiceBank(int id) const{
+    Voicebank* getVoiceBank(int id) const{
         ///通过下标获得一个 VoiceBank *
         /*!
           \param[in] id 需要的 VoiceBank * 的数组下标 ( 0 <= id < count() )。id 不在有效范围内时，返回一个空指针。
@@ -72,7 +72,7 @@ public:
         return voiceBanks.value(id);
     }
 
-    int getVoiceBankID(VoiceBank* voiceBank) const
+    int getVoiceBankID(Voicebank* voiceBank) const
     {
         ///通过 VoiceBank * 来获得相应下标
         /*!
@@ -102,27 +102,27 @@ public:
 
 signals:
     //TODO:重写信号文档
-    void aVoiceBankReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 读取完毕。
+    void aVoiceBankReadDone(Voicebank* voicebank); ///< 一个 VoiceBank 读取完毕。
     /*!<
       \param voicebank 读取完毕的 VoiceBank * 。
       \see VoiceBank::readDone(VoiceBank * voicebank)
     */
-    void aVoiceBankFirstReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 初次读取完毕。
+    void aVoiceBankFirstReadDone(Voicebank* voicebank); ///< 一个 VoiceBank 初次读取完毕。
     /*!<
       \param voicebank 读取完毕的 VoiceBank * 。
       \see VoiceBank::readDone(VoiceBank * voicebank)
     */
-    void aVoiceBankReloadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 重载完毕。
+    void aVoiceBankReloadDone(Voicebank* voicebank); ///< 一个 VoiceBank 重载完毕。
     /*!<
       \param voicebank 读取完毕的 VoiceBank * 。
       \see VoiceBank::readDone(VoiceBank * voicebank)
     */
-    void backupImageFileBecauseExists(VoiceBank * voicebank);///< 修改 VoiceBank 的 image 时由于原本已经存在一个 image 所以实施了备份
+    void backupImageFileBecauseExists(Voicebank * voicebank);///< 修改 VoiceBank 的 image 时由于原本已经存在一个 image 所以实施了备份
     /*!<
       \param voicebank 备份了 image 的 VoiceBank * 。
       \see VoiceBank::backupImageFileBecauseExists(VoiceBank * voicebank)
     */
-    void cannotBackupImageFile(VoiceBank * voicebank); ///< 一个 VoiceBank 备份 image 时发生了错误
+    void cannotBackupImageFile(Voicebank * voicebank); ///< 一个 VoiceBank 备份 image 时发生了错误
     /*!<
       \param voicebank 备份 image 时出错的 VoiceBank * 。
       \see VoiceBank::cannotBackupImageFile(VoiceBank * voicebank)
@@ -153,27 +153,27 @@ signals:
       \see aVoiceBankReadDone(VoiceBank* voicebank)
     */
 private:
-    explicit VoiceBankHandler(QObject *parent = nullptr);
-    VoiceBankHandler(const VoiceBankHandler&) = delete;
-    VoiceBankHandler& operator= (const VoiceBankHandler&) = delete;
-    static VoiceBankHandler *s_voiceBankHanlder;
+    explicit VoicebankHandler(QObject *parent = nullptr);
+    VoicebankHandler(const VoicebankHandler&) = delete;
+    VoicebankHandler& operator= (const VoicebankHandler&) = delete;
+    static VoicebankHandler *s_voiceBankHanlder;
 
     int voiceBankReadDoneCount = 0;
 
-    QList<VoiceBank *> voiceBanks{};
+    QList<Voicebank *> voiceBanks{};
 
     class Garbo {
     public:
         ~Garbo(){
-            if (VoiceBankHandler::s_voiceBankHanlder)
-                delete VoiceBankHandler::s_voiceBankHanlder;
+            if (VoicebankHandler::s_voiceBankHanlder)
+                delete VoicebankHandler::s_voiceBankHanlder;
         }
     };
 
     static Garbo garbo;
     friend Garbo;
 private slots:
-    void voiceBankFirstReadDoneSlot(VoiceBank *);
+    void voiceBankFirstReadDoneSlot(Voicebank *);
 
 public slots:
 };

@@ -214,7 +214,7 @@ QStringList MonitorFoldersScanner::getVoiceBankFoldersInFolder(const QString &di
             continue;
         }
         if (!useOldFolderScan){
-            if (VoiceBank::isVoiceBankPath(path))
+            if (Voicebank::isVoiceBankPath(path))
                 folderList.append(path);
             else
             {

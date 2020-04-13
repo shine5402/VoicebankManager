@@ -1,7 +1,7 @@
 ﻿#include "textcodecsettingdialog.h"
 #include "ui_textcodecsettingdialog.h"
 
-TextCodecSettingDialog::TextCodecSettingDialog(QWidget *parent, VoiceBank *voiceBank) :
+TextCodecSettingDialog::TextCodecSettingDialog(QWidget *parent, Voicebank *voiceBank) :
     QDialog(parent),
     ui(new Ui::TextCodecSettingDialog),voiceBank(voiceBank)
 {
@@ -14,7 +14,7 @@ TextCodecSettingDialog::~TextCodecSettingDialog()
     delete ui;
 }
 
-void TextCodecSettingDialog::setVoiceBank(VoiceBank *voiceBank)
+void TextCodecSettingDialog::setVoiceBank(Voicebank *voiceBank)
 {
     this->voiceBank = voiceBank;
     initUI();
@@ -107,9 +107,9 @@ void TextCodecSettingDialog::initUI(){
     {
         ui->voiceBankLabel->setText(tr("（默认编码）"));
         ui->followDefaultTextCodecCheckBox->setVisible(false);
-        ui->characterTxtComboBox->setCurrentText(VoiceBank::getDefaultCharacterTextCodec()->name());
-        ui->readmeTxtComboBox->setCurrentText(VoiceBank::getDefaultReadmeTextCodec()->name());
-        ui->autoDetectCheckBox->setChecked(VoiceBank::isDefalutTextCodecAutoDetect());
+        ui->characterTxtComboBox->setCurrentText(Voicebank::getDefaultCharacterTextCodec()->name());
+        ui->readmeTxtComboBox->setCurrentText(Voicebank::getDefaultReadmeTextCodec()->name());
+        ui->autoDetectCheckBox->setChecked(Voicebank::isDefalutTextCodecAutoDetect());
     }
 }
 

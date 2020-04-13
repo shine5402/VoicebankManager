@@ -6,25 +6,25 @@
 #include "voicebank.h"
 #include <public_defines.h>
 namespace Ui {
-class VoiceBankIconCropDialog;
+class VoicebankIconCropDialog;
 }
 
-class VoiceBankIconCropDialog : public QDialog
+class VoicebankIconCropDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit VoiceBankIconCropDialog(VoiceBank* voicebank,QString newImagePath,QWidget *parent = nullptr);
-    ~VoiceBankIconCropDialog() override;
+    explicit VoicebankIconCropDialog(Voicebank* voicebank,QString newImagePath,QWidget *parent = nullptr);
+    ~VoicebankIconCropDialog() override;
 
 private slots:
 
 protected:
     void accept() override;
 private:
-    Ui::VoiceBankIconCropDialog *ui;
+    Ui::VoicebankIconCropDialog *ui;
     QImage image;
-    VoiceBank* voicebank = nullptr;
+    Voicebank* voicebank = nullptr;
 };
 
 #endif // VOICEBANKICONCROPDIALOG_H

@@ -20,7 +20,7 @@ class CategoriesAndLabelsListWidget : public QWidget
     friend LabelsModel;
 
 public:
-    explicit CategoriesAndLabelsListWidget(VoiceBankHandler *handler,QWidget *parent = nullptr);
+    explicit CategoriesAndLabelsListWidget(VoicebankHandler *handler,QWidget *parent = nullptr);
     ~CategoriesAndLabelsListWidget() override;
     int getNoCategoriesCount() const;
 
@@ -64,7 +64,7 @@ private slots:
     void onLabelListViewSelectionChangedSignal(const QItemSelection &, const QItemSelection &);
 private:
     Ui::CategoriesAndLabelsListWidget *ui;
-    VoiceBankHandler* handler = nullptr;
+    VoicebankHandler* handler = nullptr;
     QStringList categories;
     QStringList labels;
     void readSettingsCategoriesAndLabels();
