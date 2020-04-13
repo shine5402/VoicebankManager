@@ -98,11 +98,9 @@ public:
     class ErrorState{
 
     public:
-        explicit ErrorState(VoiceBank* voiceBank);
+        explicit ErrorState();
         virtual QString getErrorHTMLString() = 0;/*!< 遇到的错误的具体描述。将会返回一个 HTML 片段，包含了展现错误时的相关样式（如字体颜色、前缀等）。*/
         virtual ~ErrorState();
-    protected:
-        VoiceBank* voiceBank = nullptr;///<构造时提供的 VoiceBank 指针。 ErrorState 可能使用它来获取信息。
     };
 
     QList<ErrorState*> getErrorStates() const;
@@ -187,6 +185,7 @@ private:
     QImage _image;
     QString imagePath;
     QString imagePathRelative;
+    bool imageLoaded = false;
     QString name;
     QString readme;
     QString path;
@@ -244,62 +243,73 @@ private:
     void readLabels(QJsonObject json);
     class CharacterFileNotExistsErrorState : public ErrorState{
     public:
-        explicit CharacterFileNotExistsErrorState(VoiceBank* voiceBank);
+        explicit CharacterFileNotExistsErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class NameNotSetErrorState : public ErrorState{
     public:
-        explicit NameNotSetErrorState(VoiceBank* voiceBank);
+        explicit NameNotSetErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ImageFileNotSetErrorState : public ErrorState{
     public:
-        explicit ImageFileNotSetErrorState(VoiceBank* voiceBank);
+        explicit ImageFileNotSetErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ImageFileNotExistsErrorState : public ErrorState{
     public:
-        explicit ImageFileNotExistsErrorState(VoiceBank* voiceBank);
+        explicit ImageFileNotExistsErrorState(const QString imagePath);
         virtual QString getErrorHTMLString() override;
+    private:
+        QString imagePath;
     };
     class ImageFileSuffixNotFitFileError : public ErrorState{
     public:
-        explicit ImageFileSuffixNotFitFileError(VoiceBank* voiceBank);
+        explicit ImageFileSuffixNotFitFileError();
         virtual QString getErrorHTMLString() override;
     };
     class ImageFileNotFitErrorState : public ErrorState{
     public:
-        explicit ImageFileNotFitErrorState(VoiceBank* voiceBank);
+        explicit ImageFileNotFitErrorState(int act_width, int act_height);
         virtual QString getErrorHTMLString() override;
+    private:
+        int act_width = 0, act_height = 0;
+    };
+    class ImageFileReadErrorState : public ErrorState{
+    public:
+        explicit ImageFileReadErrorState(const QString& errorString);
+        virtual QString getErrorHTMLString() override;
+    private:
+        QString errorString;
     };
     class ReadmeFileNotExistsErrorState : public ErrorState{
     public:
-        explicit ReadmeFileNotExistsErrorState(VoiceBank* voiceBank);
+        explicit ReadmeFileNotExistsErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ImageReadExceptionErrorState : public ErrorState{
     public:
-        explicit ImageReadExceptionErrorState(VoiceBank* voiceBank);
+        explicit ImageReadExceptionErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ReadmeFileCanNotOpenErrorState : public ErrorState{
     public:
-        explicit ReadmeFileCanNotOpenErrorState(VoiceBank* voiceBank);
+        explicit ReadmeFileCanNotOpenErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class CharacterFileCanNotOpenErrorState : public ErrorState{
     public:
-        explicit CharacterFileCanNotOpenErrorState(VoiceBank* voiceBank);
+        explicit CharacterFileCanNotOpenErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class CharacterFileTextCodecCanNotDetectErrorState : public ErrorState{
     public:
-        explicit CharacterFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
+        explicit CharacterFileTextCodecCanNotDetectErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ReadmeFileTextCodecCanNotDetectErrorState : public ErrorState{
     public:
-        explicit ReadmeFileTextCodecCanNotDetectErrorState(VoiceBank* voiceBank);
+        explicit ReadmeFileTextCodecCanNotDetectErrorState();
         virtual QString getErrorHTMLString() override;
     };
 
@@ -329,6 +339,8 @@ private:
     friend Garbo;
     void readFromPathPrivate();
     void doReadFromPath();
+
+    void readImage();
 
 private slots:
     void fileInfoReadCompleteEmitter();
