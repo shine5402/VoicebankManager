@@ -28,12 +28,12 @@
 /*!
     VoiceBank 类代表了一个 UTAU 式音源库。可以通过它获取音源库的相关信息，并可作出修改。
 */
-class Voicebank : public QObject
+class VoiceBank : public QObject
 {
     Q_OBJECT
 public:
-    explicit Voicebank(QString path,QObject *parent = nullptr);
-    ~Voicebank();
+    explicit VoiceBank(QString path,QObject *parent = nullptr);
+    ~VoiceBank();
 
     void reload();
 
@@ -98,11 +98,9 @@ public:
     class ErrorState{
 
     public:
-        explicit ErrorState(Voicebank* voiceBank);
+        explicit ErrorState();
         virtual QString getErrorHTMLString() = 0;/*!< 遇到的错误的具体描述。将会返回一个 HTML 片段，包含了展现错误时的相关样式（如字体颜色、前缀等）。*/
         virtual ~ErrorState();
-    protected:
-        Voicebank* voiceBank = nullptr;///<构造时提供的 VoiceBank 指针。 ErrorState 可能使用它来获取信息。
     };
 
     QList<ErrorState*> getErrorStates() const;
@@ -112,8 +110,8 @@ public:
 
     QStringList getLabels() const;
     void setLabels(const QStringList &value);
-    void addLabel(const QString& label);
-    void addLabels(const QStringList& label);
+    void appendLabel(const QString& label);
+    void appendLabels(const QStringList& label);
     void toggleLabelStatus(const QString& label);
     void removeLabel(const QString &label);
 
@@ -153,10 +151,10 @@ public:
             FirstRead,
             Reload
         };
-        VoiceBankReadFuctionRunner(Voicebank* voicebank,ReadType readType = FirstRead);
+        VoiceBankReadFuctionRunner(VoiceBank* voicebank,ReadType readType = FirstRead);
         void run() override;
     private:
-        Voicebank* voicebank;
+        VoiceBank* voicebank;
         ReadType readType;
     };
     friend VoiceBankReadFuctionRunner;
@@ -172,7 +170,7 @@ public:
 
     bool askFileInfo();
     class FileInfoStruct{
-        friend Voicebank;
+        friend VoiceBank;
         FileInfoStruct(bool isValid,uint fileCount,uint dirCount,uint64_t fileTotalSize);
     public:
         const bool isValid;
@@ -187,6 +185,7 @@ private:
     QImage _image;
     QString imagePath;
     QString imagePathRelative;
+    bool imageLoaded = false;
     QString name;
     QString readme;
     QString path;
@@ -244,62 +243,73 @@ private:
     void readLabels(QJsonObject json);
     class CharacterFileNotExistsErrorState : public ErrorState{
     public:
-        explicit CharacterFileNotExistsErrorState(Voicebank* voiceBank);
+        explicit CharacterFileNotExistsErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class NameNotSetErrorState : public ErrorState{
     public:
-        explicit NameNotSetErrorState(Voicebank* voiceBank);
+        explicit NameNotSetErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ImageFileNotSetErrorState : public ErrorState{
     public:
-        explicit ImageFileNotSetErrorState(Voicebank* voiceBank);
+        explicit ImageFileNotSetErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ImageFileNotExistsErrorState : public ErrorState{
     public:
-        explicit ImageFileNotExistsErrorState(Voicebank* voiceBank);
+        explicit ImageFileNotExistsErrorState(const QString imagePath);
         virtual QString getErrorHTMLString() override;
+    private:
+        QString imagePath;
     };
     class ImageFileSuffixNotFitFileError : public ErrorState{
     public:
-        explicit ImageFileSuffixNotFitFileError(Voicebank* voiceBank);
+        explicit ImageFileSuffixNotFitFileError();
         virtual QString getErrorHTMLString() override;
     };
     class ImageFileNotFitErrorState : public ErrorState{
     public:
-        explicit ImageFileNotFitErrorState(Voicebank* voiceBank);
+        explicit ImageFileNotFitErrorState(int act_width, int act_height);
         virtual QString getErrorHTMLString() override;
+    private:
+        int act_width = 0, act_height = 0;
+    };
+    class ImageFileReadErrorState : public ErrorState{
+    public:
+        explicit ImageFileReadErrorState(const QString& errorString);
+        virtual QString getErrorHTMLString() override;
+    private:
+        QString errorString;
     };
     class ReadmeFileNotExistsErrorState : public ErrorState{
     public:
-        explicit ReadmeFileNotExistsErrorState(Voicebank* voiceBank);
+        explicit ReadmeFileNotExistsErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ImageReadExceptionErrorState : public ErrorState{
     public:
-        explicit ImageReadExceptionErrorState(Voicebank* voiceBank);
+        explicit ImageReadExceptionErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ReadmeFileCanNotOpenErrorState : public ErrorState{
     public:
-        explicit ReadmeFileCanNotOpenErrorState(Voicebank* voiceBank);
+        explicit ReadmeFileCanNotOpenErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class CharacterFileCanNotOpenErrorState : public ErrorState{
     public:
-        explicit CharacterFileCanNotOpenErrorState(Voicebank* voiceBank);
+        explicit CharacterFileCanNotOpenErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class CharacterFileTextCodecCanNotDetectErrorState : public ErrorState{
     public:
-        explicit CharacterFileTextCodecCanNotDetectErrorState(Voicebank* voiceBank);
+        explicit CharacterFileTextCodecCanNotDetectErrorState();
         virtual QString getErrorHTMLString() override;
     };
     class ReadmeFileTextCodecCanNotDetectErrorState : public ErrorState{
     public:
-        explicit ReadmeFileTextCodecCanNotDetectErrorState(Voicebank* voiceBank);
+        explicit ReadmeFileTextCodecCanNotDetectErrorState();
         virtual QString getErrorHTMLString() override;
     };
 
@@ -330,18 +340,20 @@ private:
     void readFromPathPrivate();
     void doReadFromPath();
 
+    void readImage();
+
 private slots:
     void fileInfoReadCompleteEmitter();
 signals:
-    void firstReadDone(Voicebank *);
-    void reloadDone(Voicebank *);
-    void readDone(Voicebank *);
+    void firstReadDone(VoiceBank *);
+    void reloadDone(VoiceBank *);
+    void readDone(VoiceBank *);
     void statusOutput(const QString&);
-    void backupImageFileBecauseExists(Voicebank *);
-    void cannotBackupImageFile(Voicebank *);
+    void backupImageFileBecauseExists(VoiceBank *);
+    void cannotBackupImageFile(VoiceBank *);
     void categoryChanged();
     void labelsChanged();
-    void fileInfoReadComplete(Voicebank *);
+    void fileInfoReadComplete(VoiceBank *);
 };
 
 

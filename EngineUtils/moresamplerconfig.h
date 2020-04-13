@@ -59,13 +59,7 @@ public:
         QStringList choices;
         ValueType valueType;
     };
-    class BlankEditMode : public EditMode{
-    public:
-        BlankEditMode();
-        virtual bool isValidValue(QVariant) const override;
-        virtual QVariant toVariantValueFromString(QString) const override;
-        virtual QString toStringFromVariantValue(QVariant) const override;
-    };
+
     class DoubleEditMode : public EditMode{
     public:
         DoubleEditMode();
