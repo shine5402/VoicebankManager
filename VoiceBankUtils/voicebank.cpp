@@ -885,7 +885,7 @@ void VoiceBank::readImage()
         imageReader.setFileName(imagePath);
 
         QMimeDatabase mimedb;
-        auto mimeforImage = mimedb.mimeTypeForFile(imagePath);
+        auto mimeforImage = mimedb.mimeTypeForFile(imagePath,QMimeDatabase::MatchContent);
 
 
         if (mimeforImage.isValid() && !mimeforImage.suffixes().contains(mimedb.suffixForFileName(imagePath))){
