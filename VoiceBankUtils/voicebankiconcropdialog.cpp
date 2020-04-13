@@ -1,9 +1,9 @@
 ﻿#include "voicebankiconcropdialog.h"
 #include "ui_voicebankiconcropdialog.h"
 
-VoicebankIconCropDialog::VoicebankIconCropDialog(Voicebank *voicebank, QString newImagePath, QWidget *parent) :
+VoiceBankIconCropDialog::VoiceBankIconCropDialog(VoiceBank *voicebank, QString newImagePath, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::VoicebankIconCropDialog),
+    ui(new Ui::VoiceBankIconCropDialog),
     image(QImage(newImagePath)),voicebank(voicebank)
 {
     ui->setupUi(this);
@@ -11,12 +11,12 @@ VoicebankIconCropDialog::VoicebankIconCropDialog(Voicebank *voicebank, QString n
     setWindowTitle(tr("为音源库“%1”设定新图标").arg(voicebank->getName()));
 }
 
-VoicebankIconCropDialog::~VoicebankIconCropDialog()
+VoiceBankIconCropDialog::~VoiceBankIconCropDialog()
 {
     delete ui;
 }
 
-void VoicebankIconCropDialog::accept()
+void VoiceBankIconCropDialog::accept()
 {
     voicebank->setImage(ui->imageCropper->cropImage().toImage(),ui->targetFileNameLineEdit->text().isEmpty() ? "icon.jpg" : ui->targetFileNameLineEdit->text());
     QDialog::accept();

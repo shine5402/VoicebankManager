@@ -4,11 +4,11 @@
 #include "voicebankhandler.h"
 #include <QIcon>
 #include <public_defines.h>
-class VoicebankTableModel : public QAbstractTableModel
+class VoiceBankTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit VoicebankTableModel(VoicebankHandler *parent);
+    explicit VoiceBankTableModel(VoiceBankHandler *parent);
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override{
         if (parent.isValid())
             return 0;
@@ -34,11 +34,11 @@ public:
 signals:
     void sortDone();
 public slots:
-    void newDataEmitter(Voicebank *voiceBank);
-    void dataChangedEmitter(Voicebank *voiceBank);
+    void newDataEmitter(VoiceBank *voiceBank);
+    void dataChangedEmitter(VoiceBank *voiceBank);
 private:
     static int iconSize;
-    VoicebankHandler* voicebankHandler = nullptr;
+    VoiceBankHandler* voicebankHandler = nullptr;
 };
 
 #endif // VOICEBANKTABLEMODEL_H

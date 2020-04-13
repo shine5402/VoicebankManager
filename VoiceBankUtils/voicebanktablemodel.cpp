@@ -1,19 +1,19 @@
 ﻿#include "voicebanktablemodel.h"
-int VoicebankTableModel::iconSize = 20;
-VoicebankTableModel::VoicebankTableModel(VoicebankHandler *parent) : QAbstractTableModel (parent),voicebankHandler(parent)
+int VoiceBankTableModel::iconSize = 20;
+VoiceBankTableModel::VoiceBankTableModel(VoiceBankHandler *parent) : QAbstractTableModel (parent),voicebankHandler(parent)
 {
-    connect(parent,SIGNAL(aVoiceBankFirstReadDone(Voicebank*)),this,SLOT(newDataEmitter(Voicebank*)));
-    connect(parent,SIGNAL(aVoiceBankReloadDone(Voicebank *)),this,SLOT(dataChangedEmitter(Voicebank*)));
+    connect(parent,SIGNAL(aVoiceBankFirstReadDone(VoiceBank*)),this,SLOT(newDataEmitter(VoiceBank*)));
+    connect(parent,SIGNAL(aVoiceBankReloadDone(VoiceBank *)),this,SLOT(dataChangedEmitter(VoiceBank*)));
 }
-void VoicebankTableModel::newDataEmitter(Voicebank* voiceBank){
+void VoiceBankTableModel::newDataEmitter(VoiceBank* voiceBank){
         beginInsertRows(QModelIndex(),voicebankHandler->getVoiceBankID(voiceBank),voicebankHandler->getVoiceBankID(voiceBank));
         endInsertRows();
 }
-void VoicebankTableModel::dataChangedEmitter(Voicebank* voiceBank){
+void VoiceBankTableModel::dataChangedEmitter(VoiceBank* voiceBank){
     emit dataChanged(index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Name),index(voicebankHandler->getVoiceBankID(voiceBank),TableColumns::Path));
 }
 
-void VoicebankTableModel::clearEmitter()
+void VoiceBankTableModel::clearEmitter()
 {
     if (rowCount() > 0)
     {
@@ -21,7 +21,7 @@ void VoicebankTableModel::clearEmitter()
         endRemoveRows();
     }
 }
-QVariant VoicebankTableModel::data(const QModelIndex &index, int role) const
+QVariant VoiceBankTableModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -52,16 +52,16 @@ QVariant VoicebankTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
 }
 
-void VoicebankTableModel::sort(int column, Qt::SortOrder order)
+void VoiceBankTableModel::sort(int column, Qt::SortOrder order)
 {
     switch (column) {
     case TableColumns::Name:
-        voicebankHandler->sort(VoicebankHandler::SortableInformationID::Name,order);
+        voicebankHandler->sort(VoiceBankHandler::SortableInformationID::Name,order);
         emit dataChanged(index(0,0),index(rowCount(),columnCount()));
         emit sortDone();
         break;
     case TableColumns::Path:
-        voicebankHandler->sort(VoicebankHandler::SortableInformationID::Path,order);
+        voicebankHandler->sort(VoiceBankHandler::SortableInformationID::Path,order);
         emit dataChanged(index(0,0),index(rowCount(),columnCount()));
         emit sortDone();
         break;
@@ -70,12 +70,12 @@ void VoicebankTableModel::sort(int column, Qt::SortOrder order)
     }
 }
 
-Qt::ItemFlags VoicebankTableModel::flags(const QModelIndex &) const
+Qt::ItemFlags VoiceBankTableModel::flags(const QModelIndex &) const
 {
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
 
-QVariant VoicebankTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant VoiceBankTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::ItemDataRole::DisplayRole){
         if (orientation == Qt::Orientation::Horizontal){

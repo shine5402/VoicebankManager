@@ -10,7 +10,7 @@ void CategoriesAndLabelsListWidget::resetCurrentAndSelection()
     ui->labelListView->selectionModel()->select(labelsModel->index(0,0),QItemSelectionModel::SelectCurrent);
 }
 
-CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoicebankHandler *handler, QWidget *parent) :
+CategoriesAndLabelsListWidget::CategoriesAndLabelsListWidget(VoiceBankHandler *handler, QWidget *parent) :
     QWidget(parent),ui(new Ui::CategoriesAndLabelsListWidget),handler(handler)
 {
     ui->setupUi(this);

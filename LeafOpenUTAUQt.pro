@@ -40,9 +40,6 @@ CONFIG += c++17
 SOURCES += \
     CommonUtils/aboutdialog.cpp \
     CommonUtils/fitcontentlistview.cpp \
-    VoiceBankUtils/voicebankcategoryeditormodel.cpp \
-    VoiceBankUtils/voicebankcategorylabeleditdialog.cpp \
-    VoiceBankUtils/voicebanklabelseditormodel.cpp \
         main.cpp \
         editorwindow.cpp \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
@@ -69,9 +66,6 @@ SOURCES += \
 HEADERS += \
     CommonUtils/aboutdialog.h \
     CommonUtils/fitcontentlistview.h \
-    VoiceBankUtils/voicebankcategoryeditormodel.h \
-    VoiceBankUtils/voicebankcategorylabeleditdialog.h \
-    VoiceBankUtils/voicebanklabelseditormodel.h \
         editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
     VoiceBankUtils/voicebank.h \
@@ -97,7 +91,6 @@ HEADERS += \
 
 FORMS += \
     CommonUtils/aboutdialog.ui \
-    VoiceBankUtils/voicebankcategorylabeleditdialog.ui \
         editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \

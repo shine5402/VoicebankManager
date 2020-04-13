@@ -16,9 +16,9 @@ class TextCodecSettingDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit TextCodecSettingDialog(QWidget *parent = nullptr,Voicebank* voiceBank = nullptr);
+    explicit TextCodecSettingDialog(QWidget *parent = nullptr,VoiceBank* voiceBank = nullptr);
     ~TextCodecSettingDialog();
-    void setVoiceBank(Voicebank* voiceBank);
+    void setVoiceBank(VoiceBank* voiceBank);
     QTextCodec* getCharacterTextCodec();
     QTextCodec* getReadmeTextCodec();
     bool getIsFollowDefaultCodec();
@@ -35,7 +35,7 @@ private slots:
 
 private:
     Ui::TextCodecSettingDialog *ui;
-    Voicebank* voiceBank = nullptr;
+    VoiceBank* voiceBank = nullptr;
 
     void initUI();
     void setFormInDefault();

@@ -1,13 +1,13 @@
 ﻿#include "voicebankhandler.h"
 
-VoicebankHandler::VoicebankHandler(QObject *parent) : QObject(parent)
+VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 {
     //readThreadPoolMaxThreadCountSettings();
     connect(this,SIGNAL(categoriesChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
     connect(this,SIGNAL(labelsChanged()),this,SIGNAL(categroiesAndLabelsChanged()));
 }
 
-VoicebankHandler::~VoicebankHandler()
+VoiceBankHandler::~VoiceBankHandler()
 {
     ///VoiceBankHandler 的析构函数。
     /*!
@@ -17,18 +17,18 @@ VoicebankHandler::~VoicebankHandler()
     //saveThreadPoolMaxThreadCountSettings();
 }
 
-VoicebankHandler *VoicebankHandler::getVoiceBankHandler()
+VoiceBankHandler *VoiceBankHandler::getVoiceBankHandler()
 {
     ///VoiceBankHandler 的工厂函数。调用此函数以获取 VoiceBankHandler 的实例。
     /*!
       VoiceBankHandler 使用单件模式来保证程序中只有一份音源库列表，所以您应当使用本函数获取实例，而不是通过构造函数（您也无法这么做）。
     */
     if (!s_voiceBankHanlder)
-        s_voiceBankHanlder = new VoicebankHandler();
+        s_voiceBankHanlder = new VoiceBankHandler();
     return s_voiceBankHanlder;
 }
 
-void VoicebankHandler::readVoiceBanksFromMonitorFolders()
+void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
 {
     ///从监视文件夹中读取音源库。
     /*!
@@ -43,30 +43,30 @@ void VoicebankHandler::readVoiceBanksFromMonitorFolders()
 }
 
 
-QList<Voicebank* > VoicebankHandler::getVoiceBanks() const
+QList<VoiceBank* > VoiceBankHandler::getVoiceBanks() const
 {
     ///获取 VoiceBankHandler 保存的 VoiceBank* 列表。
     return voiceBanks;
 }
 
-void VoicebankHandler::addVoiceBank(Voicebank *newVoiceBank){
+void VoiceBankHandler::addVoiceBank(VoiceBank *newVoiceBank){
     ///将一个 VoiceBank 交给 VoiceBankHandler 管理。
     /*!
           更建议使用 addVoiceBank(QString& path) 。
           \param[in] newVoiceBank 要交给 VoiceBankHandler 的 VoiceBank * 。
         */
     voiceBanks.append(newVoiceBank);
-    connect(newVoiceBank,SIGNAL(readDone(Voicebank*)),this,SIGNAL(aVoiceBankReadDone(Voicebank*)));
-    connect(newVoiceBank,SIGNAL(firstReadDone(Voicebank*)),this,SLOT(voiceBankFirstReadDoneSlot(Voicebank* )));
-    connect(newVoiceBank,SIGNAL(firstReadDone(Voicebank*)),this,SIGNAL(aVoiceBankFirstReadDone(Voicebank* )));
-    connect(newVoiceBank,SIGNAL(reloadDone(Voicebank*)),this,SIGNAL(aVoiceBankReloadDone(Voicebank* )));
-    connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(Voicebank*)),this,SIGNAL(backupImageFileBecauseExists(Voicebank*)));
-    connect(newVoiceBank,SIGNAL(cannotBackupImageFile(Voicebank*)),this,SIGNAL(cannotBackupImageFile(Voicebank*)));
+    connect(newVoiceBank,SIGNAL(readDone(VoiceBank*)),this,SIGNAL(aVoiceBankReadDone(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(firstReadDone(VoiceBank*)),this,SLOT(voiceBankFirstReadDoneSlot(VoiceBank* )));
+    connect(newVoiceBank,SIGNAL(firstReadDone(VoiceBank*)),this,SIGNAL(aVoiceBankFirstReadDone(VoiceBank* )));
+    connect(newVoiceBank,SIGNAL(reloadDone(VoiceBank*)),this,SIGNAL(aVoiceBankReloadDone(VoiceBank* )));
+    connect(newVoiceBank,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SIGNAL(backupImageFileBecauseExists(VoiceBank*)));
+    connect(newVoiceBank,SIGNAL(cannotBackupImageFile(VoiceBank*)),this,SIGNAL(cannotBackupImageFile(VoiceBank*)));
     connect(newVoiceBank,SIGNAL(categoryChanged()),this,SIGNAL(categoriesChanged()));
     connect(newVoiceBank,SIGNAL(labelsChanged()),this,SIGNAL(labelsChanged()));
 }
 
-Voicebank* VoicebankHandler::addVoiceBank(QString &path){
+VoiceBank* VoiceBankHandler::addVoiceBank(QString &path){
     ///让 VoiceBankHandler 管理一个路径为 path 的 VoiceBank 。
     /*!
       \param[in] path 要添加的 VoiceBank 的路径。\n
@@ -74,12 +74,12 @@ Voicebank* VoicebankHandler::addVoiceBank(QString &path){
       VoiceBankHandler 会自动配置该 VoiceBank 并读取。\n
       \return 新的 VoiceBank 的指针。注意，返回时该 VoiceBank 可能并没有读取完毕。您应当等待 VoiceBankHandler::aVoiceBankReadDone(VoiceBank* voicebank) 信号或 VoiceBank::readDone(VoiceBank* ) 被触发后再使用此指针。
     */
-    auto newVoiceBank = new Voicebank(path,this);
+    auto newVoiceBank = new VoiceBank(path,this);
     addVoiceBank(newVoiceBank);
     return newVoiceBank;
 }
 
-void VoicebankHandler::clear()
+void VoiceBankHandler::clear()
 {
     ///清除 VoiceBankHandler 中的 VoiceBank* 列表。
     /*!
@@ -93,7 +93,7 @@ void VoicebankHandler::clear()
 }
 
 
-void VoicebankHandler::sort(VoicebankHandler::SortableInformationID sortWhat, Qt::SortOrder order)
+void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt::SortOrder order)
 {
     ///对 VoiceBankHandler 内的列表进行排序
     /*!
@@ -103,7 +103,7 @@ void VoicebankHandler::sort(VoicebankHandler::SortableInformationID sortWhat, Qt
       \see enum class SortableInformationID
     */
     if (sortWhat == SortableInformationID::Name)
-        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](Voicebank* value1,Voicebank* value2)->bool{
+        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](VoiceBank* value1,VoiceBank* value2)->bool{
             auto name1 = value1->getName();
             auto name2 = value2->getName();
             auto folder1 = QFileInfo(value1->getPath()).dir().dirName();
@@ -116,7 +116,7 @@ void VoicebankHandler::sort(VoicebankHandler::SortableInformationID sortWhat, Qt
                 return sortString1 > sortString2;
         });
     else if (sortWhat == SortableInformationID::Path)
-        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const Voicebank* value1,const Voicebank* value2)->bool{
+        std::sort(voiceBanks.begin(),voiceBanks.end(),[&](const VoiceBank* value1,const VoiceBank* value2)->bool{
             if (order == Qt::AscendingOrder)
                 return value1->getPath() < value2->getPath();
             else
@@ -124,7 +124,7 @@ void VoicebankHandler::sort(VoicebankHandler::SortableInformationID sortWhat, Qt
         });
 }
 
-QList<int> VoicebankHandler::findIDByNameOrPath(const QString &text) const
+QList<int> VoiceBankHandler::findIDByNameOrPath(const QString &text) const
 {
     ///在 VoiceBankHandler 管理的 VoiceBank 中按名字或路径查找
     /*!
@@ -150,7 +150,7 @@ QList<int> VoicebankHandler::findIDByNameOrPath(const QString &text) const
     return result;
 }
 
-QList<int> VoicebankHandler::findIDByCategory(const QString &category) const
+QList<int> VoiceBankHandler::findIDByCategory(const QString &category) const
 {
     ///在 VoiceBankHandler 管理的 VoiceBank 中按目录查找
     /*!
@@ -185,7 +185,7 @@ QList<int> VoicebankHandler::findIDByCategory(const QString &category) const
     return result;
 }
 
-QList<int> VoicebankHandler::findIDByLabel(const QString& label) const
+QList<int> VoiceBankHandler::findIDByLabel(const QString& label) const
 {
     ///在 VoiceBankHandler 管理的 VoiceBank 中按标签查找
     /*!
@@ -221,13 +221,13 @@ QList<int> VoicebankHandler::findIDByLabel(const QString& label) const
 
 
 
-void VoicebankHandler::voiceBankFirstReadDoneSlot(Voicebank*)
+void VoiceBankHandler::voiceBankFirstReadDoneSlot(VoiceBank*)
 {
         if (++voiceBankReadDoneCount == voiceBanks.count()){
             emit voiceBanksReadDone();
         }
 }
 
-VoicebankHandler* VoicebankHandler::s_voiceBankHanlder = nullptr;
-VoicebankHandler::Garbo VoicebankHandler::garbo{};
+VoiceBankHandler* VoiceBankHandler::s_voiceBankHanlder = nullptr;
+VoiceBankHandler::Garbo VoiceBankHandler::garbo{};
 
