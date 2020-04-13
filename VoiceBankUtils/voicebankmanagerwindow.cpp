@@ -968,7 +968,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<ul>"
                                      "<li>English（英文）：隋卞</li>"
                                      "</ul>"
-                                     "<p>如果你想要（当然，有能力最好）为本程序增加你的语言版本，请联系我！</p>"),
+                                     "<p>如果你有能力翻译本程序到以上/其他语言版本，请联系我！</p>"),
                                   //许可
                                   tr("<h4>简述</h4>"
                                      "<p>本程序大体上是以<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>分发的，除了某些文件因其代码来源的原因使用了<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。<br/>"

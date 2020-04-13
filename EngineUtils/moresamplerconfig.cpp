@@ -40,7 +40,7 @@ void MoresamplerConfig::processString()
         type = ConfigType::Blank;
         nameString = QCoreApplication::translate("MoresamplerConfig", "（空行）");
         valueString = QCoreApplication::translate("MoresamplerConfig", "（空行）");
-        editMode = getEditMode(QString());
+        editMode = nullptr;
         value = QVariant();
         return;
     }
@@ -50,7 +50,7 @@ void MoresamplerConfig::processString()
         nameString = QCoreApplication::translate("MoresamplerConfig", "（注释）");
         valueString = configString.mid(1);
         type = ConfigType::Comment;
-        editMode = getEditMode(QString());
+        editMode = getEditMode(valueString);
         value = editMode->toVariantValueFromString(valueString);
         return;
     }
@@ -123,10 +123,13 @@ QString MoresamplerConfig::toString() const
     if (type == ConfigType::Blank)
         return QString();
     auto result = nameString + " " + valueString;
+
+    if (decoration.comment)
+        result = "#" + valueString;
+
     if (decoration.override)
         result.insert(0,"*");
-    if (decoration.comment)
-        result.insert(0,"#");
+
     return result;
 }
 
@@ -174,8 +177,6 @@ MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &confi
         return new ChoicesEditMode({"on","off"});
     else if (configName == "analysis-suppress-subharmonics")
         return new ChoicesEditMode({"on","off"});
-    else if (configName.isEmpty())
-        return new BlankEditMode();
     else
         return new StringEditMode();
 }
@@ -224,6 +225,7 @@ QString MoresamplerConfig::getValueString() const
     return valueString;
 }
 
+//TODO:更新说明翻译
 const QHash<QString,QString> MoresamplerConfig::entryHelps{
     {"output-sampling-rate",QT_TRANSLATE_NOOP("MoresamplerHelp", "输出的 .wav 文件的采样频率")},
     {"output-bit-depth",QT_TRANSLATE_NOOP("MoresamplerHelp", "输出的 .wav 文件的位深")},
@@ -406,22 +408,3 @@ MoresamplerConfig::ValueNotValidException::ValueNotValidException() : std::runti
 
 }
 
-MoresamplerConfig::BlankEditMode::BlankEditMode():EditMode (ValueType::String)
-{
-
-}
-
-bool MoresamplerConfig::BlankEditMode::isValidValue(QVariant) const
-{
-    return true;
-}
-
-QVariant MoresamplerConfig::BlankEditMode::toVariantValueFromString(QString) const
-{
-    return QVariant();
-}
-
-QString MoresamplerConfig::BlankEditMode::toStringFromVariantValue(QVariant) const
-{
-    return QString();
-}
