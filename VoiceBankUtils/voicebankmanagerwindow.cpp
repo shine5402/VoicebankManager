@@ -1,12 +1,7 @@
 ﻿#include "voicebankmanagerwindow.h"
 #include "ui_voicebankmanagerwindow.h"
-//TODO:重构 将Dialog完成后的代码迁移至继承的accept和reject。
-//TODO:建立通用信息/警告/错误机制
 
-/*
- * TODO:上一条TODO的补充
- * 在主窗口的右下角放置一个可以显示错误窗口的按钮控件。弹出的窗口可不能是modal的……
- */
+
 void VoiceBankManagerWindow::connectWithVoiceBankHandler()
 {
     connect(voiceBankHandler,SIGNAL(backupImageFileBecauseExists(VoiceBank*)),this,SLOT(onBackupImageFileBecauseExists(VoiceBank *)));
@@ -499,10 +494,10 @@ void VoiceBankManagerWindow::createVoiceBanksTableMenu()
     multipleVoiceBankTableWidgetMenu->clear();
 
     multipleVoiceBankTableWidgetMenu->addMenu(copySubMenu);
-    multipleVoiceBankTableWidgetMenu->addMenu(codecSubMenu);
+    //multipleVoiceBankTableWidgetMenu->addMenu(codecSubMenu);
     multipleVoiceBankTableWidgetMenu->addSeparator();
-    multipleVoiceBankTableWidgetMenu->addMenu(voiceBankCategoriesSubMenu);
-    multipleVoiceBankTableWidgetMenu->addMenu(voiceBankLabelsSubMenu);
+    //multipleVoiceBankTableWidgetMenu->addMenu(voiceBankCategoriesSubMenu);
+    //multipleVoiceBankTableWidgetMenu->addMenu(voiceBankLabelsSubMenu);
     multipleVoiceBankTableWidgetMenu->addAction(ignoreAction);
     multipleVoiceBankTableWidgetMenu->addAction(reloadAction);
 
@@ -572,15 +567,26 @@ void VoiceBankManagerWindow::refreshCategoryAndLabelsActionsChecked()
 }
 
 void VoiceBankManagerWindow::ignoreActionSlot(){
-    auto voiceBank = getCurrentVoiceBank();
-    if (voiceBank)
+    auto voiceBanks = getSelectedVoiceBanks();
+    if (voiceBanks.size() > 0)
     {
-        auto button = QMessageBox::warning(this,tr("确定？"),tr("确定要把该文件夹中加入忽略列表吗？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Cancel);
-        if (button == QMessageBox::Ok)
-            MonitorFoldersScanner::getMonitorFoldersScanner()->addIgnoreVoiceBankFolder(voiceBank->getPath());
-        auto clickedButton = QMessageBox::information(this,tr("忽略文件夹列表被更改"),tr("您更改了忽略文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
-        if (clickedButton == QMessageBox::Ok)
-            loadVoiceBanksAndTable();
+        auto button = QMessageBox::warning(this,tr("确定？"),tr("确定要把以下文件夹中加入忽略列表吗？\n%1").arg([&]() -> QString{
+                                                                                               QStringList voicebankNameList;
+                                                                                               for (auto voicebank : voiceBanks)
+                                                                                               {
+                                                                                                   voicebankNameList.append(voicebank->getName().isEmpty() ? voicebank->getPath() : voicebank->getName());
+                                                                                               }
+                                                                                               return voicebankNameList.join("\n");
+                                                                                           }())
+                                           ,QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Cancel);
+        if (button == QMessageBox::Ok){
+            for (auto voicebank : voiceBanks)
+                MonitorFoldersScanner::getMonitorFoldersScanner()->addIgnoreVoiceBankFolder(voicebank->getPath());
+            auto clickedButton = QMessageBox::information(this,tr("忽略文件夹列表被更改"),tr("您更改了忽略文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
+            if (clickedButton == QMessageBox::Ok)
+                loadVoiceBanksAndTable();
+        }
+
     }
 }
 
@@ -837,10 +843,14 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
 }
 
 void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
-    auto voiceBank = getCurrentVoiceBank();
-    if (voiceBank){
+    auto voiceBanks = getSelectedVoiceBanks();
+
+    if (voiceBanks.size() > 0){
+        for (auto voiceBank : voiceBanks){
         voiceBank->reload();
-        setVoiceBankInfomation(voiceBank);
+        if (voiceBanks.size() == 1)
+            setVoiceBankInfomation(voiceBank);
+        }
     }
 }
 
