@@ -92,10 +92,18 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     showMoreInformationInTotalCountLabel = settings.value("VoiceBankManager/showMoreInformationInTotalCountLabel",true).toBool();
     ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
 
+    loadProgressBar->setRange(0,0);
+
     loadWindowStatus();
     connectWithVoiceBankHandler();
 }
 
+
+void VoiceBankManagerWindow::showLoadProgressBar()
+{
+    ui->statusbar->addPermanentWidget(loadProgressBar);
+    loadProgressBar->show();
+}
 
 void VoiceBankManagerWindow::loadVoiceBanksAndTable()
 {
@@ -109,6 +117,7 @@ void VoiceBankManagerWindow::loadVoiceBanksAndTable()
     ui->categoryAndLabelsAndListSplitter->setEnabled(false);
     ui->searchLineEdit->setEnabled(false);
     ui->voicebankCountLabel->setText(tr("加载中"));
+    showLoadProgressBar();
     voiceBankHandler->readVoiceBanksFromMonitorFolders();
     ui->searchLineEdit->clear();
 }
@@ -345,6 +354,7 @@ void VoiceBankManagerWindow::setUIAfterVoiceBanksReadDone()
     ui->categoryAndLabelsAndListSplitter->setEnabled(true);
     ui->searchLineEdit->setEnabled(true);
     updateVoiceBankCountLabel();
+    ui->statusbar->removeWidget(loadProgressBar);
     ui->voiceBankBriefInfomationWidget->setVisible(false);
     categoriesAndLabelsListWidget->readCategoriesFromVoicebankHandler();
     categoriesAndLabelsListWidget->readLabelsFromVoiceBankHandler();
@@ -360,6 +370,7 @@ void VoiceBankManagerWindow::onVoiceBankReloadDone(VoiceBank *voiceBank)
 {
     if (voiceBank == getCurrentVoiceBank())
         setVoiceBankInfomation(voiceBank);
+    ui->statusbar->removeWidget(loadProgressBar);
 }
 
 #ifndef NDEBUG

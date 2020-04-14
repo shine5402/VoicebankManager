@@ -121,6 +121,10 @@ private:
 
     void modifyVoiceBankName(VoiceBank* voiceBank);
 
+    QProgressBar* loadProgressBar = new QProgressBar(this);
+
+    void showLoadProgressBar();
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽
@@ -200,6 +204,7 @@ private slots:
     void onUseOldFolderScanChanged();
 
     void onVoiceBankReloadDone(VoiceBank *voiceBank);
+
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

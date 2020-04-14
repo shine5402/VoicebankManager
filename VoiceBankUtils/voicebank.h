@@ -181,11 +181,11 @@ public:
     const FileInfoStruct getfileInfoStruct(){
         return FileInfoStruct(fileInfoStruct->isFileInfoReaded,fileInfoStruct->fileCount,fileInfoStruct->dirCount,fileInfoStruct->fileTotalSize);
     }
+
 private:
     QImage _image;
     QString imagePath;
     QString imagePathRelative;
-    bool imageLoaded = false;
     QString name;
     QString readme;
     QString path;

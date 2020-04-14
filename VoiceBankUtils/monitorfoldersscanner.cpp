@@ -174,6 +174,8 @@ QStringList MonitorFoldersScanner::getFoldersInMonitorFolders()
       您可以使用其他函数来修改 MonitorFoldersScanner 的扫描行为。参见其它成员函数。
       \return 监视文件夹内的音源文件夹列表
     */
+
+
     QStringList folderList{};
     for (auto monitorFolder : monitorFolders){
         folderList.append(getVoiceBankFoldersInFolder(monitorFolder));
@@ -186,6 +188,10 @@ QStringList MonitorFoldersScanner::getFoldersInMonitorFolders()
 
 QStringList MonitorFoldersScanner::getVoiceBankFoldersInFolder(const QString &dir)
 {
+    ignoredVoiceBankFolders.clear();
+    notVoiceBankPaths.clear();
+    lastScannedPaths.clear();
+
     QStringList folderList{};
     QDir pDir(dir);
     auto entrys = pDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -195,15 +201,18 @@ QStringList MonitorFoldersScanner::getVoiceBankFoldersInFolder(const QString &di
         auto isIgnoreSub = false;
         for (auto i : ignoreVoiceBankFolders)
         {
+            auto currentIgnoreSub = false;
             if (i.startsWith("*"))
             {
                 i.remove("*");
-                isIgnoreSub = true;
+                currentIgnoreSub = true;
             }
-            if (QDir(i).path() == QDir(path).path())
+            if (QDir(i) == QDir(path))
             {
                 ignoredVoiceBankFolders.append(i);
                 isIgnore = true;
+                if (currentIgnoreSub)
+                    isIgnoreSub = true;
                 break;
             }
         }

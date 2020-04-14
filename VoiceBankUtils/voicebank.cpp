@@ -338,6 +338,7 @@ bool VoiceBank::askFileInfo()
     thread->start();
     return false;
 }
+
 void VoiceBank::setCategory(const QString &value)
 {
     ///设定该音源库所属的分类。
@@ -945,7 +946,6 @@ void VoiceBank::readCharacterFile()
                     QFileInfo imageFileInfo(imagePath);
                     if (imageFileInfo.exists()) {
                         readImage();
-
                     }
                     else
                     {
