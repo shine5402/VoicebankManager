@@ -848,8 +848,6 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     if (voiceBanks.size() > 0){
         for (auto voiceBank : voiceBanks){
         voiceBank->reload();
-        if (voiceBanks.size() == 1)
-            setVoiceBankInfomation(voiceBank);
         }
     }
 }

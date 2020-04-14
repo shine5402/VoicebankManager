@@ -8,6 +8,9 @@ QT       += core gui widgets multimedia
 !exists($$PWD/outsideLibrarys.pri){
     error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
 }
+
+VERSION = 0.14.0
+
 DISTFILES += \
     outsideLibrarys.pri \
     module.pri
@@ -21,6 +24,9 @@ TARGET = LeafOpenUTAUQt
 }
 if (contains(DEFINES,VOICEBANK_MANAGER)){
 TARGET = VoiceBankManager
+win32{
+RC_ICONS = icon/icon.ico
+}
 }
 TEMPLATE = app
 
