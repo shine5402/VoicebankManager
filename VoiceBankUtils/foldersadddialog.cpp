@@ -17,6 +17,11 @@ QString FoldersAddDialog::getNewPath() const
     return ui->pathLineEdit->text();
 }
 
+void FoldersAddDialog::setCurrentPath(const QString& newPath)
+{
+    ui->pathLineEdit->setText(newPath);
+}
+
 void FoldersAddDialog::on_exploreButton_clicked()
 {
     auto path = QFileDialog::getExistingDirectory(this,tr("选择一个文件夹"),QString(),QFileDialog::ShowDirsOnly);

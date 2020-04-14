@@ -46,6 +46,8 @@ private slots:
 
     void on_allowedPrefixDescriptionButton_clicked();
 
+    void on_modifyButton_clicked();
+
 private:
     Ui::FoldersSettingDialog *ui;
     QStringList folders;

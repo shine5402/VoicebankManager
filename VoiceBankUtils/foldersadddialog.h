@@ -17,6 +17,7 @@ public:
     explicit FoldersAddDialog(QWidget *parent = nullptr);
     ~FoldersAddDialog();
     QString getNewPath() const;
+    void setCurrentPath(const QString&newPath);
 private slots:
     void on_exploreButton_clicked();
 private:

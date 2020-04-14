@@ -75,15 +75,15 @@ void FoldersSettingDialog::on_addButton_clicked()
     {
         auto newPath = dialog->getNewPath();
         if (!newPath.isEmpty()){
-            QString newPath2 = newPath;
+            QString newPathWithPrefix = newPath;
             for (auto prefix : allowedPrefix){
                 if (newPath.startsWith(prefix.prefix)){
                     newPath.remove(prefix.prefix);
                 }
             }
             if (QDir(newPath).exists()){
-                ui->foldersListWidget->addItem(newPath2);
-                folders.append(newPath2);
+                ui->foldersListWidget->addItem(newPathWithPrefix);
+                folders.append(newPathWithPrefix);
             }
             else
                 QMessageBox::warning(this,tr("路径不存在"),tr("您输入的路径不存在。文件夹列表将不做更改。"));
@@ -106,10 +106,12 @@ void FoldersSettingDialog::on_buttonBox_clicked(QAbstractButton *button)
     case QDialogButtonBox::Reset:
         ui->foldersListWidget->clear();
         ui->foldersListWidget->addItems(oldFolders);
+        folders = oldFolders;
         break;
     case QDialogButtonBox::RestoreDefaults:
         ui->foldersListWidget->clear();
         ui->foldersListWidget->addItems(defaultFolders);
+        folders = defaultFolders;
         break;
     default:
         break;
@@ -135,4 +137,36 @@ void FoldersSettingDialog::on_allowedPrefixDescriptionButton_clicked()
     }
     auto htmlDialog = ShowHTMLDialog(text,tr("允许使用的后缀列表"),this);
     htmlDialog.exec();
+}
+
+void FoldersSettingDialog::on_modifyButton_clicked()
+{
+    auto item_list = ui->foldersListWidget->selectedItems();
+    for (auto item : item_list){
+
+        auto dialog = new FoldersAddDialog(this);
+        dialog->setCurrentPath(item->text());
+        auto dialogCode = dialog->exec();
+        if (dialogCode == QDialog::Accepted)
+        {
+            auto newPath = dialog->getNewPath();
+            if (!newPath.isEmpty()){
+                auto newPathWithPrefix = newPath;
+                for (auto prefix : allowedPrefix){
+                    if (newPath.startsWith(prefix.prefix)){
+                        newPath.remove(prefix.prefix);
+                    }
+                }
+                if (QDir(newPath).exists()){
+                    folders.replace(folders.indexOf(item->text()),newPathWithPrefix);
+                    item->setText(newPathWithPrefix);
+                }
+                else
+                    QMessageBox::warning(this,tr("路径不存在"),tr("您输入的路径不存在。文件夹列表将不做更改。"));
+            }
+            else
+                QMessageBox::warning(this,tr("路径为空"),tr("您并没有输入路径。文件夹列表将不做更改。"));
+        }
+        dialog->deleteLater();
+    }
 }
