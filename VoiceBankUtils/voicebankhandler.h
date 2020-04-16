@@ -7,6 +7,7 @@
 #include <QThreadPool>
 #include <public_defines.h>
 #include "monitorfoldersscanner.h"
+#include <setoperations.h>
 
 ///用于管理一系列VoiceBank。
 /*!
@@ -100,6 +101,8 @@ public:
     };
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 
+    QList<int> findIDByName(const QString& text) const;
+    QList<int> findIDByPath(const QString& text) const;
 signals:
     //TODO:重写信号文档
     void aVoiceBankReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 读取完毕。

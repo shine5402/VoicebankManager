@@ -133,6 +133,13 @@ QList<int> VoiceBankHandler::findIDByNameOrPath(const QString &text) const
       \see findIDByCategory(const QString &category) const
       \see findIDByLabel(const QString& label) const
     */
+    auto byName = findIDByName(text);
+    auto byPath = findIDByPath(text);
+
+    return SetOperations::getUnion<int>({byName, byPath});
+}
+
+QList<int> VoiceBankHandler::findIDByName(const QString &text) const{
     QList<int> result{};
     if (text.trimmed().isEmpty())
     {
@@ -144,7 +151,25 @@ QList<int> VoiceBankHandler::findIDByNameOrPath(const QString &text) const
     }
     for (auto voiceBank : voiceBanks)
     {
-        if (voiceBank->getName().contains(text) || voiceBank->getPath().contains(text))
+        if (voiceBank->getName().contains(text))
+            result.append(getVoiceBankID(voiceBank));
+    }
+    return result;
+}
+
+QList<int> VoiceBankHandler::findIDByPath(const QString &text) const{
+    QList<int> result{};
+    if (text.trimmed().isEmpty())
+    {
+        for (auto i = 0; i < voiceBanks.count(); ++i)
+        {
+            result.append(i);
+        }
+        return result;
+    }
+    for (auto voiceBank : voiceBanks)
+    {
+        if (voiceBank->getPath().contains(text))
             result.append(getVoiceBankID(voiceBank));
     }
     return result;

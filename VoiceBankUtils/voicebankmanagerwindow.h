@@ -126,6 +126,41 @@ private:
 
     void showLoadProgressBar();
 
+    QList<int> FilterCategory();
+
+    QList<int> FilterLabel();
+
+    void setupTranslation();
+
+    void setupVoiceBankTableView();
+
+    void setupSearchLineEdit();
+
+    QList<int> FilterSearchLineEdit();
+
+    //TODO:拆出Settings类用于整体
+    class searchSettings{
+    public:
+        enum SearchRangeEnum {Name, Path};
+        enum SpaceAsEnum{Key = 1, AND = 2, OR = 3} ;
+        bool isUseRegex() const;
+        void setUseRegex(bool value);
+        bool isCaseSensitive() const;
+        void setCaseSensitive(bool value);
+        bool getSearchRangeSetting(SearchRangeEnum range);
+        void setSearchRangeSetting(SearchRangeEnum range, bool value);
+        SpaceAsEnum getSpaceAs() const;
+        void setSpaceAs(const SpaceAsEnum& value);
+
+        void loadSettings();
+        void saveSettings();
+    private:
+        bool useRegex = false;
+        bool caseSensitive = false;
+        QHash<SearchRangeEnum, bool> searchRange;
+        SpaceAsEnum spaceAs;
+    } searchSettings{};
+
 private slots:
 #ifndef NDEBUG
     //Debug菜单项的槽
@@ -139,6 +174,7 @@ private slots:
     void createVoiceBanksCategoriesSubMenu();
     void on_voiceBanksTableView_customContextMenuRequested(const QPoint &);
     void on_voicebankImage_customContextMenuRequested(const QPoint &);
+
     //音源列表右键菜单触发槽
     void openVoiceBankPathInExplorer();
     void openVoiceBankCharacterFileByOS();
@@ -206,6 +242,7 @@ private slots:
 
     void onVoiceBankReloadDone(VoiceBank *voiceBank);
 
+    void showSearchLineEditContextMenu();
 };
 
 #endif // VOICEBANKMANAGERWINDOW_H

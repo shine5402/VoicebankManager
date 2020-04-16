@@ -19,39 +19,13 @@ void VoiceBankManagerWindow::connectWithVoiceBankHandler()
     connect(categoriesAndLabelsListWidget,SIGNAL(labelSelectionStrategyChanged()),this,SLOT(dealFilters()));
 }
 
-VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::VoiceBankManagerWindow)
+void VoiceBankManagerWindow::setupTranslation()
 {
-    /*!
-      VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。因为那是 VoiceBankHandler 的工作。 \n
-      VoiceBankManagerWindow 会自动获取 VoiceBankHandler 的实例。您只需要调用 VoiceBankManagerWindow::loadVoiceBanksAndTable() 即可让 VoiceBankManager 加载音源库。
-     */
-    ui->setupUi(this);
-#ifndef NDEBUG
-    //创建Debug用菜单项
-    QAction* debugFunctionAction = new QAction("执行Debug测试函数",this);
-    ui->menubar->addAction(debugFunctionAction);
-    connect(debugFunctionAction,SIGNAL(triggered(bool)),this,SLOT(debugFunction()));
-#endif
-
-    //设置音源信息显示区域
-    ui->voiceBankBriefInfomationWidget->setVisible(false);
-
-    //设置TableView
-    voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
-    ui->voiceBanksTableView->setModel(voiceBankTableModel);
-    ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
-    connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)));
-    connect(voiceBankTableModel,&VoiceBankTableModel::sortDone,this,&VoiceBankManagerWindow::dealFilters);
-
-    //分组语言菜单的action
     auto languageActionGroup = new QActionGroup(this);
     languageActionGroup->addAction(ui->actionAuto_detect);
     languageActionGroup->addAction(ui->actionDon_t_translate);
     languageActionGroup->addAction(ui->actionLoad_a_translation_file);
 
-    //加载语言文件
     QSettings settings;
     ui->actionAuto_detect->setChecked(settings.value("Translation/Auto",true).toBool());
     if (settings.value("Translation/Auto",true).toBool())
@@ -84,23 +58,67 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
     connect(ui->actionAuto_detect,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
     connect(ui->actionLoad_a_translation_file,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuLoadFile()));
     connect(ui->actionDon_t_translate,SIGNAL(triggered(bool)),this,SLOT(dealLanguageMenuAutoAndDontStates()));
+}
 
-    createVoiceBanksTableMenu();
+void VoiceBankManagerWindow::setupVoiceBankTableView()
+{
+    voiceBankTableModel = new VoiceBankTableModel(voiceBankHandler);
+    ui->voiceBanksTableView->setModel(voiceBankTableModel);
+    ui->voiceBanksTableView->horizontalHeader()->setSortIndicator(VoiceBankTableModel::TableColumns::Name,Qt::SortOrder::AscendingOrder);
+    connect(ui->voiceBanksTableView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),this,SLOT(onVoiceBankViewSelectionChanged(const QItemSelection &, const QItemSelection &)));
+    connect(voiceBankTableModel,&VoiceBankTableModel::sortDone,this,&VoiceBankManagerWindow::dealFilters);
+}
 
-    //在分类器里加入分类和标签
-    ui->categoryAndLabelsAndListSplitter->insertWidget(0,categoriesAndLabelsListWidget);
-    showMoreInformationInTotalCountLabel = settings.value("VoiceBankManager/showMoreInformationInTotalCountLabel",true).toBool();
-    ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
-
-    loadProgressBar->setRange(0,0);
-
+void VoiceBankManagerWindow::setupSearchLineEdit()
+{
     auto searchLineEdit = qobject_cast<LineEditWithIcon *>(ui->searchLineEdit);
     if (searchLineEdit)
     {
         searchLineEdit->setIcon(QIcon(":/icon/icon/search-24px.svg"));
     }
+    searchLineEdit->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+    connect(searchLineEdit, &QWidget::customContextMenuRequested, this, &VoiceBankManagerWindow::showSearchLineEditContextMenu);
+}
+
+VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::VoiceBankManagerWindow)
+{
+    /*!
+      VoiceBankManagerWindow 的构造函数。它将会自动加载相关设置，但不会加载音源库。因为那是 VoiceBankHandler 的工作。 \n
+      VoiceBankManagerWindow 会自动获取 VoiceBankHandler 的实例。您只需要调用 VoiceBankManagerWindow::loadVoiceBanksAndTable() 即可让 VoiceBankManager 加载音源库。
+     */
+
+    ui->setupUi(this);
+
+#ifndef NDEBUG
+    //Debug用菜单项
+    QAction* debugFunctionAction = new QAction("执行Debug测试函数",this);
+    ui->menubar->addAction(debugFunctionAction);
+    connect(debugFunctionAction,SIGNAL(triggered(bool)),this,SLOT(debugFunction()));
+#endif
+
+    ui->voiceBankBriefInfomationWidget->setVisible(false);
+
+    QSettings settings;
+    showMoreInformationInTotalCountLabel = settings.value("VoiceBankManager/showMoreInformationInTotalCountLabel",true).toBool();
+    ui->actionshow_more_infomation_in_total_count_label->setChecked(showMoreInformationInTotalCountLabel);
+
+    setupVoiceBankTableView();
+
+    setupTranslation();
+
+    createVoiceBanksTableMenu();
+
+    ui->categoryAndLabelsAndListSplitter->insertWidget(0,categoriesAndLabelsListWidget);
+
+    //让进度条显示“忙”（没有特定进度
+    loadProgressBar->setRange(0,0);
+
+    setupSearchLineEdit();
 
     loadWindowStatus();
+    searchSettings.loadSettings();
     connectWithVoiceBankHandler();
 }
 
@@ -213,6 +231,7 @@ VoiceBankManagerWindow::~VoiceBankManagerWindow()
 
     QSettings settings;
     settings.setValue("VoiceBankManager/showMoreInformationInTotalCountLabel",showMoreInformationInTotalCountLabel);
+    searchSettings.saveSettings();
 }
 
 void VoiceBankManagerWindow::loadWindowStatus()
@@ -377,6 +396,96 @@ void VoiceBankManagerWindow::onVoiceBankReloadDone(VoiceBank *voiceBank)
     if (voiceBank == getCurrentVoiceBank())
         setVoiceBankInfomation(voiceBank);
     ui->statusbar->removeWidget(loadProgressBar);
+}
+
+void VoiceBankManagerWindow::showSearchLineEditContextMenu()
+{
+    QMenu *menu = ui->searchLineEdit->createStandardContextMenu();
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+    menu->addSeparator();
+
+    QAction *useRegexAction = menu->addAction(tr("使用正则表达式"));
+    useRegexAction->setCheckable(true);
+    useRegexAction->setChecked(searchSettings.isUseRegex());
+    connect(useRegexAction,&QAction::toggled, this, [this](bool checked){searchSettings.setUseRegex(checked);});
+    connect(useRegexAction,&QAction::toggled, this, &VoiceBankManagerWindow::dealFilters);
+
+    QAction *caseSensitiveAction = menu->addAction(tr("区分大小写"));
+    caseSensitiveAction->setCheckable(true);
+    caseSensitiveAction->setChecked(searchSettings.isCaseSensitive());
+    connect(caseSensitiveAction,&QAction::toggled, this, [this](bool checked){searchSettings.setCaseSensitive(checked);});
+    connect(caseSensitiveAction,&QAction::toggled, this, &VoiceBankManagerWindow::dealFilters);
+
+    QMenu *searchRangeMenu = menu->addMenu(tr("搜索范围"));
+    QAction *rangeName = searchRangeMenu->addAction(tr("音源名称"));
+    rangeName->setCheckable(true);
+    rangeName->setChecked(searchSettings.getSearchRangeSetting(searchSettings::Name));
+    QAction *rangePath = searchRangeMenu->addAction(tr("音源路径"));
+    rangePath->setCheckable(true);
+    rangePath->setChecked(searchSettings.getSearchRangeSetting(searchSettings::Path));
+
+    auto makeAtLeastOne = [rangeName, rangePath]{
+        if (!(rangeName->isChecked()) && !(rangePath->isChecked()))
+        {
+            rangeName->setChecked(true);
+            rangePath->setChecked(true);
+        }
+        if (rangeName->isChecked() && !(rangePath->isChecked())){
+            rangeName->setDisabled(true);
+        }
+        if (!(rangeName->isChecked()) && rangePath->isChecked()){
+            rangePath->setDisabled(true);
+        }
+        if (rangeName->isChecked() && rangePath->isChecked())
+        {
+            rangeName->setDisabled(false);
+            rangePath->setDisabled(false);
+        }
+    };
+
+    makeAtLeastOne();
+
+    connect(rangeName, &QAction::toggled, this, [this, makeAtLeastOne](bool checked){searchSettings.setSearchRangeSetting(searchSettings::Name, checked);});
+    connect(rangeName, &QAction::toggled, this, &VoiceBankManagerWindow::dealFilters);
+    connect(rangePath, &QAction::toggled, this, [this, makeAtLeastOne](bool checked){searchSettings.setSearchRangeSetting(searchSettings::Path, checked);});
+    connect(rangePath, &QAction::toggled, this, &VoiceBankManagerWindow::dealFilters);
+
+    QMenu *spaceAsMenu = menu->addMenu(tr("将空格视为"));
+    QAction *spaceAsKey = spaceAsMenu->addAction(tr("关键词"));
+    spaceAsKey->setCheckable(true);
+    QAction *spaceAsAND = spaceAsMenu->addAction(tr("与"));
+    spaceAsAND->setCheckable(true);
+    QAction *spaceAsOR = spaceAsMenu->addAction(tr("或"));
+    spaceAsOR->setCheckable(true);
+
+    switch (searchSettings.getSpaceAs()) {
+    case searchSettings::Key: spaceAsKey->setChecked(true);break;
+    case searchSettings::AND: spaceAsAND->setChecked(true);break;
+    case searchSettings::OR: spaceAsOR->setChecked(true);break;
+    }
+
+    auto spaceAsGroup = new QActionGroup(spaceAsMenu);
+    spaceAsGroup->addAction(spaceAsKey);
+    spaceAsGroup->addAction(spaceAsAND);
+    spaceAsGroup->addAction(spaceAsOR);
+    connect(spaceAsGroup, &QActionGroup::triggered, this,
+            [this](QAction *action){
+        if (action->text() == tr("关键词")){
+            searchSettings.setSpaceAs(searchSettings::Key);
+        }
+        else if (action->text() == tr("与"))
+        {
+            searchSettings.setSpaceAs(searchSettings::AND);
+        }
+        else if (action->text() == tr("或"))
+        {
+            searchSettings.setSpaceAs(searchSettings::OR);
+        }
+        ;});
+
+    connect(spaceAsGroup, &QActionGroup::triggered, this,&VoiceBankManagerWindow::dealFilters);
+
+    menu->popup(QCursor::pos());
 }
 
 #ifndef NDEBUG
@@ -864,7 +973,7 @@ void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
 
     if (voiceBanks.size() > 0){
         for (auto voiceBank : voiceBanks){
-        voiceBank->reload();
+            voiceBank->reload();
         }
     }
 }
@@ -908,10 +1017,8 @@ void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
     }
 }
 
-void VoiceBankManagerWindow::dealFilters()
+QList<int> VoiceBankManagerWindow::FilterCategory()
 {
-    auto byName = voiceBankHandler->findIDByNameOrPath(ui->searchLineEdit->text());
-
     QList<int> byCategory;
     if (currentCategoriesFilter.count() == 1)
         byCategory.append(voiceBankHandler->findIDByCategory(currentCategoriesFilter.at(0)));
@@ -924,6 +1031,11 @@ void VoiceBankManagerWindow::dealFilters()
         }
     }
 
+    return byCategory;
+}
+
+QList<int> VoiceBankManagerWindow::FilterLabel()
+{
     QList<int> byLabel;
     if (currentLabelFilter.count() == 1)
         byLabel.append(voiceBankHandler->findIDByLabel(currentLabelFilter.at(0)));
@@ -944,7 +1056,23 @@ void VoiceBankManagerWindow::dealFilters()
             }
         }
     }
-    auto result = SetOperations::getIntersection<int>({byName,byCategory,byLabel});
+    return byLabel;
+}
+
+QList<int> VoiceBankManagerWindow::FilterSearchLineEdit()
+{
+    return voiceBankHandler->findIDByNameOrPath(ui->searchLineEdit->text());
+}
+
+void VoiceBankManagerWindow::dealFilters()
+{
+    auto bySearch = FilterSearchLineEdit();
+
+    auto byCategory = FilterCategory();
+
+    auto byLabel = FilterLabel();
+
+    auto result = SetOperations::getIntersection<int>({bySearch,byCategory,byLabel});
     showVoiceBanksRows(result);
 }
 
@@ -986,7 +1114,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<ul>"
                                      "<li>English（英文）：隋卞</li>"
                                      "</ul>"
-                                     "<p>如果你有能力翻译本程序到以上/其他语言版本，请联系我！</p>"),
+                                     "<p>如果你能协助翻译本程序到以上/其他语言版本，请联系我！</p>"),
                                   //许可
                                   tr("<h4>简述</h4>"
                                      "<p>本程序大体上是以<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>分发的，除了某些文件因其代码来源的原因使用了<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。<br/>"
@@ -1020,7 +1148,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<ul>"
                                      "<li>qBittorrent，作者：qBittorrent Project (<a href=\"http://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GNU GPL v2</a> with some special exception)"
                                      "</ul>"
-                                     "<h4>本程序的使用了以下美术资源</h4>"
+                                     "<h4>本程序使用了以下美术资源</h4>"
                                      "<ul>"
                                      "<li>Material icons，作者：Google(<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>)</li>"
                                      "</ul>"
@@ -1450,4 +1578,65 @@ void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
             .arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getScannedSubFolders().join("\n"));
     auto dialog = new ShowHTMLDialog(html,tr("音源文件夹扫描详情"),this);
     dialog->exec();
+}
+
+bool VoiceBankManagerWindow::searchSettings::isUseRegex() const
+{
+    return useRegex;
+}
+
+void VoiceBankManagerWindow::searchSettings::setUseRegex(bool value)
+{
+    useRegex = value;
+}
+
+bool VoiceBankManagerWindow::searchSettings::isCaseSensitive() const
+{
+    return caseSensitive;
+}
+
+void VoiceBankManagerWindow::searchSettings::setCaseSensitive(bool value)
+{
+    caseSensitive = value;
+}
+
+bool VoiceBankManagerWindow::searchSettings::getSearchRangeSetting(VoiceBankManagerWindow::searchSettings::SearchRangeEnum range)
+{
+    return searchRange.value(range);
+}
+
+void VoiceBankManagerWindow::searchSettings::setSearchRangeSetting(VoiceBankManagerWindow::searchSettings::SearchRangeEnum range, bool value)
+{
+    searchRange.insert(range,value);
+}
+
+void VoiceBankManagerWindow::searchSettings::loadSettings()
+{
+    QSettings settings;
+
+    setUseRegex(settings.value("SearchFilter/isUseRegex", false).toBool());
+    setCaseSensitive(settings.value("SearchFilter/isCaseSensitive", false).toBool());
+    setSearchRangeSetting(Name, settings.value("SearchFilter/Range/Name", true).toBool());
+    setSearchRangeSetting(Path, settings.value("SearchFilter/Range/Path", true).toBool());
+    setSpaceAs(static_cast<SpaceAsEnum>(settings.value("SearchFilter/SpaceAs", 1).toInt()));
+}
+
+void VoiceBankManagerWindow::searchSettings::saveSettings()
+{
+    QSettings settings;
+    settings.setValue("SearchFilter/isUseRegex",isUseRegex());
+    settings.setValue("SearchFilter/isCaseSensitive",isCaseSensitive());
+    settings.setValue("SearchFilter/Range/Name",getSearchRangeSetting(Name));
+    settings.setValue("SearchFilter/Range/Path",getSearchRangeSetting(Path));
+    settings.setValue("SearchFilter/SpaceAs",getSpaceAs());
+}
+
+VoiceBankManagerWindow::searchSettings::SpaceAsEnum VoiceBankManagerWindow::searchSettings::getSpaceAs() const
+{
+    return spaceAs;
+}
+
+void VoiceBankManagerWindow::searchSettings::setSpaceAs(const SpaceAsEnum& value)
+{
+    spaceAs = value;
 }
