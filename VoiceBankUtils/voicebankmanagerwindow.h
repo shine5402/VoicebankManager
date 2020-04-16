@@ -37,6 +37,7 @@
 #include <functional>
 #include <textconverthelper.h>
 #include "CommonUtils/aboutdialog.h"
+#include "CommonUtils/lineeditwithicon.h"
 
 namespace Ui {
 class VoiceBankManagerWindow;

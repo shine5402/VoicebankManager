@@ -20,7 +20,7 @@
 #include "ui_aboutdialog.h"
 
 AboutDialog::AboutDialog(const QString& applicationName,
-                         const QImage& applicationIcon,
+                         const QIcon& applicationIcon,
                          const QString& aboutHtml,
                          const QString& authorHtml,
                          const QString& thanksHtml,
@@ -38,11 +38,12 @@ AboutDialog::AboutDialog(const QString& applicationName,
         ui->headWidget->hide();
     }
     if (applicationIcon.isNull())
-        ui->iconLabel->hide();
+        ui->iconButton->hide();
     setWindowTitle(tr("关于 %1").arg(applicationName));
     ui->nameLabel->setText("<h1>" + applicationName + "</h1>");
-    auto iconScaled = applicationIcon.scaledToHeight(ui->nameLabel->height());
-    ui->iconLabel->setPixmap(QPixmap::fromImage(applicationIcon));
+
+    ui->iconButton->setIcon(applicationIcon);
+
     QList<QPair<int,QString>> tabTextList{};
     for (int i = 0; i < ui->tabWidget->count() ; ++i)
     {

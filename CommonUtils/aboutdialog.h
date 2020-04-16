@@ -14,7 +14,7 @@ class AboutDialog : public QDialog
 
 public:
     explicit AboutDialog(const QString& applicationName,
-                         const QImage& applicationIcon,
+                         const QIcon& applicationIcon,
                          const QString& aboutHtml,
                          const QString& authorHtml,
                          const QString& thanksHtml,

@@ -94,6 +94,12 @@ VoiceBankManagerWindow::VoiceBankManagerWindow(QWidget *parent) :
 
     loadProgressBar->setRange(0,0);
 
+    auto searchLineEdit = qobject_cast<LineEditWithIcon *>(ui->searchLineEdit);
+    if (searchLineEdit)
+    {
+        searchLineEdit->setIcon(QIcon(":/icon/icon/search-24px.svg"));
+    }
+
     loadWindowStatus();
     connectWithVoiceBankHandler();
 }
@@ -905,6 +911,7 @@ void VoiceBankManagerWindow::showVoiceBanksRows(const QList<int> &voiceBankIDs)
 void VoiceBankManagerWindow::dealFilters()
 {
     auto byName = voiceBankHandler->findIDByNameOrPath(ui->searchLineEdit->text());
+
     QList<int> byCategory;
     if (currentCategoriesFilter.count() == 1)
         byCategory.append(voiceBankHandler->findIDByCategory(currentCategoriesFilter.at(0)));
@@ -916,6 +923,7 @@ void VoiceBankManagerWindow::dealFilters()
             byCategory = SetOperations::getUnion<int>({byCategory,voiceBankHandler->findIDByCategory(i)});
         }
     }
+
     QList<int> byLabel;
     if (currentLabelFilter.count() == 1)
         byLabel.append(voiceBankHandler->findIDByLabel(currentLabelFilter.at(0)));
@@ -952,12 +960,13 @@ void VoiceBankManagerWindow::on_actionExit_triggered()
 
 void VoiceBankManagerWindow::on_actionAbout_triggered()
 {
-    auto dialog = new AboutDialog(tr("音源管理器 v%1").arg(voicebankManagerVersion),QImage(),
+    auto dialog = new AboutDialog(tr("音源管理器 v%1").arg(voicebankManagerVersion),QIcon {":/icon/icon/icon.png"},
                                   //关于
                                   tr("<p>为管理适用于UTAU歌声合成应用程序的声音资料库写的一个辅助工具。</p>"
                                      "<p>版权所有 2018-2019 shine_5402</p>"
                                      "<p>本程序是 Leaf Open UTAU Project 的一部分。</p>"
-                                     "<p>Github项目页：<a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a></p>"),
+                                     "<p>Github项目页：<a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a></p>"
+                                     "<p>UTAU是由飴屋／菖蒲(ameya)开发的歌声合成软件。UTAU图标版权归属于飴屋／菖蒲(ameya)。</p>"),
                                   //作者
                                   tr("<h4>主要维护者</h4>"
                                      "<p>shine_5402</p>"
@@ -1010,6 +1019,10 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<h4>本程序参考、借用了以下项目的部分源代码</h4>"
                                      "<ul>"
                                      "<li>qBittorrent，作者：qBittorrent Project (<a href=\"http://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GNU GPL v2</a> with some special exception)"
+                                     "</ul>"
+                                     "<h4>本程序的使用了以下美术资源</h4>"
+                                     "<ul>"
+                                     "<li>Material icons，作者：Google(<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>)</li>"
                                      "</ul>"
                                      "<h4>Apache License, Version 2.0</h4>"
                                      "<pre>%3</pre>"

@@ -46,6 +46,7 @@ CONFIG += c++17
 SOURCES += \
     CommonUtils/aboutdialog.cpp \
     CommonUtils/fitcontentlistview.cpp \
+    CommonUtils/lineeditwithicon.cpp \
         main.cpp \
         editorwindow.cpp \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
@@ -72,6 +73,7 @@ SOURCES += \
 HEADERS += \
     CommonUtils/aboutdialog.h \
     CommonUtils/fitcontentlistview.h \
+    CommonUtils/lineeditwithicon.h \
         editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
     VoiceBankUtils/voicebank.h \

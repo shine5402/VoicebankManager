@@ -8,4 +8,8 @@
         <file alias="qse">LICENSE/qBittorrentSpecialException.txt</file>
         <file alias="lgplv2.1">LICENSE/LGPLv2.1.txt</file>
     </qresource>
+    <qresource prefix="/icon">
+        <file>icon/search-24px.svg</file>
+        <file>icon/icon.png</file>
+    </qresource>
 </RCC>
