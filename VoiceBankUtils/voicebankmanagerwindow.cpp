@@ -445,9 +445,9 @@ void VoiceBankManagerWindow::showSearchLineEditContextMenu()
 
     makeAtLeastOne();
 
-    connect(rangeName, &QAction::toggled, this, [this, makeAtLeastOne](bool checked){searchSettings.setSearchRangeSetting(searchSettings::Name, checked);});
+    connect(rangeName, &QAction::toggled, this, [this](bool checked){searchSettings.setSearchRangeSetting(searchSettings::Name, checked);});
     connect(rangeName, &QAction::toggled, this, &VoiceBankManagerWindow::dealFilters);
-    connect(rangePath, &QAction::toggled, this, [this, makeAtLeastOne](bool checked){searchSettings.setSearchRangeSetting(searchSettings::Path, checked);});
+    connect(rangePath, &QAction::toggled, this, [this](bool checked){searchSettings.setSearchRangeSetting(searchSettings::Path, checked);});
     connect(rangePath, &QAction::toggled, this, &VoiceBankManagerWindow::dealFilters);
 
     QMenu *spaceAsMenu = menu->addMenu(tr("将空格视为"));
@@ -1061,20 +1061,48 @@ QList<int> VoiceBankManagerWindow::FilterLabel()
 
 QList<int> VoiceBankManagerWindow::FilterSearchLineEdit()
 {
-    auto result = QList<int>{};
+    auto resultByName = QList<int>{};
+    auto resultByPath = QList<int>{};
 
-    if (searchSettings.getSearchRangeSetting(searchSettings.Name))
+    auto keys = QStringList{};
+
+    if (searchSettings.getSpaceAs() != searchSettings.Key)
+        keys = ui->searchLineEdit->text().split(" ");
+    else
+        keys.append(ui->searchLineEdit->text());
+
+    if (searchSettings.getSpaceAs() == searchSettings.AND)
     {
-        auto byName = voiceBankHandler->findIDByName(ui->searchLineEdit->text(), searchSettings.isUseRegex(), searchSettings.isCaseSensitive()?Qt::CaseSensitive:Qt::CaseInsensitive);
-        result = SetOperations::getUnion<int>({result, byName});
+        for (int i = 0; i < voiceBankHandler->count(); ++i)
+        {
+            if (searchSettings.getSearchRangeSetting(searchSettings.Name))
+                resultByName.append(i);
+            if (searchSettings.getSearchRangeSetting(searchSettings.Path))
+                resultByPath.append(i);
+        }
     }
-    if (searchSettings.getSearchRangeSetting(searchSettings.Path))
-    {
-        auto byPath = voiceBankHandler->findIDByPath(ui->searchLineEdit->text(), searchSettings.isUseRegex(), searchSettings.isCaseSensitive()?Qt::CaseSensitive:Qt::CaseInsensitive);
-        result = SetOperations::getUnion<int>({result, byPath});
+    for (auto key : keys){
+        if (searchSettings.getSearchRangeSetting(searchSettings.Name))
+        {
+            auto byName = voiceBankHandler->findIDByName(key, searchSettings.isUseRegex(), searchSettings.isCaseSensitive()?Qt::CaseSensitive:Qt::CaseInsensitive);
+            if (searchSettings.getSpaceAs() == searchSettings.AND)
+                resultByName = SetOperations::getIntersection<int>({resultByName, byName});
+            else
+                resultByName = SetOperations::getUnion<int>({resultByName, byName});
+        }
+
+        if (searchSettings.getSearchRangeSetting(searchSettings.Path))
+        {
+            auto byPath = voiceBankHandler->findIDByPath(key, searchSettings.isUseRegex(), searchSettings.isCaseSensitive()?Qt::CaseSensitive:Qt::CaseInsensitive);
+            if (searchSettings.getSpaceAs() == searchSettings.AND)
+                resultByPath = SetOperations::getIntersection<int>({resultByPath, byPath});
+            else
+                resultByPath = SetOperations::getUnion<int>({resultByPath, byPath});
+        }
+
     }
 
-    return result;
+    return SetOperations::getUnion<int>({resultByName, resultByPath});
 }
 
 void VoiceBankManagerWindow::dealFilters()
