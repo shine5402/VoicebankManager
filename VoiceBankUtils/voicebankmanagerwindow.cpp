@@ -1061,7 +1061,20 @@ QList<int> VoiceBankManagerWindow::FilterLabel()
 
 QList<int> VoiceBankManagerWindow::FilterSearchLineEdit()
 {
-    return voiceBankHandler->findIDByNameOrPath(ui->searchLineEdit->text());
+    auto result = QList<int>{};
+
+    if (searchSettings.getSearchRangeSetting(searchSettings.Name))
+    {
+        auto byName = voiceBankHandler->findIDByName(ui->searchLineEdit->text(), searchSettings.isUseRegex(), searchSettings.isCaseSensitive()?Qt::CaseSensitive:Qt::CaseInsensitive);
+        result = SetOperations::getUnion<int>({result, byName});
+    }
+    if (searchSettings.getSearchRangeSetting(searchSettings.Path))
+    {
+        auto byPath = voiceBankHandler->findIDByPath(ui->searchLineEdit->text(), searchSettings.isUseRegex(), searchSettings.isCaseSensitive()?Qt::CaseSensitive:Qt::CaseInsensitive);
+        result = SetOperations::getUnion<int>({result, byPath});
+    }
+
+    return result;
 }
 
 void VoiceBankManagerWindow::dealFilters()

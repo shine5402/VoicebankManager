@@ -101,8 +101,8 @@ public:
     };
     void sort(SortableInformationID sortWhat, Qt::SortOrder order = Qt::AscendingOrder);
 
-    QList<int> findIDByName(const QString& text) const;
-    QList<int> findIDByPath(const QString& text) const;
+    QList<int> findIDByName(const QString& text, bool useRegex, Qt::CaseSensitivity cs) const;
+    QList<int> findIDByPath(const QString& text, bool useRegex, Qt::CaseSensitivity cs) const;
 signals:
     //TODO:重写信号文档
     void aVoiceBankReadDone(VoiceBank* voicebank); ///< 一个 VoiceBank 读取完毕。

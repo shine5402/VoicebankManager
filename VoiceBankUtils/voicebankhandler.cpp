@@ -126,21 +126,16 @@ void VoiceBankHandler::sort(VoiceBankHandler::SortableInformationID sortWhat, Qt
 
 QList<int> VoiceBankHandler::findIDByNameOrPath(const QString &text) const
 {
-    ///在 VoiceBankHandler 管理的 VoiceBank 中按名字或路径查找
-    /*!
-      \param[in] text 要查找的 VoiceBank 的名称或路径。该函数采用部分匹配方式，即二者中有一个含有 text 即可。
-      \return 查找到的 VoiceBank* 的列表。
-      \see findIDByCategory(const QString &category) const
-      \see findIDByLabel(const QString& label) const
-    */
-    auto byName = findIDByName(text);
-    auto byPath = findIDByPath(text);
+    auto byName = findIDByName(text, false, Qt::CaseSensitivity::CaseInsensitive);
+    auto byPath = findIDByPath(text, false, Qt::CaseSensitivity::CaseInsensitive);
 
     return SetOperations::getUnion<int>({byName, byPath});
 }
 
-QList<int> VoiceBankHandler::findIDByName(const QString &text) const{
+//TODO:重构：合并以下函数
+QList<int> VoiceBankHandler::findIDByName(const QString &text, bool useRegex, Qt::CaseSensitivity cs) const{
     QList<int> result{};
+    //条件空时返回所有结果
     if (text.trimmed().isEmpty())
     {
         for (auto i = 0; i < voiceBanks.count(); ++i)
@@ -149,16 +144,27 @@ QList<int> VoiceBankHandler::findIDByName(const QString &text) const{
         }
         return result;
     }
+    if (useRegex)
+    {
+        auto regex = QRegularExpression(text, cs == Qt::CaseSensitive ? QRegularExpression::NoPatternOption : QRegularExpression::CaseInsensitiveOption);
+        for (auto voiceBank : voiceBanks)
+        {
+            if (regex.match(voiceBank->getName()).hasMatch())
+                result.append(getVoiceBankID(voiceBank));
+        }
+    }
+    else{
     for (auto voiceBank : voiceBanks)
     {
-        if (voiceBank->getName().contains(text))
+        if (voiceBank->getName().contains(text, cs))
             result.append(getVoiceBankID(voiceBank));
-    }
+    }}
     return result;
 }
 
-QList<int> VoiceBankHandler::findIDByPath(const QString &text) const{
+QList<int> VoiceBankHandler::findIDByPath(const QString &text, bool useRegex, Qt::CaseSensitivity cs) const{
     QList<int> result{};
+    //条件空时返回所有结果
     if (text.trimmed().isEmpty())
     {
         for (auto i = 0; i < voiceBanks.count(); ++i)
@@ -167,11 +173,21 @@ QList<int> VoiceBankHandler::findIDByPath(const QString &text) const{
         }
         return result;
     }
+    if (useRegex)
+    {
+        auto regex = QRegularExpression(text, cs == Qt::CaseSensitive ? QRegularExpression::NoPatternOption : QRegularExpression::CaseInsensitiveOption);
+        for (auto voiceBank : voiceBanks)
+        {
+            if (regex.match(voiceBank->getPath()).hasMatch())
+                result.append(getVoiceBankID(voiceBank));
+        }
+    }
+    else{
     for (auto voiceBank : voiceBanks)
     {
-        if (voiceBank->getPath().contains(text))
+        if (voiceBank->getPath().contains(text, cs))
             result.append(getVoiceBankID(voiceBank));
-    }
+    }}
     return result;
 }
 
