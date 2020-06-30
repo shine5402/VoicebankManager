@@ -10,7 +10,7 @@ FoldersSettingDialog::FoldersSettingDialog(QWidget *parent) :
     ui->allowedPrefixDescriptionButton->hide();
 }
 
-FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QString &label, const QString &title, QWidget *parent, const QStringList &defaultFolders, const QList<AllowedPrefix>& allowedPrefix) : FoldersSettingDialog(parent)
+FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QString &label, const QString &title, QWidget *parent, const QStringList &defaultFolders, const QList<AllowedAffix>& allowedPrefix) : FoldersSettingDialog(parent)
 {
     setFolders(folders);
     setWindowTitle(title);
@@ -24,7 +24,7 @@ FoldersSettingDialog::FoldersSettingDialog(const QStringList &folders, const QSt
         ui->allowedPrefixDescriptionButton->show();
         for (auto i : allowedPrefix)
         {
-            text.append(i.prefix);
+            text.append(i.affix);
             if (!i.briefDescription.isEmpty())
                 text.append(tr("（%1）").arg(i.briefDescription));
             text.append(tr("，"));
@@ -77,8 +77,8 @@ void FoldersSettingDialog::on_addButton_clicked()
         if (!newPath.isEmpty()){
             QString newPathWithPrefix = newPath;
             for (auto prefix : allowedPrefix){
-                if (newPath.startsWith(prefix.prefix)){
-                    newPath.remove(prefix.prefix);
+                if (newPath.startsWith(prefix.affix)){
+                    newPath.remove(prefix.affix);
                 }
             }
             if (QDir(newPath).exists()){
@@ -118,7 +118,7 @@ void FoldersSettingDialog::on_buttonBox_clicked(QAbstractButton *button)
     }
 }
 
-void FoldersSettingDialog::setAllowedPrefix(const QList<AllowedPrefix>& value)
+void FoldersSettingDialog::setAllowedPrefix(const QList<AllowedAffix>& value)
 {
     allowedPrefix = value;
 }
@@ -133,9 +133,14 @@ void FoldersSettingDialog::on_allowedPrefixDescriptionButton_clicked()
     QString text;
     for (auto i : allowedPrefix)
     {
-        text.append(tr("<p><b>后缀</b>：%1<br/><b>描述</b>：%2</p>").arg(i.prefix).arg(i.description));
+        text.append(tr("<p><b>%3</b>：%1<br/><b>描述</b>：%2</p>").arg(i.affix).arg(i.description).arg([&]() -> QString{
+                                                                                                       switch (i.type) {
+                                                                                                           case AllowedAffix::prefix: return tr("前缀");
+                                                                                                           case AllowedAffix::suffix: return tr("后缀");
+                                                                                                       }
+                                                                                                   }()));
     }
-    auto htmlDialog = ShowHTMLDialog(text,tr("允许使用的后缀列表"),this);
+    auto htmlDialog = ShowHTMLDialog(text,tr("允许使用的词缀列表"),this);
     htmlDialog.exec();
 }
 
@@ -153,8 +158,8 @@ void FoldersSettingDialog::on_modifyButton_clicked()
             if (!newPath.isEmpty()){
                 auto newPathWithPrefix = newPath;
                 for (auto prefix : allowedPrefix){
-                    if (newPath.startsWith(prefix.prefix)){
-                        newPath.remove(prefix.prefix);
+                    if (newPath.startsWith(prefix.affix)){
+                        newPath.remove(prefix.affix);
                     }
                 }
                 if (QDir(newPath).exists()){

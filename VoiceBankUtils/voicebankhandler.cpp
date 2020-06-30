@@ -34,6 +34,7 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
     /*!
       在确定待读取文件夹列表时，程序会考虑是否递归查找、忽略文件夹列表、外部文件夹列表等。参见这些设置相关的函数以获取详情。
     */
+    //TODO:将此处变为多线程
     auto voiceBankPaths = MonitorFoldersScanner::getMonitorFoldersScanner()->getFoldersInMonitorFolders();
     if (voiceBankPaths.count() == 0)
         emit voiceBanksReadDone();

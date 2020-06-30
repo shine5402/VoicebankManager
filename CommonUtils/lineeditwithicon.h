@@ -1,14 +1,4 @@
-/****************************************************************************
-**
-** Copyright (c) 2007 Trolltech ASA <info@trolltech.com>
-**
-** Use, modification and distribution is allowed without limitation,
-** warranty, liability or support of any kind.
-**
-** ========
-** This is a file copied from qBittorrent with my own modification.
-**
-****************************************************************************/
+//以下文件参考了qBittorrent的相关代码，而参考来源还带有“Copyright (c) 2007 Trolltech ASA <info@trolltech.com>”的声明。
 
 #ifndef LINEEDITWITHICON_H
 #define LINEEDITWITHICON_H
@@ -28,11 +18,11 @@ public:
     void setIcon(const QIcon& icon);
 
 protected:
-    void resizeEvent(QResizeEvent *e) override;
+    void resizeEvent(QResizeEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
-    QToolButton *m_iconButton;
+    QToolButton *iconButton;
 };
 
 #endif // LIENEDIT_H

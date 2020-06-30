@@ -139,10 +139,11 @@ Qt::ItemFlags MoresamplerConfigsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
+
     if ((configReader->getConfig(index.row())->canEdit()) && (isValueColumn(index) || isEditableOverrideColumn(index)))
         return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
-    else
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
 
 void MoresamplerConfigsModel::removeConfig(int id)

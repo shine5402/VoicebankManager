@@ -129,7 +129,7 @@ void VoiceBankManagerWindow::showLoadProgressBar()
     loadProgressBar->show();
 }
 
-void VoiceBankManagerWindow::loadVoiceBanksAndTable()
+void VoiceBankManagerWindow::loadVoiceBanksAndChangeUI()
 {
     /*!
       加载音源库列表，并填充窗口中的表格。\n
@@ -142,8 +142,8 @@ void VoiceBankManagerWindow::loadVoiceBanksAndTable()
     ui->searchLineEdit->setEnabled(false);
     ui->voicebankCountLabel->setText(tr("加载中"));
     showLoadProgressBar();
-    voiceBankHandler->readVoiceBanksFromMonitorFolders();
     ui->searchLineEdit->clear();
+    voiceBankHandler->readVoiceBanksFromMonitorFolders();
 }
 
 void VoiceBankManagerWindow::dealLanguageMenuAutoAndDontStates(){
@@ -250,11 +250,13 @@ void VoiceBankManagerWindow::loadWindowStatus()
         //横向
         QWidget *hWidget0 = ui->categoryAndLabelsAndListSplitter->widget(0);
         auto sizePolicy0 = hWidget0->sizePolicy();
-        sizePolicy0.setHorizontalStretch(1);
+        constexpr int defaultCategoryAndLabelsHorizontalStretch = 1;
+        sizePolicy0.setHorizontalStretch(defaultCategoryAndLabelsHorizontalStretch);
         hWidget0->setSizePolicy(sizePolicy0);
-        QWidget *hWidget1 = ui->categoryAndLabelsAndListSplitter->widget(1);
+        constexpr int defaultVoiceBankListHorizontalStretch = 5;
+        QWidget *hWidget1 = ui->categoryAndLabelsAndListSplitter->widget(defaultVoiceBankListHorizontalStretch);
         auto sizePolicy1 = hWidget1->sizePolicy();
-        sizePolicy1.setHorizontalStretch(5);
+        sizePolicy1.setHorizontalStretch(defaultVoiceBankListHorizontalStretch);
         hWidget1->setSizePolicy(sizePolicy1);
 
     }
@@ -305,10 +307,10 @@ void VoiceBankManagerWindow::fillVoicebankInformationTextBrower(VoiceBank* voice
     ui->voicebankInformationTextBrowser->append(tr("<h4 style=\"color:blue\">文件编码：</h4>"));
     if (voiceBank->hasTextCodecAutoDetected())
     {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">自动探测后程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name()),QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
     else {
-        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name())).arg(QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
+        ui->voicebankInformationTextBrowser->append(tr("<p style=\"color:blue\">程序读取时使用的文本编码：character.txt：%1；readme.txt：%2。</p>").arg(QString::fromUtf8(voiceBank->getCharacterTextCodec()->name()),QString::fromUtf8(voiceBank->getReadmeTextCodec()->name())));
     }
 }
 
@@ -710,7 +712,7 @@ void VoiceBankManagerWindow::ignoreActionSlot(){
                 MonitorFoldersScanner::getMonitorFoldersScanner()->addIgnoreVoiceBankFolder(voicebank->getPath());
             auto clickedButton = QMessageBox::information(this,tr("忽略文件夹列表被更改"),tr("您更改了忽略文件夹列表，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
             if (clickedButton == QMessageBox::Ok)
-                loadVoiceBanksAndTable();
+                loadVoiceBanksAndChangeUI();
         }
 
     }
@@ -816,7 +818,7 @@ void VoiceBankManagerWindow::openVoiceBankReadmeFileByOS(){
     if (voiceBank){
         auto url = QUrl("file:" + voiceBank->getPath() + "readme.txt");
         if(!QDesktopServices::openUrl(url)){
-            if (!QFileInfo(voiceBank->getPath() + "readme.txt").exists())
+            if (!QFileInfo::exists(voiceBank->getPath() + "readme.txt"))
             {
                 auto id = QMessageBox::information(this,"文件不存在","看起来该音源的readme.txt不存在。是否需要程序创建一个？",QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
                 if (id == QMessageBox::Ok)
@@ -848,7 +850,7 @@ void VoiceBankManagerWindow::copyVoiceBankCharacterFilePathtoClipboard(){
     for (auto voiceBank : voiceBanks){
         if (voiceBank)
         {
-            if (!QFileInfo(voiceBank->getPath() + "character.txt").exists())
+            if (!QFileInfo::exists(voiceBank->getPath() + "character.txt"))
             {
                 auto id = QMessageBox::information(this,tr("文件不存在"),tr("看起来音源“%1”的character.txt不存在。是否需要程序创建一个？").arg(voiceBank->getPath()),QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
                 if (id == QMessageBox::Ok)
@@ -873,7 +875,7 @@ void VoiceBankManagerWindow::copyVoiceBankReadmeFilePathtoClipboard(){
     for (auto voiceBank : voiceBanks){
         if (voiceBank)
         {
-            if (!QFileInfo(voiceBank->getPath() + "readme.txt").exists())
+            if (!QFileInfo::exists(voiceBank->getPath() + "readme.txt"))
             {
                 auto id = QMessageBox::information(this,tr("文件不存在"),tr("看起来音源“%1”的readme.txt不存在。是否需要程序创建一个？").arg(voiceBank->getPath()),QMessageBox::Ok | QMessageBox::Abort,QMessageBox::Ok);
                 if (id == QMessageBox::Ok)
@@ -914,7 +916,7 @@ void VoiceBankManagerWindow::convertCharacterCodecActionSlot(){
     auto voiceBank = getCurrentVoiceBank();
     if (voiceBank){
         auto path = voiceBank->getPath() + "character.txt";
-        if (!QFileInfo(path).exists())
+        if (!QFileInfo::exists(path))
         {
             QMessageBox::warning(this,tr("character.txt不存在"),tr("您选定的音源不存在character.txt。所以无法进行转换操作。"));
             return;
@@ -963,7 +965,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
         {
             voiceBank->clearWavFileReadStage();
             voiceBank->setWavFileNameTextCodec(targetCodec);
-            QMessageBox::information(this,tr("转换成功完成"),tr("音源%1的WAV文件名均已从%2转换至%3。").arg(voiceBank->getName()).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
+            QMessageBox::information(this,tr("转换成功完成"),tr("音源%1的WAV文件名均已从%2转换至%3。").arg(voiceBank->getName()).arg(QString::fromUtf8(sourceCodec->name()),QString::fromUtf8(targetCodec->name())));
         }
     }
 }
@@ -971,7 +973,7 @@ void VoiceBankManagerWindow::convertWavFileNameCodecActionSlot(){
 void VoiceBankManagerWindow::reloadVoiceBankActionSlot(){
     auto voiceBanks = getSelectedVoiceBanks();
 
-    if (voiceBanks.size() > 0){
+    if (!voiceBanks.empty()){
         for (auto voiceBank : voiceBanks){
             voiceBank->reload();
         }
@@ -985,7 +987,7 @@ void VoiceBankManagerWindow::on_actionMonitor_Folders_triggered()
 
 void VoiceBankManagerWindow::on_actionRefresh_triggered()
 {
-    loadVoiceBanksAndTable();
+    loadVoiceBanksAndChangeUI();
 }
 
 void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
@@ -998,7 +1000,7 @@ void VoiceBankManagerWindow::on_actionDefault_TextCodec_triggered()
         VoiceBank::setDefalutTextCodecAutoDetect(dialog->getIsAutoDetect());
         auto clickedButton = QMessageBox::information(this,tr("默认文本读取编码被更改"),tr("您更改了默认的读取用文本编码，是否立即重载音源库列表？"),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
-            loadVoiceBanksAndTable();
+            loadVoiceBanksAndChangeUI();
     }
     dialog->deleteLater();
 }
@@ -1158,7 +1160,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<p>如果你能协助翻译本程序到以上/其他语言版本，请联系我！</p>"),
                                   //许可
                                   tr("<h4>简述</h4>"
-                                     "<p>本程序大体上是以<a href=\"https://www.apache.org/licenses/LICENSE-2.0\">Apache License, Version 2.0</a>分发的，除了某些文件因其代码来源的原因使用了<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。<br/>"
+                                     "<p>本程序的代码库中的代码是以<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。分发的<br/>"
                                      "你可以直接通过上述链接（需要Internet）查看这些许可，也可继续向下翻阅。<br/>"
                                      "你可以通过源文件中的说明来辨别文件使用的许可。</p>"
                                      "<h4>Apache License, Version 2.0</h4>"
@@ -1169,13 +1171,13 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                            QFile file(":/license/apachev2");
                                            file.open(QFile::ReadOnly);
                                            return QString::fromUtf8(file.readAll());
-                                       }())
-                                  .arg([] () -> QString {
+                                       }(),
+                                       [] () -> QString {
                                            QFile file(":/license/gplv3");
                                            file.open(QFile::ReadOnly);
                                            return QString::fromUtf8(file.readAll());
-                                       }()
-                                       ),
+                                       }())
+                                  ,
                                   tr("<i>你可以直接通过库后所附许可的链接查看每个库的对应许可（需要Internet），也可继续向下翻阅。</i>"
                                      "<h4>本程序使用了以下第三方程序库：</h4>"
                                      "<ul>"
@@ -1185,7 +1187,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<li>ImageCropper，作者：dimkanovikov 与 shine_5402 (<a href=\"http://www.gnu.org/licenses/lgpl-3.0.html\">GNU LGPL v3</a>)</li>"
                                      "<li>libchardet，版本 %2，作者：JoungKyun.Kim (<a href=\"https://www.mozilla.org/en-US/MPL/1.1/\">MPL 1.1</a> or <a href=\"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\">LGPL 2.1</a>)</li>"
                                      "</ul>"
-                                     "<h4>本程序参考、借用了以下项目的部分源代码</h4>"
+                                     "<h4>本程序参考了以下项目的部分源代码</h4>"
                                      "<ul>"
                                      "<li>qBittorrent，作者：qBittorrent Project (<a href=\"http://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GNU GPL v2</a> with some special exception)"
                                      "</ul>"
@@ -1205,8 +1207,7 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<pre>%7</pre>"
                                      "<h4>GNU General Public License, Version 2</h4>"
                                      "<pre>%8</pre>"
-                                     "<h4>qBittorrent special exception</h4>"
-                                     "<pre>%9</pre>").arg(QT_VERSION_STR).arg(QChardet::libchardetVersion())
+                                     ).arg(QT_VERSION_STR).arg(QChardet::libchardetVersion())
                                   .arg([] () -> QString {
                                            QFile file(":/license/apachev2");
                                            file.open(QFile::ReadOnly);
@@ -1238,11 +1239,6 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                            file.open(QFile::ReadOnly);
                                            return QString::fromUtf8(file.readAll());
                                        }())
-                                  .arg([] () -> QString {
-                                           QFile file(":/license/qse");
-                                           file.open(QFile::ReadOnly);
-                                           return QString::fromUtf8(file.readAll());
-                                       }())
                                   ,this
                                   );
     dialog->exec();
@@ -1256,7 +1252,8 @@ void VoiceBankManagerWindow::on_actionAbout_Qt_triggered()
 void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
 {
     bool ok = false;
-    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),VoiceBank::getThreadPoolMaxThreadCount(),1,2147483647,1,&ok);
+    constexpr int maxThread = 2147483647;
+    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),VoiceBank::getThreadPoolMaxThreadCount(),1,maxThread,1,&ok);
     if (ok){
         VoiceBank::setThreadPoolMaxThreadCount(count);
         ui->statusbar->showMessage(tr("线程池大小已经被设置为%1").arg(count));
@@ -1333,11 +1330,11 @@ void VoiceBankManagerWindow::moresamplerConfigEditActionSlot()
 void VoiceBankManagerWindow::on_actionEdit_Global_MoresamplerConfig_triggered()
 {
     QStringList configFilePaths;
-    for (auto path : MonitorFoldersScanner::getMonitorFoldersScanner()->getMonitorFolders())
+    for (const auto& path : MonitorFoldersScanner::getMonitorFoldersScanner()->getMonitorFolders())
     {
         QDir dir(path);
         if (dir.cdUp()){
-            if (QFileInfo(dir.absoluteFilePath("moreconfig.txt")).exists())
+            if (QFileInfo::exists(dir.absoluteFilePath("moreconfig.txt")))
                 configFilePaths.append(QDir::cleanPath(dir.absoluteFilePath("moreconfig.txt")));
         }
     }
@@ -1383,7 +1380,6 @@ void VoiceBankManagerWindow::modifyVoiceBankName(VoiceBank * voiceBank)
             }
             catch(FileIOWithCodecHelper::FileNotExists&){
                 setVoiceBankInfomation(voiceBank);
-                auto a = voiceBank->getName();
                 ui->statusbar->showMessage(tr("路径为%1的音源的character.txt不存在。程序已经自动创建并将名称设置为%1。").arg(voiceBank->getName()));
             }
         }
@@ -1482,7 +1478,7 @@ void VoiceBankManagerWindow::on_playSamplebutton_clicked()
 void VoiceBankManagerWindow::onSamplePlayerPositionChange(qint64 position)
 {
     auto sampleDuration = samplePlayer->duration();
-    qreal positionRate = static_cast<double>(position) / ((sampleDuration == 0)?INT_MAX:sampleDuration);
+    qreal positionRate = static_cast<double>(position) / ((sampleDuration == 0) ? INT_MAX : sampleDuration);
     samplePlayerProgress->setValue(static_cast<int>(INT_MAX * positionRate));
 }
 void VoiceBankManagerWindow::onSamplePlayerStateChanged(QMediaPlayer::State state)
@@ -1544,7 +1540,7 @@ void VoiceBankManagerWindow::on_actionFor_File_Name_triggered()
     auto sourceCodec = QTextCodec::codecForLocale();
     auto targetCodec = QTextCodec::codecForLocale();
     if (TextConvertHelper::processFileNameConvert(fileNameRaw,filePath,tr("转换%1下的文件名").arg(path),sourceCodec,targetCodec,this))
-        QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的从%2到%3的转换成功完成。").arg(path).arg(QString::fromUtf8(sourceCodec->name())).arg(QString::fromUtf8(targetCodec->name())));
+        QMessageBox::information(this,tr("转换成功"),tr("对%1下的文件名的从%2到%3的转换成功完成。").arg(path).arg(QString::fromUtf8(sourceCodec->name()),QString::fromUtf8(targetCodec->name())));
 }
 
 void VoiceBankManagerWindow::on_voicebankImage_customContextMenuRequested(const QPoint &)
@@ -1580,7 +1576,7 @@ void VoiceBankManagerWindow::on_actionshow_more_infomation_in_total_count_label_
     updateVoiceBankCountLabel();
 }
 
-void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QList<FoldersSettingDialog::AllowedPrefix>& allowedPrefix)
+void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList& defaultList, const QList<FoldersSettingDialog::AllowedAffix>& allowedPrefix)
 {
     auto dialog = new FoldersSettingDialog(getFunc(MonitorFoldersScanner::getMonitorFoldersScanner()),tr("设定%1：").arg(name),tr("%1设定").arg(name),this,defaultList,allowedPrefix);
     auto dialogCode = dialog->exec();
@@ -1588,7 +1584,7 @@ void VoiceBankManagerWindow::letUserModifyFolder(std::function<QStringList(Monit
         setFunc(MonitorFoldersScanner::getMonitorFoldersScanner(),dialog->getFolders());
         auto clickedButton = QMessageBox::information(this,tr("%1被更改").arg(name),tr("您更改了%1，是否立即重载音源库列表？").arg(name),QMessageBox::Ok | QMessageBox::Cancel,QMessageBox::Ok);
         if (clickedButton == QMessageBox::Ok)
-            loadVoiceBanksAndTable();
+            loadVoiceBanksAndChangeUI();
     }
     dialog->deleteLater();
 }
@@ -1600,7 +1596,7 @@ void VoiceBankManagerWindow::on_actionOutside_VoiceBanks_triggered()
 
 void VoiceBankManagerWindow::on_actionIgnored_folders_triggered()
 {
-    letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"),QStringList(),{{"*",tr("子文件夹不包括"),tr("在路径前使用“*”前缀会使VoiceBankManager在扫描时同时忽略其子文件夹。")}});
+    letUserModifyFolder(std::mem_fn(&MonitorFoldersScanner::getIgnoreVoiceBankFolders),std::mem_fn(&MonitorFoldersScanner::setIgnoreVoiceBankFolders),tr("忽略文件夹列表"),QStringList(),{{"*", FoldersSettingDialog::AllowedAffix::prefix, tr("子文件夹不包括"),tr("在路径前使用“*”前缀会使VoiceBankManager在扫描时同时忽略其子文件夹。")}});
 }
 
 void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
@@ -1613,10 +1609,10 @@ void VoiceBankManagerWindow::on_actionView_scan_details_triggered()
                    "<pre>%3</pre>"
                    "<h4>子文件夹递归确定得到的声库文件夹</h4>"
                    "<pre>%4</pre>")
-            .arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getIgnoredVoiceBankFolders().join("\n"))
-            .arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getNotVoiceBankPaths().join("\n"))
-            .arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getOutsideVoiceBankFolders().join("\n"))
-            .arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getScannedSubFolders().join("\n"));
+            .arg(MonitorFoldersScanner::getMonitorFoldersScanner()->getIgnoredVoiceBankFolders().join("\n"),
+                 MonitorFoldersScanner::getMonitorFoldersScanner()->getNotVoiceBankPaths().join("\n"),
+                 MonitorFoldersScanner::getMonitorFoldersScanner()->getOutsideVoiceBankFolders().join("\n"),
+                 MonitorFoldersScanner::getMonitorFoldersScanner()->getScannedSubFolders().join("\n"));
     auto dialog = new ShowHTMLDialog(html,tr("音源文件夹扫描详情"),this);
     dialog->exec();
 }

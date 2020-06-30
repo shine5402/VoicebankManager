@@ -24,7 +24,8 @@ int main(int argc, char *argv[])
 #ifdef VOICEBANK_MANAGER
     VoiceBankManagerWindow v;
     v.show();
-    v.loadVoiceBanksAndTable();
+    //QTimer::singleShot(0, &v, &VoiceBankManagerWindow::loadVoiceBanksAndTable);
+    v.loadVoiceBanksAndChangeUI();
 #endif
     return a.exec();
 }

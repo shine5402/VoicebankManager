@@ -43,7 +43,7 @@ void CategoriesAndLabelsListWidget::readSettingsCategoriesAndLabels()
     {
         auto value = settings.value("VoiceBankManager/Categories");
         categories = value.toStringList();
-        for (auto i : categories)
+        for (const auto& i : categories)
         {
             categoriesUsedCount.insert(i,0);
         }
@@ -53,7 +53,7 @@ void CategoriesAndLabelsListWidget::readSettingsCategoriesAndLabels()
     {
         auto value = settings.value("VoiceBankManager/Labels");
         labels = value.toStringList();
-        for (auto i : labels)
+        for (const auto& i : labels)
         {
             labelsUsedCount.insert(i,0);
         }
@@ -125,10 +125,10 @@ void CategoriesAndLabelsListWidget::readLabelsFromVoiceBankHandler()
     for (int i = 0;i < handler->count();++i)
     {
         auto labels_vb = handler->getVoiceBank(i)->getLabels();
-        for (auto label : labels_vb)
+        for (const auto& label : labels_vb)
             labelsUsedCount.insert(label,labelsUsedCount.value(label,0) + 1);
         if (!labels_vb.isEmpty()){
-            for (auto i : labels_vb)
+            for (const auto& i : labels_vb)
                 if (!labels.contains(i))
                     labels.append(i);
         }
@@ -181,7 +181,7 @@ void CategoriesAndLabelsListWidget::removeUnusedCategories()
             toBeRemoved.append(i.key());
         }
     }
-    for (auto i : toBeRemoved)
+    for (const auto& i : toBeRemoved)
         categoriesUsedCount.remove(i);
     ui->categoriesListView->updateGeometry();
     emit categoriesChanged();
@@ -199,7 +199,7 @@ void CategoriesAndLabelsListWidget::removeUnusedLabels()
             toBeRemoved.append(i.key());
         }
     }
-    for (auto i : toBeRemoved)
+    for (const auto& i : toBeRemoved)
         labelsUsedCount.remove(i);
     ui->labelListView->updateGeometry();
     emit labelsChanged();

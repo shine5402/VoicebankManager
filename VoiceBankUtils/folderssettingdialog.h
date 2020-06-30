@@ -7,6 +7,8 @@
 #include <public_defines.h>
 #include "./CommonUtils/showhtmldialog.h"
 
+//TODO:移动到CommonUtil
+
 namespace Ui {
     class FoldersSettingDialog;
 }
@@ -16,22 +18,24 @@ class FoldersSettingDialog : public QDialog
     Q_OBJECT
 
 public:
-    struct AllowedPrefix{
-        QString prefix;
+    struct AllowedAffix{
+        QString affix;
+        enum Type{prefix, suffix} type = prefix;
+        Q_ENUM(Type);
         QString briefDescription;
         QString description;
     };
 
     explicit FoldersSettingDialog(QWidget *parent = nullptr);
     explicit FoldersSettingDialog(const QStringList &folders,const QString &label,const QString &title
-                                  ,QWidget *parent = nullptr,const QStringList &defaultFolders = QStringList(),const QList<AllowedPrefix> &allowedPrefix = QList<AllowedPrefix>());
+                                  ,QWidget *parent = nullptr,const QStringList &defaultFolders = QStringList(),const QList<AllowedAffix> &allowedPrefix = QList<AllowedAffix>());
     ~FoldersSettingDialog();
     void setFolders(const QStringList &folders);
     QStringList getFolders() const;
     void setLabel(const QString &label);
     void setDefaultFolders(const QStringList &value);
 
-    void setAllowedPrefix(const QList<AllowedPrefix>& value);
+    void setAllowedPrefix(const QList<AllowedAffix>& value);
 
 signals:
     void monitorFoldersModified(QStringList folders);
@@ -53,7 +57,7 @@ private:
     QStringList folders;
     QStringList oldFolders;
     QStringList defaultFolders;
-    QList<AllowedPrefix> allowedPrefix;
+    QList<AllowedAffix> allowedPrefix;
 };
 
 #endif // MONITORFOLDERSSETTINGDIALOG_H

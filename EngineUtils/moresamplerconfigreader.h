@@ -13,7 +13,7 @@ public:
     enum ConfigFileType{
         Global,VoiceBank
     };
-    explicit MoresamplerConfigReader(const QString& configFilePath, const ConfigFileType configFileType,QObject *parent = nullptr);
+    explicit MoresamplerConfigReader(QString configFilePath, const ConfigFileType configFileType, QObject *parent = nullptr);
     void readConfigs();
     int count() const{
         return configs.count();

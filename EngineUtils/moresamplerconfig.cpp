@@ -1,14 +1,14 @@
 ﻿#include "moresamplerconfig.h"
+#include <utility>
 
-MoresamplerConfig::MoresamplerConfig(QString &configString):configString(configString)
+MoresamplerConfig::MoresamplerConfig(QString configString):configString(std::move(configString))
 {
     processString();
 }
 
 MoresamplerConfig::~MoresamplerConfig()
 {
-    if (editMode)
-        delete editMode;
+    delete editMode;
 }
 
 QString MoresamplerConfig::getConfigString() const
@@ -27,7 +27,7 @@ MoresamplerConfig::ConfigType MoresamplerConfig::getType() const
     return type;
 }
 
-QString MoresamplerConfig::getTypeString(QString name)
+QString MoresamplerConfig::getTypeString(const QString& name)
 {
     return getTypeString(getType(name));
 }
@@ -145,40 +145,40 @@ MoresamplerConfig::EditMode *MoresamplerConfig::getEditMode(const QString &confi
 {
     if (configName == "output-sampling-rate")
         return new PositiveIntegerEditMode();
-    else if (configName == "output-bit-depth")
+    if (configName == "output-bit-depth")
         return new ChoicesEditMode({"8","16","24","32"});
-    else if (configName == "resampler-compatibility")
+    if (configName == "resampler-compatibility")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "synthesis-utau-style-normalization")
+    if (configName == "synthesis-utau-style-normalization")
         return new ChoicesEditMode({"full","voiced","off"});
-    else if (configName == "synthesis-loudness-preservation")
+    if (configName == "synthesis-loudness-preservation")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "synthesis-duration-extension-method")
+    if (configName == "synthesis-duration-extension-method")
         return new ChoicesEditMode({"auto","stretch","loop"});
-    else if (configName == "multithread-synthesis")
+    if (configName == "multithread-synthesis")
         return new ChoicesEditMode({"full","on","off"});
-    else if (configName == "auto-update-llsm-mrq")
+    if (configName == "auto-update-llsm-mrq")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "dump-log-file")
+    if (configName == "dump-log-file")
         return new StringEditMode();
-    else if (configName == "analysis-f0-range-from-path")
+    if (configName == "analysis-f0-range-from-path")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "analysis-biased-f0-estimation")
+    if (configName == "analysis-biased-f0-estimation")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "analysis-f0-min")
+    if (configName == "analysis-f0-min")
         return new PositiveDoubleEditMode();
-    else if (configName == "analysis-f0-max")
+    if (configName == "analysis-f0-max")
         return new PositiveDoubleEditMode();
-    else if (configName == "load-frq")
+    if (configName == "load-frq")
         return new ChoicesEditMode({"strict","on","off"});
-    else if (configName == "analysis-anti-distortion")
+    if (configName == "analysis-anti-distortion")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "analysis-noise-reduction")
+    if (configName == "analysis-noise-reduction")
         return new ChoicesEditMode({"on","off"});
-    else if (configName == "analysis-suppress-subharmonics")
+    if (configName == "analysis-suppress-subharmonics")
         return new ChoicesEditMode({"on","off"});
-    else
-        return new StringEditMode();
+
+    return new StringEditMode();
 }
 
 void MoresamplerConfig::setValue(const QVariant &value)
@@ -251,7 +251,7 @@ MoresamplerConfig::EditMode::NotChoicesException::NotChoicesException() : std::r
 
 }
 
-MoresamplerConfig::EditMode::EditMode(MoresamplerConfig::EditMode::ValueType valueType, QStringList choices) : choices(choices),valueType(valueType)
+MoresamplerConfig::EditMode::EditMode(MoresamplerConfig::EditMode::ValueType valueType, QStringList choices) : choices(std::move(choices)),valueType(valueType)
 {
 
 }
@@ -266,14 +266,11 @@ QStringList MoresamplerConfig::EditMode::getChoices() const
 {
     if (valueType == ValueType::Choices)
         return choices;
-    else
-        throw NotChoicesException();
+
+    throw NotChoicesException();
 }
 
-MoresamplerConfig::EditMode::~EditMode()
-{
-
-}
+MoresamplerConfig::EditMode::~EditMode() = default;
 
 MoresamplerConfig::DoubleEditMode::DoubleEditMode() : EditMode(Double)
 {
@@ -291,16 +288,15 @@ QVariant MoresamplerConfig::DoubleEditMode::toVariantValueFromString(QString val
     auto value = valueString.toDouble(&ok);
     if (ok && isValidValue(value))
         return value;
-    else
-        return 0.0;
+    return 0.0;
 }
 
 QString MoresamplerConfig::DoubleEditMode::toStringFromVariantValue(QVariant value) const
 {
     if (isValidValue(value))
         return QString("%1").arg(value.toDouble());
-    else
-        return QString("%1").arg(0.0);
+
+    return QString("%1").arg(0.0);
 }
 
 MoresamplerConfig::PositiveDoubleEditMode::PositiveDoubleEditMode() : DoubleEditMode ()
@@ -329,16 +325,16 @@ QVariant MoresamplerConfig::IntegerEditMode::toVariantValueFromString(QString va
     auto value = valueString.toInt(&ok);
     if (ok && isValidValue(value))
         return value;
-    else
-        return 0;
+
+    return 0;
 }
 
 QString MoresamplerConfig::IntegerEditMode::toStringFromVariantValue(QVariant value) const
 {
     if (isValidValue(value))
         return QString("%1").arg(value.toInt());
-    else
-        return QString("%1").arg(0);
+
+    return QString("%1").arg(0);
 }
 
 MoresamplerConfig::PositiveIntegerEditMode::PositiveIntegerEditMode() : IntegerEditMode ()
@@ -365,19 +361,19 @@ QVariant MoresamplerConfig::StringEditMode::toVariantValueFromString(QString val
 {
     if (isValidValue(valueString))
         return valueString;
-    else
-        return QVariant();
+
+    return QVariant();
 }
 
 QString MoresamplerConfig::StringEditMode::toStringFromVariantValue(QVariant value) const
 {
     if (isValidValue(value))
         return value.toString();
-    else
-        return QString();
+
+    return QString();
 }
 
-MoresamplerConfig::ChoicesEditMode::ChoicesEditMode(QStringList choices) : EditMode (ValueType::Choices,choices)
+MoresamplerConfig::ChoicesEditMode::ChoicesEditMode(QStringList choices) : EditMode (ValueType::Choices,std::move(choices))
 {
 
 }
@@ -391,16 +387,16 @@ QVariant MoresamplerConfig::ChoicesEditMode::toVariantValueFromString(QString va
 {
     if (isValidValue(valueString))
         return valueString;
-    else
-        return choices.at(0);
+
+    return choices.at(0);
 }
 
 QString MoresamplerConfig::ChoicesEditMode::toStringFromVariantValue(QVariant value) const
 {
     if (value.type() == QVariant::String && isValidValue(value))
         return value.toString();
-    else
-        return choices.at(0);
+
+    return choices.at(0);
 }
 
 MoresamplerConfig::ValueNotValidException::ValueNotValidException() : std::runtime_error("The given value is not valid for this config.")

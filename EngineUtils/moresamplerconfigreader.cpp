@@ -1,6 +1,7 @@
 ﻿#include "moresamplerconfigreader.h"
+#include <utility>
 
-MoresamplerConfigReader::MoresamplerConfigReader(const QString &configFilePath, const ConfigFileType configFileType, QObject *parent) : QObject(parent),path(configFilePath),configFileType(configFileType)
+MoresamplerConfigReader::MoresamplerConfigReader(QString configFilePath, const ConfigFileType configFileType, QObject *parent) : QObject(parent),path(std::move(configFilePath)),configFileType(configFileType)
 {
     readConfigs();
 }
@@ -13,7 +14,7 @@ void MoresamplerConfigReader::readConfigs()
         auto fileContent = file->readAll();
         auto fileContentString = QString::fromUtf8(fileContent);
         auto fileContentSingleLine = fileContentString.split("\n");
-        for (auto string : fileContentSingleLine)
+        for (const auto& string : fileContentSingleLine)
         {
             configs.append(new MoresamplerConfig(string));
         }

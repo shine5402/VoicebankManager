@@ -49,7 +49,7 @@ AboutDialog::AboutDialog(const QString& applicationName,
     {
         tabTextList.append(qMakePair(i,ui->tabWidget->tabText(i)));
     }
-    for (auto i : tabTextList)
+    for (const auto& i : tabTextList)
     {
         if (i.second == tr("关于"))
             setTab(i.first,ui->aboutTextBrowser,aboutHtml);

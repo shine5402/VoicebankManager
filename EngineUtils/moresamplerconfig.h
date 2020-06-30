@@ -12,7 +12,7 @@
 class MoresamplerConfig
 {
 public:
-    MoresamplerConfig(QString& configString);
+    MoresamplerConfig(QString configString);
     ~MoresamplerConfig();
     enum ConfigType{
         Unknown,Analysis,Synthesis,Output,MetaFlag,Misc,Comment,Blank
@@ -26,7 +26,7 @@ public:
     {
         return getTypeString(getType());
     }
-    static QString getTypeString(QString typeName);
+    static QString getTypeString(const QString& typeName);
     bool isComment() const{
         return decoration.comment;
     }

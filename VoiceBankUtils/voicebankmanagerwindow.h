@@ -53,7 +53,7 @@ public:
     explicit VoiceBankManagerWindow(QWidget *parent = nullptr);
     ~VoiceBankManagerWindow() override;
 
-    void loadVoiceBanksAndTable();
+    void loadVoiceBanksAndChangeUI();
 
 public slots:
 
@@ -107,7 +107,7 @@ private:
     void loadWindowStatus();
     void saveWindowStatus();
 
-    void letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {}, const QList<FoldersSettingDialog::AllowedPrefix>& allowedPrefix = {});
+    void letUserModifyFolder(std::function<QStringList(MonitorFoldersScanner*)>getFunc, std::function<void(MonitorFoldersScanner*,const QStringList&)>setFunc, const QString& name, const QStringList &defaultList = {}, const QList<FoldersSettingDialog::AllowedAffix>& allowedPrefix = {});
 
     void refreshCategoryAndLabelsActionsChecked();
 

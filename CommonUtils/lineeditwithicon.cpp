@@ -11,9 +11,7 @@
 ****************************************************************************/
 
 #include "lineeditwithicon.h"
-
 #include <algorithm>
-
 #include <QGuiApplication>
 #include <QResizeEvent>
 #include <QStyle>
@@ -22,43 +20,44 @@
 LineEditWithIcon::LineEditWithIcon(QWidget *parent)
     : QLineEdit(parent)
 {
-    m_iconButton = new QToolButton(this);
-    m_iconButton->setCursor(Qt::ArrowCursor);
-    m_iconButton->setStyleSheet("QToolButton {border: none; padding: 2px;}");
+    iconButton = new QToolButton(this);
+    iconButton->setCursor(Qt::ArrowCursor);
+    iconButton->setStyleSheet("QToolButton {border: none; padding: 2px;}");
 
-    // padding between text and widget borders
-    setStyleSheet(QString::fromLatin1("QLineEdit {padding-left: %1px;}").arg(m_iconButton->sizeHint().width()));
+    // 让文字的左边距包含iconButton的宽度
+    setStyleSheet(QString("QLineEdit {padding-left: %1px;}").arg(iconButton->sizeHint().width()));
 
     setClearButtonEnabled(true);
 
-    const int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-    setMaximumHeight(std::max(sizeHint().height(), m_iconButton->sizeHint().height()) + frameWidth * 2);
+    auto frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+    setMaximumHeight(std::max(sizeHint().height(), iconButton->sizeHint().height()) + frameWidth * 2);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 }
 
 LineEditWithIcon::LineEditWithIcon(const QIcon& icon, QWidget* parent) : LineEditWithIcon(parent)
 {
-    m_iconButton->setIcon(icon);
+    iconButton->setIcon(icon);
 }
 
 void LineEditWithIcon::setIcon(const QIcon& icon)
 {
-    m_iconButton->setIcon(icon);
+    iconButton->setIcon(icon);
 }
 
-void LineEditWithIcon::resizeEvent(QResizeEvent *e)
+void LineEditWithIcon::resizeEvent(QResizeEvent *event)
 {
-    const int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-    const int xPos = QGuiApplication::isLeftToRight()
-                     ? frameWidth
-                     : (e->size().width() - m_iconButton->sizeHint().width() - frameWidth);
-    m_iconButton->move(xPos, (e->size().height() - m_iconButton->sizeHint().height()) / 2);
+    //垂直居中iconButton
+    auto frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+    auto x = QGuiApplication::isLeftToRight() ? frameWidth : (event->size().width() - iconButton->sizeHint().width() - frameWidth);
+    iconButton->move(x, (event->size().height() - iconButton->sizeHint().height()) / 2);
 }
 
 void LineEditWithIcon::keyPressEvent(QKeyEvent *event)
 {
+    //按Esc键时清除内容
     if ((event->modifiers() == Qt::NoModifier) && (event->key() == Qt::Key_Escape)) {
         clear();
     }
+
     QLineEdit::keyPressEvent(event);
 }

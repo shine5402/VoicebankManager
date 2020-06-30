@@ -22,9 +22,9 @@ QVariant CategoriesModel::data(const QModelIndex &index, int role) const
     if (role == Qt::ItemDataRole::DisplayRole){
         if (index.row() > 1)
             return QString("%1 (%2)").arg(dataSource->categories.at(index.row() - 2)).arg(dataSource->categoriesUsedCount.value(dataSource->categories.at(index.row() - 2)));
-        else if (index.row() == 1)
+        if (index.row() == 1)
             return tr("未分类 (%1)").arg(dataSource->getNoCategoriesCount());
-        else if (index.row() == 0)
+        if (index.row() == 0)
             return tr("全部 (%1)").arg(dataSource->handler->count());
     }
     return QVariant();

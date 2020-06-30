@@ -50,7 +50,7 @@
    <item row="2" column="2" colspan="2">
     <widget class="QPushButton" name="allowedPrefixDescriptionButton">
      <property name="text">
-      <string>可用后缀具体说明</string>
+      <string>可用词缀具体说明</string>
      </property>
     </widget>
    </item>

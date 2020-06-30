@@ -1,7 +1,7 @@
 ﻿#include "moresamplerconfigsdialog.h"
 #include "ui_moresamplerconfigsdialog.h"
 
-MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const MoresamplerConfigReader::ConfigFileType configFileType,QWidget *parent,QString voiceBankName) :
+MoresamplerConfigsDialog::MoresamplerConfigsDialog(const QString &path, const MoresamplerConfigReader::ConfigFileType configFileType,QWidget *parent,const QString& voiceBankName) :
     QDialog(parent),
     ui(new Ui::MoresamplerConfigsDialog),path(path)
 {
@@ -57,7 +57,8 @@ void MoresamplerConfigsDialog::on_addButton_clicked()
         else if (name == tr("（元标记）"))
         {
             bool ok = false;
-            auto num = QInputDialog::getInt(this,tr("指定元标记的序数"),tr("在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的序数。比如，您想要使用M1，就在下框中输入1."),1,1,100,1,&ok);
+            constexpr int metaFlagIDMax = 100;
+            auto num = QInputDialog::getInt(this,tr("指定元标记的序数"),tr("在下面的输入框中输入一个数字。该数字将作为调用元标记时应当使用的序数。比如，您想要使用M1，就在下框中输入1."),1,1,metaFlagIDMax,1,&ok);
             if (ok)
             {
                 name = QString("meta-flag-%1").arg(num);
@@ -88,12 +89,12 @@ void MoresamplerConfigsDialog::accept()
         auto dir = QFileInfo(path).dir();
         auto llsmInfoList = dir.entryInfoList(filter,QDir::Files | QDir::NoDotAndDotDot);
         QList<QPair<QString,QString>> errorFiles;
-        for (auto i : llsmInfoList)
+        for (const auto& i : llsmInfoList)
         {
             QFile file(i.canonicalFilePath());
             if (!file.remove())
             {
-                qCritical() << tr("删除文件%1时出现错误%2。").arg(file.fileName()).arg(file.errorString());
+                qCritical() << tr("删除文件%1时出现错误%2。").arg(file.fileName(), file.errorString());
                 errorFiles.append(qMakePair(file.fileName(),file.errorString()));
             }
         }
@@ -119,7 +120,7 @@ void MoresamplerConfigsDialog::accept()
     QDialog::accept();
 }
 
-void MoresamplerConfigsDialog::onInvalidValue(int row, QVariant data)
+void MoresamplerConfigsDialog::onInvalidValue(int row, const QVariant& data)
 {
     QMessageBox::warning(this,tr("设置的值无效"),tr("您设置的值“%1”无法应用于第%2行。请修改后重试。").arg(data.toString()).arg(row));
 }

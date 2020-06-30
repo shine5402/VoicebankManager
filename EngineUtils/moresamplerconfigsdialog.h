@@ -18,7 +18,7 @@ class MoresamplerConfigsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit MoresamplerConfigsDialog(const QString& path, const MoresamplerConfigReader::ConfigFileType configFileType, QWidget *parent = nullptr, QString voiceBankName = QString());
+    explicit MoresamplerConfigsDialog(const QString& path, const MoresamplerConfigReader::ConfigFileType configFileType, QWidget *parent = nullptr, const QString& voiceBankName = QString());
     ~MoresamplerConfigsDialog() override;
 
 private slots:
@@ -27,7 +27,7 @@ private slots:
     void on_addButton_clicked();
 public slots:
     void accept() override;
-    void onInvalidValue(int row, QVariant data);
+    void onInvalidValue(int row, const QVariant& data);
 private:
     Ui::MoresamplerConfigsDialog *ui;
     QString path;
