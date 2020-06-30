@@ -20,12 +20,10 @@ class FoldersSettingDialog : public QDialog
 public:
     struct AllowedAffix{
         QString affix;
-        enum Type{prefix, suffix} type = prefix;
-        Q_ENUM(Type);
+        enum Type{prefix, suffix} type;
         QString briefDescription;
         QString description;
     };
-
     explicit FoldersSettingDialog(QWidget *parent = nullptr);
     explicit FoldersSettingDialog(const QStringList &folders,const QString &label,const QString &title
                                   ,QWidget *parent = nullptr,const QStringList &defaultFolders = QStringList(),const QList<AllowedAffix> &allowedPrefix = QList<AllowedAffix>());

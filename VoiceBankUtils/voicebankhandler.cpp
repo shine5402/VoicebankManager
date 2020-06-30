@@ -1,4 +1,5 @@
 ﻿#include "voicebankhandler.h"
+#include <QtConcurrent/QtConcurrent>
 
 VoiceBankHandler::VoiceBankHandler(QObject *parent) : QObject(parent)
 {
@@ -35,12 +36,18 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
       在确定待读取文件夹列表时，程序会考虑是否递归查找、忽略文件夹列表、外部文件夹列表等。参见这些设置相关的函数以获取详情。
     */
     //TODO:将此处变为多线程
-    auto voiceBankPaths = MonitorFoldersScanner::getMonitorFoldersScanner()->getFoldersInMonitorFolders();
-    if (voiceBankPaths.count() == 0)
-        emit voiceBanksReadDone();
-    else{
-        addVoiceBanks(voiceBankPaths);
-    }
+    getFoldersInMonitorFoldersFuture = QtConcurrent::run(std::bind(&MonitorFoldersScanner::getFoldersInMonitorFolders, MonitorFoldersScanner::getMonitorFoldersScanner()));
+    auto watcher = new QFutureWatcher<QStringList>(this);
+    watcher->setFuture(getFoldersInMonitorFoldersFuture);
+
+    connect(watcher, &QFutureWatcher<QStringList>::finished, this, &VoiceBankHandler::gotFoldersInMonitorFolders);
+
+//    auto voiceBankPaths = MonitorFoldersScanner::getMonitorFoldersScanner()->getFoldersInMonitorFolders();
+//    if (voiceBankPaths.count() == 0)
+//        emit voiceBanksReadDone();
+//    else{
+//        addVoiceBanks(voiceBankPaths);
+//    }
 }
 
 
@@ -267,6 +274,16 @@ void VoiceBankHandler::voiceBankFirstReadDoneSlot(VoiceBank*)
 {
         if (++voiceBankReadDoneCount == voiceBanks.count()){
             emit voiceBanksReadDone();
+        }
+}
+
+void VoiceBankHandler::gotFoldersInMonitorFolders()
+{
+    auto voiceBankPaths = getFoldersInMonitorFoldersFuture.result();
+        if (voiceBankPaths.count() == 0)
+            emit voiceBanksReadDone();
+        else{
+            addVoiceBanks(voiceBankPaths);
         }
 }
 

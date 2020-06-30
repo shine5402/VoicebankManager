@@ -93,6 +93,7 @@ void VoiceBank::readFromPathPrivate()
       \warning VoiceBank 并不对没有读取就进行操作提出警告。\n
       VoiceBank 将会启动一个新线程进行读取，所以此函数会立即返回。您应当检查 readDone(VoiceBank *) 信号来得知 VoiceBank 何时读取完毕。
     */
+    //使用QFuture
     auto newVoiceBankReadFunctionRunner = new VoiceBankReadFuctionRunner(this);
     threadPool->start(newVoiceBankReadFunctionRunner);
 }

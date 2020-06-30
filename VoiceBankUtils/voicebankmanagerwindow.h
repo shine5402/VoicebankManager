@@ -78,7 +78,7 @@ private:
     void updateVoiceBankCountLabel();
 
     QMenu* singleVoiceBankTableWidgetMenu = new QMenu(this);
-    //TODO:↓
+    //TODO:multipleVoiceBankTableWidgetMenu
     QMenu* multipleVoiceBankTableWidgetMenu = new QMenu(this);
     QMenu* voiceBankCategoriesSubMenu = nullptr;
     QActionGroup* voiceBankCategoriesActionGroup = new QActionGroup(this);

@@ -8,6 +8,7 @@
 #include <public_defines.h>
 #include "monitorfoldersscanner.h"
 #include <setoperations.h>
+#include <QFuture>
 
 ///用于管理一系列VoiceBank。
 /*!
@@ -175,8 +176,11 @@ private:
 
     static Garbo garbo;
     friend Garbo;
+
+    QFuture<QStringList> getFoldersInMonitorFoldersFuture;
 private slots:
     void voiceBankFirstReadDoneSlot(VoiceBank *);
+    void gotFoldersInMonitorFolders();
 
 public slots:
 };

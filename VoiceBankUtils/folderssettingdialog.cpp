@@ -138,6 +138,7 @@ void FoldersSettingDialog::on_allowedPrefixDescriptionButton_clicked()
                                                                                                            case AllowedAffix::prefix: return tr("前缀");
                                                                                                            case AllowedAffix::suffix: return tr("后缀");
                                                                                                        }
+                                                                                                       return {};
                                                                                                    }()));
     }
     auto htmlDialog = ShowHTMLDialog(text,tr("允许使用的词缀列表"),this);
