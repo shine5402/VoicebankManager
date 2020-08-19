@@ -241,8 +241,7 @@ void VoiceBankManagerWindow::loadWindowStatus()
         restoreGeometry(settings.value("VoiceBankManager/WindowGeometry").toByteArray());
     if (settings.contains("VoiceBankManager/categoryAndLabelsAndListSplitterState"))
     {
-        bool a = ui->categoryAndLabelsAndListSplitter->restoreState(settings.value("VoiceBankManager/categoryAndLabelsAndListSplitterState").toByteArray());
-        qDebug() << a;
+        ui->categoryAndLabelsAndListSplitter->restoreState(settings.value("VoiceBankManager/categoryAndLabelsAndListSplitterState").toByteArray());
     }
     else
     {
@@ -254,7 +253,7 @@ void VoiceBankManagerWindow::loadWindowStatus()
         sizePolicy0.setHorizontalStretch(defaultCategoryAndLabelsHorizontalStretch);
         hWidget0->setSizePolicy(sizePolicy0);
         constexpr int defaultVoiceBankListHorizontalStretch = 5;
-        QWidget *hWidget1 = ui->categoryAndLabelsAndListSplitter->widget(defaultVoiceBankListHorizontalStretch);
+        QWidget *hWidget1 = ui->categoryAndLabelsAndListSplitter->widget(1);
         auto sizePolicy1 = hWidget1->sizePolicy();
         sizePolicy1.setHorizontalStretch(defaultVoiceBankListHorizontalStretch);
         hWidget1->setSizePolicy(sizePolicy1);
@@ -1135,7 +1134,6 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                   //关于
                                   tr("<p>为管理适用于UTAU歌声合成应用程序的声音资料库写的一个辅助工具。</p>"
                                      "<p>版权所有 2018-2019 shine_5402</p>"
-                                     "<p>本程序是 Leaf Open UTAU Project 的一部分。</p>"
                                      "<p>Github项目页：<a href=\"https://github.com/shine5402/LeafOpenUTAUQt\">Leaf OpenUTAU Qt Project</a></p>"
                                      "<p>UTAU是由飴屋／菖蒲(ameya)开发的歌声合成软件。UTAU图标版权归属于飴屋／菖蒲(ameya)。</p>"),
                                   //作者
@@ -1149,13 +1147,12 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                      "<b>如果需要反馈程序的BUG，或者想要提出对新特性的请求，请直接在Github项目页提交issue。</b>"),
                                   //致谢
                                   tr("<p>首先先是感谢在UTAU坑里遇到的所有朋友，特别是哈鲁鲁的UTAU群里第一时间使用的大家，没有你们我不可能坚持写出这个工具。名单太长，这里就不列举了。</p>"
-                                     "<p>然后是感谢隋卞帮忙做英文翻译，我的英语真的很烂……</p>"
                                      "<p>接着要感谢在第三方代码那页里提到的所有第三方作者，没有他们我肯定要花上更多功夫，甚至无法完成。</p>"
                                      "<p>当然最后，还有使用这个软件的你。感谢您的使用！</p>"),
                                   //译者
                                   tr("<h4>本程序译者</h4>"
                                      "<ul>"
-                                     "<li>English（英文）：隋卞</li>"
+                                     "<li></li>"
                                      "</ul>"
                                      "<p>如果你能协助翻译本程序到以上/其他语言版本，请联系我！</p>"),
                                   //许可
@@ -1253,7 +1250,9 @@ void VoiceBankManagerWindow::on_actionSet_Thread_Pool_Max_Count_triggered()
 {
     bool ok = false;
     constexpr int maxThread = 2147483647;
-    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),VoiceBank::getThreadPoolMaxThreadCount(),1,maxThread,1,&ok);
+    auto count = QInputDialog::getInt(this,tr("设定线程池的最大大小"),
+                                      tr("（高级）该设置改变程序读取音源库时的最大线程数。请确保您在知道自己在做什么之后再更改此项设置。"),
+                                      VoiceBank::getThreadPoolMaxThreadCount(),1,maxThread,1,&ok);
     if (ok){
         VoiceBank::setThreadPoolMaxThreadCount(count);
         ui->statusbar->showMessage(tr("线程池大小已经被设置为%1").arg(count));

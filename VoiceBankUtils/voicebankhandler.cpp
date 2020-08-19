@@ -38,16 +38,8 @@ void VoiceBankHandler::readVoiceBanksFromMonitorFolders()
     //TODO:将此处变为多线程
     getFoldersInMonitorFoldersFuture = QtConcurrent::run(std::bind(&MonitorFoldersScanner::getFoldersInMonitorFolders, MonitorFoldersScanner::getMonitorFoldersScanner()));
     auto watcher = new QFutureWatcher<QStringList>(this);
-    watcher->setFuture(getFoldersInMonitorFoldersFuture);
-
     connect(watcher, &QFutureWatcher<QStringList>::finished, this, &VoiceBankHandler::gotFoldersInMonitorFolders);
-
-//    auto voiceBankPaths = MonitorFoldersScanner::getMonitorFoldersScanner()->getFoldersInMonitorFolders();
-//    if (voiceBankPaths.count() == 0)
-//        emit voiceBanksReadDone();
-//    else{
-//        addVoiceBanks(voiceBankPaths);
-//    }
+    watcher->setFuture(getFoldersInMonitorFoldersFuture);
 }
 
 
