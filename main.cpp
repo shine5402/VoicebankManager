@@ -16,16 +16,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Leaf UTAU Qt");
     LeafLogger::LogInit();
 
-#ifdef EDITOR
-    EditorWindow w;
-    w.show();
-#endif
 
-#ifdef VOICEBANK_MANAGER
     VoiceBankManagerWindow v;
     v.show();
-    //QTimer::singleShot(0, &v, &VoiceBankManagerWindow::loadVoiceBanksAndTable);
     v.loadVoiceBanksAndChangeUI();
-#endif
     return a.exec();
 }

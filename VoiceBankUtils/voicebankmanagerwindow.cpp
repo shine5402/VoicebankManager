@@ -1159,17 +1159,9 @@ void VoiceBankManagerWindow::on_actionAbout_triggered()
                                   tr("<h4>简述</h4>"
                                      "<p>本程序的代码库中的代码是以<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU 通用公共许可证 版本3</a>。分发的<br/>"
                                      "你可以直接通过上述链接（需要Internet）查看这些许可，也可继续向下翻阅。<br/>"
-                                     "你可以通过源文件中的说明来辨别文件使用的许可。</p>"
-                                     "<h4>Apache License, Version 2.0</h4>"
-                                     "<pre>%1</pre>"
                                      "<h4>GNU General Public License, Version 3</h4>"
-                                     "<pre>%2</pre>")
+                                     "<pre>%1</pre>")
                                   .arg([] () -> QString {
-                                           QFile file(":/license/apachev2");
-                                           file.open(QFile::ReadOnly);
-                                           return QString::fromUtf8(file.readAll());
-                                       }(),
-                                       [] () -> QString {
                                            QFile file(":/license/gplv3");
                                            file.open(QFile::ReadOnly);
                                            return QString::fromUtf8(file.readAll());

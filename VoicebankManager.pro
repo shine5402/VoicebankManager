@@ -1,9 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2018-08-24T14:58:05
-#
-#-------------------------------------------------
-
 QT       += core gui widgets multimedia
 !exists($$PWD/outsideLibrarys.pri){
     error("outsideLibrarys.pri not exist, please write one. The outsideLibrarys.template.pri could help.")
@@ -15,19 +9,13 @@ DISTFILES += \
     outsideLibrarys.pri \
     module.pri
 
-include(module.pri)
 include(outsideLibrarys.pri)
 
-TARGET = LeafOpenUTAUQt
-if (contains(DEFINES,EDITOR)){
-TARGET = LeafOpenUTAUQt
-}
-if (contains(DEFINES,VOICEBANK_MANAGER)){
-TARGET = VoiceBankManager
+TARGET = VoicebankManager
 win32{
 RC_ICONS = icon/icon.ico
 }
-}
+
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -48,7 +36,6 @@ SOURCES += \
     CommonUtils/fitcontentlistview.cpp \
     CommonUtils/lineeditwithicon.cpp \
         main.cpp \
-        editorwindow.cpp \
     VoiceBankUtils/voicebankmanagerwindow.cpp \
     VoiceBankUtils/voicebank.cpp \
     VoiceBankUtils/voicebankhandler.cpp \
@@ -74,7 +61,6 @@ HEADERS += \
     CommonUtils/aboutdialog.h \
     CommonUtils/fitcontentlistview.h \
     CommonUtils/lineeditwithicon.h \
-        editorwindow.h \
     VoiceBankUtils/voicebankmanagerwindow.h \
     VoiceBankUtils/voicebank.h \
     VoiceBankUtils/voicebankhandler.h \
@@ -99,7 +85,6 @@ HEADERS += \
 
 FORMS += \
     CommonUtils/aboutdialog.ui \
-        editorwindow.ui \
     VoiceBankUtils/voicebankmanagerwindow.ui \
     VoiceBankUtils/textcodecsettingdialog.ui \
     EngineUtils/moresamplerconfigsdialog.ui \
@@ -126,5 +111,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resource.qrc
-TRANSLATIONS = LeafOpenUTAUQt_en.ts
+TRANSLATIONS =
 
